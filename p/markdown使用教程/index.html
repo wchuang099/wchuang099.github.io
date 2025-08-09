@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Markdown使用教程">
+<title>Markdown使用教程</title>
+
+<link rel='canonical' href='https://example.com/p/markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/'>
+
+<link rel="stylesheet" href="/scss/style.min.cfa5b1b0e78d61c00a14173992a1f3fa3b5c1b9fa34d023de959af564e7b19dd.css"><meta property='og:title' content="Markdown使用教程">
+<meta property='og:description' content="Markdown使用教程">
+<meta property='og:url' content='https://example.com/p/markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/'>
+<meta property='og:site_name' content='王创的站点'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Markdown' /><meta property='article:published_time' content='2025-08-07T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2025-08-07T22:30:00&#43;08:00'/>
+<meta name="twitter:title" content="Markdown使用教程">
+<meta name="twitter:description" content="Markdown使用教程">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu_a9521bd358f3fb79.png" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✍️</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">王创的站点</a></h1>
+            <h2 class="site-description">欢迎来到我的网站</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/CaiJimmy/hugo-theme-stack'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%85%B3%E4%BA%8E/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%8F%8B%E6%83%85%E9%93%BE%E6%8E%A5/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>友情链接</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li>
+      <ol>
+        <li><a href="#一markdown简介">一、Markdown简介</a></li>
+        <li><a href="#二markdown标题">二、Markdown标题</a></li>
+        <li><a href="#三markdown段落">三、Markdown段落</a></li>
+        <li><a href="#四markdown-列表">四、Markdown 列表</a></li>
+        <li><a href="#五markdown区块">五、Markdown区块</a></li>
+        <li><a href="#六markdown代码框">六、Markdown代码框</a></li>
+        <li><a href="#七markdown链接">七、Markdown链接</a></li>
+        <li><a href="#八markdown图片">八、Markdown图片</a></li>
+        <li><a href="#九markdown表格">九、Markdown表格</a></li>
+        <li><a href="#十markdown高级技巧">十、Markdown高级技巧</a></li>
+        <li><a href="#十一标题自动编号">十一、标题自动编号</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E6%8A%80%E6%9C%AF/" >
+                技术
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/">Markdown使用教程</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            Markdown使用教程
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025-08-07</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 8 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="一markdown简介">一、Markdown简介
+</h2><p>Markdown 是一种轻量级标记语言，它允许人们使用易读易写的纯文本格式编写文档。</p>
+<p>Markdown 语言在 2004 由约翰·格鲁伯（英语：John Gruber）创建。</p>
+<p>Markdown 编写的文档可以导出 HTML 、Word、图像、PDF、Epub 等多种格式的文档。</p>
+<p>Markdown 编写的文档后缀为 .md, .markdown。</p>
+<p>Markdown 能被使用来撰写电子书，如：Gitbook。/</p>
+<p>当前许多网站都广泛使用 Markdown 来撰写帮助文档或是用于论坛上发表消息。例如：GitHub、简书、reddit、Diaspora、Stack Exchange、OpenStreetMap 、SourceForge等。
+markdown编写Hello World!语法：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl"># Hello World!
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="二markdown标题">二、Markdown标题
+</h2><p>使用 # 号可表示 1-6 级标题，一级标题对应一个 # 号，二级标题对应两个 # 号，以此类推。</p>
+<p><strong>使用#号标记标题语法格式：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl"># 一级标题
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">## 二级标题
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">### 三级标题
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">#### 四级标题
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">##### 五级标题
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">###### 六级标题
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="三markdown段落">三、Markdown段落
+</h2><p>Markdown的段落没有特殊的格式，直接编写文字就好，段落的换行号是使用两个以上的空格加回车。</p>
+<p><strong>3.1 字体</strong></p>
+<p>Markdown 可以使用以下几种字体：</p>
+<ul>
+<li>用1个星号*或底线_表示斜体</li>
+<li>用2个星号*或底线_表示粗体</li>
+<li>用3个星号*或底线_表示粗斜体</li>
+</ul>
+<p><strong>语法格式：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">*斜体文字*
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">_斜体文字_
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">**粗体文字**
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">__粗体文字__
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">***粗斜体文字***
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">___粗斜体文字___
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>显示效果：</strong></p>
+<p><em>斜体文字</em></p>
+<p><em>斜体文字</em></p>
+<p><strong>粗体文字</strong></p>
+<p><strong>粗体文字</strong></p>
+<p>*<strong>粗斜体文字*</strong></p>
+<p>*<strong>粗斜体文字*</strong></p>
+<p><strong>3.2 分隔线</strong></p>
+<p>可以在一行中用三个以上的星号*、减号-、底线_来建立一个分隔线，行内不能有其他东西，你也可以在星号或减号蹭插入空格。下面这种写法都可以建立分隔线：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">***
+</span></span><span class="line"><span class="cl">* * *
+</span></span><span class="line"><span class="cl">******
+</span></span><span class="line"><span class="cl">- - -
+</span></span><span class="line"><span class="cl">------
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>显示效果：</strong></p>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<p><strong>3.3 删除线</strong></p>
+<p>如果段落上的文字要添加删除线，只需要在文字的两端加上两个波浪线~~即可。</p>
+<p><strong>语法格式：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">baidu.com
+</span></span><span class="line"><span class="cl">sina.com
+</span></span><span class="line"><span class="cl">~~tencent.com~~
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>显示效果如下：</p>
+<p><a class="link" href="https://link.zhihu.com/?target=http%3A//baidu.com"  target="_blank" rel="noopener"
+    >http://baidu.com</a> <a class="link" href="https://link.zhihu.com/?target=http%3A//sina.com"  target="_blank" rel="noopener"
+    >http://sina.com</a> <del>tencent.com</del></p>
+<p><strong>3.4 下划线</strong></p>
+<p>下划线可以通过HTML的标签来实现</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">&lt;u&gt;带下划线文本&lt;/u&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>显示效果如下：
+<u>带下划线文本</u></p>
+<p><strong>3.5 脚注</strong></p>
+<p>脚注是对文本的补充说明。</p>
+<p>Markdown脚注的格式如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">[^要注明的文本]：
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>显示效果：</strong>
+[^要注明的文本]：</p>
+<h2 id="四markdown-列表">四、Markdown 列表
+</h2><p><strong>4.1 有序列表和无序列表</strong></p>
+<p>Markdown支持有序列表和无序列表，无序列表使用星号(*)、加号(+)或者减号(-)作为标记：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">* 第一项
+</span></span><span class="line"><span class="cl">* 第二项
+</span></span><span class="line"><span class="cl">* 第三项
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">+ 第一项
+</span></span><span class="line"><span class="cl">+ 第二项
+</span></span><span class="line"><span class="cl">+ 第三项
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">- 第一项
+</span></span><span class="line"><span class="cl">- 第二项
+</span></span><span class="line"><span class="cl">- 第三项
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>显示效果：</p>
+<ul>
+<li>第一项</li>
+<li>第二项</li>
+<li>第三项</li>
+</ul>
+<ul>
+<li>第一项</li>
+<li>第二项</li>
+<li>第三项</li>
+</ul>
+<ul>
+<li>第一项</li>
+<li>第二项</li>
+<li>第三项</li>
+</ul>
+<p>有序列表直接在文字有加上1. 2. 3. 来表示，符号和文字之间加上一个空格字符，如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">1. 第一项
+</span></span><span class="line"><span class="cl">2. 第二项
+</span></span><span class="line"><span class="cl">3. 第三项
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ol>
+<li>第一项</li>
+<li>第二项</li>
+<li>第三项</li>
+</ol>
+<p><strong>4.2 列表嵌套</strong></p>
+<p>列表嵌套只需在子列表的选项前添加四个空格即可：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">1. 第一项：
+</span></span><span class="line"><span class="cl">    - 第一项嵌套的第一个元素
+</span></span><span class="line"><span class="cl">    - 第一项嵌套的第二个元素
+</span></span><span class="line"><span class="cl">2. 第二项：
+</span></span><span class="line"><span class="cl">    - 第二项嵌套的第一个元素
+</span></span><span class="line"><span class="cl">    - 第二项嵌套的第二个元素
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>显示效果：</strong></p>
+<ol>
+<li>第一项：</li>
+</ol>
+<ul>
+<li>第一项嵌套的第一个元素</li>
+<li>第一项嵌套的第二个元素</li>
+</ul>
+<ol>
+<li>第二项：</li>
+</ol>
+<ul>
+<li>第二项嵌套的第一个元素</li>
+<li>第二项嵌套的第二个元素</li>
+</ul>
+<h2 id="五markdown区块">五、Markdown区块
+</h2><p>Markdown区块引用是在段落开头使用&gt;符号，然后后面紧跟一个空格符号：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">&gt; 区块引用
+</span></span><span class="line"><span class="cl">&gt; Markdown教程
+</span></span><span class="line"><span class="cl">&gt; 学的不仅是技术更是梦想
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>显示效果如下：</p>
+<blockquote>
+<p>区块引用 Markdown教程 学的不仅是技术更是梦想</p></blockquote>
+<p>另外区块是可以嵌套的，一个&gt;符号是最外层，两个符号是第一层嵌套，以此类推：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">&gt; 最外层
+</span></span><span class="line"><span class="cl">&gt;&gt; 第一层嵌套
+</span></span><span class="line"><span class="cl">&gt;&gt;&gt; 第二层嵌套
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>显示效果如下：</p>
+<blockquote>
+<p>最外层
+第一层嵌套
+第二层嵌套</p></blockquote>
+<p><strong>5.1 区块中使用列表</strong></p>
+<p>区块中使用列表实例如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">&gt; 区块中使用列表
+</span></span><span class="line"><span class="cl">&gt; 1. 第一项
+</span></span><span class="line"><span class="cl">&gt; 2. 第二项
+</span></span><span class="line"><span class="cl">&gt; + 第一项
+</span></span><span class="line"><span class="cl">&gt; + 第二项
+</span></span><span class="line"><span class="cl">&gt; + 第三项
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>显示效果：</p>
+<blockquote>
+<p>区块中使用列表 1. 第一项 2. 第二项 + 第一项 + 第二项 + 第三项</p></blockquote>
+<p><strong>5.2 列表中使用区块</strong></p>
+<p>如果要在列表项目内放进区块，那么就需要在&gt;前添加四个空格和缩进。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">* 第一项
+</span></span><span class="line"><span class="cl">    &gt; Markdown教程
+</span></span><span class="line"><span class="cl">    &gt; 学的不仅是技术更是梦想
+</span></span><span class="line"><span class="cl">* 第二项
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>显示效果如下：</p>
+<ul>
+<li>第一项 &gt; Markdown教程 &gt; 学的不仅是技术更是梦想</li>
+<li>第二项</li>
+</ul>
+<h2 id="六markdown代码框">六、Markdown代码框
+</h2><p>如果是段落上的一个函数或片段的代码可以用两个&rsquo;把它包起来。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">&#39;print()&#39; 函数
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>&lsquo;print()&rsquo; 函数</p>
+<p><strong>6.1 代码区块</strong></p>
+<p>代码区块使用4个空格或者一个制表符（Tab键）。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="o">&lt;</span><span class="err">?</span><span class="n">Python</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Markdown&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">test</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Markdown test!&#39;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>也可以用&rsquo;&lsquo;&lsquo;包裹一段代码，并指定一种语言（也可以不指定）：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="s1">&#39;&#39;&#39;javascript
+</span></span></span><span class="line"><span class="cl"><span class="s1">$(document).read(function(){
+</span></span></span><span class="line"><span class="cl"><span class="s1">    alert(&#39;</span><span class="nx">Markdown</span><span class="s1">&#39;);
+</span></span></span><span class="line"><span class="cl"><span class="s1">});
+</span></span></span><span class="line"><span class="cl"><span class="s1">&#39;&#39;&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>显示效果：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="s1">&#39;&#39;&#39;javascript
+</span></span></span><span class="line"><span class="cl"><span class="s1">$(document).read(function){
+</span></span></span><span class="line"><span class="cl"><span class="s1">    alert(&#39;</span><span class="nx">Markdown</span><span class="s1">&#39;);
+</span></span></span><span class="line"><span class="cl"><span class="s1">});
+</span></span></span><span class="line"><span class="cl"><span class="s1">&#39;&#39;&#39;</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="七markdown链接">七、Markdown链接
+</h2><p>链接使用方法如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">[链接名称](链接地址)
+</span></span><span class="line"><span class="cl">或者
+</span></span><span class="line"><span class="cl">&lt;链接地址&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>例如：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">这是一个链接 [新浪新闻](https://news.sina.com.cn/)
+</span></span><span class="line"><span class="cl">&lt;https://news.sina.com.cn/&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>显示效果如下：</p>
+<p>这是一个链接 <a class="link" href="https://link.zhihu.com/?target=https%3A//news.sina.com.cn/"  target="_blank" rel="noopener"
+    >新浪新闻</a></p>
+<p><a class="link" href="https://link.zhihu.com/?target=https%3A//news.sina.com.cn/"  target="_blank" rel="noopener"
+    >https://news.sina.com.cn/</a></p>
+<p><strong>7.1 高级链接</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">链接也可以用变量来代替，文档末尾附带变量地址：
+</span></span><span class="line"><span class="cl">这个链接用1作为网址变量[baidu][1]
+</span></span><span class="line"><span class="cl">这个链接用markdown作为网址变量[Markdown][markdown]
+</span></span><span class="line"><span class="cl">然后文档的结尾为变量赋值(网址)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">[1]: http://www.baidu.com
+</span></span><span class="line"><span class="cl">[markdown]: http://www.markdown.com
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>显示效果如下：</p>
+<p>链接也可以用变量来代替，文档末尾附带变量地址： 这个链接用1作为网址变量<a class="link" href="https://zhuanlan.zhihu.com/p/108984311/%28https://pic4.zhimg.com/80/v2-a47051e92cf74930bedd7469978e6c08_hd.png%29"  target="_blank" rel="noopener"
+    >baidu</a> 这个链接用markdown作为网址变量<a class="link" href="https://link.zhihu.com/?target=http%3A//www.markdown.com/"  target="_blank" rel="noopener"
+    >Markdown</a> 然后文档的结尾为变量赋值(网址)</p>
+<h2 id="八markdown图片">八、Markdown图片
+</h2><p>Markdown图片语法格式为：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">![alt 属性文本](图片地址)
+</span></span><span class="line"><span class="cl">![alt 属性文本](图片地址 &#34;可选标题&#34;)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>开头一个感叹号!</li>
+<li>接着一个方括号，里面放上图片的代替文字</li>
+<li>接着一个普通括号，里面放上图片的网址，最后还可以用引号包住并加上选择性的&rsquo;title&rsquo;属性文字。</li>
+</ul>
+<p>实例如下：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">![有问题上知乎 图标](https://pic4.zhimg.com/80/v2-a47051e92cf74930bedd7469978e6c08_hd.png)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">---
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">![通信人家园 图标](http://www.txrjy.com/static/image/common/logo.gif)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>显示效果如下：</strong></p>
+<p><img src="https://pic1.zhimg.com/80/v2-a47051e92cf74930bedd7469978e6c08_720w.webp"
+	
+	
+	
+	loading="lazy"
+	
+		alt="img"
+	
+	
+></p>
+<hr>
+<p><img src="https://pic4.zhimg.com/80/v2-612255e26e6a7b9452b984602dfb1387_720w.webp"
+	
+	
+	
+	loading="lazy"
+	
+		alt="img"
+	
+	
+></p>
+<p>也可以像网址那样对图片使用变量：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">这个图片链接用1作为网址变量[zhihu][1]
+</span></span><span class="line"><span class="cl">然后在文档的结尾为变量赋值（网址）
+</span></span><span class="line"><span class="cl">[1]: (https://pic4.zhimg.com/80/v2-a47051e92cf74930bedd7469978e6c08_hd.png)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>显示效果如下：</p>
+<p>这个图片链接用1作为网址变量<a class="link" href="https://zhuanlan.zhihu.com/p/108984311/%28https://pic4.zhimg.com/80/v2-a47051e92cf74930bedd7469978e6c08_hd.png%29"  target="_blank" rel="noopener"
+    >zhihu</a> 然后在文档的结尾为变量赋值（网址）</p>
+<p>Markdown 没有办法指定图片的高度与宽度，如果需要的话，可以使用普通的</p>
+<p><img src="https://pic2.zhimg.com/80/v2-3c40829a650f96ab57be6975d78f8601_720w.webp"
+	
+	
+	
+	loading="lazy"
+	
+		alt="img"
+	
+	
+></p>
+<p>标签。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">&lt;img src=“https://pic4.zhimg.com/80/v2-a47051e92cf74930bedd7469978e6c08_hd.png” width=10%&gt;
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>显示效果：</strong></p>
+<p><img src="https://pic1.zhimg.com/80/v2-a47051e92cf74930bedd7469978e6c08_720w.webp"
+	
+	
+	
+	loading="lazy"
+	
+		alt="img"
+	
+	
+></p>
+<h2 id="九markdown表格">九、Markdown表格
+</h2><p>Markdown制作表格使用|来分隔不同的单元格，使用-来分隔表头和其他行。</p>
+<p><strong>语法格式：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">|表头1|表头2|
+</span></span><span class="line"><span class="cl">|----|----|
+</span></span><span class="line"><span class="cl">|单元格11|单元格12|
+</span></span><span class="line"><span class="cl">|单元格21|单元格22|
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>显示效果：</strong></p>
+<p>| 表头1 | 表头2 | | &mdash;&mdash;&ndash; | &mdash;&mdash;&ndash; | | 单元格11 | 单元格12 | | 单元格21 | 单元格22 |</p>
+<p><strong>9.1 对齐方式</strong></p>
+<p>可以设置表头的对齐方式：</p>
+<ul>
+<li>-: 设置内容或标题栏右对齐</li>
+<li>:- 设置内容或标题栏左对齐</li>
+<li>:-: 设置内容或标题栏居中对齐</li>
+</ul>
+<p><strong>语法格式：</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">|左对齐|居中对齐|右对齐|
+</span></span><span class="line"><span class="cl">|:----|:----:|----:|
+</span></span><span class="line"><span class="cl">|单元格11|单元格12|单元格13|
+</span></span><span class="line"><span class="cl">|单元格21|单元格22|单元格23|
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>显示效果：</strong></p>
+<p>| 左对齐 | 居中对齐 | 右对齐 | | :&mdash;&mdash;- | :&mdash;&mdash;: | &mdash;&mdash;-: | | 单元格11 | 单元格12 | 单元格13 | | 单元格21 | 单元格22 | 单元格23 |</p>
+<h2 id="十markdown高级技巧">十、Markdown高级技巧
+</h2><p>支持的HTML元素</p>
+<p>不在Markdown涵盖范围之内的标签，都可以直接在文档里面用HTML撰写。</p>
+<p>目前支持的HTML元素有：
+*<strong>等 ，如：*</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl">使用<span class="p">&lt;</span><span class="nt">kbd</span><span class="p">&gt;</span>Ctrl<span class="p">&lt;/</span><span class="nt">kbd</span><span class="p">&gt;</span>+<span class="p">&lt;</span><span class="nt">kbd</span><span class="p">&gt;</span>Alt<span class="p">&lt;/</span><span class="nt">kbd</span><span class="p">&gt;</span>+<span class="p">&lt;</span><span class="nt">kbd</span><span class="p">&gt;</span>Del<span class="p">&lt;/</span><span class="nt">kbd</span><span class="p">&gt;</span>重启电脑
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>*<strong>显示效果如下：*</strong></p>
+<p>*<strong>使用Ctrl+Alt+Del重启电脑*</strong></p>
+<p>*<strong>10.1 转义*</strong></p>
+<p>*<strong>Markdown使用了很多特殊符号来表示特定的意义，如果需要显示特定的符号则需要使用转义字符，Markdown使用反斜杠转义特殊字符：*</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">**文本加粗**
+</span></span><span class="line"><span class="cl">\*\*正常显示星号\*\*
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>*<strong>显示效果:*</strong></p>
+<p>*<strong>文本加粗 *<em>正常显示星号*</em>*</strong></p>
+<p>*<strong>Mrkdown支持以下这些符号前面加上反斜杠来帮助插入普通符号：*</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">\   反斜线
+</span></span><span class="line"><span class="cl">`   反引号
+</span></span><span class="line"><span class="cl">*   星号
+</span></span><span class="line"><span class="cl">_   下划线
+</span></span><span class="line"><span class="cl">{}  花括号
+</span></span><span class="line"><span class="cl">[]  方括号
+</span></span><span class="line"><span class="cl">()  小括号
+</span></span><span class="line"><span class="cl">#   井字号
+</span></span><span class="line"><span class="cl">+   加号
+</span></span><span class="line"><span class="cl">-   减号
+</span></span><span class="line"><span class="cl">.   英文句点
+</span></span><span class="line"><span class="cl">!   感叹号
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>*<strong>10.2 数学公式*</strong></p>
+<p>*<strong>当你需要在编辑器中插入数学公式时，可以使用两个美元符 $$ 包裹 TeX 或 LaTeX 格式的数学公式来实现。*</strong></p>
+<p>*<strong>实例如下：*</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">$$
+</span></span><span class="line"><span class="cl">\int_0^1 {x^2} \,{\rm d}x
+</span></span><span class="line"><span class="cl">$$
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="十一标题自动编号">十一、标题自动编号
+</h2><p><a class="link" href="https://blog.csdn.net/jyn15159/article/details/122978472"  target="_blank" rel="noopener"
+    >https://blog.csdn.net/jyn15159/article/details/122978472</a></p>
+<p>打开Typora这款软件，点击左上角的“文件”，接着点击“偏好设置”
+选择“外观”，点击“打开主题文件夹”
+打开Typora的theme文件夹，新建样式文件base.user.css</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span><span class="lnt">76
+</span><span class="lnt">77
+</span><span class="lnt">78
+</span><span class="lnt">79
+</span><span class="lnt">80
+</span><span class="lnt">81
+</span><span class="lnt">82
+</span><span class="lnt">83
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-css" data-lang="css"><span class="line"><span class="cl"><span class="c">/** initialize css counter */</span>
+</span></span><span class="line"><span class="cl"><span class="p">#</span><span class="nn">write</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">counter-reset</span><span class="p">:</span> <span class="n">h1</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nt">h1</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">counter-reset</span><span class="p">:</span> <span class="n">h2</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nt">h2</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">counter-reset</span><span class="p">:</span> <span class="n">h3</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nt">h3</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">counter-reset</span><span class="p">:</span> <span class="n">h4</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nt">h4</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">counter-reset</span><span class="p">:</span> <span class="n">h5</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nt">h5</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">counter-reset</span><span class="p">:</span> <span class="n">h6</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c">/** put counter result into headings */</span>
+</span></span><span class="line"><span class="cl"><span class="p">#</span><span class="nn">write</span> <span class="nt">h1</span><span class="p">:</span><span class="nd">before</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">counter-increment</span><span class="p">:</span> <span class="n">h1</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">content</span><span class="p">:</span> <span class="nb">counter</span><span class="p">(</span><span class="n">h1</span><span class="p">)</span> <span class="s2">&#34;. &#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">#</span><span class="nn">write</span> <span class="nt">h2</span><span class="p">:</span><span class="nd">before</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">counter-increment</span><span class="p">:</span> <span class="n">h2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">content</span><span class="p">:</span> <span class="nb">counter</span><span class="p">(</span><span class="n">h1</span><span class="p">)</span> <span class="s2">&#34;.&#34;</span> <span class="nb">counter</span><span class="p">(</span><span class="n">h2</span><span class="p">)</span> <span class="s2">&#34;. &#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">#</span><span class="nn">write</span> <span class="nt">h3</span><span class="p">:</span><span class="nd">before</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl"><span class="nt">h3</span><span class="p">.</span><span class="nc">md-focus</span><span class="p">.</span><span class="nc">md-heading</span><span class="p">:</span><span class="nd">before</span> <span class="c">/** override the default style for focused headings */</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">counter-increment</span><span class="p">:</span> <span class="n">h3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">content</span><span class="p">:</span> <span class="nb">counter</span><span class="p">(</span><span class="n">h1</span><span class="p">)</span> <span class="s2">&#34;.&#34;</span> <span class="nb">counter</span><span class="p">(</span><span class="n">h2</span><span class="p">)</span> <span class="s2">&#34;.&#34;</span> <span class="nb">counter</span><span class="p">(</span><span class="n">h3</span><span class="p">)</span> <span class="s2">&#34;. &#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">#</span><span class="nn">write</span> <span class="nt">h4</span><span class="p">:</span><span class="nd">before</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl"><span class="nt">h4</span><span class="p">.</span><span class="nc">md-focus</span><span class="p">.</span><span class="nc">md-heading</span><span class="p">:</span><span class="nd">before</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">counter-increment</span><span class="p">:</span> <span class="n">h4</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">content</span><span class="p">:</span> <span class="nb">counter</span><span class="p">(</span><span class="n">h1</span><span class="p">)</span> <span class="s2">&#34;.&#34;</span> <span class="nb">counter</span><span class="p">(</span><span class="n">h2</span><span class="p">)</span> <span class="s2">&#34;.&#34;</span> <span class="nb">counter</span><span class="p">(</span><span class="n">h3</span><span class="p">)</span> <span class="s2">&#34;.&#34;</span> <span class="nb">counter</span><span class="p">(</span><span class="n">h4</span><span class="p">)</span> <span class="s2">&#34;. &#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">#</span><span class="nn">write</span> <span class="nt">h5</span><span class="p">:</span><span class="nd">before</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl"><span class="nt">h5</span><span class="p">.</span><span class="nc">md-focus</span><span class="p">.</span><span class="nc">md-heading</span><span class="p">:</span><span class="nd">before</span> 
+</span></span><span class="line"><span class="cl">    <span class="nt">counter-increment</span><span class="o">:</span> <span class="nt">h5</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">content</span><span class="o">:</span> <span class="nt">counter</span><span class="o">(</span><span class="nt">h1</span><span class="o">)</span> <span class="s2">&#34;.&#34;</span> <span class="nt">counter</span><span class="o">(</span><span class="nt">h2</span><span class="o">)</span> <span class="s2">&#34;.&#34;</span> <span class="nt">counter</span><span class="o">(</span><span class="nt">h3</span><span class="o">)</span> <span class="s2">&#34;.&#34;</span> <span class="nt">counter</span><span class="o">(</span><span class="nt">h4</span><span class="o">)</span> <span class="s2">&#34;.&#34;</span> <span class="nt">counter</span><span class="o">(</span><span class="nt">h5</span><span class="o">)</span> <span class="s2">&#34;. &#34;</span>
+</span></span><span class="line"><span class="cl"><span class="err">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">#</span><span class="nn">write</span> <span class="nt">h6</span><span class="p">:</span><span class="nd">before</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl"><span class="nt">h6</span><span class="p">.</span><span class="nc">md-focus</span><span class="p">.</span><span class="nc">md-heading</span><span class="p">:</span><span class="nd">before</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">counter-increment</span><span class="p">:</span> <span class="n">h6</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">content</span><span class="p">:</span> <span class="nb">counter</span><span class="p">(</span><span class="n">h1</span><span class="p">)</span> <span class="s2">&#34;.&#34;</span> <span class="nb">counter</span><span class="p">(</span><span class="n">h2</span><span class="p">)</span> <span class="s2">&#34;.&#34;</span> <span class="nb">counter</span><span class="p">(</span><span class="n">h3</span><span class="p">)</span> <span class="s2">&#34;.&#34;</span> <span class="nb">counter</span><span class="p">(</span><span class="n">h4</span><span class="p">)</span> <span class="s2">&#34;.&#34;</span> <span class="nb">counter</span><span class="p">(</span><span class="n">h5</span><span class="p">)</span> <span class="s2">&#34;.&#34;</span> <span class="nb">counter</span><span class="p">(</span><span class="n">h6</span><span class="p">)</span> <span class="s2">&#34;. &#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c">/** override the default style for focused headings */</span>
+</span></span><span class="line"><span class="cl"><span class="p">#</span><span class="nn">write</span><span class="o">&gt;</span><span class="nt">h3</span><span class="p">.</span><span class="nc">md-focus</span><span class="p">:</span><span class="nd">before</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">#</span><span class="nn">write</span><span class="o">&gt;</span><span class="nt">h4</span><span class="p">.</span><span class="nc">md-focus</span><span class="p">:</span><span class="nd">before</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">#</span><span class="nn">write</span><span class="o">&gt;</span><span class="nt">h5</span><span class="p">.</span><span class="nc">md-focus</span><span class="p">:</span><span class="nd">before</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">#</span><span class="nn">write</span><span class="o">&gt;</span><span class="nt">h6</span><span class="p">.</span><span class="nc">md-focus</span><span class="p">:</span><span class="nd">before</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl"><span class="nt">h3</span><span class="p">.</span><span class="nc">md-focus</span><span class="p">:</span><span class="nd">before</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl"><span class="nt">h4</span><span class="p">.</span><span class="nc">md-focus</span><span class="p">:</span><span class="nd">before</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl"><span class="nt">h5</span><span class="p">.</span><span class="nc">md-focus</span><span class="p">:</span><span class="nd">before</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl"><span class="nt">h6</span><span class="p">.</span><span class="nc">md-focus</span><span class="p">:</span><span class="nd">before</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">color</span><span class="p">:</span> <span class="kc">inherit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">border</span><span class="p">:</span> <span class="kc">inherit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">border-radius</span><span class="p">:</span> <span class="kc">inherit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">position</span><span class="p">:</span> <span class="kc">inherit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">left</span><span class="p">:</span><span class="kc">initial</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">float</span><span class="p">:</span> <span class="kc">none</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">top</span><span class="p">:</span><span class="kc">initial</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">font-size</span><span class="p">:</span> <span class="kc">inherit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">padding-left</span><span class="p">:</span> <span class="kc">inherit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">padding-right</span><span class="p">:</span> <span class="kc">inherit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">vertical-align</span><span class="p">:</span> <span class="kc">inherit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">font-weight</span><span class="p">:</span> <span class="kc">inherit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">line-height</span><span class="p">:</span> <span class="kc">inherit</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>保存base.user.css文件，重启<code>Typora</code>软件</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/markdown/">Markdown</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>by wchuang</span>
+    </section>
+    <section class="article-lastmod">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <span>
+            最后更新于 2025-08-07 22:30
+        </span>
+    </section></footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/git%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Git使用教程</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    © 
+2025 wchuang
+
+
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
