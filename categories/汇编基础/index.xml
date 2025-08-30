@@ -1,0 +1,1352 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>汇编基础 on 王创的站点</title>
+        <link>https://example.com/categories/%E6%B1%87%E7%BC%96%E5%9F%BA%E7%A1%80/</link>
+        <description>Recent content in 汇编基础 on 王创的站点</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <copyright>wchuang</copyright>
+        <lastBuildDate>Sat, 30 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://example.com/categories/%E6%B1%87%E7%BC%96%E5%9F%BA%E7%A1%80/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>03.逻辑运算</title>
+        <link>https://example.com/p/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/</link>
+        <pubDate>Sat, 30 Aug 2025 00:00:00 +0000</pubDate>
+        
+        <guid>https://example.com/p/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/</guid>
+        <description>&lt;h1 id=&#34;逻辑运算的引入&#34;&gt;逻辑运算的引入
+&lt;/h1&gt;&lt;p&gt;如果现在只是将数据存到计算机的容器中，是没有任何意义的，我们还需要告诉计算机这些数据有什么用，让计算机对这些数做运算。所以我们知道计算机到底是如何做运算的，所以我们引入逻辑运算&lt;/p&gt;
+&lt;h1 id=&#34;逻辑运算&#34;&gt;逻辑运算
+&lt;/h1&gt;&lt;p&gt;由于计算机受硬件的限制影响，CPU再复杂可以理解为一条条的线路组成的，而电信号只有两种形式0和1，所以一般计算机的逻辑运算的对象都是二进制数&lt;/p&gt;
+&lt;p&gt;逻辑运算分为：&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;逻辑运算&lt;/th&gt;
+          &lt;th&gt;汇编符号&lt;/th&gt;
+          &lt;th&gt;C语言符号&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;与&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;AND&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;&amp;amp;&lt;/code&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;或&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;OR&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;`&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;异或&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;XOR&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;^&lt;/code&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;非&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;NOT&lt;/code&gt;&lt;/td&gt;
+          &lt;td&gt;&lt;code&gt;!&lt;/code&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;cpu是如何计算23&#34;&gt;CPU是如何计算2+3
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;初始数据&lt;/strong&gt;（二进制表示）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;code&gt;x = 2&lt;/code&gt;，二进制表示：&lt;code&gt;0010&lt;/code&gt;
+&lt;code&gt;y = 3&lt;/code&gt;，二进制表示：&lt;code&gt;0011&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;17
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;18
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;19
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;20
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;21
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;22
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;23
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	0010	
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;xor 0011
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;------------
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	0001        R:0001
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	0010
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;and 0011
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;------------
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	0010  &amp;lt;&amp;lt;1  得   0100       #&amp;lt;&amp;lt;1表示左移一位
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;此时计算机会判断0100是否全为0,如果全为0表示运算结束,将R中此时的值作为结果输出,如果不为0则将R中的值赋给x。0100赋给y再做一次同样运算
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	0001
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;xor 0100
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;-------------
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	0101         R:0101
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	0001
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;and 0100
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;-------------
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	0000  &amp;lt;&amp;lt;1  得   0000
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;判断0000全为0,则运算结束,将R中的值0101作为运算的结果,化成十进制即为5
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;总结&lt;/p&gt;
+&lt;p&gt;这个过程模拟了 &lt;strong&gt;加法运算&lt;/strong&gt;，通过 &lt;strong&gt;XOR&lt;/strong&gt; 来计算和，使用 &lt;strong&gt;AND&lt;/strong&gt; 来计算进位，然后通过 &lt;strong&gt;左移&lt;/strong&gt; 来处理进位，最终得到结果 &lt;code&gt;5&lt;/code&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;如何获取某个值的第n位是0还是1&#34;&gt;如何获取某个值的第N位是0还是1
+&lt;/h2&gt;&lt;p&gt;比如现在某个寄存器中存了一个值，值化成二进制时，有些特殊的值每一位都有它的特殊含义，所以我们想要知道这个值的第N位是0还是1。如果我们把寄存器中的值取出来，一个一个数着看，就会很麻烦，但是如果做下面的运算，就会容易很多&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;#现在想要查看某寄存器中的值的第4位是0还是1,我们就可以将寄存器中的值与0x08做与运算，如果得到结果中有一个1,则这个值的第四位就是1，如果结果全是0，则值的第四位就是0
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;		10001111
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;and		00001000
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;----------------------
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;		00001000
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;用异或做加密解密&#34;&gt;用异或做加密解密
+&lt;/h2&gt;&lt;p&gt;如果进行简单的加密，可以使用亦&lt;a class=&#34;link&#34; href=&#34;https://so.csdn.net/so/search?q=%e6%88%96%e8%bf%90%e7%ae%97&amp;amp;spm=1001.2101.3001.7020&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;或运算&lt;/a&gt;，因为选择一个双方都知道密钥，用此密钥与数据做亦或加密加密过后，别人如果没有密钥则不好解开这个密文，而对于接受方，使用相同的密钥再做一次亦或即可得到原来的明文值&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;要加密的数据:2015			00100000		00010101
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;		         	 ^	01010100	 ^	01010100
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;		         	 ------------    ------------
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;密钥:54				   01110100		   01000001
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;					
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;加密后的结果：			      74		       41
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;					
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;					
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                         01110100	   01000001
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                      ^	01010100	 ^  01010100
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;		         	-------------     ------------
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;						00100000		00010101
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;					
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;解密后的结果：				  20		       15
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h1 id=&#34;补码的基本概念&#34;&gt;&lt;strong&gt;补码的基本概念&lt;/strong&gt;
+&lt;/h1&gt;&lt;h3 id=&#34;1-补码是存储整数的编码方式&#34;&gt;1. &lt;strong&gt;补码是存储整数的编码方式&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;补码的设计让计算机可以在同一个系统中既表示正数，也表示负数，而且不需要特殊处理负数，这使得计算机能通过 &lt;strong&gt;加法器&lt;/strong&gt; 来同时执行加法和减法运算。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;正数的补码&lt;/strong&gt; 和原码是一样的，保持不变。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;负数的补码&lt;/strong&gt; 是通过对其原码取反然后加 1 得到的，这样可以确保负数在加法运算中能正常工作。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;2-为什么补码统一了加法和减法&#34;&gt;2. &lt;strong&gt;为什么补码统一了加法和减法？&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;补码的最大优势之一就是它让计算机的硬件（加法器）可以 &lt;strong&gt;统一处理加法和减法&lt;/strong&gt;。具体来说：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;加法&lt;/strong&gt;：对于正数，补码的加法就像普通的加法一样；对于负数，计算机会使用补码来进行加法，从而正确地计算出负数的加法结果。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;减法&lt;/strong&gt;：减法可以通过加法来转换。比如 &lt;code&gt;A - B&lt;/code&gt; 可以转换为 &lt;code&gt;A + (-B)&lt;/code&gt;，也就是说，计算机通过补码将减法问题转化为加法问题。&lt;strong&gt;负数的补码&lt;/strong&gt; 是通过对该数的 &lt;strong&gt;原码取反&lt;/strong&gt; 并加 1 得到的，这样它可以与其他数一起进行加法运算，得到正确的结果。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;3-举个例子&#34;&gt;3. &lt;strong&gt;举个例子&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;假设要计算 &lt;code&gt;5 - 3&lt;/code&gt;，在补码表示下，这个减法会转换为 &lt;code&gt;5 + (-3)&lt;/code&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;表示 5&lt;/strong&gt;（原码）：
+&lt;code&gt;5&lt;/code&gt; 的二进制是 &lt;code&gt;00000101&lt;/code&gt;。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;表示 -3&lt;/strong&gt;（补码）：
+&lt;code&gt;3&lt;/code&gt; 的二进制是 &lt;code&gt;00000011&lt;/code&gt;，取反得到 &lt;code&gt;11111100&lt;/code&gt;，然后加 1 得到 &lt;code&gt;11111101&lt;/code&gt;，这就是 &lt;code&gt;-3&lt;/code&gt; 的补码。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;计算 &lt;code&gt;5 + (-3)&lt;/code&gt;&lt;/strong&gt;：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;00000101  (5)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;+ 11111101  (-3)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;------------
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;00000000  (结果是 2)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;所以 &lt;code&gt;5 - 3&lt;/code&gt; 就转化为 &lt;code&gt;5 + (-3)&lt;/code&gt;，并得到了正确的结果 &lt;code&gt;2&lt;/code&gt;。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;所以，补码不仅是 &lt;strong&gt;负数的表示方式&lt;/strong&gt;，而是 &lt;strong&gt;有符号整数&lt;/strong&gt; 在计算机中统一的表示和运算方法。&lt;/p&gt;
+&lt;h3 id=&#34;4-加法中的补码&#34;&gt;4. &lt;strong&gt;加法中的补码&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;补码在加法运算中非常重要。因为加法和减法都可以通过 &lt;strong&gt;补码加法&lt;/strong&gt; 来完成，所以计算机 &lt;strong&gt;只需一个加法器&lt;/strong&gt; 来同时完成加法和减法。&lt;/p&gt;
+&lt;p&gt;例子：加法&lt;/p&gt;
+&lt;p&gt;假设我们要计算 &lt;code&gt;2 + (-3)&lt;/code&gt;，即 &lt;code&gt;2 + (-3)&lt;/code&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;表示 2&lt;/strong&gt;：
+&lt;code&gt;2&lt;/code&gt; 的二进制表示是 &lt;code&gt;00000010&lt;/code&gt;（假设是 8 位）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;表示 -3&lt;/strong&gt;：
+&lt;code&gt;3&lt;/code&gt; 的二进制表示是 &lt;code&gt;00000011&lt;/code&gt;，那么 &lt;strong&gt;-3&lt;/strong&gt; 的补码是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;取反 &lt;code&gt;00000011&lt;/code&gt; → &lt;code&gt;11111100&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;加 1 → &lt;code&gt;11111101&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;计算 &lt;code&gt;2 + (-3)&lt;/code&gt;&lt;/strong&gt;：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;00000010  (2)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;+ 11111101  (-3)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;------------
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;11111111  (结果是 -1)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;所以，&lt;code&gt;2 + (-3)&lt;/code&gt; 结果是 &lt;code&gt;-1&lt;/code&gt;。这就是 &lt;strong&gt;加法&lt;/strong&gt;，通过补码加法实现的。&lt;/p&gt;
+&lt;h3 id=&#34;5-减法中的补码&#34;&gt;5. &lt;strong&gt;减法中的补码&lt;/strong&gt;
+&lt;/h3&gt;&lt;p&gt;减法可以转化为加法来计算。比如 &lt;code&gt;A - B&lt;/code&gt; 就转化为 &lt;code&gt;A + (-B)&lt;/code&gt;，所以减法的计算就是在加法器上完成的。&lt;/p&gt;
+&lt;p&gt;例子：减法&lt;/p&gt;
+&lt;p&gt;假设我们要计算 &lt;code&gt;5 - 3&lt;/code&gt;：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;表示 5&lt;/strong&gt;：
+&lt;code&gt;5&lt;/code&gt; 的二进制是 &lt;code&gt;00000101&lt;/code&gt;。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;表示 -3&lt;/strong&gt;：
+&lt;code&gt;3&lt;/code&gt; 的二进制是 &lt;code&gt;00000011&lt;/code&gt;，那么 &lt;strong&gt;-3&lt;/strong&gt; 的补码是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;取反 &lt;code&gt;00000011&lt;/code&gt; → &lt;code&gt;11111100&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;加 1 → &lt;code&gt;11111101&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;计算 &lt;code&gt;5 + (-3)&lt;/code&gt;&lt;/strong&gt;：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;00000101  (5)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;+ 11111101  (-3)
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;------------
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;00000000  (结果是 2)
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;所以，&lt;code&gt;5 - 3&lt;/code&gt; 结果是 &lt;code&gt;2&lt;/code&gt;，同样是通过补码加法来实现的。&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>02.数据宽度</title>
+        <link>https://example.com/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/</link>
+        <pubDate>Sun, 24 Aug 2025 00:00:00 +0000</pubDate>
+        
+        <guid>https://example.com/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/</guid>
+        <description>&lt;h2 id=&#34;什么是数据宽度&#34;&gt;什么是数据宽度
+&lt;/h2&gt;&lt;p&gt;计算机中存储的数据最终都是二进制存储的，计算机只认识1和0，但是不是一下子全部存进去的，而是分成很多的容器，每个容器都有最大容量，比如有的可以装4个二进制数，有的可以装8个二进制数。所以在计算机中，由于受硬件的制约，数据都是有长度限制的（我们称为数据宽度）&lt;/p&gt;
+&lt;p&gt;如果要存储的数超过了容器的数据宽度计算机怎么处理呢？直接将高位多出来的位丢弃！&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;比如一个容器的数据宽度为4位，那么如果我现在存一个数16，化为二进制为10000，由于只能存4位，那么进位的多出来的位会被丢弃，最终读到的是0000，即0&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;存储过程&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;容器只有 &lt;strong&gt;4 位&lt;/strong&gt;，意味着它本质就是一个 &lt;strong&gt;4 位寄存器/存储单元&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;当你把 &lt;code&gt;16&lt;/code&gt;（二进制 &lt;code&gt;10000&lt;/code&gt;）写进去时，计算机会 &lt;strong&gt;只保留低 4 位&lt;/strong&gt;：&lt;/li&gt;
+&lt;li&gt;10000   （5 位原始数据）&lt;/li&gt;
+&lt;li&gt;↓ 截断高位&lt;/li&gt;
+&lt;li&gt;0000    （只剩 4 位）&lt;/li&gt;
+&lt;li&gt;结果：读出来是 &lt;strong&gt;0&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;再看几个例子&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;存  8（二进制 &lt;code&gt;1000&lt;/code&gt;） → &lt;code&gt;1000&lt;/code&gt;（还能放得下） → 结果 = 8&lt;/li&gt;
+&lt;li&gt;存 15（二进制 &lt;code&gt;1111&lt;/code&gt;） → &lt;code&gt;1111&lt;/code&gt; → 结果 = 15&lt;/li&gt;
+&lt;li&gt;存 16（二进制 &lt;code&gt;10000&lt;/code&gt;） → 截断 → &lt;code&gt;0000&lt;/code&gt; → 结果 = 0&lt;/li&gt;
+&lt;li&gt;存 17（二进制 &lt;code&gt;10001&lt;/code&gt;） → 截断 → &lt;code&gt;0001&lt;/code&gt; → 结果 = 1&lt;/li&gt;
+&lt;li&gt;存 18（二进制 &lt;code&gt;10010&lt;/code&gt;） → 截断 → &lt;code&gt;0010&lt;/code&gt; → 结果 = 2&lt;/li&gt;
+&lt;/ul&gt;&lt;/blockquote&gt;
+&lt;h2 id=&#34;无符号数有符号数&#34;&gt;无符号数、有符号数
+&lt;/h2&gt;&lt;p&gt;以前我们只是记住：如果一个存储单元只有 &lt;strong&gt;4 位&lt;/strong&gt;，&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;无符号数&lt;/strong&gt;：4 位全部用来表示数值，可表示 &lt;code&gt;0000&lt;/code&gt; 到 &lt;code&gt;1111&lt;/code&gt;，总共有 16 种可能。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;有符号数&lt;/strong&gt;：最高位作为符号位，&lt;code&gt;0000&lt;/code&gt; 到 &lt;code&gt;0111&lt;/code&gt;（最高位 0）表示正数，&lt;code&gt;1000&lt;/code&gt; 到 &lt;code&gt;1111&lt;/code&gt;（最高位 1）表示负数。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;但实际上，&lt;strong&gt;计算机并不“认识”正负号&lt;/strong&gt;。原码、反码、补码只是人类为了表示有符号数和方便运算而制定的规则，硬件只处理 0 和 1，并不会理解这些数的正负意义。&lt;/p&gt;
+&lt;h3 id=&#34;4位宽度理论示例&#34;&gt;4位宽度(理论示例)
+&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;注意：1 位是理论上的最小存储单位，但在现代 CPU 和汇编实践中，最小的可操作单位通常是 8 位（1 字节），所以计算机中没有4位容器，我们只是为了引入方便理解。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;假设计算机只能存 &lt;strong&gt;4 位二进制数&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;一共可以表示2^4=16 种数&lt;/li&gt;
+&lt;li&gt;对应十六进制：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;二进制：0000 &lt;span class=&#34;m&#34;&gt;0001&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0010&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0011&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0100&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0101&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0110&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;0111&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1000&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1001&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1010&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1011&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1100&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1101&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1110&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;1111&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;16进制： &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;    &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;    &lt;span class=&#34;m&#34;&gt;2&lt;/span&gt;    &lt;span class=&#34;m&#34;&gt;3&lt;/span&gt;    &lt;span class=&#34;m&#34;&gt;4&lt;/span&gt;    &lt;span class=&#34;m&#34;&gt;5&lt;/span&gt;    &lt;span class=&#34;m&#34;&gt;6&lt;/span&gt;    &lt;span class=&#34;m&#34;&gt;7&lt;/span&gt;    &lt;span class=&#34;m&#34;&gt;8&lt;/span&gt;    &lt;span class=&#34;m&#34;&gt;9&lt;/span&gt;   &lt;span class=&#34;nv&#34;&gt;A&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;10&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;B&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;11&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;C&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;12&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;D&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;13&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;E&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;14&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;F&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;15&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;1️⃣ &lt;strong&gt;无符号数&lt;/strong&gt;（Unsigned）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;定义&lt;/strong&gt;：全部4位都用来表示数值，不区分正负&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;范围&lt;/strong&gt;：0~15&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;规则&lt;/strong&gt;：超过15再加1会绕到0（如16→0，17→1）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;理解&lt;/strong&gt;：计算机只认识0和1，它不“知道”正负。正负只是我们人为定义的解释方式。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;2️⃣ &lt;strong&gt;有符号数&lt;/strong&gt;（Signed，补码表示）&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;问题&lt;/strong&gt;：4 位二进制数，同时要表示正数和负数&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;解决&lt;/strong&gt;：用 &lt;strong&gt;最高位&lt;/strong&gt; 作为符号位（0正，1负），剩下3位表示数值&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;范围&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;正数：000-0111 → 0到7&lt;/li&gt;
+&lt;li&gt;负数：1000-1111 → -8到-1&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;为什么 F 是 -1？&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;4位补码规则：负数存储为 &lt;strong&gt;补码&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;负数的补码 = 正数原码取反 + 1&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;以 &lt;code&gt;1111&lt;/code&gt; 为例：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;最高位是1 → 是负数&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;取反 + 1：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;补码：1111
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;取反：0000
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;+1   ：0001
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;得到原码 = 0001 → 十进制 1&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;加上符号 → -1&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;类似地：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1110 → 取反 0001 → +1 → 0010 → -2
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1101 → 取反 0010 → +1 → 0011 → -3
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1000 → 取反 0111 → +1 → 1000（其实是4位的原码表示-8）
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;补码的主要作用 &lt;strong&gt;是为了让负数可以在计算机中表示，并且加减运算可以统一&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;所以说它是 &lt;strong&gt;存储负数的一种方法&lt;/strong&gt;，但更准确是 &lt;strong&gt;存储整数（正负数）的一种编码方式&lt;/strong&gt;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src=&#34;https://example.com/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/4%E4%BD%8D%E5%AE%BD%E5%BA%A6.png&#34;
+	width=&#34;1237&#34;
+	height=&#34;605&#34;
+	srcset=&#34;https://example.com/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/4%E4%BD%8D%E5%AE%BD%E5%BA%A6_hu_f09d58a425b51d2d.png 480w, https://example.com/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/4%E4%BD%8D%E5%AE%BD%E5%BA%A6_hu_fbbe00930c9e7cbc.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;4位宽度&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;204&#34;
+		data-flex-basis=&#34;490px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;8位宽度&#34;&gt;8位宽度
+&lt;/h3&gt;&lt;p&gt;假设现在4位不够表示我要存的数了，我换一个大一点的容器，存储数据的范围为0x00到0xFF，即数据宽度为8位，那么此时容器如何表示&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1. 无符号数表示&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;对于 &lt;strong&gt;8位无符号数&lt;/strong&gt;，范围从 &lt;code&gt;0x00&lt;/code&gt; 到 &lt;code&gt;0xFF&lt;/code&gt;，也就是从 &lt;code&gt;0&lt;/code&gt; 到 &lt;code&gt;255&lt;/code&gt;，共有 &lt;strong&gt;256&lt;/strong&gt; 个可能的数值。这是因为每个位置上可以是 &lt;code&gt;0&lt;/code&gt; 或 &lt;code&gt;1&lt;/code&gt;，所以有 &lt;code&gt;2^8 = 256&lt;/code&gt; 种不同的组合。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;最小值：&lt;code&gt;0x00&lt;/code&gt;，即 &lt;code&gt;0&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;最大值：&lt;code&gt;0xFF&lt;/code&gt;，即 &lt;code&gt;255&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;2. 有符号数表示&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;对于 &lt;strong&gt;8位有符号数&lt;/strong&gt;，我们需要使用 &lt;strong&gt;补码表示法&lt;/strong&gt;。为了表示正负数，通常约定 &lt;strong&gt;最高位&lt;/strong&gt;（即 &lt;strong&gt;符号位&lt;/strong&gt;）为 &lt;code&gt;0&lt;/code&gt; 时表示正数，符号位为 &lt;code&gt;1&lt;/code&gt; 时表示负数。根据补码的规则，范围被分为两半：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;正数范围&lt;/strong&gt;：&lt;code&gt;0x00&lt;/code&gt; 到 &lt;code&gt;0x7F&lt;/code&gt;，即从 &lt;code&gt;0&lt;/code&gt; 到 &lt;code&gt;127&lt;/code&gt;，这部分数据用补码表示时，符号位为 &lt;code&gt;0&lt;/code&gt;，其余 7 位表示正数。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;0x00&lt;/code&gt; = &lt;code&gt;00000000&lt;/code&gt;，表示正数 &lt;code&gt;0&lt;/code&gt;。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;0x7F&lt;/code&gt; = &lt;code&gt;01111111&lt;/code&gt;，表示正数 &lt;code&gt;127&lt;/code&gt;（符号位为 0）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;负数范围&lt;/strong&gt;：&lt;code&gt;0x80&lt;/code&gt; 到 &lt;code&gt;0xFF&lt;/code&gt;，即从 &lt;code&gt;-128&lt;/code&gt; 到 &lt;code&gt;-1&lt;/code&gt;，符号位为 &lt;code&gt;1&lt;/code&gt;，剩余部分表示负数。负数的补码是通过对正数取反加 1 来得到的。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;0x80&lt;/code&gt; = &lt;code&gt;10000000&lt;/code&gt;，表示负数 &lt;code&gt;-128&lt;/code&gt;（符号位为 1）。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;0xFF&lt;/code&gt; = &lt;code&gt;11111111&lt;/code&gt;，表示负数 &lt;code&gt;-1&lt;/code&gt;。即11111111 → 取反 00000000 → +1 → 00000000 → -1&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://example.com/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/8%E4%BD%8D%E5%AE%BD%E5%BA%A6.png&#34;
+	width=&#34;1176&#34;
+	height=&#34;516&#34;
+	srcset=&#34;https://example.com/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/8%E4%BD%8D%E5%AE%BD%E5%BA%A6_hu_18c7f0dfbd1466e3.png 480w, https://example.com/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/8%E4%BD%8D%E5%AE%BD%E5%BA%A6_hu_2263808c05f22465.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;8位宽度&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;227&#34;
+		data-flex-basis=&#34;546px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;16位宽度&#34;&gt;16位宽度
+&lt;/h3&gt;&lt;p&gt;16位数据宽度容器存储无符号数范围是从0到FFFF
+存储有符号数从0到7FFF表示正数，从8000到FFFF表示负数
+&lt;img src=&#34;https://example.com/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/16%E4%BD%8D%E5%AE%BD%E5%BA%A6.png&#34;
+	width=&#34;1192&#34;
+	height=&#34;487&#34;
+	srcset=&#34;https://example.com/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/16%E4%BD%8D%E5%AE%BD%E5%BA%A6_hu_d470ef54b228cf08.png 480w, https://example.com/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/16%E4%BD%8D%E5%AE%BD%E5%BA%A6_hu_a15831b88606b1e6.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;16位宽度&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;244&#34;
+		data-flex-basis=&#34;587px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;32位宽度&#34;&gt;32位宽度
+&lt;/h3&gt;&lt;blockquote&gt;
+&lt;p&gt;目前计算机中最常见的也是这个数据宽度的容器&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;32位数据宽度容器存储无符号数范围是从0到FFFFFFFF
+存储有符号数从0到7FFFFFFF表示正数，从80000000到FFFFFFFF表示负数
+&lt;img src=&#34;https://example.com/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/32%E4%BD%8D%E5%AE%BD%E5%BA%A6.png&#34;
+	width=&#34;1832&#34;
+	height=&#34;509&#34;
+	srcset=&#34;https://example.com/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/32%E4%BD%8D%E5%AE%BD%E5%BA%A6_hu_dd96e05fec61b618.png 480w, https://example.com/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/32%E4%BD%8D%E5%AE%BD%E5%BA%A6_hu_13a200bb8393a78.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;32位宽度&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;359&#34;
+		data-flex-basis=&#34;863px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h2 id=&#34;数据单位&#34;&gt;数据单位
+&lt;/h2&gt;&lt;p&gt;存储单位&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;名称&lt;/th&gt;
+          &lt;th&gt;大小&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;位-BIT&lt;/td&gt;
+          &lt;td&gt;█（1位）&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;字节-Byte&lt;/td&gt;
+          &lt;td&gt;█|█|█|█|█|█|█|█（8位）&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;字-Word&lt;/td&gt;
+          &lt;td&gt;█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█（16位）&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;双字-Doubleword&lt;/td&gt;
+          &lt;td&gt;█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█（32位）&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;存储范围&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;名称&lt;/th&gt;
+          &lt;th&gt;大小&lt;/th&gt;
+          &lt;th&gt;二进制位数&lt;/th&gt;
+          &lt;th&gt;十六进制范围&lt;/th&gt;
+          &lt;th&gt;十进制范围&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;位（Bit）&lt;/td&gt;
+          &lt;td&gt;1 位&lt;/td&gt;
+          &lt;td&gt;1&lt;/td&gt;
+          &lt;td&gt;0 – 1&lt;/td&gt;
+          &lt;td&gt;0 – 1&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;字节（Byte）&lt;/td&gt;
+          &lt;td&gt;8 位 = 1 字节&lt;/td&gt;
+          &lt;td&gt;8&lt;/td&gt;
+          &lt;td&gt;0x00 – 0xFF&lt;/td&gt;
+          &lt;td&gt;0 – 255&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;字（Word）&lt;/td&gt;
+          &lt;td&gt;16 位 = 2 字节&lt;/td&gt;
+          &lt;td&gt;16&lt;/td&gt;
+          &lt;td&gt;0x0000 – 0xFFFF&lt;/td&gt;
+          &lt;td&gt;0 – 65,535&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;双字（Double Word, DWORD）&lt;/td&gt;
+          &lt;td&gt;32 位 = 4 字节&lt;/td&gt;
+          &lt;td&gt;32&lt;/td&gt;
+          &lt;td&gt;0x00000000 – 0xFFFFFFFF&lt;/td&gt;
+          &lt;td&gt;0 – 4,294,967,295&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;当我们存储数据的时候，需要知道自己存储的数据的数据宽度是什么，假设你要存储一个1，要存入字节中，那么以二进制的表示即为：0000 0001，转为十六进制即为0x01
+**字节（Byte）**的存储范围使用十六进制表示则为：&lt;strong&gt;0 - 0xFF&lt;/strong&gt;
+**字（Word）**的存储范围：&lt;strong&gt;0 - 0xFFFF&lt;/strong&gt;
+**双字（Doubleword）**的存储范围：&lt;strong&gt;0 - 0xFFFFFFFF&lt;/strong&gt;&lt;/p&gt;
+</description>
+        </item>
+        <item>
+        <title>01.进制基础</title>
+        <link>https://example.com/p/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/</link>
+        <pubDate>Sat, 23 Aug 2025 00:00:00 +0000</pubDate>
+        
+        <guid>https://example.com/p/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/</guid>
+        <description>&lt;h1 id=&#34;计算机与数字的关系&#34;&gt;计算机与数字的关系
+&lt;/h1&gt;&lt;h2 id=&#34;信息的二进制表示&#34;&gt;信息的二进制表示
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;计算机处理的任何信息，包括&lt;strong&gt;图片、视频、音乐、文字、程序&lt;/strong&gt;，最终都是以 &lt;strong&gt;二进制 0 和 1&lt;/strong&gt; 的形式存储和处理的。&lt;/li&gt;
+&lt;li&gt;二进制是计算机唯一“能理解”的语言。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;为什么计算机使用二进制&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;二进制足够表达所有信息
+&lt;ul&gt;
+&lt;li&gt;每一位只有 0 和 1，组合起来可以表示任意数据。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;受硬件制约
+&lt;ul&gt;
+&lt;li&gt;电子电路中开关只有两种状态：通/断、亮/灭，对应 1/0&lt;/li&gt;
+&lt;li&gt;二进制与硬件自然匹配，可靠且稳定&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;进制的本质&#34;&gt;进制的本质
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;如果将进制定义成这样，你有何想法?&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;十进制的定义
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;由十个符号组成
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;如果改成这样呢? 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	9152476380            逢十进一，10是多少呢？用19表示
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;-或写成这样呢？
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;	@ # ! $ ^ &amp;amp; * ( =     逢十进一，十用#@表示
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;了解事物的本质，如果将上面的符号用于加密，那会给解密者代理极大的麻烦
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;所以2+3=1成立吗？&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;成立的，元素是可以自己定义的
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;自定义符号：   0   2   3   1   8   7   6   9   5   4
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;标准数值：     0   1   2   3   4   5   6   7   8   9
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;&lt;strong&gt;世界上有多少种进制&lt;/strong&gt;？&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;世界可以有任何进制，但一进制除外
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;进制要求：满 N 进 1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;老师让学生数 5 只羊,
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;学生画：| | | | | 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;或者刻“正”字
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;不进位，只是重复堆符号
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;常用的进制&#34;&gt;常用的进制
+&lt;/h2&gt;&lt;p&gt;在计算机中，常用的数值进制包括二进制、八进制、十进制和十六进制。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;二进制&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;只有两个数字：&lt;code&gt;0&lt;/code&gt; 和 &lt;code&gt;1&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;每一位称为 &lt;strong&gt;bit（位）&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;适合计算机底层使用（电平高低）&lt;/li&gt;
+&lt;li&gt;示例：&lt;code&gt;0b1010&lt;/code&gt; 表示十进制的 10&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;八进制&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;符号：通常写作 0o，例如 0o17&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;位数：每位数字 0~7&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;用途：&lt;/p&gt;
+&lt;p&gt;曾经用于计算机汇编编程&lt;/p&gt;
+&lt;p&gt;方便把二进制每三位分组表示&lt;/p&gt;
+&lt;p&gt;八进制的每一位正好对应二进制的三位&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;十进制&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;符号：普通数字 0~9&lt;/li&gt;
+&lt;li&gt;用途：人类日常使用，编程中输入/输出数据时通常用十进制表示&lt;/li&gt;
+&lt;li&gt;示例：&lt;code&gt;1234&lt;/code&gt; 是标准的十进制表示&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;十六进制&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;符号：通常以 &lt;code&gt;0x&lt;/code&gt; 开头&lt;/li&gt;
+&lt;li&gt;位数：&lt;code&gt;0 1 2 3 4 5 6 7 8 9 a b c d e f&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;用途：常用来表示内存地址、颜色、机器码等&lt;/li&gt;
+&lt;li&gt;一个十六进制位用4个二进制位表示&lt;/li&gt;
+&lt;li&gt;示例：&lt;code&gt;0x1A3F&lt;/code&gt; ==   二进制 &lt;code&gt;0001 1010 0011 1111&lt;/code&gt; ==  十进制 &lt;code&gt;6719&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;进制运算&#34;&gt;进制运算
+&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;计算的核心，就是查数（掰手指）&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&#34;十进制表&#34;&gt;十进制表
+&lt;/h2&gt;&lt;p&gt;加法表&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+1=2
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+2=3   2+2=4
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+3=4   2+3=5   3+3=6
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+4=5   2+4=6   3+4=7   4+4=8
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+5=6   2+5=7   3+5=8   4+5=9   5+5=10
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+6=7   2+6=8   3+6=9   4+6=10  5+6=11  6+6=12
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+7=8   2+7=9   3+7=10  4+7=11  5+7=12  6+7=13  7+7=14
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+8=9   2+8=10  3+8=11  4+8=12  5+8=13  6+8=14  7+8=15  8+8=16
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+9=10  2+9=11  3+9=12  4+9=13  5+9=14  6+9=15  7+9=16  8+9=17  9+9=18
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;乘法表&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×1=1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×2=2   2×2=4
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×3=3   2×3=6   3×3=9
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×4=4   2×4=8   3×4=12  4×4=16
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×5=5   2×5=10  3×5=15  4×5=20  5×5=25
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×6=6   2×6=12  3×6=18  4×6=24  5×6=30  6×6=36
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×7=7   2×7=14  3×7=21  4×7=28  5×7=35  6×7=42  7×7=49
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×8=8   2×8=16  3×8=24  4×8=32  5×8=40  6×8=48  7×8=56  8×8=64
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×9=9   2×9=18  3×9=27  4×9=36  5×9=45  6×9=54  7×9=63  8×9=72  9×9=81
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;八进制&#34;&gt;八进制
+&lt;/h2&gt;&lt;p&gt;数数表&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;9
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 0   1   2   3   4   5   6   7
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;10  11  12  13  14  15  16  17
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;20  21  22  23  24  25  26  27
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;30  31  32  33  34  35  36  37
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;40  41  42  43  44  45  46  47
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;50  51  52  53  54  55  56  57
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;60  61  62  63  64  65  66  67
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;70  71  72  73  74  75  76  77
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;100
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;八进制加法表&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+1=2
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+2=3   2+2=4
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+3=4   2+3=5   3+3=6
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+4=5   2+4=6   3+4=7   4+4=10
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+5=6   2+5=7   3+5=10  4+5=11  5+5=12
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+6=7   2+6=10  3+6=11  4+6=12  5+6=13  6+6=14
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+7=10  2+7=11  3+7=12  4+7=13  5+7=14  6+7=15  7+7=16
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;八进制乘法表&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×1=1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×2=2   2×2=4
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×3=3   2×3=6   3×3=11
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×4=4   2×4=10  3×4=14  4×4=20
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×5=5   2×5=12  3×5=17  4×5=24  5×5=31
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×6=6   2×6=14  3×6=22  4×6=30  5×6=36  6×6=44
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×7=7   2×7=16  3×7=25  4×7=34  5×7=43  6×7=52  7×7=61
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;十六进制&#34;&gt;十六进制
+&lt;/h2&gt;&lt;p&gt;数数表&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;16
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 0    1    2    3    4    5    6    7    8    9    A    B    C    D    E    F
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 10   11   12   13   14   15   16   17   18   19   1A   1B   1C   1D   1E   1F
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 20   21   22   23   24   25   26   27   28   29   2A   2B   2C   2D   2E   2F
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 30   31   32   33   34   35   36   37   38   39   3A   3B   3C   3D   3E   3F
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 40   41   42   43   44   45   46   47   48   49   4A   4B   4C   4D   4E   4F
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 50   51   52   53   54   55   56   57   58   59   5A   5B   5C   5D   5E   5F
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 60   61   62   63   64   65   66   67   68   69   6A   6B   6C   6D   6E   6F
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 70   71   72   73   74   75   76   77   78   79   7A   7B   7C   7D   7E   7F
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 80   81   82   83   84   85   86   87   88   89   8A   8B   8C   8D   8E   8F
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 90   91   92   93   94   95   96   97   98   99   9A   9B   9C   9D   9E   9F
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; A0   A1   A2   A3   A4   A5   A6   A7   A8   A9   AA   AB   AC   AD   AE   AF
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; B0   B1   B2   B3   B4   B5   B6   B7   B8   B9   BA   BB   BC   BD   BE   BF
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; C0   C1   C2   C3   C4   C5   C6   C7   C8   C9   CA   CB   CC   CD   CE   CF
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; D0   D1   D2   D3   D4   D5   D6   D7   D8   D9   DA   DB   DC   DD   DE   DF
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; E0   E1   E2   E3   E4   E5   E6   E7   E8   E9   EA   EB   EC   ED   EE   EF
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; F0   F1   F2   F3   F4   F5   F6   F7   F8   F9   FA   FB   FC   FD   FE   FF
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;十六六乘法表&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×1=1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×2=2   2×2=4
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×3=3   2×3=6   3×3=9
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×4=4   2×4=8   3×4=C   4×4=10
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×5=5   2×5=A   3×5=F   4×5=14  5×5=19
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×6=6   2×6=C   3×6=12  4×6=18  5×6=1E  6×6=24
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×7=7   2×7=E   3×7=15  4×7=1C  5×7=23  6×7=2A  7×7=31
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×8=8   2×8=10  3×8=18  4×8=20  5×8=28  6×8=30  7×8=38  8×8=40
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×9=9   2×9=12  3×9=1B  4×9=24  5×9=2D  6×9=36  7×9=3F  8×9=48  9×9=51
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×A=A   2×A=14  3×A=1E  4×A=28  5×A=32  6×A=3C  7×A=46  8×A=50  9×A=5A  A×A=64
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×B=B   2×B=16  3×B=21  4×B=2C  5×B=37  6×B=42  7×B=4D  8×B=58  9×B=63  A×B=6E  B×B=79
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×C=C   2×C=18  3×C=24  4×C=30  5×C=3C  6×C=48  7×C=54  8×C=60  9×C=6C  A×C=78  B×C=84  C×C=90
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×D=D   2×D=1A  3×D=27  4×D=34  5×D=41  6×D=4E  7×D=5B  8×D=68  9×D=75  A×D=82  B×D=8F  C×D=9C D×D=A9
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×E=E   2×E=1C  3×E=2A  4×E=38  5×E=46  6×E=54  7×E=62  8×E=70  9×E=7E  A×E=8C  B×E=9A  C×E=A8  D×E=B6  E×E=C4
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1×F=F   2×F=1E  3×F=2D  4×F=3C  5×F=4B  6×F=5A  7×F=69  8×F=78  9×F=87  A×F=96  B×F=A5  C×F=B4  D×F=C3  E×F=D2  F×F=E1
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;加法表&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;15
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+1=2
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+2=3   2+2=4
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+3=4   2+3=5   3+3=6
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+4=5   2+4=6   3+4=7   4+4=8
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+5=6   2+5=7   3+5=8   4+5=9   5+5=A
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+6=7   2+6=8   3+6=9   4+6=A   5+6=B   6+6=C
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+7=8   2+7=9   3+7=A   4+7=B   5+7=C   6+7=D   7+7=E
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+8=9   2+8=A   3+8=B   4+8=C   5+8=D   6+8=E   7+8=F   8+8=10
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+9=A   2+9=B   3+9=C   4+9=D   5+9=E   6+9=F   7+9=10  8+9=11  9+9=12
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+A=B   2+A=C   3+A=D   4+A=E   5+A=F   6+A=10  7+A=11  8+A=12  9+A=13  A+A=14
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+B=C   2+B=D   3+B=E   4+B=F   5+B=10  6+B=11  7+B=12  8+B=13  9+B=14  A+B=15  B+B=16
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+C=D   2+C=E   3+C=F   4+C=10  5+C=11  6+C=12  7+C=13  8+C=14  9+C=15  A+C=16  B+C=17  C+C=18
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+D=E   2+D=F   3+D=10  4+D=11  5+D=12  6+D=13  7+D=14  8+D=15  9+D=16  A+D=17  B+D=18  C+D=19  D+D=1A
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+E=F   2+E=10  3+E=11  4+E=12  5+E=13  6+E=14  7+E=15  8+E=16  9+E=17  A+E=18  B+E=19  C+E=1A  D+E=1B  E+E=1C
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1+F=10  2+F=11  3+F=12  4+F=13  5+F=14  6+F=15  7+F=16  8+F=17  9+F=18  A+F=19  B+F=1A  C+F=1B  D+F=1C  E+F=1D  F+F=1E
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h1 id=&#34;进制进位技巧&#34;&gt;进制进位技巧
+&lt;/h1&gt;&lt;h2 id=&#34;标准三进制&#34;&gt;标准三进制
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 0   1   2 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;10  11  12
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;20  21  22  #三进制只有012三个数。到22这里，已经没符号可表示了需要进位
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;22后续如何进位，我们来拆解：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   2 2
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; +   1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;------
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;第一步：个位 2 + 1•
+2 + 1 = 3 → 但三进制中没有 3•所以：3 ÷ 3 = 1 余 0 → 写 0，向前进位 1&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   1←
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   2 2
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;+    1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;------
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;     0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;第二步：十位 2 + 进位1
+2 + 1 = 3 → 又满 3 了！•所以：3 ÷ 3 = 1 余 0 → 写 0，再向前进位 1&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1←
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   2 2
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;+    1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;------
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   0 0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;第三步：百位没有数字了，但还有进位 1•所以：在百位写 1&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   2 2
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;+    1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;------
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 1 0 0
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;继续写&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;100 101 102
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;110 111 112
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;120 121 122  #122 如何进位? 同上方法
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;三进制举例更数值更明显。其他进制也是如此计算&lt;/p&gt;
+&lt;h2 id=&#34;自定义三进制&#34;&gt;自定义三进制
+&lt;/h2&gt;&lt;p&gt;自定义：9 4 6
+标准值：0 1 2&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;9  4  6
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;49 44 46
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;69 64 66  #如何进位？
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;499 494 496
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   6 6
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;+    1
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;------
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt; 1 0 0   #100换成三进制499
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h1 id=&#34;二进制转换进制方法&#34;&gt;二进制转换进制方法
+&lt;/h1&gt;&lt;h2 id=&#34;二进制权重作用&#34;&gt;二进制权重作用
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;权重的本质&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;二进制每一位的权重 = 2 的位次&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;权重只跟二进制本身有关，和你最终要转换成什么进制无关&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;位数&lt;/th&gt;
+          &lt;th&gt;16&lt;/th&gt;
+          &lt;th&gt;15&lt;/th&gt;
+          &lt;th&gt;14&lt;/th&gt;
+          &lt;th&gt;13&lt;/th&gt;
+          &lt;th&gt;12&lt;/th&gt;
+          &lt;th&gt;11&lt;/th&gt;
+          &lt;th&gt;10&lt;/th&gt;
+          &lt;th&gt;9&lt;/th&gt;
+          &lt;th&gt;8&lt;/th&gt;
+          &lt;th&gt;7&lt;/th&gt;
+          &lt;th&gt;6&lt;/th&gt;
+          &lt;th&gt;5&lt;/th&gt;
+          &lt;th&gt;4&lt;/th&gt;
+          &lt;th&gt;3&lt;/th&gt;
+          &lt;th&gt;2&lt;/th&gt;
+          &lt;th&gt;1&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;权重&lt;/td&gt;
+          &lt;td&gt;32768&lt;/td&gt;
+          &lt;td&gt;16384&lt;/td&gt;
+          &lt;td&gt;8192&lt;/td&gt;
+          &lt;td&gt;4096&lt;/td&gt;
+          &lt;td&gt;2048&lt;/td&gt;
+          &lt;td&gt;1024&lt;/td&gt;
+          &lt;td&gt;512&lt;/td&gt;
+          &lt;td&gt;256&lt;/td&gt;
+          &lt;td&gt;128&lt;/td&gt;
+          &lt;td&gt;64&lt;/td&gt;
+          &lt;td&gt;32&lt;/td&gt;
+          &lt;td&gt;16&lt;/td&gt;
+          &lt;td&gt;8&lt;/td&gt;
+          &lt;td&gt;4&lt;/td&gt;
+          &lt;td&gt;2&lt;/td&gt;
+          &lt;td&gt;1&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;二进制转换&#34;&gt;二进制转换
+&lt;/h2&gt;&lt;h3 id=&#34;1-分组法快速法&#34;&gt;1️⃣ 分组法（快速法）
+&lt;/h3&gt;&lt;p&gt;优点快速、直观、运算量小&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;适用条件&lt;/strong&gt;：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;适用于目标进制是 &lt;strong&gt;2 的幂&lt;/strong&gt;（4、8、16、32、64 …）&lt;/li&gt;
+&lt;li&gt;每组二进制最大值刚好能表示目标进制的一位&lt;/li&gt;
+&lt;li&gt;如果目标进制不是 2 的整数次方（比如 3、5、6、7、9、10），就不能分组，只能先转十进制，再转目标进制。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt; 1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 7
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 8
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt; 9
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;10
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;11
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;12
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;13
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;14
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-mysql&#34; data-lang=&#34;mysql&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;二进制：&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;10101111&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;err&#34;&gt;每&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;err&#34;&gt;位一组：&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1010&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1111&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;err&#34;&gt;左边&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1010&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;err&#34;&gt;→&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;A&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;err&#34;&gt;右边&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1111&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;15&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;err&#34;&gt;→&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;F&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;err&#34;&gt;十六进制&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;AF&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;`&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;二进制：&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;     &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;位次：&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;7&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;6&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;     &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;权重：&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;128&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;   &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;64&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;   &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;32&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;   &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;16&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;     &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;分组后：&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1010&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;   &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1111&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;分组权重：&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;十进制：&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;     &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;        &lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;15&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;十六进制：&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;A&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;         &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;F&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;组合&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;err&#34;&gt;→&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;AF&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;目标进制&lt;/th&gt;
+          &lt;th&gt;2 的幂&lt;/th&gt;
+          &lt;th&gt;分组二进制位数&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;4&lt;/td&gt;
+          &lt;td&gt;2&lt;strong&gt;²&lt;/strong&gt;      2次方,2位二进制一组&lt;/td&gt;
+          &lt;td&gt;2&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;8&lt;/td&gt;
+          &lt;td&gt;2&lt;strong&gt;³&lt;/strong&gt;      3次方,3位二进制一组&lt;/td&gt;
+          &lt;td&gt;3&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;16&lt;/td&gt;
+          &lt;td&gt;2&lt;strong&gt;⁴&lt;/strong&gt;      4次方,4位二进制一组&lt;/td&gt;
+          &lt;td&gt;4&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;32&lt;/td&gt;
+          &lt;td&gt;2&lt;strong&gt;⁵&lt;/strong&gt;      5次方,5位二进制一组&lt;/td&gt;
+          &lt;td&gt;5&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;64&lt;/td&gt;
+          &lt;td&gt;2&lt;strong&gt;⁶&lt;/strong&gt;      6次方,6位二进制一组&lt;/td&gt;
+          &lt;td&gt;6&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;2-十进制中转法通用法&#34;&gt;2️⃣ 十进制中转法（通用法）
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;适用条件&lt;/strong&gt;：目标进制 &lt;strong&gt;不是 2 的幂&lt;/strong&gt;（3、5、6、7、9、10、12 …）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;方法&lt;/strong&gt;：二进制 → 十进制 → 任意进制&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;优点&lt;/strong&gt;：通用，适用于所有进制&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;缺点&lt;/strong&gt;：步骤多、计算量大&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;二进制 → 十进制&lt;/strong&gt;（权重求和法）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;示例：二进制 101101&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;位次&lt;/th&gt;
+          &lt;th&gt;5&lt;/th&gt;
+          &lt;th&gt;4&lt;/th&gt;
+          &lt;th&gt;3&lt;/th&gt;
+          &lt;th&gt;2&lt;/th&gt;
+          &lt;th&gt;1&lt;/th&gt;
+          &lt;th&gt;0&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;二进制&lt;/td&gt;
+          &lt;td&gt;1&lt;/td&gt;
+          &lt;td&gt;0&lt;/td&gt;
+          &lt;td&gt;1&lt;/td&gt;
+          &lt;td&gt;1&lt;/td&gt;
+          &lt;td&gt;0&lt;/td&gt;
+          &lt;td&gt;1&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;权重&lt;/td&gt;
+          &lt;td&gt;32&lt;/td&gt;
+          &lt;td&gt;16&lt;/td&gt;
+          &lt;td&gt;8&lt;/td&gt;
+          &lt;td&gt;4&lt;/td&gt;
+          &lt;td&gt;2&lt;/td&gt;
+          &lt;td&gt;1&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;乘积&lt;/td&gt;
+          &lt;td&gt;32&lt;/td&gt;
+          &lt;td&gt;0&lt;/td&gt;
+          &lt;td&gt;8&lt;/td&gt;
+          &lt;td&gt;4&lt;/td&gt;
+          &lt;td&gt;0&lt;/td&gt;
+          &lt;td&gt;1&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;十进制 = 32 + 0 + 8 + 4 + 0 + 1 = 45&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;&lt;strong&gt;十进制 → 目标进制&lt;/strong&gt;（除基取余法）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;公式：十进制数÷目标进制=商&amp;hellip;余数十进制数 ÷ 目标进制 = 商 &amp;hellip; 余数十进制数÷目标进制=商&amp;hellip;余数&lt;/li&gt;
+&lt;li&gt;余数 = 目标进制的最低位&lt;/li&gt;
+&lt;li&gt;商继续除基，直到商 = 0&lt;/li&gt;
+&lt;li&gt;余数 &lt;strong&gt;倒序排列&lt;/strong&gt; = 最终目标进制表示&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;示例&lt;/strong&gt;：45 → 七进制&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;45 ÷ 7 = 6 余 3 → 低位 = 3&lt;/li&gt;
+&lt;li&gt;6 ÷ 7 = 0 余 6 → 高位 = 6&lt;/li&gt;
+&lt;li&gt;七进制 = &lt;code&gt;63_7&lt;/code&gt; ✅&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;总结口诀&#34;&gt;总结口诀：
+&lt;/h3&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;目标进制&lt;/th&gt;
+          &lt;th&gt;二进制权重作用&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;二转十进制&lt;/td&gt;
+          &lt;td&gt;权重求和法 → 直接算&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;二转二的幂进制&lt;/td&gt;
+          &lt;td&gt;分组法 → 每组权重内部依旧用 2 的幂求和&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;二转奇数进制 / 其他&lt;/td&gt;
+          &lt;td&gt;十进制中转法 → 权重先算十进制，再除基取余&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id=&#34;2进制转16进制表必背&#34;&gt;&lt;strong&gt;2进制转16进制表&lt;/strong&gt;(必背)
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;每1个16进制位对应4个二进制位。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;三个关键点记忆&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;2 -&amp;gt;10   #进位     3-&amp;gt;11  4-&amp;gt;100
+4 -&amp;gt;100  #进位   5-101 6-&amp;gt;110 7-&amp;gt;111
+8 -&amp;gt;1000
+8 4 2 记前9个   后面记住关键点 A=1010   D=1100   然后都+1&lt;/p&gt;
+&lt;p&gt;这个对应关系表需要熟练掌握，做到看见二进制可以直接转为十六进制，反之亦然。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;二进制&lt;/th&gt;
+          &lt;th&gt;0000&lt;/th&gt;
+          &lt;th&gt;0001&lt;/th&gt;
+          &lt;th&gt;0010&lt;/th&gt;
+          &lt;th&gt;0011&lt;/th&gt;
+          &lt;th&gt;0100&lt;/th&gt;
+          &lt;th&gt;0101&lt;/th&gt;
+          &lt;th&gt;0110&lt;/th&gt;
+          &lt;th&gt;0111&lt;/th&gt;
+          &lt;th&gt;1000&lt;/th&gt;
+          &lt;th&gt;1001&lt;/th&gt;
+          &lt;th&gt;1010&lt;/th&gt;
+          &lt;th&gt;1011&lt;/th&gt;
+          &lt;th&gt;1100&lt;/th&gt;
+          &lt;th&gt;1101&lt;/th&gt;
+          &lt;th&gt;1110&lt;/th&gt;
+          &lt;th&gt;1111&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;十六进制&lt;/td&gt;
+          &lt;td&gt;0&lt;/td&gt;
+          &lt;td&gt;1&lt;/td&gt;
+          &lt;td&gt;2&lt;/td&gt;
+          &lt;td&gt;3&lt;/td&gt;
+          &lt;td&gt;4&lt;/td&gt;
+          &lt;td&gt;5&lt;/td&gt;
+          &lt;td&gt;6&lt;/td&gt;
+          &lt;td&gt;7&lt;/td&gt;
+          &lt;td&gt;8&lt;/td&gt;
+          &lt;td&gt;9&lt;/td&gt;
+          &lt;td&gt;A&lt;/td&gt;
+          &lt;td&gt;B&lt;/td&gt;
+          &lt;td&gt;C&lt;/td&gt;
+          &lt;td&gt;D&lt;/td&gt;
+          &lt;td&gt;E&lt;/td&gt;
+          &lt;td&gt;F&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

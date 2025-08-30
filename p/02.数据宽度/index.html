@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="什么是数据宽度 计算机中存储的数据最终都是二进制存储的，计算机只认识1和0，但是不是一下子全部存进去的，而是分成很多的容器，每个容器都有最大容量，比如有的可以装4个二进制数，有的可以装8个二进制数。所以在计算机中，由于受硬件的制约，数据都是有长度限制的（我们称为数据宽度）\n">
+<title>02.数据宽度</title>
+
+<link rel='canonical' href='https://example.com/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/'>
+
+<link rel="stylesheet" href="/scss/style.min.946cca6c6259ef94ac55abfae7c7bf3291ea3ed5eea17ef77500b257217c6710.css"><meta property='og:title' content="02.数据宽度">
+<meta property='og:description' content="什么是数据宽度 计算机中存储的数据最终都是二进制存储的，计算机只认识1和0，但是不是一下子全部存进去的，而是分成很多的容器，每个容器都有最大容量，比如有的可以装4个二进制数，有的可以装8个二进制数。所以在计算机中，由于受硬件的制约，数据都是有长度限制的（我们称为数据宽度）\n">
+<meta property='og:url' content='https://example.com/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/'>
+<meta property='og:site_name' content='王创的站点'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-08-24T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2025-08-24T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="02.数据宽度">
+<meta name="twitter:description" content="什么是数据宽度 计算机中存储的数据最终都是二进制存储的，计算机只认识1和0，但是不是一下子全部存进去的，而是分成很多的容器，每个容器都有最大容量，比如有的可以装4个二进制数，有的可以装8个二进制数。所以在计算机中，由于受硬件的制约，数据都是有长度限制的（我们称为数据宽度）\n">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu_a9521bd358f3fb79.png" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✍️</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">王创的站点</a></h1>
+            <h2 class="site-description">欢迎来到我的网站</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/CaiJimmy/hugo-theme-stack'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%85%B3%E4%BA%8E/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%8F%8B%E6%83%85%E9%93%BE%E6%8E%A5/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>友情链接</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li>
+      <ol>
+        <li><a href="#什么是数据宽度">什么是数据宽度</a></li>
+        <li><a href="#无符号数有符号数">无符号数、有符号数</a>
+          <ol>
+            <li><a href="#4位宽度理论示例">4位宽度(理论示例)</a></li>
+            <li><a href="#8位宽度">8位宽度</a></li>
+            <li><a href="#16位宽度">16位宽度</a></li>
+            <li><a href="#32位宽度">32位宽度</a></li>
+          </ol>
+        </li>
+        <li><a href="#数据单位">数据单位</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/" >
+                逆向初级
+            </a>
+        
+            <a href="/categories/%E6%B1%87%E7%BC%96%E5%9F%BA%E7%A1%80/" >
+                汇编基础
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/">02.数据宽度</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025-08-24</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 5 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="什么是数据宽度">什么是数据宽度
+</h2><p>计算机中存储的数据最终都是二进制存储的，计算机只认识1和0，但是不是一下子全部存进去的，而是分成很多的容器，每个容器都有最大容量，比如有的可以装4个二进制数，有的可以装8个二进制数。所以在计算机中，由于受硬件的制约，数据都是有长度限制的（我们称为数据宽度）</p>
+<p>如果要存储的数超过了容器的数据宽度计算机怎么处理呢？直接将高位多出来的位丢弃！</p>
+<blockquote>
+<p>比如一个容器的数据宽度为4位，那么如果我现在存一个数16，化为二进制为10000，由于只能存4位，那么进位的多出来的位会被丢弃，最终读到的是0000，即0</p>
+<p><strong>存储过程</strong></p>
+<ul>
+<li>容器只有 <strong>4 位</strong>，意味着它本质就是一个 <strong>4 位寄存器/存储单元</strong>。</li>
+<li>当你把 <code>16</code>（二进制 <code>10000</code>）写进去时，计算机会 <strong>只保留低 4 位</strong>：</li>
+<li>10000   （5 位原始数据）</li>
+<li>↓ 截断高位</li>
+<li>0000    （只剩 4 位）</li>
+<li>结果：读出来是 <strong>0</strong></li>
+</ul>
+<p><strong>再看几个例子</strong></p>
+<ul>
+<li>存  8（二进制 <code>1000</code>） → <code>1000</code>（还能放得下） → 结果 = 8</li>
+<li>存 15（二进制 <code>1111</code>） → <code>1111</code> → 结果 = 15</li>
+<li>存 16（二进制 <code>10000</code>） → 截断 → <code>0000</code> → 结果 = 0</li>
+<li>存 17（二进制 <code>10001</code>） → 截断 → <code>0001</code> → 结果 = 1</li>
+<li>存 18（二进制 <code>10010</code>） → 截断 → <code>0010</code> → 结果 = 2</li>
+</ul></blockquote>
+<h2 id="无符号数有符号数">无符号数、有符号数
+</h2><p>以前我们只是记住：如果一个存储单元只有 <strong>4 位</strong>，</p>
+<ul>
+<li><strong>无符号数</strong>：4 位全部用来表示数值，可表示 <code>0000</code> 到 <code>1111</code>，总共有 16 种可能。</li>
+<li><strong>有符号数</strong>：最高位作为符号位，<code>0000</code> 到 <code>0111</code>（最高位 0）表示正数，<code>1000</code> 到 <code>1111</code>（最高位 1）表示负数。</li>
+</ul>
+<p>但实际上，<strong>计算机并不“认识”正负号</strong>。原码、反码、补码只是人类为了表示有符号数和方便运算而制定的规则，硬件只处理 0 和 1，并不会理解这些数的正负意义。</p>
+<h3 id="4位宽度理论示例">4位宽度(理论示例)
+</h3><blockquote>
+<p>注意：1 位是理论上的最小存储单位，但在现代 CPU 和汇编实践中，最小的可操作单位通常是 8 位（1 字节），所以计算机中没有4位容器，我们只是为了引入方便理解。</p></blockquote>
+<p>假设计算机只能存 <strong>4 位二进制数</strong></p>
+<ul>
+<li>一共可以表示2^4=16 种数</li>
+<li>对应十六进制：</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">二进制：0000 <span class="m">0001</span> <span class="m">0010</span> <span class="m">0011</span> <span class="m">0100</span> <span class="m">0101</span> <span class="m">0110</span> <span class="m">0111</span> <span class="m">1000</span> <span class="m">1001</span> <span class="m">1010</span> <span class="m">1011</span> <span class="m">1100</span> <span class="m">1101</span> <span class="m">1110</span> <span class="m">1111</span>
+</span></span><span class="line"><span class="cl">16进制： <span class="m">0</span>    <span class="m">1</span>    <span class="m">2</span>    <span class="m">3</span>    <span class="m">4</span>    <span class="m">5</span>    <span class="m">6</span>    <span class="m">7</span>    <span class="m">8</span>    <span class="m">9</span>   <span class="nv">A</span><span class="o">=</span><span class="m">10</span> <span class="nv">B</span><span class="o">=</span><span class="m">11</span> <span class="nv">C</span><span class="o">=</span><span class="m">12</span> <span class="nv">D</span><span class="o">=</span><span class="m">13</span> <span class="nv">E</span><span class="o">=</span><span class="m">14</span> <span class="nv">F</span><span class="o">=</span><span class="m">15</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>1️⃣ <strong>无符号数</strong>（Unsigned）</p>
+<ul>
+<li><strong>定义</strong>：全部4位都用来表示数值，不区分正负</li>
+<li><strong>范围</strong>：0~15</li>
+<li><strong>规则</strong>：超过15再加1会绕到0（如16→0，17→1）</li>
+<li><strong>理解</strong>：计算机只认识0和1，它不“知道”正负。正负只是我们人为定义的解释方式。</li>
+</ul>
+<p>2️⃣ <strong>有符号数</strong>（Signed，补码表示）</p>
+<ul>
+<li>
+<p><strong>问题</strong>：4 位二进制数，同时要表示正数和负数</p>
+</li>
+<li>
+<p><strong>解决</strong>：用 <strong>最高位</strong> 作为符号位（0正，1负），剩下3位表示数值</p>
+</li>
+<li>
+<p><strong>范围</strong>：</p>
+<ul>
+<li>正数：000-0111 → 0到7</li>
+<li>负数：1000-1111 → -8到-1</li>
+</ul>
+</li>
+<li>
+<p><strong>为什么 F 是 -1？</strong></p>
+<ol>
+<li>
+<p>4位补码规则：负数存储为 <strong>补码</strong></p>
+<ul>
+<li>负数的补码 = 正数原码取反 + 1</li>
+</ul>
+</li>
+<li>
+<p>以 <code>1111</code> 为例：</p>
+<ul>
+<li>
+<p>最高位是1 → 是负数</p>
+</li>
+<li>
+<p>取反 + 1：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">补码：1111
+</span></span><span class="line"><span class="cl">取反：0000
+</span></span><span class="line"><span class="cl">+1   ：0001
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>得到原码 = 0001 → 十进制 1</p>
+</li>
+<li>
+<p>加上符号 → -1</p>
+</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>
+<p>类似地：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">1110 → 取反 0001 → +1 → 0010 → -2
+</span></span><span class="line"><span class="cl">1101 → 取反 0010 → +1 → 0011 → -3
+</span></span><span class="line"><span class="cl">1000 → 取反 0111 → +1 → 1000（其实是4位的原码表示-8）
+</span></span></code></pre></td></tr></table>
+</div>
+</div></li>
+</ul>
+<blockquote>
+<p>补码的主要作用 <strong>是为了让负数可以在计算机中表示，并且加减运算可以统一</strong>。</p>
+<p>所以说它是 <strong>存储负数的一种方法</strong>，但更准确是 <strong>存储整数（正负数）的一种编码方式</strong></p></blockquote>
+<p><img src="/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/4%E4%BD%8D%E5%AE%BD%E5%BA%A6.png"
+	width="1237"
+	height="605"
+	srcset="/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/4%E4%BD%8D%E5%AE%BD%E5%BA%A6_hu_f09d58a425b51d2d.png 480w, /p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/4%E4%BD%8D%E5%AE%BD%E5%BA%A6_hu_fbbe00930c9e7cbc.png 1024w"
+	loading="lazy"
+	
+		alt="4位宽度"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="204"
+		data-flex-basis="490px"
+	
+></p>
+<h3 id="8位宽度">8位宽度
+</h3><p>假设现在4位不够表示我要存的数了，我换一个大一点的容器，存储数据的范围为0x00到0xFF，即数据宽度为8位，那么此时容器如何表示</p>
+<p><strong>1. 无符号数表示</strong></p>
+<p>对于 <strong>8位无符号数</strong>，范围从 <code>0x00</code> 到 <code>0xFF</code>，也就是从 <code>0</code> 到 <code>255</code>，共有 <strong>256</strong> 个可能的数值。这是因为每个位置上可以是 <code>0</code> 或 <code>1</code>，所以有 <code>2^8 = 256</code> 种不同的组合。</p>
+<ul>
+<li>最小值：<code>0x00</code>，即 <code>0</code>。</li>
+<li>最大值：<code>0xFF</code>，即 <code>255</code>。</li>
+</ul>
+<p><strong>2. 有符号数表示</strong></p>
+<p>对于 <strong>8位有符号数</strong>，我们需要使用 <strong>补码表示法</strong>。为了表示正负数，通常约定 <strong>最高位</strong>（即 <strong>符号位</strong>）为 <code>0</code> 时表示正数，符号位为 <code>1</code> 时表示负数。根据补码的规则，范围被分为两半：</p>
+<p><strong>正数范围</strong>：<code>0x00</code> 到 <code>0x7F</code>，即从 <code>0</code> 到 <code>127</code>，这部分数据用补码表示时，符号位为 <code>0</code>，其余 7 位表示正数。</p>
+<ul>
+<li>
+<p><code>0x00</code> = <code>00000000</code>，表示正数 <code>0</code>。</p>
+</li>
+<li>
+<p><code>0x7F</code> = <code>01111111</code>，表示正数 <code>127</code>（符号位为 0）。</p>
+</li>
+</ul>
+<p><strong>负数范围</strong>：<code>0x80</code> 到 <code>0xFF</code>，即从 <code>-128</code> 到 <code>-1</code>，符号位为 <code>1</code>，剩余部分表示负数。负数的补码是通过对正数取反加 1 来得到的。</p>
+<ul>
+<li>
+<p><code>0x80</code> = <code>10000000</code>，表示负数 <code>-128</code>（符号位为 1）。</p>
+</li>
+<li>
+<p><code>0xFF</code> = <code>11111111</code>，表示负数 <code>-1</code>。即11111111 → 取反 00000000 → +1 → 00000000 → -1</p>
+</li>
+</ul>
+<p><img src="/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/8%E4%BD%8D%E5%AE%BD%E5%BA%A6.png"
+	width="1176"
+	height="516"
+	srcset="/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/8%E4%BD%8D%E5%AE%BD%E5%BA%A6_hu_18c7f0dfbd1466e3.png 480w, /p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/8%E4%BD%8D%E5%AE%BD%E5%BA%A6_hu_2263808c05f22465.png 1024w"
+	loading="lazy"
+	
+		alt="8位宽度"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="227"
+		data-flex-basis="546px"
+	
+></p>
+<h3 id="16位宽度">16位宽度
+</h3><p>16位数据宽度容器存储无符号数范围是从0到FFFF
+存储有符号数从0到7FFF表示正数，从8000到FFFF表示负数
+<img src="/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/16%E4%BD%8D%E5%AE%BD%E5%BA%A6.png"
+	width="1192"
+	height="487"
+	srcset="/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/16%E4%BD%8D%E5%AE%BD%E5%BA%A6_hu_d470ef54b228cf08.png 480w, /p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/16%E4%BD%8D%E5%AE%BD%E5%BA%A6_hu_a15831b88606b1e6.png 1024w"
+	loading="lazy"
+	
+		alt="16位宽度"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="244"
+		data-flex-basis="587px"
+	
+></p>
+<h3 id="32位宽度">32位宽度
+</h3><blockquote>
+<p>目前计算机中最常见的也是这个数据宽度的容器</p></blockquote>
+<p>32位数据宽度容器存储无符号数范围是从0到FFFFFFFF
+存储有符号数从0到7FFFFFFF表示正数，从80000000到FFFFFFFF表示负数
+<img src="/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/32%E4%BD%8D%E5%AE%BD%E5%BA%A6.png"
+	width="1832"
+	height="509"
+	srcset="/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/32%E4%BD%8D%E5%AE%BD%E5%BA%A6_hu_dd96e05fec61b618.png 480w, /p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/32%E4%BD%8D%E5%AE%BD%E5%BA%A6_hu_13a200bb8393a78.png 1024w"
+	loading="lazy"
+	
+		alt="32位宽度"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="359"
+		data-flex-basis="863px"
+	
+></p>
+<h2 id="数据单位">数据单位
+</h2><p>存储单位</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>名称</th>
+          <th>大小</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>位-BIT</td>
+          <td>█（1位）</td>
+      </tr>
+      <tr>
+          <td>字节-Byte</td>
+          <td>█|█|█|█|█|█|█|█（8位）</td>
+      </tr>
+      <tr>
+          <td>字-Word</td>
+          <td>█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█（16位）</td>
+      </tr>
+      <tr>
+          <td>双字-Doubleword</td>
+          <td>█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█（32位）</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>存储范围</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>名称</th>
+          <th>大小</th>
+          <th>二进制位数</th>
+          <th>十六进制范围</th>
+          <th>十进制范围</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>位（Bit）</td>
+          <td>1 位</td>
+          <td>1</td>
+          <td>0 – 1</td>
+          <td>0 – 1</td>
+      </tr>
+      <tr>
+          <td>字节（Byte）</td>
+          <td>8 位 = 1 字节</td>
+          <td>8</td>
+          <td>0x00 – 0xFF</td>
+          <td>0 – 255</td>
+      </tr>
+      <tr>
+          <td>字（Word）</td>
+          <td>16 位 = 2 字节</td>
+          <td>16</td>
+          <td>0x0000 – 0xFFFF</td>
+          <td>0 – 65,535</td>
+      </tr>
+      <tr>
+          <td>双字（Double Word, DWORD）</td>
+          <td>32 位 = 4 字节</td>
+          <td>32</td>
+          <td>0x00000000 – 0xFFFFFFFF</td>
+          <td>0 – 4,294,967,295</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>当我们存储数据的时候，需要知道自己存储的数据的数据宽度是什么，假设你要存储一个1，要存入字节中，那么以二进制的表示即为：0000 0001，转为十六进制即为0x01
+**字节（Byte）**的存储范围使用十六进制表示则为：<strong>0 - 0xFF</strong>
+**字（Word）**的存储范围：<strong>0 - 0xFFFF</strong>
+**双字（Doubleword）**的存储范围：<strong>0 - 0xFFFFFFFF</strong></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>by wchuang</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">03.逻辑运算</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">01.进制基础</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    © 
+2025 wchuang
+
+
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
