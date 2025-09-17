@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="逻辑运算的引入 如果现在只是将数据存到计算机的容器中，是没有任何意义的，我们还需要告诉计算机这些数据有什么用，让计算机对这些数做运算。所以我们知道计算机到底是如何做运算的，所以我们引入逻辑运算\n">
+<title>03.逻辑运算</title>
+
+<link rel='canonical' href='https://example.com/p/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/'>
+
+<link rel="stylesheet" href="/scss/style.min.946cca6c6259ef94ac55abfae7c7bf3291ea3ed5eea17ef77500b257217c6710.css"><meta property='og:title' content="03.逻辑运算">
+<meta property='og:description' content="逻辑运算的引入 如果现在只是将数据存到计算机的容器中，是没有任何意义的，我们还需要告诉计算机这些数据有什么用，让计算机对这些数做运算。所以我们知道计算机到底是如何做运算的，所以我们引入逻辑运算\n">
+<meta property='og:url' content='https://example.com/p/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/'>
+<meta property='og:site_name' content='王创的站点'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-08-30T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2025-08-30T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="03.逻辑运算">
+<meta name="twitter:description" content="逻辑运算的引入 如果现在只是将数据存到计算机的容器中，是没有任何意义的，我们还需要告诉计算机这些数据有什么用，让计算机对这些数做运算。所以我们知道计算机到底是如何做运算的，所以我们引入逻辑运算\n">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu_a9521bd358f3fb79.png" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✍️</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">王创的站点</a></h1>
+            <h2 class="site-description">欢迎来到我的网站</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/CaiJimmy/hugo-theme-stack'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%85%B3%E4%BA%8E/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%8F%8B%E6%83%85%E9%93%BE%E6%8E%A5/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>友情链接</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#逻辑运算的引入">逻辑运算的引入</a></li>
+    <li><a href="#逻辑运算">逻辑运算</a>
+      <ol>
+        <li>
+          <ol>
+            <li><a href="#cpu是如何计算23">CPU是如何计算2+3</a></li>
+            <li><a href="#计算3-2">计算3-2</a></li>
+            <li><a href="#计算2-3">计算2-3</a></li>
+          </ol>
+        </li>
+        <li><a href="#如何获取某个值的第n位是0还是1">如何获取某个值的第N位是0还是1</a></li>
+        <li><a href="#用异或做加密解密">用异或做加密解密</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/" >
+                逆向初级
+            </a>
+        
+            <a href="/categories/%E6%B1%87%E7%BC%96%E5%9F%BA%E7%A1%80/" >
+                汇编基础
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/">03.逻辑运算</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025-08-30</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 4 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h1 id="逻辑运算的引入">逻辑运算的引入
+</h1><p>如果现在只是将数据存到计算机的容器中，是没有任何意义的，我们还需要告诉计算机这些数据有什么用，让计算机对这些数做运算。所以我们知道计算机到底是如何做运算的，所以我们引入逻辑运算</p>
+<h1 id="逻辑运算">逻辑运算
+</h1><p>由于计算机受硬件的限制影响，CPU再复杂可以理解为一条条的线路组成的，而电信号只有两种形式0和1，所以一般计算机的逻辑运算的对象都是二进制数</p>
+<p>逻辑运算分为：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>逻辑运算</th>
+          <th>汇编符号</th>
+          <th>C语言符号</th>
+          <th>口诀</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>与</td>
+          <td><code>AND</code></td>
+          <td><code>&amp;</code></td>
+          <td>有0则0，全1才1</td>
+      </tr>
+      <tr>
+          <td>或</td>
+          <td><code>OR</code></td>
+          <td>`</td>
+          <td>`</td>
+      </tr>
+      <tr>
+          <td>异或</td>
+          <td><code>XOR</code></td>
+          <td><code>^</code></td>
+          <td>相同为0，相异为1</td>
+      </tr>
+      <tr>
+          <td>非</td>
+          <td><code>NOT</code></td>
+          <td><code>!</code> 或 <code>~</code></td>
+          <td>0变1，1变0</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="cpu是如何计算23">CPU是如何计算2+3
+</h3><ol>
+<li><strong>初始数据</strong>（二进制表示）</li>
+</ol>
+<p><code>x = 2</code>，二进制表示：<code>0010</code>
+<code>y = 3</code>，二进制表示：<code>0011</code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">	0010	
+</span></span><span class="line"><span class="cl">xor 0011
+</span></span><span class="line"><span class="cl">------------
+</span></span><span class="line"><span class="cl">	0001        R:0001
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	0010
+</span></span><span class="line"><span class="cl">and 0011
+</span></span><span class="line"><span class="cl">------------
+</span></span><span class="line"><span class="cl">	0010  &lt;&lt;1  得   0100       #&lt;&lt;1表示左移一位
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">此时计算机会判断0100是否全为0,如果全为0表示运算结束,将R中此时的值作为结果输出,如果不为0则将R中的值赋给x。0100赋给y再做一次同样运算
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	0001
+</span></span><span class="line"><span class="cl">xor 0100
+</span></span><span class="line"><span class="cl">-------------
+</span></span><span class="line"><span class="cl">	0101         R:0101
+</span></span><span class="line"><span class="cl">	
+</span></span><span class="line"><span class="cl">	0001
+</span></span><span class="line"><span class="cl">and 0100
+</span></span><span class="line"><span class="cl">-------------
+</span></span><span class="line"><span class="cl">	0000  &lt;&lt;1  得   0000
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">判断0000全为0,则运算结束,将R中的值0101作为运算的结果,化成十进制即为5
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>总结</p>
+<p>这个过程模拟了 <strong>加法运算</strong>，通过 <strong>XOR</strong> 来计算和，使用 <strong>AND</strong> 来计算进位，然后通过 <strong>左移</strong> 来处理进位，最终得到结果 <code>5</code>。</p>
+<h3 id="计算3-2">计算3-2
+</h3><p>x = 3<code> → 二进制：</code>0000 0011
+y = 2<code> → 二进制：</code>0000 0010</p>
+<p><code>-2</code> 的补码：</p>
+<ul>
+<li>原码：<code>0000 0010</code></li>
+<li>反码：<code>1111 1101</code></li>
+<li>补码：<code>1111 1110</code></li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">补码0000 0010-&gt;1111 1101-&gt;1111 1110
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">##############第一次运算
+</span></span><span class="line"><span class="cl">0000 0011
+</span></span><span class="line"><span class="cl">1111 1110  xor
+</span></span><span class="line"><span class="cl">----------
+</span></span><span class="line"><span class="cl">1111 1101   R:1111 1101
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">0000 0011
+</span></span><span class="line"><span class="cl">1111 1110  and
+</span></span><span class="line"><span class="cl">----------
+</span></span><span class="line"><span class="cl">0000 0100   &lt;&lt;进位1 得0000 0100
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">更新变量：  
+</span></span><span class="line"><span class="cl">x = 1111 1101
+</span></span><span class="line"><span class="cl">y = 0000 0100
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">##############第二次运算
+</span></span><span class="line"><span class="cl">1111 1101
+</span></span><span class="line"><span class="cl">0000 0100  xor
+</span></span><span class="line"><span class="cl">----------
+</span></span><span class="line"><span class="cl">1111 1001   R:1111 1001
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">1111 1101
+</span></span><span class="line"><span class="cl">0000 0100  and
+</span></span><span class="line"><span class="cl">----------
+</span></span><span class="line"><span class="cl">0000 0100    &lt;&lt;进位1 得0000 1000
+</span></span><span class="line"><span class="cl">更新变量：  
+</span></span><span class="line"><span class="cl">x = 1111 1001
+</span></span><span class="line"><span class="cl">y = 0000 1000
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">###############第三次运算
+</span></span><span class="line"><span class="cl">1111 1001
+</span></span><span class="line"><span class="cl">0000 1000 xor
+</span></span><span class="line"><span class="cl">-------------
+</span></span><span class="line"><span class="cl">1111 0001     R:1111 0001
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">1111 1001
+</span></span><span class="line"><span class="cl">0000 1000 and
+</span></span><span class="line"><span class="cl">--------------
+</span></span><span class="line"><span class="cl">0000 1000    进位0001 0000
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">更新变量：  
+</span></span><span class="line"><span class="cl">x = 1111 0001
+</span></span><span class="line"><span class="cl">y = 0001 0000
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">############第四次运算
+</span></span><span class="line"><span class="cl">1111 0001
+</span></span><span class="line"><span class="cl">0001 0000 xor
+</span></span><span class="line"><span class="cl">-------------
+</span></span><span class="line"><span class="cl">1110 0001    R:1110 0001
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">1111 0001
+</span></span><span class="line"><span class="cl">0001 0000 and
+</span></span><span class="line"><span class="cl">-------------
+</span></span><span class="line"><span class="cl">0001 0000    进位0010 0000
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">更新变量：  
+</span></span><span class="line"><span class="cl">x = 1110 0001
+</span></span><span class="line"><span class="cl">y = 0010 0000
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">############第五次运算
+</span></span><span class="line"><span class="cl">1110 0001
+</span></span><span class="line"><span class="cl">0010 0000 xor
+</span></span><span class="line"><span class="cl">-------------
+</span></span><span class="line"><span class="cl">1100 0001    R:1100 0001
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">1110 0001
+</span></span><span class="line"><span class="cl">0010 0000 and
+</span></span><span class="line"><span class="cl">-------------
+</span></span><span class="line"><span class="cl">0010 0001    进位0100 0001
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">更新变量：  
+</span></span><span class="line"><span class="cl">x = 1100 0001
+</span></span><span class="line"><span class="cl">y = 0100 0001
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">############第六次运算
+</span></span><span class="line"><span class="cl">1100 0001
+</span></span><span class="line"><span class="cl">0100 0001 xor
+</span></span><span class="line"><span class="cl">-------------
+</span></span><span class="line"><span class="cl">1000 0001    R:1000 0001
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">1100 0001
+</span></span><span class="line"><span class="cl">0100 0001 and
+</span></span><span class="line"><span class="cl">-------------
+</span></span><span class="line"><span class="cl">0100 0001    进位1000 0001
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">更新变量：  
+</span></span><span class="line"><span class="cl">x = 1000 0001
+</span></span><span class="line"><span class="cl">y = 1000 0001
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">#########第七次运算
+</span></span><span class="line"><span class="cl">1000 0001
+</span></span><span class="line"><span class="cl">1000 0001 xor
+</span></span><span class="line"><span class="cl">-------------
+</span></span><span class="line"><span class="cl">0000 0000    R:1000 0001
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">1000 0001
+</span></span><span class="line"><span class="cl">1000 0001 and
+</span></span><span class="line"><span class="cl">-------------
+</span></span><span class="line"><span class="cl">0000 0000   进位00000 0000
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="计算2-3">计算2-3
+</h3><p><code>x=2 y=3 </code></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">0000 0010
+</span></span><span class="line"><span class="cl">1111 1101  xor
+</span></span><span class="line"><span class="cl">-------------
+</span></span><span class="line"><span class="cl">1111 1111
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">0000 0010
+</span></span><span class="line"><span class="cl">1111 1101 and
+</span></span><span class="line"><span class="cl">-------------
+</span></span><span class="line"><span class="cl">0000 0000
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">1111 1111
+</span></span><span class="line"><span class="cl">取反 → 加1 → 得正数 → 加负号
+</span></span><span class="line"><span class="cl">0000 0000 
+</span></span><span class="line"><span class="cl">0000 0001
+</span></span><span class="line"><span class="cl">-1
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="如何获取某个值的第n位是0还是1">如何获取某个值的第N位是0还是1
+</h2><p>比如现在某个寄存器中存了一个值，值化成二进制时，有些特殊的值每一位都有它的特殊含义，所以我们想要知道这个值的第N位是0还是1。如果我们把寄存器中的值取出来，一个一个数着看，就会很麻烦，但是如果做下面的运算，就会容易很多</p>
+<p>#现在想要查看某寄存器中的值的第4位是0还是1,我们就可以将寄存器中的值与0x08做与运算，如果得到结果中有一个1,则这个值的第四位就是1，如果结果全是0，则值的第四位就是0</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">		10001111
+</span></span><span class="line"><span class="cl">and		00001000
+</span></span><span class="line"><span class="cl">​		00001000
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h2 id="用异或做加密解密">用异或做加密解密
+</h2><p>如果进行简单的加密，可以使用亦<a class="link" href="https://so.csdn.net/so/search?q=%e6%88%96%e8%bf%90%e7%ae%97&amp;spm=1001.2101.3001.7020"  target="_blank" rel="noopener"
+    >或运算</a>，因为选择一个双方都知道密钥，用此密钥与数据做亦或加密加密过后，别人如果没有密钥则不好解开这个密文，而对于接受方，使用相同的密钥再做一次亦或即可得到原来的明文值</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">要加密的数据:2015			00100000		00010101
+</span></span><span class="line"><span class="cl">		         	 ^	01010100	 ^	01010100
+</span></span><span class="line"><span class="cl">		         	 ------------    ------------
+</span></span><span class="line"><span class="cl">密钥:54				   01110100		   01000001
+</span></span><span class="line"><span class="cl">					
+</span></span><span class="line"><span class="cl">加密后的结果：			      74		       41
+</span></span><span class="line"><span class="cl">					
+</span></span><span class="line"><span class="cl">					
+</span></span><span class="line"><span class="cl">                         01110100	   01000001
+</span></span><span class="line"><span class="cl">                      ^	01010100	 ^  01010100
+</span></span><span class="line"><span class="cl">		         	-------------     ------------
+</span></span><span class="line"><span class="cl">						00100000		00010101
+</span></span><span class="line"><span class="cl">					
+</span></span><span class="line"><span class="cl">解密后的结果：				  20		       15
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>by wchuang</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/05.%E5%86%85%E5%AD%98/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">05.内存</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/04.%E5%AF%84%E5%AD%98%E5%99%A8/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">04.寄存器</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">02.数据宽度</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">01.进制基础</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    © 
+2025 wchuang
+
+
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
