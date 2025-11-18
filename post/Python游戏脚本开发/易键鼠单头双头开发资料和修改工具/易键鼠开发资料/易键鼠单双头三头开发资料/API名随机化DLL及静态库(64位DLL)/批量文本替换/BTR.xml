@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<str>
+	<Configure1>
+		<BackUp>1</BackUp>
+		<Subdir>1</Subdir>
+		<Case_Sensitive>1</Case_Sensitive>
+		<MutilReplace>1</MutilReplace>
+		<Force_ReadOnly>1</Force_ReadOnly>
+		<ReplaceType>1</ReplaceType>
+	</Configure1>
+	<Configure2>
+		<Language>Chinese_Simplified</Language>
+		<SelectFileExt>*.c;*.cpp;*.h;*.def</SelectFileExt>
+		<DefaultFileExt>*.txt;*.htm;*.c;*.cpp;*.h;*.hpp;*.pas;*.dpr;*.bpr;*.asp;*.php;*.cgi;*.ini;*.bat;*.inc;*.java;*.py;*.def</DefaultFileExt>
+		<itsSelf>0</itsSelf>
+		<OutPutDir></OutPutDir>
+		<Extract_File_Source_Add>0</Extract_File_Source_Add>
+		<Extract_Add_Empty_Row>0</Extract_Add_Empty_Row>
+		<Extract_Include_Start>1</Extract_Include_Start>
+		<Extract_Include_End>1</Extract_Include_End>
+	</Configure2>
+	<History>
+		<Target>453A5C736F6674776172655CB3ACBCB6C5FAC1BFCEC4B1BECCE6BBBB56342E305C6D73646B646C6C5F445C;1;453A5C736F6674776172655CB3ACBCB6C5FAC1BFCEC4B1BECCE6BBBB56342E305C6D73646B646C6C5F583634445C;1</Target>
+		<NormalReplaceMemo1>BBB6D3ADCAB9D3C3B3ACBCB6C5FAC1BFCEC4B1BECCE6BBBB342E30</NormalReplaceMemo1>
+		<NormalReplaceMemo2>D0BBD0BB</NormalReplaceMemo2>
+		<CharacterReplaceMemo1></CharacterReplaceMemo1>
+		<CharacterReplaceMemo2>0D0A0D0A0D0A</CharacterReplaceMemo2>
+		<CharacterReplaceMemo3></CharacterReplaceMemo3>
+	</History>
+	<MultiReplace>
+		<RepacleRulesFile>C:\文件夹（请勿删除）\产品资料12.17\03.26更新\易键鼠开发资料\易键鼠单双头三头开发资料\API名随机化DLL及静态库(64位DLL)\批量文本替换\MultiRules\一般替换规则.nrr</RepacleRulesFile>
+	</MultiReplace>
+</str>
