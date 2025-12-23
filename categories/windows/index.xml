@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Windows on 王创的站点</title>
+        <link>https://example.com/categories/windows/</link>
+        <description>Recent content in Windows on 王创的站点</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <copyright>wchuang</copyright>
+        <lastBuildDate>Tue, 28 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://example.com/categories/windows/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>nssm进程管理工具</title>
+        <link>https://example.com/p/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/</link>
+        <pubDate>Tue, 28 Oct 2025 00:00:00 +0000</pubDate>
+        
+        <guid>https://example.com/p/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/</guid>
+        <description>&lt;h2 id=&#34;nssm注册系统服务&#34;&gt;nssm注册系统服务
+&lt;/h2&gt;&lt;p&gt;对于Windows平台来说，很多软件或系统的后台服务是基于windows服务的方式运行的，它的优势是稳定可靠，有进程保护，但对于一些普通exe程序（控制台程序或带界面的windows程序）或bat文件是否也可以封装成windows服务进行运行呢？其实windows本身就有SC.exe，它为Windows系统自带工具，可对Windows系统服务进行创建，查询，启动，停止，删除等操作。但是SC.exe 只支持操作服务控制管理器(SCM)接口规范的系统服务，比如一般的网络服务进程如nginx 等无法作为服务直接启动了，因此本文介绍一个可以封装普通exe程序或bat文件的windows服务工具：NSSM。&lt;/p&gt;
+&lt;p&gt;NSSM是一个服务封装程序，它可以将普通exe程序或bat文件封装成服务，使之像windows服务一样运行。同类型的工具还有微软自己的srvany，不过nssm更加简单易用，并且功能强大。它的特点如下：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;支持普通exe程序（控制台程序或者带界面的Windows程序都可以）或bat文件&lt;/li&gt;
+&lt;li&gt;安装简单又方便&lt;/li&gt;
+&lt;li&gt;可以重定向输出（并且支持Rotation）&lt;/li&gt;
+&lt;li&gt;可以自动守护封装了的服务，程序挂掉了后可以自动重启&lt;/li&gt;
+&lt;li&gt;可以自定义环境变量&lt;/li&gt;
+&lt;li&gt;可以自定义启动参数
+从以上可以得知，NSSM每个功能都很实用，可以大大简化开发流程，降低了开发难度，使用和调试起来也非常方便，特别不需要考虑开发一个服务实现服务守护功能，以确保稳定可靠。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;nssm常用命令&#34;&gt;NSSM常用命令
+&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;6
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;7
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;1.安装服务：nssm install 服务名称
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;2.删除服务：nssm remove 服务名称
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;3.删除服务确定：nssm remove 服务名称 confirm
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;4.修改服务（显示界面修改）：nssm edit 服务名称
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;5.启动服务：nssm start 服务名称
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;6.停止服务：nssm stop 服务名名称
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;7.停止服务：nssm stop 服务名称
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;nssm使用步骤&#34;&gt;NSSM使用步骤
+&lt;/h2&gt;&lt;h3 id=&#34;下载nssm&#34;&gt;下载NSSM
+&lt;/h3&gt;&lt;p&gt;1.&lt;a class=&#34;link&#34; href=&#34;http://nssm.cc/download&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;
+    &gt;下载NSSM&lt;/a&gt;
+2.根据windows平台，将32/64位nssm.exe文件解压至任意文件夹
+3.cmd进入到nssm.exe所在目录，如你操作系统是32bit，请对应32位的nssm.exe文件，如你操作系统是64bit，请对应64位的nssm.exe
+4.输入 nssm install {服务名称}，即注册Windows服务的名称。&lt;/p&gt;
+&lt;h3 id=&#34;注册服务&#34;&gt;注册服务
+&lt;/h3&gt;&lt;p&gt;设置说明，如下：
+1.Application Path: 选择系统安装的exe或bat。
+2.Startup directory: 选择exe或bat项目的根目录。
+3.Arguments: 输入启动参数。
+4.Service name: 服务名称
+上述步骤操作完成，即可点击Install service来注册服务。
+在系统服务中services.msc找到刚刚注册的服务，右键属性 - 恢复即可设置此服务挂掉重启等内容。
+需要注意一点，安装完服务后，需要启动服务，否则没有生效。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
