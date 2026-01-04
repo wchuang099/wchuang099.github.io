@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="一、 信号&amp;槽（Signals &amp; Slots） 1.信号（Signal）和槽（Slot）概念\n信号（Signal）\n表示“发生了什么事”（如：按钮被点击、文本发生变化）\n">
+<title>PySide信号槽与多线程</title>
+
+<link rel='canonical' href='https://example.com/p/pyside%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/'>
+
+<link rel="stylesheet" href="/scss/style.min.946cca6c6259ef94ac55abfae7c7bf3291ea3ed5eea17ef77500b257217c6710.css"><meta property='og:title' content="PySide信号槽与多线程">
+<meta property='og:description' content="一、 信号&amp;槽（Signals &amp; Slots） 1.信号（Signal）和槽（Slot）概念\n信号（Signal）\n表示“发生了什么事”（如：按钮被点击、文本发生变化）\n">
+<meta property='og:url' content='https://example.com/p/pyside%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/'>
+<meta property='og:site_name' content='王创的站点'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-12-23T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2025-12-23T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="PySide信号槽与多线程">
+<meta name="twitter:description" content="一、 信号&amp;槽（Signals &amp; Slots） 1.信号（Signal）和槽（Slot）概念\n信号（Signal）\n表示“发生了什么事”（如：按钮被点击、文本发生变化）\n">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu_a9521bd358f3fb79.png" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✍️</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">王创的站点</a></h1>
+            <h2 class="site-description">欢迎来到我的网站</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/CaiJimmy/hugo-theme-stack'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%85%B3%E4%BA%8E/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%8F%8B%E6%83%85%E9%93%BE%E6%8E%A5/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>友情链接</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#一-信号槽signals--slots">一、 信号&amp;槽（Signals &amp; Slots）</a></li>
+    <li><a href="#二自定义信号槽与多线程">二、自定义信号槽与多线程</a>
+      <ol>
+        <li><a href="#pyside2--pyqt-中的多线程与信号机制">PySide2 / PyQt 中的多线程与信号机制</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/python/" >
+                Python
+            </a>
+        
+            <a href="/categories/gui%E5%BC%80%E5%8F%91/" >
+                GUI开发
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/pyside%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/">PySide信号槽与多线程</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025-12-23</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 5 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h1 id="一-信号槽signals--slots">一、 信号&amp;槽（Signals &amp; Slots）
+</h1><p><strong>1.信号（Signal）和槽（Slot）概念</strong></p>
+<ul>
+<li>
+<p><strong>信号（Signal）</strong><br>
+表示“发生了什么事”（如：按钮被点击、文本发生变化）</p>
+</li>
+<li>
+<p><strong>槽（Slot）</strong><br>
+表示“当事件发生时要执行的动作”（如：打印日志、更新界面）</p>
+</li>
+</ul>
+<blockquote>
+<p>可以理解为：<br>
+<strong>信号 = 广播消息</strong><br>
+<strong>槽 = 监听并响应消息的函数</strong></p></blockquote>
+<p><strong>2.PyQt/PySide 与 PySimpleGUI 事件处理机制对比</strong></p>
+<ul>
+<li>控件事件触发方式</li>
+</ul>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>框架</th>
+          <th>如何标识控件</th>
+          <th>如何响应事件</th>
+          <th>是否需要主循环</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>PySimpleGUI</strong></td>
+          <td>通过 <code>key=&quot;xxx&quot;</code> 字符串标识（如 <code>sg.Button(&quot;OK&quot;, key=&quot;-OK-&quot;)</code>）</td>
+          <td>在 <code>while True</code> 循环中判断 <code>event == &quot;-OK-&quot;</code></td>
+          <td>✅ 必须显式编写 <code>while</code> 事件读取循环</td>
+      </tr>
+      <tr>
+          <td><strong>PyQt / PySide</strong></td>
+          <td>控件本身就是对象（如 <code>self.btn = QPushButton(&quot;OK&quot;)</code>）</td>
+          <td>直接连接对象的内置信号：<code>self.btn.clicked.connect(self.handler)</code></td>
+          <td>❌ 不需要；由 <code>QApplication.exec_()</code> 启动 Qt 内置事件循环</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>3.PyQt/PySide 标准控件自带信号示例</strong>
+QtWidgets依赖QtGui &ndash;&gt; QtGui依赖QtCore &ndash;&gt; 因此使用 QtWidgets 时，自动获得了 QtGui 和 QtCore 的能力（如信号槽）
+所以QtWidgets下面的控件内置了信号槽能力</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>控件类型</th>
+          <th>常用内置信号</th>
+          <th>触发时机</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>QPushButton</code></td>
+          <td><code>clicked()</code></td>
+          <td>用户点击按钮</td>
+      </tr>
+      <tr>
+          <td><code>QLineEdit</code></td>
+          <td><code>textChanged(str)</code><br><code>returnPressed()</code></td>
+          <td>文本内容变化<br>用户按下回车</td>
+      </tr>
+      <tr>
+          <td><code>QComboBox</code></td>
+          <td><code>currentIndexChanged(int)</code><br><code>currentTextChanged(str)</code></td>
+          <td>选中项索引改变<br>选中项文本改变</td>
+      </tr>
+      <tr>
+          <td><code>QCheckBox</code></td>
+          <td><code>toggled(bool)</code><br><code>stateChanged(int)</code></td>
+          <td>勾选状态切换<br>状态值变化（0/1/2）</td>
+      </tr>
+      <tr>
+          <td><code>QRadioButton</code></td>
+          <td><code>toggled(bool)</code></td>
+          <td>选中或取消选中</td>
+      </tr>
+      <tr>
+          <td><code>QSlider</code></td>
+          <td><code>valueChanged(int)</code></td>
+          <td>滑块值变化</td>
+      </tr>
+      <tr>
+          <td><code>QTimer</code></td>
+          <td><code>timeout()</code></td>
+          <td>定时器超时</td>
+      </tr>
+      <tr>
+          <td><code>QThread</code></td>
+          <td><code>started()</code><br><code>finished()</code></td>
+          <td>线程启动<br>线程执行结束</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>4.关键结论</p>
+<p><strong>所有标准控件都自带信号</strong></p>
+<ul>
+<li><strong>只有在以下情况才需要自定义信号</strong>：
+<ul>
+<li>自己写控件类</li>
+<li>子线程需要向 UI 传递业务数据</li>
+</ul>
+</li>
+<li>槽必须是 <strong>可调用对象</strong>
+<ul>
+<li>函数 / 方法 / lambda</li>
+</ul>
+</li>
+<li>槽对象必须被持有引用<br>
+否则可能被 GC 回收，导致信号失效</li>
+</ul>
+<blockquote>
+<p>✔ 一个信号可以连接多个槽<br>
+✔ 一个槽也可以监听多个信号</p></blockquote>
+<p>5.基础示例（单线程）</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">PySide2.QtWidgets</span> <span class="kn">import</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QVBoxLayout</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">sys</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">MainWindow</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 窗口设置</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&#34;信号与槽示例&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 创建控件</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&#34;点我&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 布局</span>
+</span></span><span class="line"><span class="cl">        <span class="n">layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">button</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 信号绑定</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">on_button_clicked</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 槽函数（类方法）</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">on_button_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;按钮被点击了！&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">window</span> <span class="o">=</span> <span class="n">MainWindow</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">window</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">exec_</span><span class="p">())</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h1 id="二自定义信号槽与多线程">二、自定义信号槽与多线程
+</h1><h2 id="pyside2--pyqt-中的多线程与信号机制">PySide2 / PyQt 中的多线程与信号机制
+</h2><p>1.在 <strong>PySide2 / PyQt 的 GUI 编程中</strong>， <strong>多线程几乎总是要配合自定义信号（Signal）使用</strong>， 才能 <strong>安全、可靠</strong> 地实现子线程与主线程（UI）的通信。这是因为 Qt 有两条“铁律”。</p>
+<ul>
+<li><strong>所有 UI 操作必须在主线程执行</strong><br>
+否则属于未定义行为，可能直接崩溃。</li>
+<li><strong>不同线程之间不能直接操作对方的对象</strong><br>
+包括调用方法、访问属性，都是非线程安全的。</li>
+</ul>
+<p><strong>2、多线程的真实目的</strong></p>
+<ul>
+<li>在 <strong>子线程</strong> 执行耗时任务<br>
+（如：下载、计算、读文件等）</li>
+<li>在 <strong>任务完成后通知 UI 更新</strong><br>
+（显示结果、更新进度条、启用按钮等）</li>
+</ul>
+<p>这就不可避免地产生了 <strong>跨线程通信需求</strong>。</p>
+<p><strong>3.Qt 官方唯一安全的跨线程通信方式</strong></p>
+<p><strong>信号 / 槽（Signal / Slot）机制</strong></p>
+<ul>
+<li>信号可以在 <strong>子线程发出</strong></li>
+<li>槽函数在 <strong>主线程执行</strong></li>
+<li>通过 <strong>信号参数传递数据</strong></li>
+<li>自动使用 <strong>队列连接（Queued Connection）</strong></li>
+<li>线程安全</li>
+</ul>
+<p><strong>4.为什么必须自定义信号？</strong></p>
+<p>Qt <strong>没有提供通用的内置信号</strong><br>
+用于传递你的业务数据，例如：</p>
+<ul>
+<li><code>int</code>：进度值</li>
+<li><code>str</code>：结果文本</li>
+<li><code>list</code>：计算数据</li>
+</ul>
+<blockquote>
+<p>只要子线程需要向 UI 传递数据，<br>
+<strong>就必须自定义信号。</strong></p></blockquote>
+<p><strong>5.总结</strong></p>
+<p><strong>Qt 多线程的正确模式：</strong><br>
+子线程做耗时工作 → 发信号 → 主线程更新 UI</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">PySide2.QtCore</span> <span class="kn">import</span> <span class="n">QThread</span><span class="p">,</span> <span class="n">Signal</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">PySide2.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">QApplication</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QPushButton</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">time</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">模拟快递员会将包裹放到快递驿站，然后由机器人送到家
+</span></span></span><span class="line"><span class="cl"><span class="s2">机器人：Signal定义信号 + emit 发射信号（信号本身是广播式的，谁连了谁就能收到）
+</span></span></span><span class="line"><span class="cl"><span class="s2">家(主界面)：connect(订阅信号)+绑定响应动作(槽) + 更新显示器(界面) 
+</span></span></span><span class="line"><span class="cl"><span class="s2">##################################
+</span></span></span><span class="line"><span class="cl"><span class="s2">Qt 信号槽心法”：
+</span></span></span><span class="line"><span class="cl"><span class="s2">信号是广播，槽是听众
+</span></span></span><span class="line"><span class="cl"><span class="s2">子线程只“说”，不“改 UI”
+</span></span></span><span class="line"><span class="cl"><span class="s2">主线程负责“听”和“显示”
+</span></span></span><span class="line"><span class="cl"><span class="s2">&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#  快递机器人</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">DeliveryBot</span><span class="p">(</span><span class="n">QThread</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># -----------------------------------第一步：自定义信号和工作线程------------------------------------</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 【0】机器人出厂自带“按门铃”的能力（定义信号）</span>
+</span></span><span class="line"><span class="cl">    <span class="n">update_signal</span> <span class="o">=</span> <span class="n">Signal</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>  <span class="c1"># 门铃只能传递一句话，比如“1号包裹到了”</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 【5】机器人开始送货（工作线程）</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">pkg</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># 走路上楼需要时间（模拟耗时任务）</span>
+</span></span><span class="line"><span class="cl">            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&#34; 第</span><span class="si">{</span><span class="n">pkg</span><span class="si">}</span><span class="s2">个包裹已送到门口！&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">update_signal</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>  <span class="c1"># 【6】按你家门铃！（发射信号）</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#  家（主界面）</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">MyGui</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 显示器：显示快递状态 和 一个“叫机器人送到家”按钮</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">notebook</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&#34;快件已到驿站，等待派送...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">call_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&#34;呼叫送货机器人&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">        <span class="n">layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">notebook</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">call_button</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">        <span class="c1">#-----------------------------------第二步：信号绑定到槽------------------------------------</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 【1】预约一个快递机器人：该机器人内置了信号</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">worker</span> <span class="o">=</span> <span class="n">DeliveryBot</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">        <span class="c1"># 【2】【worker信号发送者】+【update_signal信号名称】+[connect订阅该信号]+[绑定响应动作(槽)]</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">update_signal</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hear_doorbell</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">        <span class="c1"># 【3】设置按钮：点一下机器人出发，</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 【call_button信号发送者】+【clicked信号名称】+【connect订阅该信号】+【绑定响应动作(槽)】</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># clicked 是 QPushButton 内置信号，你同样用 connect 订阅它。</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">call_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">send_bot</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1">#-----------------------------------第三步：让线程开始工作，并发送信号------------------------------------</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 【4】你按下按钮（在主线程中）</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">send_bot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">notebook</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&#34; 机器人已出发...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">call_button</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>  <span class="c1"># 机器人开始后台送货！</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">#-----------------------------------第四步：处理接收到的信号------------------------------------</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 【7】你听到门铃响（槽函数）→ 更新显示器（在主线程！）</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">hear_doorbell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">notebook</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">#  启动整个系统</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&#34;__main__&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="p">([])</span>
+</span></span><span class="line"><span class="cl">    <span class="n">home</span> <span class="o">=</span> <span class="n">MyGui</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">home</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">app</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>by wchuang</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/pyside%E5%9F%BA%E7%A1%80/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PySide基础</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/pyside%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PySide美化界面</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/%E8%84%9A%E6%9C%AC%E9%9A%94%E7%A6%BB%E6%96%B9%E6%A1%88/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">脚本隔离方案</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/conda%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Conda使用教程</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/3.-yolo%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">3. YOLO标注和训练数据</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    © 
+2026 wchuang
+
+
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="寄存器 寄存器的基本概念 计算机存储数据的地方，有三个地方：CPU &gt; 内存 &gt; 硬盘 其中，寄存器是指 CPU 内部用来存储数据的高速存储单元。 如果你使用的是一个 32 位的 CPU，那么它能提供的寄存器通常有：8 位、16 位、32 位的访问形式。\n">
+<title>04.寄存器</title>
+
+<link rel='canonical' href='https://example.com/p/04.%E5%AF%84%E5%AD%98%E5%99%A8/'>
+
+<link rel="stylesheet" href="/scss/style.min.946cca6c6259ef94ac55abfae7c7bf3291ea3ed5eea17ef77500b257217c6710.css"><meta property='og:title' content="04.寄存器">
+<meta property='og:description' content="寄存器 寄存器的基本概念 计算机存储数据的地方，有三个地方：CPU &gt; 内存 &gt; 硬盘 其中，寄存器是指 CPU 内部用来存储数据的高速存储单元。 如果你使用的是一个 32 位的 CPU，那么它能提供的寄存器通常有：8 位、16 位、32 位的访问形式。\n">
+<meta property='og:url' content='https://example.com/p/04.%E5%AF%84%E5%AD%98%E5%99%A8/'>
+<meta property='og:site_name' content='王创的站点'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-08-31T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2025-08-31T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="04.寄存器">
+<meta name="twitter:description" content="寄存器 寄存器的基本概念 计算机存储数据的地方，有三个地方：CPU &gt; 内存 &gt; 硬盘 其中，寄存器是指 CPU 内部用来存储数据的高速存储单元。 如果你使用的是一个 32 位的 CPU，那么它能提供的寄存器通常有：8 位、16 位、32 位的访问形式。\n">
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu_a9521bd358f3fb79.png" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+                    <span class="emoji">✍️</span>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">王创的站点</a></h1>
+            <h2 class="site-description">欢迎来到我的网站</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://github.com/CaiJimmy/hugo-theme-stack'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://twitter.com'
+                        target="_blank"
+                        title="Twitter"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M22 4.01c-1 .49 -1.98 .689 -3 .99c-1.121 -1.265 -2.783 -1.335 -4.38 -.737s-2.643 2.06 -2.62 3.737v1c-3.245 .083 -6.135 -1.395 -8 -4c0 0 -4.182 7.433 4 11c-1.872 1.247 -3.739 2.088 -6 2c3.308 1.803 6.913 2.423 10.034 1.517c3.58 -1.04 6.522 -3.723 7.651 -7.742a13.84 13.84 0 0 0 .497 -3.753c-.002 -.249 1.51 -2.772 1.818 -4.013z" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%85%B3%E4%BA%8E/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%8F%8B%E6%83%85%E9%93%BE%E6%8E%A5/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>友情链接</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#寄存器">寄存器</a>
+      <ol>
+        <li><a href="#寄存器的基本概念">寄存器的基本概念</a></li>
+        <li><a href="#通用寄存器">通用寄存器</a></li>
+        <li><a href="#x86-架构中的-32-位通用寄存器">x86 架构中的 32 位通用寄存器</a></li>
+        <li><a href="#子寄存器">子寄存器</a></li>
+      </ol>
+    </li>
+    <li><a href="#认识ollydbg">认识OllyDbg</a>
+      <ol>
+        <li><a href="#按f3打开一个exe程序">按<code>F3</code>打开一个EXE程序</a></li>
+        <li><a href="#修改寄存器中值">修改寄存器中值</a></li>
+      </ol>
+    </li>
+    <li><a href="#汇编指令">汇编指令</a>
+      <ol>
+        <li><a href="#指令作用与操作数表">指令作用与操作数表</a></li>
+        <li><a href="#常用语法示例">常用语法示例</a>
+          <ol>
+            <li><a href="#mov数据传送">MOV（数据传送）</a></li>
+            <li><a href="#add加法">ADD（加法）</a></li>
+            <li><a href="#sub减法">SUB（减法）</a></li>
+            <li><a href="#and按位与">AND（按位与）</a></li>
+            <li><a href="#or按位或">OR（按位或）</a></li>
+            <li><a href="#xor按位异或">XOR（按位异或）</a></li>
+            <li><a href="#not按位取反">NOT（按位取反）</a></li>
+          </ol>
+        </li>
+        <li><a href="#汇编指令总结">汇编指令总结</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/" >
+                逆向初级
+            </a>
+        
+            <a href="/categories/%E6%B1%87%E7%BC%96%E5%9F%BA%E7%A1%80/" >
+                汇编基础
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/04.%E5%AF%84%E5%AD%98%E5%99%A8/">04.寄存器</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time">
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025-08-31</time>
+            </div>
+        
+
+        
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 7 分钟
+                </time>
+            </div>
+        
+    </footer>
+    
+
+    
+</div>
+
+</header>
+
+    <section class="article-content">
+    
+    
+    <h1 id="寄存器">寄存器
+</h1><h2 id="寄存器的基本概念">寄存器的基本概念
+</h2><p>计算机存储数据的地方，有三个地方：<code>CPU</code> &gt; <code>内存</code> &gt; <code>硬盘</code>
+其中，<code>寄存器</code>是指 CPU 内部用来存储数据的高速存储单元。
+如果你使用的是一个 32 位的 CPU，那么它能提供的寄存器通常有：8 位、16 位、32 位的访问形式。</p>
+<h2 id="通用寄存器">通用寄存器
+</h2><p>在 CPU 里面，寄存器分很多类：</p>
+<ul>
+<li><strong>通用寄存器（General Purpose Register, GPR）</strong>
+→ 可以存数据、存地址、存中间运算结果，用途比较广。</li>
+<li><strong>专用寄存器</strong>
+→ 有固定功能，不能随便用，比如：
+<ul>
+<li>EIP：指令指针寄存器，存放下一条要执行指令的地址</li>
+<li>EFLAGS：标志寄存器，存放运算结果的标志位（零/进位/溢出等）</li>
+<li>段寄存器：负责内存分段管理</li>
+</ul>
+</li>
+</ul>
+<p>因为通用寄存器不像 EIP、EFLAGS 那样被“锁死”在某个功能上，而是<strong>灵活多用</strong>，所以才叫 <strong>通用</strong>。</p>
+<h2 id="x86-架构中的-32-位通用寄存器">x86 架构中的 32 位通用寄存器
+</h2><p>在 32 位 CPU 中，常见的通用寄存器有 8 个：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>寄存器</th>
+          <th>编号</th>
+          <th>存储数据范围</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>EAX</td>
+          <td>0</td>
+          <td>0 - 0xFFFFFFFF</td>
+      </tr>
+      <tr>
+          <td>ECX</td>
+          <td>1</td>
+          <td>0 - 0xFFFFFFFF</td>
+      </tr>
+      <tr>
+          <td>EDX</td>
+          <td>2</td>
+          <td>0 - 0xFFFFFFFF</td>
+      </tr>
+      <tr>
+          <td>EBX</td>
+          <td>3</td>
+          <td>0 - 0xFFFFFFFF</td>
+      </tr>
+      <tr>
+          <td>ESP</td>
+          <td>4</td>
+          <td>0 - 0xFFFFFFFF</td>
+      </tr>
+      <tr>
+          <td>EBP</td>
+          <td>5</td>
+          <td>0 - 0xFFFFFFFF</td>
+      </tr>
+      <tr>
+          <td>ESI</td>
+          <td>6</td>
+          <td>0 - 0xFFFFFFFF</td>
+      </tr>
+      <tr>
+          <td>EDI</td>
+          <td>7</td>
+          <td>0 - 0xFFFFFFFF</td>
+      </tr>
+  </tbody>
+</table></div>
+<ul>
+<li>每个寄存器都是独立的存储单元</li>
+<li>每个寄存器固定大小：32 位 → 4 字节</li>
+<li>它们可以同时存储不同的数据，互不干扰，EAX 装的数据不会“占用” EBX、ECX 的空间。</li>
+</ul>
+<blockquote>
+<p>虽然名字上都算“通用寄存器”，但在实际编程时它们会有<strong>习惯性用途</strong>：虽然名字上都叫“通用寄存器”，但在实际编程时，它们往往有<strong>习惯性用途</strong>：</p>
+<ul>
+<li>EAX：累加器（运算结果常放在这）</li>
+<li>ECX：计数器（循环次数常放这）</li>
+<li>EDX：数据寄存器（扩展乘除法时存高位）</li>
+<li>EBX：基址寄存器（有时存地址）</li>
+<li>ESI / EDI：源地址 / 目的地址寄存器（字符串操作常用）</li>
+<li>ESP / EBP：与栈相关（函数调用时常用）</li>
+</ul>
+<p>但这些用途<strong>不是强制的</strong>，编译器或程序员完全可以把它们当普通存储单元来使用。</p></blockquote>
+<h2 id="子寄存器">子寄存器
+</h2><p>1.<strong>子寄存器概念</strong></p>
+<p>一个寄存器内部可以继续拆分成更小的“子寄存器”。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">EAX (32位) = 0x12345678
+</span></span><span class="line"><span class="cl">   ├── 高16位 = 0x1234   ← 没有专门的寄存器名
+</span></span><span class="line"><span class="cl">   └── AX (低16位) = 0x5678
+</span></span><span class="line"><span class="cl">         ├── AH (高8位) = 0x56
+</span></span><span class="line"><span class="cl">         └── AL (低8位) = 0x78
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>修改 <strong>AL</strong> → AX / EAX 的低 8 位会被改变</li>
+<li>修改 <strong>AX</strong> → EAX 的低 16 位会被改变</li>
+<li>修改 <strong>EAX</strong> → 整个 32 位寄存器会被改变</li>
+<li>这些修改<strong>不会影响其他寄存器</strong>（如 EBX、ECX）</li>
+</ul>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-c" data-lang="c"><span class="line"><span class="cl"><span class="err">可以在</span><span class="n">OllyDbg上验证</span><span class="err">：</span>
+</span></span><span class="line"><span class="cl"><span class="n">MOV</span> <span class="n">EAX</span><span class="p">,</span><span class="mh">0xAAAAAAAA</span>	
+</span></span><span class="line"><span class="cl"><span class="n">MOV</span> <span class="n">AX</span><span class="p">,</span><span class="mh">0xBBBB</span>	
+</span></span><span class="line"><span class="cl"><span class="n">MOV</span> <span class="n">AH</span><span class="p">,</span><span class="mh">0xCC</span>	
+</span></span><span class="line"><span class="cl"><span class="n">MOV</span> <span class="n">AL</span><span class="p">,</span><span class="mh">0xDD</span>	
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>2.<strong>子寄存器存在的原因</strong></p>
+<ul>
+<li><strong>兼容历史</strong>
+x86 架构从 **8 位 → 16 位 → 32 位 ** 逐步演进。
+为了让早期程序在新 CPU 上仍能运行，Intel 保留了子寄存器的访问方式。</li>
+<li><strong>灵活性</strong>
+有时候只需要处理 1 字节（8 位）或 2 字节（16 位）的数据，直接用子寄存器效率更高，不必操作整个32位寄存器。</li>
+</ul>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">32位寄存器</th>
+          <th>16位子寄存器</th>
+          <th>有无8位子寄存器</th>
+          <th>高8位</th>
+          <th>低8位</th>
+          <th>示例值（32/16/8位）</th>
+          <th>编号（二进制/十进制）</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">EAX</td>
+          <td>AX</td>
+          <td>✅</td>
+          <td>AH</td>
+          <td>AL</td>
+          <td>0x12345678 / 0x5678 / 0x56/0x78</td>
+          <td>000 / 0</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">ECX</td>
+          <td>CX</td>
+          <td>✅</td>
+          <td>CH</td>
+          <td>CL</td>
+          <td>0x12345678 / 0x5678 / 0x56/0x78</td>
+          <td>001 / 1</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">EDX</td>
+          <td>DX</td>
+          <td>✅</td>
+          <td>DH</td>
+          <td>DL</td>
+          <td>0x12345678 / 0x5678 / 0x56/0x78</td>
+          <td>010 / 2</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">EBX</td>
+          <td>BX</td>
+          <td>✅</td>
+          <td>BH</td>
+          <td>BL</td>
+          <td>0x12345678 / 0x5678 / 0x56/0x78</td>
+          <td>011 / 3</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">ESP</td>
+          <td>SP</td>
+          <td>❌</td>
+          <td>—</td>
+          <td>—</td>
+          <td>0x12345678 / 0x5678 / —</td>
+          <td>100 / 4</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">EBP</td>
+          <td>BP</td>
+          <td>❌</td>
+          <td>—</td>
+          <td>—</td>
+          <td>0x12345678 / 0x5678 / —</td>
+          <td>101 / 5</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">ESI</td>
+          <td>SI</td>
+          <td>❌</td>
+          <td>—</td>
+          <td>—</td>
+          <td>0x12345678 / 0x5678 / —</td>
+          <td>110 / 6</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">EDI</td>
+          <td>DI</td>
+          <td>❌</td>
+          <td>—</td>
+          <td>—</td>
+          <td>0x12345678 / 0x5678 / —</td>
+          <td>111 / 7</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><img src="/p/04.%E5%AF%84%E5%AD%98%E5%99%A8/%E5%AF%84%E5%AD%98%E5%99%A8%E5%B1%82%E7%BA%A7.png"
+	width="646"
+	height="245"
+	srcset="/p/04.%E5%AF%84%E5%AD%98%E5%99%A8/%E5%AF%84%E5%AD%98%E5%99%A8%E5%B1%82%E7%BA%A7_hu_144ba27c7113d5a4.png 480w, /p/04.%E5%AF%84%E5%AD%98%E5%99%A8/%E5%AF%84%E5%AD%98%E5%99%A8%E5%B1%82%E7%BA%A7_hu_eece28ee4ee0b48.png 1024w"
+	loading="lazy"
+	
+		alt="寄存器层级"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="263"
+		data-flex-basis="632px"
+	
+></p>
+<h1 id="认识ollydbg">认识OllyDbg
+</h1><h2 id="按f3打开一个exe程序">按<code>F3</code>打开一个EXE程序
+</h2><p><img src="/p/04.%E5%AF%84%E5%AD%98%E5%99%A8/OD%E7%AA%97%E5%8F%A3.png"
+	width="1915"
+	height="1016"
+	srcset="/p/04.%E5%AF%84%E5%AD%98%E5%99%A8/OD%E7%AA%97%E5%8F%A3_hu_d5f83834b6e83a94.png 480w, /p/04.%E5%AF%84%E5%AD%98%E5%99%A8/OD%E7%AA%97%E5%8F%A3_hu_491025e76408ef4f.png 1024w"
+	loading="lazy"
+	
+		alt="od窗口"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="188"
+		data-flex-basis="452px"
+	
+></p>
+<h2 id="修改寄存器中值">修改寄存器中值
+</h2><p>如何自己写汇编指令，双击程序正在执行的地址那一行的指令，可以新添加指令或者修改指令，最后按Assemble添加或修改成功。添加或修改后，这条指令会作为程序即将执行的指令，当按<code>F8</code>时，程序会执行你新添加的指令，添加多条，会依次向下覆盖，程序执行处在第一条你新添加的指令地址处</p>
+<p><img src="/p/04.%E5%AF%84%E5%AD%98%E5%99%A8/OD%E4%BF%AE%E6%94%B9%E5%AF%84%E5%AD%98%E5%99%A8%E5%80%BC.png"
+	width="1904"
+	height="1014"
+	srcset="/p/04.%E5%AF%84%E5%AD%98%E5%99%A8/OD%E4%BF%AE%E6%94%B9%E5%AF%84%E5%AD%98%E5%99%A8%E5%80%BC_hu_99f0a9f235e09854.png 480w, /p/04.%E5%AF%84%E5%AD%98%E5%99%A8/OD%E4%BF%AE%E6%94%B9%E5%AF%84%E5%AD%98%E5%99%A8%E5%80%BC_hu_b3f5184f9f9b1e2b.png 1024w"
+	loading="lazy"
+	
+		alt="od窗口"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="187"
+		data-flex-basis="450px"
+	
+></p>
+<blockquote>
+<p>注意因为寄存器是32位的，所以如果地址数值大于了32位，即会从低位取32位，多余的位将被丢弃MOV EAX,123456789   #会变成23456789</p></blockquote>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">MOV EAX,12345678     #MOV是汇编指令，EAX是寄存器，后面的数叫立即数，此指令的作用就是将立即数存在EAX中
+</span></span><span class="line"><span class="cl">ADD EAX,1          #将1与EAX中已经存储的数做加法运算，结果再存储在EAX中
+</span></span><span class="line"><span class="cl">MOV ECX,2
+</span></span><span class="line"><span class="cl">ADD EAX,ECX       #将EAX与ECX中的值相加，将结果再放入EAX中
+</span></span><span class="line"><span class="cl">SUB EAX,3         #用EAX中的值-3，再将结果放入EAX中
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><img src="/p/04.%E5%AF%84%E5%AD%98%E5%99%A8/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4.png"
+	width="1890"
+	height="509"
+	srcset="/p/04.%E5%AF%84%E5%AD%98%E5%99%A8/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4_hu_5e8dd294ae1de90.png 480w, /p/04.%E5%AF%84%E5%AD%98%E5%99%A8/%E6%B1%87%E7%BC%96%E6%8C%87%E4%BB%A4_hu_d6ae9942c12e9006.png 1024w"
+	loading="lazy"
+	
+		alt="汇编指令"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="371"
+		data-flex-basis="891px"
+	
+></p>
+<h1 id="汇编指令">汇编指令
+</h1><h2 id="指令作用与操作数表">指令作用与操作数表
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>指令</th>
+          <th>作用</th>
+          <th>目标操作数</th>
+          <th>源操作数</th>
+          <th>宽度要求</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>MOV</td>
+          <td>复制数据不改变源</td>
+          <td>寄存器/内存</td>
+          <td>寄存器/内存/立即数</td>
+          <td>必须一致（短补零，长截断）</td>
+      </tr>
+      <tr>
+          <td>ADD</td>
+          <td>相加并存回目标</td>
+          <td>寄存器/内存</td>
+          <td>寄存器/内存/立即数</td>
+          <td>源可与目标宽度不一致（立即数可不同）</td>
+      </tr>
+      <tr>
+          <td>SUB</td>
+          <td>相减并存回目标</td>
+          <td>寄存器/内存</td>
+          <td>寄存器/内存/立即数</td>
+          <td>源可与目标宽度不一致（立即数可不同）</td>
+      </tr>
+      <tr>
+          <td>AND</td>
+          <td>与 → 存回目标</td>
+          <td>寄存器/内存</td>
+          <td>寄存器/内存/立即数</td>
+          <td>源可与目标宽度不一致（立即数可不同）</td>
+      </tr>
+      <tr>
+          <td>OR</td>
+          <td>或 → 存回目标</td>
+          <td>寄存器/内存</td>
+          <td>寄存器/内存/立即数</td>
+          <td>源可与目标宽度不一致（立即数可不同）</td>
+      </tr>
+      <tr>
+          <td>XOR</td>
+          <td>异或 → 存回目标</td>
+          <td>寄存器/内存</td>
+          <td>寄存器/内存/立即数</td>
+          <td>源可与目标宽度不一致（立即数可不同）</td>
+      </tr>
+      <tr>
+          <td>NOT</td>
+          <td>非 → 存回操作数</td>
+          <td>寄存器/内存</td>
+          <td>—</td>
+          <td>单操作数</td>
+      </tr>
+  </tbody>
+</table></div>
+<h2 id="常用语法示例">常用语法示例
+</h2><h3 id="mov数据传送">MOV（数据传送）
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl"># 语法：MOV r32, imm32
+</span></span><span class="line"><span class="cl"># EAX = 0x12345678
+</span></span><span class="line"><span class="cl">MOV EAX, 0x12345678
+</span></span><span class="line"><span class="cl"># 结果 EAX = 0x12345678
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 语法：MOV r32, r32/m32
+</span></span><span class="line"><span class="cl"># EBX = EAX
+</span></span><span class="line"><span class="cl">MOV EBX, EAX
+</span></span><span class="line"><span class="cl"># 结果 EBX = 0x12345678
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 语法：MOV r32, r32/m32
+</span></span><span class="line"><span class="cl"># ECX = [0x00400000]（假设内存值=0x10）
+</span></span><span class="line"><span class="cl">MOV ECX, [0x00400000]
+</span></span><span class="line"><span class="cl"># 结果 ECX = 0x10
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"># 语法：MOV r32/m32, r32
+</span></span><span class="line"><span class="cl"># [0x00400000] = EAX
+</span></span><span class="line"><span class="cl">MOV [0x00400000], EAX
+</span></span><span class="line"><span class="cl"># 结果 [0x00400000] = 0x12345678
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="add加法">ADD（加法）
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="cp"># 语法：ADD r32, imm32
+</span></span></span><span class="line"><span class="cl"><span class="cp"># EAX = EAX + 0x3（假设初始EAX=0x5）
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="n">MOV</span> <span class="n">EAX</span><span class="p">,</span> <span class="mh">0x5</span>
+</span></span><span class="line"><span class="cl"><span class="n">ADD</span> <span class="n">EAX</span><span class="p">,</span> <span class="mh">0x3</span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 结果 EAX = 0x8
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 语法：ADD r32, r32/m32
+</span></span></span><span class="line"><span class="cl"><span class="cp"># EAX = EAX + EBX（假设EAX=0x10, EBX=0x4）
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="n">MOV</span> <span class="n">EAX</span><span class="p">,</span> <span class="mh">0x10</span>
+</span></span><span class="line"><span class="cl"><span class="n">MOV</span> <span class="n">EBX</span><span class="p">,</span> <span class="mh">0x4</span>
+</span></span><span class="line"><span class="cl"><span class="n">ADD</span> <span class="n">EAX</span><span class="p">,</span> <span class="n">EBX</span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 结果 EAX = 0x14
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 语法：ADD r32, r32/m32
+</span></span></span><span class="line"><span class="cl"><span class="cp"># EAX = EAX + [0x00400000]（假设内存值=0x7）
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="n">MOV</span> <span class="n">EAX</span><span class="p">,</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="n">ADD</span> <span class="n">EAX</span><span class="p">,</span> <span class="p">[</span><span class="mh">0x00400000</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 结果 EAX = 0x7
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="sub减法">SUB（减法）
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="cp"># 语法：SUB r32, imm32
+</span></span></span><span class="line"><span class="cl"><span class="cp"># EAX = EAX - 0x3（假设初始EAX=0x10）
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="n">MOV</span> <span class="n">EAX</span><span class="p">,</span> <span class="mh">0x10</span>
+</span></span><span class="line"><span class="cl"><span class="n">SUB</span> <span class="n">EAX</span><span class="p">,</span> <span class="mh">0x3</span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 结果 EAX = 0xD
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 语法：SUB r32, r32/m32
+</span></span></span><span class="line"><span class="cl"><span class="cp"># EAX = EAX - EBX（假设EAX=0x20, EBX=0x5）
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="n">MOV</span> <span class="n">EAX</span><span class="p">,</span> <span class="mh">0x20</span>
+</span></span><span class="line"><span class="cl"><span class="n">MOV</span> <span class="n">EBX</span><span class="p">,</span> <span class="mh">0x5</span>
+</span></span><span class="line"><span class="cl"><span class="n">SUB</span> <span class="n">EAX</span><span class="p">,</span> <span class="n">EBX</span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 结果 EAX = 0x1B
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 语法：SUB r32, r32/m32
+</span></span></span><span class="line"><span class="cl"><span class="cp"># EAX = EAX - [0x00400000]（假设内存值=0x4）
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="n">MOV</span> <span class="n">EAX</span><span class="p">,</span> <span class="mh">0x10</span>
+</span></span><span class="line"><span class="cl"><span class="n">SUB</span> <span class="n">EAX</span><span class="p">,</span> <span class="p">[</span><span class="mh">0x00400000</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 结果 EAX = 0xC
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="and按位与">AND（按位与）
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="cp"># 语法：AND r32, imm32
+</span></span></span><span class="line"><span class="cl"><span class="cp"># EAX = EAX &amp; 0x0F（假设初始EAX=0xFF）
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="n">MOV</span> <span class="n">EAX</span><span class="p">,</span> <span class="mh">0xFF</span>
+</span></span><span class="line"><span class="cl"><span class="n">AND</span> <span class="n">EAX</span><span class="p">,</span> <span class="mh">0x0F</span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 结果 EAX = 0x0F
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 语法：AND r32, r32/m32
+</span></span></span><span class="line"><span class="cl"><span class="cp"># EAX = EAX &amp; EBX（假设EAX=0xF0, EBX=0x0F）
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="n">MOV</span> <span class="n">EAX</span><span class="p">,</span> <span class="mh">0xF0</span>
+</span></span><span class="line"><span class="cl"><span class="n">MOV</span> <span class="n">EBX</span><span class="p">,</span> <span class="mh">0x0F</span>
+</span></span><span class="line"><span class="cl"><span class="n">AND</span> <span class="n">EAX</span><span class="p">,</span> <span class="n">EBX</span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 结果 EAX = 0x00
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 语法：AND r32, r32/m32
+</span></span></span><span class="line"><span class="cl"><span class="cp"># EAX = EAX &amp; [0x00400000]（假设内存值=0x0F）
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="n">MOV</span> <span class="n">EAX</span><span class="p">,</span> <span class="mh">0xFF</span>
+</span></span><span class="line"><span class="cl"><span class="n">AND</span> <span class="n">EAX</span><span class="p">,</span> <span class="p">[</span><span class="mh">0x00400000</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 结果 EAX = 0x0F
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="or按位或">OR（按位或）
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="cp"># 语法：OR r32, imm32
+</span></span></span><span class="line"><span class="cl"><span class="cp"># EAX = EAX | 0xF（假设初始EAX=0x0）
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="n">MOV</span> <span class="n">EAX</span><span class="p">,</span> <span class="mh">0x0</span>
+</span></span><span class="line"><span class="cl"><span class="n">OR</span> <span class="n">EAX</span><span class="p">,</span> <span class="mh">0xF</span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 结果 EAX = 0xF
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 语法：OR r32, r32/m32
+</span></span></span><span class="line"><span class="cl"><span class="cp"># EAX = EAX | EBX（假设EAX=0x10, EBX=0x01）
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="n">MOV</span> <span class="n">EAX</span><span class="p">,</span> <span class="mh">0x10</span>
+</span></span><span class="line"><span class="cl"><span class="n">MOV</span> <span class="n">EBX</span><span class="p">,</span> <span class="mh">0x01</span>
+</span></span><span class="line"><span class="cl"><span class="n">OR</span> <span class="n">EAX</span><span class="p">,</span> <span class="n">EBX</span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 结果 EAX = 0x11
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 语法：OR r32, r32/m32
+</span></span></span><span class="line"><span class="cl"><span class="cp"># EAX = EAX | [0x00400000]（假设内存值=0x05）
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="n">MOV</span> <span class="n">EAX</span><span class="p">,</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="n">OR</span> <span class="n">EAX</span><span class="p">,</span> <span class="p">[</span><span class="mh">0x00400000</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 结果 EAX = 0x5
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="xor按位异或">XOR（按位异或）
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="cp"># 语法：XOR r32, imm32
+</span></span></span><span class="line"><span class="cl"><span class="cp"># EAX = EAX ^ 0xFF（假设初始EAX=0x55）
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="n">MOV</span> <span class="n">EAX</span><span class="p">,</span> <span class="mh">0x55</span>
+</span></span><span class="line"><span class="cl"><span class="n">XOR</span> <span class="n">EAX</span><span class="p">,</span> <span class="mh">0xFF</span> 
+</span></span><span class="line"><span class="cl"><span class="cp"># 结果 EAX = 0xAA
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 语法：XOR r32, r32/m32
+</span></span></span><span class="line"><span class="cl"><span class="cp"># EAX = EAX ^ EBX（假设EAX=0xAA, EBX=0x0F）
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="n">MOV</span> <span class="n">EAX</span><span class="p">,</span> <span class="mh">0xAA</span>
+</span></span><span class="line"><span class="cl"><span class="n">MOV</span> <span class="n">EBX</span><span class="p">,</span> <span class="mh">0x0F</span>
+</span></span><span class="line"><span class="cl"><span class="n">XOR</span> <span class="n">EAX</span><span class="p">,</span> <span class="n">EBX</span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 结果 EAX = 0xA5
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 语法：XOR r32, r32/m32
+</span></span></span><span class="line"><span class="cl"><span class="cp"># EAX = EAX ^ [0x00400000]（假设内存值=0x05）
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="n">MOV</span> <span class="n">EAX</span><span class="p">,</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl"><span class="n">XOR</span> <span class="n">EAX</span><span class="p">,</span> <span class="p">[</span><span class="mh">0x00400000</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 结果 EAX = 0x5
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="not按位取反">NOT（按位取反）
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C" data-lang="C"><span class="line"><span class="cl"><span class="cp"># 语法：NOT r32/m32
+</span></span></span><span class="line"><span class="cl"><span class="cp"># EAX = ~EAX（假设初始EAX=0x0F）
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="n">MOV</span> <span class="n">EAX</span><span class="p">,</span> <span class="mh">0x0F</span>
+</span></span><span class="line"><span class="cl"><span class="n">NOT</span> <span class="n">EAX</span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 结果 EAX = 0xFFFFFFF0
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 语法：NOT r8/m8
+</span></span></span><span class="line"><span class="cl"><span class="cp"># AL = ~AL（假设初始AL=0x0F）
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="n">MOV</span> <span class="n">AL</span><span class="p">,</span> <span class="mh">0x0F</span>
+</span></span><span class="line"><span class="cl"><span class="n">NOT</span> <span class="n">AL</span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 结果 AL = 0xF0
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 语法：NOT r32/m32
+</span></span></span><span class="line"><span class="cl"><span class="cp"># [0x00400000] = ~[0x00400000]（假设内存值=0x0F）
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="n">NOT</span> <span class="p">[</span><span class="mh">0x00400000</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="cp"># 结果 [0x00400000] = 0xF0
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><blockquote>
+<p>r 通用寄存器；m 代表内存；imm 代表立即数；r8 代表8位通用寄存器；m8 代表8位内存；imm8 代表8位立即数</p>
+<p>源、目标不能同时为内存</p>
+<ul>
+<li>寄存器 ← 寄存器</li>
+<li>寄存器 ← 内存</li>
+<li>寄存器 ← 立即数</li>
+<li>内存 ← 寄存器</li>
+</ul></blockquote>
+<h2 id="汇编指令总结">汇编指令总结
+</h2><p>1️⃣ MOV（数据传送）</p>
+<ul>
+<li><strong>作用</strong>：把一个值从寄存器、内存或立即数，传送到另一个寄存器或内存。</li>
+<li><strong>底层实现</strong>：
+<ul>
+<li>不经过加法器或逻辑运算</li>
+<li>只是 <strong>把数据直接写入目标寄存器/内存</strong></li>
+<li>硬件上通常是 <strong>总线传输 + 寄存器写入</strong>，可能会有时序控制</li>
+</ul>
+</li>
+<li>简单来说，MOV 就是 <strong>数据搬运</strong>，不做数学计算。</li>
+</ul>
+<hr>
+<p>2️⃣ ADD/SUB</p>
+<ul>
+<li><strong>作用</strong>：执行数学运算</li>
+<li><strong>底层实现</strong>：
+<ul>
+<li>统一用 <strong>加法器 + 补码</strong>（SUB 通过补码转换）</li>
+<li>每一位用逻辑门（XOR、AND、OR、NOT）处理</li>
+</ul>
+</li>
+<li>本质上是 <strong>数学计算 + 位运算</strong>。</li>
+</ul>
+<p>3️⃣ 总结对比</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>指令</th>
+          <th>本质</th>
+          <th>底层</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>MOV</td>
+          <td>数据搬运</td>
+          <td>总线传输 + 寄存器/内存写入</td>
+      </tr>
+      <tr>
+          <td>ADD</td>
+          <td>加法</td>
+          <td>加法器 + 逻辑门（XOR/AND/OR）</td>
+      </tr>
+      <tr>
+          <td>SUB</td>
+          <td>减法</td>
+          <td>加法器 + 补码 + 逻辑门</td>
+      </tr>
+      <tr>
+          <td>AND/OR/XOR/NOT</td>
+          <td>按位运算</td>
+          <td>逻辑门（XOR/AND/OR/NOT）</td>
+      </tr>
+  </tbody>
+</table></div>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>by wchuang</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/05.%E5%86%85%E5%AD%98/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">05.内存</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">03.逻辑运算</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">02.数据宽度</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="">
+    <a href="/p/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">01.进制基础</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    © 
+2026 wchuang
+
+
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
