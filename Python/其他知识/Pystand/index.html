@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="https://zhuanlan.zhihu.com/p/691339803
+一、什么是嵌入式打包？# 嵌入式解释器（Windows embeddable package） 是 Python 官方专门提供给“打包场景”的：
+从 python.org/downloads/windows/ 下载 Windows embeddable package (32/64-bit)。 它是一个绿色版 zip 包，不需要安装，解压后就是一个最小可运行的 Python。 适合用来嵌入到 PyStand / PyInstaller / cx_Freeze 等打包工具里。 适用版本：Python 3.5 及以上（因为嵌入式解释器是 3.5 开始提供的）。 嵌入式解释器和开发环境的版本保持一致 打包原理 你把这个 embeddable 包解压到你的项目目录。 把你写的 Python 脚本（或编译成 .pyc/.pyd/.pyo）放进去。 配置好 pythonXY._pth 文件（类似虚拟环境的 sys.path 设置），让它能找到你项目的依赖。 区别于 PyInstaller、cx_Freeze 等工具 PyInstaller：把代码和解释器打成一个单独 exe。 Embeddable：保留一个完整的独立 Python 环境 &#43; 你的程序，更像是“便携版 Python &#43; 应用”。 如果你下载了 python-3.12.9-embed-amd64.zip，解压后结构大概是：
+|-- python.exe |-- python312.zip ← 标准库，不用解压占用空间小，Python 启动时直接从 zip 里加载模块。 |-- python312._pth ← 配置搜索路径二、打包准备# 准备代码# main.py
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="Pystand打包工具">
+  <meta property="og:description" content="https://zhuanlan.zhihu.com/p/691339803
+一、什么是嵌入式打包？# 嵌入式解释器（Windows embeddable package） 是 Python 官方专门提供给“打包场景”的：
+从 python.org/downloads/windows/ 下载 Windows embeddable package (32/64-bit)。 它是一个绿色版 zip 包，不需要安装，解压后就是一个最小可运行的 Python。 适合用来嵌入到 PyStand / PyInstaller / cx_Freeze 等打包工具里。 适用版本：Python 3.5 及以上（因为嵌入式解释器是 3.5 开始提供的）。 嵌入式解释器和开发环境的版本保持一致 打包原理 你把这个 embeddable 包解压到你的项目目录。 把你写的 Python 脚本（或编译成 .pyc/.pyd/.pyo）放进去。 配置好 pythonXY._pth 文件（类似虚拟环境的 sys.path 设置），让它能找到你项目的依赖。 区别于 PyInstaller、cx_Freeze 等工具 PyInstaller：把代码和解释器打成一个单独 exe。 Embeddable：保留一个完整的独立 Python 环境 &#43; 你的程序，更像是“便携版 Python &#43; 应用”。 如果你下载了 python-3.12.9-embed-amd64.zip，解压后结构大概是：
+|-- python.exe |-- python312.zip ← 标准库，不用解压占用空间小，Python 启动时直接从 zip 里加载模块。 |-- python312._pth ← 配置搜索路径二、打包准备# 准备代码# main.py">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="python">
+
+
+  <meta itemprop="name" content="Pystand打包工具">
+  <meta itemprop="description" content="https://zhuanlan.zhihu.com/p/691339803
+一、什么是嵌入式打包？# 嵌入式解释器（Windows embeddable package） 是 Python 官方专门提供给“打包场景”的：
+从 python.org/downloads/windows/ 下载 Windows embeddable package (32/64-bit)。 它是一个绿色版 zip 包，不需要安装，解压后就是一个最小可运行的 Python。 适合用来嵌入到 PyStand / PyInstaller / cx_Freeze 等打包工具里。 适用版本：Python 3.5 及以上（因为嵌入式解释器是 3.5 开始提供的）。 嵌入式解释器和开发环境的版本保持一致 打包原理 你把这个 embeddable 包解压到你的项目目录。 把你写的 Python 脚本（或编译成 .pyc/.pyd/.pyo）放进去。 配置好 pythonXY._pth 文件（类似虚拟环境的 sys.path 设置），让它能找到你项目的依赖。 区别于 PyInstaller、cx_Freeze 等工具 PyInstaller：把代码和解释器打成一个单独 exe。 Embeddable：保留一个完整的独立 Python 环境 &#43; 你的程序，更像是“便携版 Python &#43; 应用”。 如果你下载了 python-3.12.9-embed-amd64.zip，解压后结构大概是：
+|-- python.exe |-- python312.zip ← 标准库，不用解压占用空间小，Python 启动时直接从 zip 里加载模块。 |-- python312._pth ← 配置搜索路径二、打包准备# 准备代码# main.py">
+  <meta itemprop="wordCount" content="325">
+
+<title>Pystand打包工具 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.9d4fa0048b4786d5be096d98c61a47e02072a87b9dbf0bb86dcd8edf179c4e43.js" integrity="sha256-nU&#43;gBItHhtW&#43;CW2YxhpH4CByqHudvwu4bc2O3xecTkM=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-python">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-204365caa941390a182aeb870c8b397d" class="toggle" checked />
+    <label for="section-204365caa941390a182aeb870c8b397d" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f6929f8819239c236e3ff6d9318a645b" class="toggle"  />
+    <label for="section-f6929f8819239c236e3ff6d9318a645b" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-797baf87757652be835bcce5680ea0d4" class="toggle"  />
+    <label for="section-797baf87757652be835bcce5680ea0d4" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0fa9f382cfc268805da9afbea1ac822b" class="toggle"  />
+    <label for="section-0fa9f382cfc268805da9afbea1ac822b" class="flex">
+      <a role="button" class="">
+        Python数据处理</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-938c3edbaa8e3dd01e8b93d6f9361182" class="toggle"  />
+    <label for="section-938c3edbaa8e3dd01e8b93d6f9361182" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-56b62cfe8bd1e3138f346455c7c08d01" class="toggle" checked />
+    <label for="section-56b62cfe8bd1e3138f346455c7c08d01" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="active">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e12d76c83fadc5077063bd8a06e4974c" class="toggle"  />
+    <label for="section-e12d76c83fadc5077063bd8a06e4974c" class="flex">
+      <a role="button" class="">
+        Linux</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-docker/" class="">
+      安装 Docker 教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-mysql/" class="">
+      安装 mysql 教程</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-23e22f2cefc5200495b10b220f00dc9b" class="toggle"  />
+    <label for="section-23e22f2cefc5200495b10b220f00dc9b" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5f3519d07421b3022c482beb7e53757d" class="toggle"  />
+    <label for="section-5f3519d07421b3022c482beb7e53757d" class="flex">
+      <a role="button" class="">
+        Other</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强平台装机流程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-00896273d6e22b6628839c56863edc57" class="toggle"  />
+    <label for="section-00896273d6e22b6628839c56863edc57" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-212fbf26dee144498e07df6cb6c18024" class="toggle"  />
+    <label for="section-212fbf26dee144498e07df6cb6c18024" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB/" class="">
+      处理鼠标漂移</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5b47f8600929668d6470260320a7fd81" class="toggle"  />
+    <label for="section-5b47f8600929668d6470260320a7fd81" class="flex">
+      <a href="/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+        幽灵键鼠</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a>
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E6%B8%B8%E6%88%8F%E8%84%9A%E6%9C%AC%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%9A%94%E7%A6%BB%E6%96%B9%E6%A1%88/" class="">
+      脚本隔离方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c5a43b1f0709f0338f2ab4a52452792c" class="toggle"  />
+    <label for="section-c5a43b1f0709f0338f2ab4a52452792c" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>Pystand打包工具</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#一什么是嵌入式打包">一、什么是嵌入式打包？</a></li>
+    <li><a href="#二打包准备">二、打包准备</a>
+      <ul>
+        <li><a href="#准备代码">准备代码</a></li>
+        <li><a href="#准备虚拟环境">准备虚拟环境</a></li>
+        <li><a href="#使用pystand壳打包">使用pystand壳打包</a></li>
+      </ul>
+    </li>
+    <li><a href="#三体积优化">三、体积优化</a>
+      <ul>
+        <li><a href="#优化第一步">优化第一步</a></li>
+        <li><a href="#优化第二步">优化第二步</a></li>
+      </ul>
+    </li>
+    <li><a href="#四加密源码">四、加密源码</a></li>
+    <li><a href="#五常见问题">五、常见问题</a>
+      <ul>
+        <li><a href="#打包tkinter模块">打包tkinter模块</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><p><a href="https://zhuanlan.zhihu.com/p/691339803">https://zhuanlan.zhihu.com/p/691339803</a></p>
+<h2 id="一什么是嵌入式打包">一、什么是嵌入式打包？<a class="anchor" href="#%e4%b8%80%e4%bb%80%e4%b9%88%e6%98%af%e5%b5%8c%e5%85%a5%e5%bc%8f%e6%89%93%e5%8c%85">#</a></h2>
+<p><strong>嵌入式解释器（Windows embeddable package）</strong> 是 Python 官方专门提供给“打包场景”的：</p>
+<ul>
+<li>从 <a href="https://www.python.org/downloads/windows/">python.org/downloads/windows/</a> 下载 <strong>Windows embeddable package (32/64-bit)</strong>。</li>
+<li>它是一个绿色版 zip 包，不需要安装，解压后就是一个最小可运行的 Python。</li>
+<li>适合用来嵌入到 PyStand / PyInstaller / cx_Freeze 等打包工具里。</li>
+<li>适用版本：Python 3.5 及以上（因为嵌入式解释器是 3.5 开始提供的）。</li>
+<li>嵌入式解释器和开发环境的版本保持一致</li>
+</ul>
+<ol>
+<li>打包原理
+<ul>
+<li>你把这个 embeddable 包解压到你的项目目录。</li>
+<li>把你写的 Python 脚本（或编译成 <code>.pyc</code>/<code>.pyd</code>/<code>.pyo</code>）放进去。</li>
+<li>配置好 <code>pythonXY._pth</code> 文件（类似虚拟环境的 <code>sys.path</code> 设置），让它能找到你项目的依赖。</li>
+</ul>
+</li>
+<li>区别于 PyInstaller、cx_Freeze 等工具
+<ul>
+<li>PyInstaller：把代码和解释器打成一个单独 exe。</li>
+<li>Embeddable：保留一个完整的独立 Python 环境 + 你的程序，更像是“便携版 Python + 应用”。</li>
+</ul>
+</li>
+</ol>
+<p>如果你下载了 <code>python-3.12.9-embed-amd64.zip</code>，解压后结构大概是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">|--</span> python<span style="color:#f92672">.</span>exe
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|--</span> python312<span style="color:#f92672">.</span>zip  <span style="color:#960050;background-color:#1e0010">←</span> 标准库<span style="color:#960050;background-color:#1e0010">，</span>不用解压占用空间小<span style="color:#960050;background-color:#1e0010">，</span>Python 启动时直接从 zip 里加载模块<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">|--</span> python312<span style="color:#f92672">.</span>_pth  <span style="color:#960050;background-color:#1e0010">←</span> 配置搜索路径</span></span></code></pre></div><h2 id="二打包准备">二、打包准备<a class="anchor" href="#%e4%ba%8c%e6%89%93%e5%8c%85%e5%87%86%e5%a4%87">#</a></h2>
+<h3 id="准备代码">准备代码<a class="anchor" href="#%e5%87%86%e5%a4%87%e4%bb%a3%e7%a0%81">#</a></h3>
+<p>main.py</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> sys
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> PyQt5.QtWidgets <span style="color:#f92672">import</span> QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> matplotlib.backends.backend_qt5agg <span style="color:#f92672">import</span> FigureCanvasQTAgg <span style="color:#66d9ef">as</span> FigureCanvas
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> matplotlib.figure <span style="color:#f92672">import</span> Figure
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MplCanvas</span>(FigureCanvas):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;Ultimately, this is a QWidget (as well as a FigureCanvasAgg, etc.).&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self, parent<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>, width<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span>, height<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span>, dpi<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span>):
+</span></span><span style="display:flex;"><span>        fig <span style="color:#f92672">=</span> Figure(figsize<span style="color:#f92672">=</span>(width, height), dpi<span style="color:#f92672">=</span>dpi)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>axes <span style="color:#f92672">=</span> fig<span style="color:#f92672">.</span>add_subplot()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 初始化父类</span>
+</span></span><span style="display:flex;"><span>        super(MplCanvas, self)<span style="color:#f92672">.</span><span style="color:#a6e22e">__init__</span>(fig)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MainWindow</span>(QMainWindow):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self):
+</span></span><span style="display:flex;"><span>        super(MainWindow, self)<span style="color:#f92672">.</span><span style="color:#a6e22e">__init__</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 创建MplCanvas实例作为窗口中的中央部件</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>canvas <span style="color:#f92672">=</span> MplCanvas(self, width<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span>, height<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span>, dpi<span style="color:#f92672">=</span><span style="color:#ae81ff">100</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 生成数据并绘制</span>
+</span></span><span style="display:flex;"><span>        x_values <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>linspace(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> np<span style="color:#f92672">.</span>pi, num<span style="color:#f92672">=</span><span style="color:#ae81ff">200</span>)
+</span></span><span style="display:flex;"><span>        y_values <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>sin(x_values)
+</span></span><span style="display:flex;"><span>        df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame({<span style="color:#e6db74">&#39;x&#39;</span>: x_values, <span style="color:#e6db74">&#39;sin(x)&#39;</span>: y_values})
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>canvas<span style="color:#f92672">.</span>axes<span style="color:#f92672">.</span>plot(x_values, y_values, label<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Sine Function&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 设置图表标题、坐标轴标签等</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>canvas<span style="color:#f92672">.</span>axes<span style="color:#f92672">.</span>set_xlabel(<span style="color:#e6db74">&#39;X axis (x)&#39;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>canvas<span style="color:#f92672">.</span>axes<span style="color:#f92672">.</span>set_ylabel(<span style="color:#e6db74">&#39;Y axis(sin(x))&#39;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>canvas<span style="color:#f92672">.</span>axes<span style="color:#f92672">.</span>set_title(<span style="color:#e6db74">&#39;y = sin(x)&#39;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>canvas<span style="color:#f92672">.</span>axes<span style="color:#f92672">.</span>legend()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 布局管理</span>
+</span></span><span style="display:flex;"><span>        layout <span style="color:#f92672">=</span> QVBoxLayout()
+</span></span><span style="display:flex;"><span>        layout<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>canvas)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>text<span style="color:#f92672">=</span>QLabel(str(df<span style="color:#f92672">.</span>info))
+</span></span><span style="display:flex;"><span>        layout<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>text)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        container <span style="color:#f92672">=</span> QWidget()
+</span></span><span style="display:flex;"><span>        container<span style="color:#f92672">.</span>setLayout(layout)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setCentralWidget(container)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    app <span style="color:#f92672">=</span> QApplication(sys<span style="color:#f92672">.</span>argv)
+</span></span><span style="display:flex;"><span>    main_win <span style="color:#f92672">=</span> MainWindow()
+</span></span><span style="display:flex;"><span>    main_win<span style="color:#f92672">.</span>show()
+</span></span><span style="display:flex;"><span>    sys<span style="color:#f92672">.</span>exit(app<span style="color:#f92672">.</span>exec_())</span></span></code></pre></div><h3 id="准备虚拟环境">准备虚拟环境<a class="anchor" href="#%e5%87%86%e5%a4%87%e8%99%9a%e6%8b%9f%e7%8e%af%e5%a2%83">#</a></h3>
+<p>pycharm创建虚拟环境项目，将代码文件放进去,运行一次</p>
+<h3 id="使用pystand壳打包">使用pystand壳打包<a class="anchor" href="#%e4%bd%bf%e7%94%a8pystand%e5%a3%b3%e6%89%93%e5%8c%85">#</a></h3>
+<p>1.下载pystand项目中的pystand程序，这是一个C++编写的壳，用来调用python解释器运行代码。</p>
+<blockquote class='book-hint '>
+<p>你也可以不用这个壳，直接bat命令调用python解释器运行main.py文件，但这样多少显得不太美观。</p></blockquote><p><a href="https://github.com/skywind3000/PyStand/releases">https://github.com/skywind3000/PyStand/releases</a></p>
+<p><img src="../images/Pystand_pystand%e9%a1%b9%e7%9b%aeReleases%e5%88%97%e8%a1%a8.png" alt="pystand项目Releases列表" /></p>
+<p>只需要看这两个就行，一个是py38-x64，一个是py38，分别对应64位解释器和32位解释器，同时也对应了64位的pystand及32位的pystand，请注意这俩一定要对应上。<strong>不能用32位的pystand去运行64位的python解释器</strong>。</p>
+<blockquote class='book-hint '>
+<p>其他Releases版本内包含的pyqt5,pyside2等，都是32位的
+pystand-v1.1.1-exe.zip，这个Releases版本也挺重要的，里面包含了无界面与有界面的pystand壳，适用于不同的应用场合，看你的项目是否需要命令行界面（那个黑框）。</p></blockquote><p>2.本文以64位为例，下载PyStand-py38-x64.7z。下载到本地后，它应该长这样。
+<img src="../images/Pystand_pystand%e6%96%87%e4%bb%b6%e7%9b%ae%e5%bd%95.png" alt="pystand文件目录" /></p>
+<ul>
+<li>runtime文件夹里面放的是python embeddable解释器，这里面自带的是python3.8.10。</li>
+<li>site-packages里面放的是第三方库，空的。</li>
+<li>pystand.exe是一个c++写的壳，双击即可运行</li>
+<li>pystand.int中保存的是python代码，你可以理解为main.py文件，这个文件中必须是python代码（注意哦，<strong>必须是明文代码</strong>，原因可以去看pystand源码），用作程序入口。</li>
+</ul>
+<p>你可以选择将runtime文件夹里面的内容删掉，自己去官网下载其他版本的python embeddable解释器，我这里以python 3.12为例， <a href="https://www.python.org/downloads/windows/">python.org/downloads/windows/</a> 去官网下载，并替换runtime文件夹中的文件。</p>
+<p>3.将你的项目所依赖的虚拟环境下的site-package文件夹下所有内容copy到pystand的site-package文件夹下，请注意，如果你的项目所依赖的虚拟环境并不是特别的干净，比如还有项目根本没用到的scipy库等，我建议你<strong>重新新建虚拟环境，安装好依赖后拷贝</strong>。（其实拷贝系统环境也行，就是一般没那么干净。有很多冗余的库）</p>
+<p>（这步操作一般没啥问题，但是有些第三方库<strong>不讲武德</strong>，比如最新版torch库，它把二进制依赖dll文件扔到sitepackage外面，只复制sitepackage里面的内容，会报错dll load failed，这种时候有其他的处理办法）</p>
+<p>到这儿，打包程序的环境配置完毕。</p>
+<p>4，在pystand目录下，新建script目录，将程序代码拷贝到里面去。并对代码入口做简要修改，注释掉 if <strong>name</strong> == &lsquo;<strong>main</strong>&rsquo;:，新建入口函数，名称随意，这里以start为例。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">start</span>():
+</span></span><span style="display:flex;"><span>    app <span style="color:#f92672">=</span> QApplication(sys<span style="color:#f92672">.</span>argv)
+</span></span><span style="display:flex;"><span>    main_win <span style="color:#f92672">=</span> MainWindow()
+</span></span><span style="display:flex;"><span>    main_win<span style="color:#f92672">.</span>show()
+</span></span><span style="display:flex;"><span>    sys<span style="color:#f92672">.</span>exit(app<span style="color:#f92672">.</span>exec_())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># if __name__ == &#39;__main__&#39;:</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#     app = QApplication(sys.argv)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#     main_win = MainWindow()</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#     main_win.show()</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#     sys.exit(app.exec_())</span></span></span></code></pre></div><p>5，修改pystand.int中的代码，以文本编辑器打开该文件，直接清空内容，输入以下代码。这样就表示，从start函数启动程序。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> main <span style="color:#f92672">import</span> start
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#运行入口函数</span>
+</span></span><span style="display:flex;"><span>    start()</span></span></code></pre></div><p>但是第4步我们将main.py文件扔到了scripts文件夹下，程序是不知道main.py文件在哪儿的，所以会报错：
+from main import start
+ModuleNotFoundError: no module named &ldquo;main&rdquo;
+去改runtime文件夹里面的._pth文件，加一行../scripts就ok了</p>
+<pre tabindex="0"><code>python312.zip
+.
+../scripts
+# Uncomment to run site.main() automatically
+import site</code></pre><p>6，双击pystand.exe，运行程序，可得到如期结果。到这儿，打包算初步完成。</p>
+<ul>
+<li>
+<p>如果不能如期运行，可以使用cmd命令运行pystand.exe，可以查看到报错信息。</p>
+</li>
+<li>
+<p>如果需要自定义程序名字，需要同时修改pystand.exe及http://pystand.int两个文件，保持同名即可。</p>
+</li>
+<li>
+<p>如果觉得保持同名很麻烦，想允许用户自己随便改名，那么请将http://pystand.int改名为http://pystand_static.int即可。</p>
+</li>
+<li>
+<p>如果觉得int文件有点碍眼，那就得修改pystand源码了，稍微改一下就可以让pystand去runtime里面找int文件，就可以藏起来了。（但是不推荐改，最好用韦神提供的exe，他拿去报白名单了，报毒概率低哦）</p>
+</li>
+<li>
+<p>如果需要自定义程序图标，请使用Resource Hacker 更换图标，非常简单。</p>
+</li>
+<li>
+<p>程序源代码是以源码形式放在script目录中的，建议使用nuitka批量将py文件转为pyd文件，提升运行速度的同时隐藏了源码。</p>
+</li>
+</ul>
+<h2 id="三体积优化">三、体积优化<a class="anchor" href="#%e4%b8%89%e4%bd%93%e7%a7%af%e4%bc%98%e5%8c%96">#</a></h2>
+<h3 id="优化第一步">优化第一步<a class="anchor" href="#%e4%bc%98%e5%8c%96%e7%ac%ac%e4%b8%80%e6%ad%a5">#</a></h3>
+<p>删除不需要的固有第三方库，请删除sitepackage文件夹下的pip，pip-info，wheel，wheel-info，setuptools，setuptools-info，合计6个文件夹，这大概是15M。请删除runtime文件夹下的get-pip.py文件，这个是python官方提供拿来安装pip的，不需要。</p>
+<h3 id="优化第二步">优化第二步<a class="anchor" href="#%e4%bc%98%e5%8c%96%e7%ac%ac%e4%ba%8c%e6%ad%a5">#</a></h3>
+<p>使用神秘脚本删除程序运行不需要的第三方库文件。</p>
+<p>请到下面的链接获取，如果觉得好用，请大力宣传哦！</p>
+<p>打包瘦身脚本：https://github.com/mengdeer589/PythonSizeCruncher</p>
+<p>请仔细阅读该脚本使用说明，本文仅展示瘦身效果。</p>
+<p><strong>注意注意</strong>：请对sitepackage文件夹使用哦，本脚本对runtime文件夹内的文件没有识别能力。</p>
+<h2 id="四加密源码">四、加密源码<a class="anchor" href="#%e5%9b%9b%e5%8a%a0%e5%af%86%e6%ba%90%e7%a0%81">#</a></h2>
+<p>按照本文所推荐的打包方式，源码其实是放在script文件夹中，以python源码的形式存放的。现在我们来简单加密一下，不让别人随随便看见。</p>
+<p>请安装nuitka，然后对你的代码文件夹，使用&ndash;module命令，将源码编译为pyd文件。上面已经提到了详细命令。</p>
+<p>而pyd文件比pyc文件安全的多，它类似于dll文件，一般人很难破解，想逆向还原源码，那更是不可能。</p>
+<p><strong>但是pyd文件作为一个依赖模块，是可以直接通过dir函数查看其暴露的接口的，所以请将重要变量匿名化（不能被import，dir出来）</strong></p>
+<h2 id="五常见问题">五、常见问题<a class="anchor" href="#%e4%ba%94%e5%b8%b8%e8%a7%81%e9%97%ae%e9%a2%98">#</a></h2>
+<h3 id="打包tkinter模块">打包tkinter模块<a class="anchor" href="#%e6%89%93%e5%8c%85tkinter%e6%a8%a1%e5%9d%97">#</a></h3>
+<p>官方提供的嵌入式解释器并不包含pip工具，以及tkinter模块，下面的步骤是怎么补上这个tkinter模块。</p>
+<p>注：本方法目的在于后续可以<strong>复用</strong>，所以并不按照官方的目录结构来。</p>
+<p>①复制tkinter模块。从已经安装了tkinter模块的相同python解释器环境中复制，该模块通常位于解释器的Lib文件夹下，将tkinter文件夹复制到pystand/runtime/Lib文件夹下，注意，这里需要新建一个Lib文件夹。</p>
+<p>②复制tcl文件夹里面<strong>所有的文件</strong>，到pystand/runtime/Lib文件夹下，tcl文件夹通常位于解释器的同级目录。</p>
+<p>③复制二进制模块。复制_tkinter.pyd，tcl86t.dll，tk86t.dll三个文件到pystand/runtime/Lib文件夹下，这三个文件通常位于解释器的DLLs文件夹下。</p>
+<p>④修改路径。修改runtime文件夹里面的python310._pth文件，增加一行./Lib。注意，这里有个点，代表同级目录的Lib文件夹。</p>
+<p>tips:20240907更新，若打包python版本为3.12，tkinter打包时，需复制系统python3.12解释器dlls文件夹下的zlib1.dll到pystand/runtime/Lib文件夹下。</p>
+<p>现在可以运行程序了。如果后续还需要打包tkinter模块。直接复制这里弄好的Lib文件夹跟._pth文件到runtime文件夹下即可实现复用。</p>
+<p><img src="../images/Pystand_%e5%bc%84%e5%a5%bd%e5%90%8e%e7%9a%84lib.png" alt="弄好后的lib" /></p>
+<p><img src="../images/Pystand_python312_pth.png" alt="python312_pth" /></p>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>PySide信号槽与多线程</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="flex align-center">
+        <span>Conda使用教程</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#一什么是嵌入式打包">一、什么是嵌入式打包？</a></li>
+    <li><a href="#二打包准备">二、打包准备</a>
+      <ul>
+        <li><a href="#准备代码">准备代码</a></li>
+        <li><a href="#准备虚拟环境">准备虚拟环境</a></li>
+        <li><a href="#使用pystand壳打包">使用pystand壳打包</a></li>
+      </ul>
+    </li>
+    <li><a href="#三体积优化">三、体积优化</a>
+      <ul>
+        <li><a href="#优化第一步">优化第一步</a></li>
+        <li><a href="#优化第二步">优化第二步</a></li>
+      </ul>
+    </li>
+    <li><a href="#四加密源码">四、加密源码</a></li>
+    <li><a href="#五常见问题">五、常见问题</a>
+      <ul>
+        <li><a href="#打包tkinter模块">打包tkinter模块</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

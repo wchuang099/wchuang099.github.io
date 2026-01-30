@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="数据分析：是把隐藏在一些看似杂乱无章的数据背后的信息提炼出来，总结出所研究对象的内在规律 数据分析三剑客：Numpy,Pandas,Matplotlib
+Numpy是Python语言的一个扩展程序库，支持大量的维度数组与矩阵运算，此外也针对数组运算提供大量的数学函数库。 NumPy 核心功能：
+NumPy 的核心是 ndarray（多维数组对象），它相比 Python 的 list 有几个优势： 存储更紧凑（同类型数据，连续内存） 运算速度快（底层 C 实现） 支持广播机制（不同形状数组自动匹配运算） 提供大量数学函数和线性代数工具 安装导入# pip install numpy import numpy as np print(np.__version__)创建数组# 一维数组（1D Array）# 就像一个数字列表，只有一个维度。 结构类似 Python 里的列表 [1, 2, 3, 4]。 表示一条“线”上的数据。 arr_1d = np.array([10, 20, 30, 40]) print(arr_1d) # 输出: [10 20 30 40] print(arr_1d.shape) # 输出: (4,) 表示长度是4的一维数组 二维数组（2D Array）# 类似于一个表格（矩阵），有“行”和“列”两个维度。
+结构类似 Python 里的嵌套列表 [[1, 2], [3, 4]]。
+表示“矩阵”或“二维平面”上的数据。
+arr_2d = np.array([[1, 2, 3], [4, 5, 6]]) print(arr_2d) # 输出:# [[1 2 3] # [4 5 6]] print(arr_2d.shape) # 输出: (2, 3) 表示2行3列的二维数组三维数组（3D Array）# 形状是 (层数, 行数, 列数)，就是多张二维矩阵叠加在一起。 类似于一个“数据立方体”。 常用于表示彩色图片（宽×高×RGB三通道）、视频帧序列，或者多组二维数据集合。 import numpy as np arr_3d = np.array([ [[1, 2, 3], # 第1层，第一行 [4, 5, 6]], # 第1层，第二行 [[7, 8, 9], # 第2层，第一行 [10, 11, 12]] # 第2层，第二行 ]) print(arr_3d) # 输出： # [[[ 1 2 3] # [ 4 5 6]] # # [[ 7 8 9] # [10 11 12]]] print(arr_3d.shape) # 输出：(2, 2, 3) # 表示2层，每层2行3列 维度 用途举例 视觉形象 1维 数组、向量 线 2维 矩阵、表格 面 3维 立体数据（视频、彩色图） 体（立方体） 更多维度就是在三维基础上继续“叠加”更多维度，但在实际应用中，超过 5~10 维的数组就非常少见了，太高维的数组很难直观理解和处理。
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="Numpy">
+  <meta property="og:description" content="数据分析：是把隐藏在一些看似杂乱无章的数据背后的信息提炼出来，总结出所研究对象的内在规律 数据分析三剑客：Numpy,Pandas,Matplotlib
+Numpy是Python语言的一个扩展程序库，支持大量的维度数组与矩阵运算，此外也针对数组运算提供大量的数学函数库。 NumPy 核心功能：
+NumPy 的核心是 ndarray（多维数组对象），它相比 Python 的 list 有几个优势： 存储更紧凑（同类型数据，连续内存） 运算速度快（底层 C 实现） 支持广播机制（不同形状数组自动匹配运算） 提供大量数学函数和线性代数工具 安装导入# pip install numpy import numpy as np print(np.__version__)创建数组# 一维数组（1D Array）# 就像一个数字列表，只有一个维度。 结构类似 Python 里的列表 [1, 2, 3, 4]。 表示一条“线”上的数据。 arr_1d = np.array([10, 20, 30, 40]) print(arr_1d) # 输出: [10 20 30 40] print(arr_1d.shape) # 输出: (4,) 表示长度是4的一维数组 二维数组（2D Array）# 类似于一个表格（矩阵），有“行”和“列”两个维度。
+结构类似 Python 里的嵌套列表 [[1, 2], [3, 4]]。
+表示“矩阵”或“二维平面”上的数据。
+arr_2d = np.array([[1, 2, 3], [4, 5, 6]]) print(arr_2d) # 输出:# [[1 2 3] # [4 5 6]] print(arr_2d.shape) # 输出: (2, 3) 表示2行3列的二维数组三维数组（3D Array）# 形状是 (层数, 行数, 列数)，就是多张二维矩阵叠加在一起。 类似于一个“数据立方体”。 常用于表示彩色图片（宽×高×RGB三通道）、视频帧序列，或者多组二维数据集合。 import numpy as np arr_3d = np.array([ [[1, 2, 3], # 第1层，第一行 [4, 5, 6]], # 第1层，第二行 [[7, 8, 9], # 第2层，第一行 [10, 11, 12]] # 第2层，第二行 ]) print(arr_3d) # 输出： # [[[ 1 2 3] # [ 4 5 6]] # # [[ 7 8 9] # [10 11 12]]] print(arr_3d.shape) # 输出：(2, 2, 3) # 表示2层，每层2行3列 维度 用途举例 视觉形象 1维 数组、向量 线 2维 矩阵、表格 面 3维 立体数据（视频、彩色图） 体（立方体） 更多维度就是在三维基础上继续“叠加”更多维度，但在实际应用中，超过 5~10 维的数组就非常少见了，太高维的数组很难直观理解和处理。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="python">
+
+
+  <meta itemprop="name" content="Numpy">
+  <meta itemprop="description" content="数据分析：是把隐藏在一些看似杂乱无章的数据背后的信息提炼出来，总结出所研究对象的内在规律 数据分析三剑客：Numpy,Pandas,Matplotlib
+Numpy是Python语言的一个扩展程序库，支持大量的维度数组与矩阵运算，此外也针对数组运算提供大量的数学函数库。 NumPy 核心功能：
+NumPy 的核心是 ndarray（多维数组对象），它相比 Python 的 list 有几个优势： 存储更紧凑（同类型数据，连续内存） 运算速度快（底层 C 实现） 支持广播机制（不同形状数组自动匹配运算） 提供大量数学函数和线性代数工具 安装导入# pip install numpy import numpy as np print(np.__version__)创建数组# 一维数组（1D Array）# 就像一个数字列表，只有一个维度。 结构类似 Python 里的列表 [1, 2, 3, 4]。 表示一条“线”上的数据。 arr_1d = np.array([10, 20, 30, 40]) print(arr_1d) # 输出: [10 20 30 40] print(arr_1d.shape) # 输出: (4,) 表示长度是4的一维数组 二维数组（2D Array）# 类似于一个表格（矩阵），有“行”和“列”两个维度。
+结构类似 Python 里的嵌套列表 [[1, 2], [3, 4]]。
+表示“矩阵”或“二维平面”上的数据。
+arr_2d = np.array([[1, 2, 3], [4, 5, 6]]) print(arr_2d) # 输出:# [[1 2 3] # [4 5 6]] print(arr_2d.shape) # 输出: (2, 3) 表示2行3列的二维数组三维数组（3D Array）# 形状是 (层数, 行数, 列数)，就是多张二维矩阵叠加在一起。 类似于一个“数据立方体”。 常用于表示彩色图片（宽×高×RGB三通道）、视频帧序列，或者多组二维数据集合。 import numpy as np arr_3d = np.array([ [[1, 2, 3], # 第1层，第一行 [4, 5, 6]], # 第1层，第二行 [[7, 8, 9], # 第2层，第一行 [10, 11, 12]] # 第2层，第二行 ]) print(arr_3d) # 输出： # [[[ 1 2 3] # [ 4 5 6]] # # [[ 7 8 9] # [10 11 12]]] print(arr_3d.shape) # 输出：(2, 2, 3) # 表示2层，每层2行3列 维度 用途举例 视觉形象 1维 数组、向量 线 2维 矩阵、表格 面 3维 立体数据（视频、彩色图） 体（立方体） 更多维度就是在三维基础上继续“叠加”更多维度，但在实际应用中，超过 5~10 维的数组就非常少见了，太高维的数组很难直观理解和处理。">
+  <meta itemprop="wordCount" content="300">
+
+<title>Numpy | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.9d4fa0048b4786d5be096d98c61a47e02072a87b9dbf0bb86dcd8edf179c4e43.js" integrity="sha256-nU&#43;gBItHhtW&#43;CW2YxhpH4CByqHudvwu4bc2O3xecTkM=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-python">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-204365caa941390a182aeb870c8b397d" class="toggle" checked />
+    <label for="section-204365caa941390a182aeb870c8b397d" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f6929f8819239c236e3ff6d9318a645b" class="toggle"  />
+    <label for="section-f6929f8819239c236e3ff6d9318a645b" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-797baf87757652be835bcce5680ea0d4" class="toggle"  />
+    <label for="section-797baf87757652be835bcce5680ea0d4" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0fa9f382cfc268805da9afbea1ac822b" class="toggle" checked />
+    <label for="section-0fa9f382cfc268805da9afbea1ac822b" class="flex">
+      <a role="button" class="">
+        Python数据处理</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="active">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-938c3edbaa8e3dd01e8b93d6f9361182" class="toggle"  />
+    <label for="section-938c3edbaa8e3dd01e8b93d6f9361182" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-56b62cfe8bd1e3138f346455c7c08d01" class="toggle"  />
+    <label for="section-56b62cfe8bd1e3138f346455c7c08d01" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e12d76c83fadc5077063bd8a06e4974c" class="toggle"  />
+    <label for="section-e12d76c83fadc5077063bd8a06e4974c" class="flex">
+      <a role="button" class="">
+        Linux</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-docker/" class="">
+      安装 Docker 教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-mysql/" class="">
+      安装 mysql 教程</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-23e22f2cefc5200495b10b220f00dc9b" class="toggle"  />
+    <label for="section-23e22f2cefc5200495b10b220f00dc9b" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5f3519d07421b3022c482beb7e53757d" class="toggle"  />
+    <label for="section-5f3519d07421b3022c482beb7e53757d" class="flex">
+      <a role="button" class="">
+        Other</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强平台装机流程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-00896273d6e22b6628839c56863edc57" class="toggle"  />
+    <label for="section-00896273d6e22b6628839c56863edc57" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-212fbf26dee144498e07df6cb6c18024" class="toggle"  />
+    <label for="section-212fbf26dee144498e07df6cb6c18024" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB/" class="">
+      处理鼠标漂移</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5b47f8600929668d6470260320a7fd81" class="toggle"  />
+    <label for="section-5b47f8600929668d6470260320a7fd81" class="flex">
+      <a href="/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+        幽灵键鼠</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a>
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E6%B8%B8%E6%88%8F%E8%84%9A%E6%9C%AC%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%9A%94%E7%A6%BB%E6%96%B9%E6%A1%88/" class="">
+      脚本隔离方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c5a43b1f0709f0338f2ab4a52452792c" class="toggle"  />
+    <label for="section-c5a43b1f0709f0338f2ab4a52452792c" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>Numpy</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#一维数组1d-array">一维数组（1D Array）</a></li>
+    <li><a href="#二维数组2d-array">二维数组（2D Array）</a></li>
+    <li><a href="#三维数组3d-array">三维数组（3D Array）</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><p>数据分析：是把隐藏在一些看似杂乱无章的数据背后的信息提炼出来，总结出所研究对象的内在规律
+数据分析三剑客：<strong>Numpy,Pandas,Matplotlib</strong></p>
+<p>Numpy是Python语言的一个扩展程序库，支持大量的维度数组与矩阵运算，此外也针对数组运算提供大量的数学函数库。
+NumPy 核心功能：</p>
+<blockquote class='book-hint '>
+<ul>
+<li>NumPy 的核心是 ndarray（多维数组对象），它相比 Python 的 list 有几个优势：</li>
+<li>存储更紧凑（同类型数据，连续内存）</li>
+<li>运算速度快（底层 C 实现）</li>
+<li>支持广播机制（不同形状数组自动匹配运算）</li>
+<li>提供大量数学函数和线性代数工具</li>
+</ul></blockquote><h1 id="安装导入">安装导入<a class="anchor" href="#%e5%ae%89%e8%a3%85%e5%af%bc%e5%85%a5">#</a></h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>pip install numpy
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>print(np<span style="color:#f92672">.</span>__version__)</span></span></code></pre></div><h1 id="创建数组">创建数组<a class="anchor" href="#%e5%88%9b%e5%bb%ba%e6%95%b0%e7%bb%84">#</a></h1>
+<h2 id="一维数组1d-array">一维数组（1D Array）<a class="anchor" href="#%e4%b8%80%e7%bb%b4%e6%95%b0%e7%bb%841d-array">#</a></h2>
+<ul>
+<li>就像一个<strong>数字列表</strong>，只有一个维度。</li>
+<li>结构类似 Python 里的列表 <code>[1, 2, 3, 4]</code>。</li>
+<li>表示一条“<strong>线</strong>”上的数据。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>arr_1d <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">20</span>, <span style="color:#ae81ff">30</span>, <span style="color:#ae81ff">40</span>])
+</span></span><span style="display:flex;"><span>print(arr_1d)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 输出: [10 20 30 40]</span>
+</span></span><span style="display:flex;"><span>print(arr_1d<span style="color:#f92672">.</span>shape)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 输出: (4,)  表示长度是4的一维数组 </span></span></span></code></pre></div><h2 id="二维数组2d-array">二维数组（2D Array）<a class="anchor" href="#%e4%ba%8c%e7%bb%b4%e6%95%b0%e7%bb%842d-array">#</a></h2>
+<ul>
+<li>
+<p>类似于一个表格（矩阵），有“行”和“列”两个维度。</p>
+</li>
+<li>
+<p>结构类似 Python 里的嵌套列表 [[1, 2], [3, 4]]。</p>
+</li>
+<li>
+<p>表示“<strong>矩阵</strong>”或“<strong>二维平面</strong>”上的数据。</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>arr_2d <span style="color:#f92672">=</span> np.array<span style="color:#f92672">([[</span>1, 2, 3<span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>4, 5, 6<span style="color:#f92672">]])</span>
+</span></span><span style="display:flex;"><span>print<span style="color:#f92672">(</span>arr_2d<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 输出:# [[1 2 3]</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#  [4 5 6]]</span>
+</span></span><span style="display:flex;"><span>print<span style="color:#f92672">(</span>arr_2d.shape<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 输出: (2, 3)  表示2行3列的二维数组</span></span></span></code></pre></div><h2 id="三维数组3d-array">三维数组（3D Array）<a class="anchor" href="#%e4%b8%89%e7%bb%b4%e6%95%b0%e7%bb%843d-array">#</a></h2>
+<ul>
+<li>形状是 <code>(层数, 行数, 列数)</code>，就是<strong>多张二维矩阵叠加</strong>在一起。</li>
+<li>类似于一个“<strong>数据立方体</strong>”。</li>
+<li>常用于表示彩色图片（宽×高×RGB三通道）、视频帧序列，或者多组二维数据集合。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> numpy <span style="color:#66d9ef">as</span> np
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>arr_3d <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>array([
+</span></span><span style="display:flex;"><span>    [[<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>],    <span style="color:#75715e"># 第1层，第一行</span>
+</span></span><span style="display:flex;"><span>     [<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>]],   <span style="color:#75715e"># 第1层，第二行</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    [[<span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">9</span>],    <span style="color:#75715e"># 第2层，第一行</span>
+</span></span><span style="display:flex;"><span>     [<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">11</span>, <span style="color:#ae81ff">12</span>]] <span style="color:#75715e"># 第2层，第二行</span>
+</span></span><span style="display:flex;"><span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(arr_3d)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 输出：</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># [[[ 1  2  3]</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#   [ 4  5  6]]</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#  [[ 7  8  9]</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#   [10 11 12]]]</span>
+</span></span><span style="display:flex;"><span>print(arr_3d<span style="color:#f92672">.</span>shape)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 输出：(2, 2, 3)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 表示2层，每层2行3列</span></span></span></code></pre></div><table>
+  <thead>
+      <tr>
+          <th>维度</th>
+          <th>用途举例</th>
+          <th>视觉形象</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>1维</td>
+          <td>数组、向量</td>
+          <td>线</td>
+      </tr>
+      <tr>
+          <td>2维</td>
+          <td>矩阵、表格</td>
+          <td>面</td>
+      </tr>
+      <tr>
+          <td>3维</td>
+          <td>立体数据（视频、彩色图）</td>
+          <td>体（立方体）</td>
+      </tr>
+  </tbody>
+</table>
+<p>更多维度就是在三维基础上继续“叠加”更多维度，但在实际应用中，超过 5~10 维的数组就非常少见了，太高维的数组很难直观理解和处理。</p>
+<blockquote class='book-hint '>
+<p>注意:
+numpy默认ndarray的所有元素的类型是相同的
+如果传进来的列表中包含不同的类型，则统一为同一类型，优先级:str&gt;fioat&gt;int</p>
+<p>arr_2d = np.array([[1,2.1,3],[4,5,&ldquo;six&rdquo;]])
+print(arr_ad)
+#([[&lsquo;1&rsquo;, &lsquo;2.1&rsquo;, &lsquo;3&rsquo;],
+#[&lsquo;4&rsquo;, &lsquo;5&rsquo;, &lsquo;six&rsquo;]], dtype=&rsquo;&lt;U32&rsquo;)</p></blockquote><h1 id="数组属性">数组属性<a class="anchor" href="#%e6%95%b0%e7%bb%84%e5%b1%9e%e6%80%a7">#</a></h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>arr<span style="color:#f92672">.</span>shape      <span style="color:#75715e"># 形状</span>
+</span></span><span style="display:flex;"><span>arr<span style="color:#f92672">.</span>ndim       <span style="color:#75715e"># 维度</span>
+</span></span><span style="display:flex;"><span>arr<span style="color:#f92672">.</span>size       <span style="color:#75715e"># 元素总数</span>
+</span></span><span style="display:flex;"><span>arr<span style="color:#f92672">.</span>dtype      <span style="color:#75715e"># 数据类型</span></span></span></code></pre></div><h1 id="数组运算">数组运算<a class="anchor" href="#%e6%95%b0%e7%bb%84%e8%bf%90%e7%ae%97">#</a></h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">+</span> b          <span style="color:#75715e"># 加</span>
+</span></span><span style="display:flex;"><span>a <span style="color:#f92672">-</span> b          <span style="color:#75715e"># 减</span>
+</span></span><span style="display:flex;"><span>a <span style="color:#f92672">*</span> b          <span style="color:#75715e"># 元素相乘</span>
+</span></span><span style="display:flex;"><span>a <span style="color:#f92672">/</span> b          <span style="color:#75715e"># 元素相除</span>
+</span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>dot(a, b)   <span style="color:#75715e"># 矩阵乘法</span>
+</span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>sum(a)      <span style="color:#75715e"># 求和</span>
+</span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>mean(a)     <span style="color:#75715e"># 均值</span>
+</span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>max(a)      <span style="color:#75715e"># 最大值</span>
+</span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>min(a)      <span style="color:#75715e"># 最小值</span>
+</span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>sqrt(a)     <span style="color:#75715e"># 平方根</span></span></span></code></pre></div><h1 id="索引与切片">索引与切片<a class="anchor" href="#%e7%b4%a2%e5%bc%95%e4%b8%8e%e5%88%87%e7%89%87">#</a></h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a[<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">2</span>]        <span style="color:#75715e"># 第1行第3列</span>
+</span></span><span style="display:flex;"><span>a[:, <span style="color:#ae81ff">0</span>]        <span style="color:#75715e"># 第一列</span>
+</span></span><span style="display:flex;"><span>a[<span style="color:#ae81ff">1</span>, :]        <span style="color:#75715e"># 第二行</span>
+</span></span><span style="display:flex;"><span>a[<span style="color:#ae81ff">0</span>:<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">3</span>]    <span style="color:#75715e"># 子数组切片</span>
+</span></span><span style="display:flex;"><span>a[a <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">5</span>]       <span style="color:#75715e"># 布尔索引</span></span></span></code></pre></div><h1 id="形状变换">形状变换<a class="anchor" href="#%e5%bd%a2%e7%8a%b6%e5%8f%98%e6%8d%a2">#</a></h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a<span style="color:#f92672">.</span>reshape(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>)  <span style="color:#75715e"># 改形状</span>
+</span></span><span style="display:flex;"><span>a<span style="color:#f92672">.</span>flatten()      <span style="color:#75715e"># 拉平成一维</span>
+</span></span><span style="display:flex;"><span>a<span style="color:#f92672">.</span>T              <span style="color:#75715e"># 转置</span></span></span></code></pre></div><h1 id="拼接与分割">拼接与分割<a class="anchor" href="#%e6%8b%bc%e6%8e%a5%e4%b8%8e%e5%88%86%e5%89%b2">#</a></h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>concatenate([a, b], axis<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>) <span style="color:#75715e"># 行拼接</span>
+</span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>concatenate([a, b], axis<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>) <span style="color:#75715e"># 列拼接</span>
+</span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>split(a, <span style="color:#ae81ff">2</span>, axis<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>)         <span style="color:#75715e"># 按行分割</span></span></span></code></pre></div><h1 id="随机数">随机数<a class="anchor" href="#%e9%9a%8f%e6%9c%ba%e6%95%b0">#</a></h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>rand(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>)      <span style="color:#75715e"># 0-1均匀分布</span>
+</span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>randn(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>)     <span style="color:#75715e"># 标准正态分布</span>
+</span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>randint(<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">10</span>, (<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>)) <span style="color:#75715e"># 整数</span>
+</span></span><span style="display:flex;"><span>np<span style="color:#f92672">.</span>random<span style="color:#f92672">.</span>seed(<span style="color:#ae81ff">42</span>)        <span style="color:#75715e"># 固定随机数种子</span></span></span></code></pre></div></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>一些规范</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="flex align-center">
+        <span>Pandas基础</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#一维数组1d-array">一维数组（1D Array）</a></li>
+    <li><a href="#二维数组2d-array">二维数组（2D Array）</a></li>
+    <li><a href="#三维数组3d-array">三维数组（3D Array）</a></li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

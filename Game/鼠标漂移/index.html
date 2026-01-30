@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="http://bbs.anjian.com/showtopic-566788-1.aspx https://blog.sina.com.cn/s/blog_9522b30f010119su.html
+https://tieba.baidu.com/p/3989538710?share=9105&amp;fr=sharewise&amp;see_lz=0&amp;share_from=post&amp;sfc=copy&amp;client_type=2&amp;client_version=12.89.1.0&amp;st=1760188693&amp;is_video=false&amp;unique=824A8C4E0644456F60814F8819DB0547
+鼠标漂移的解决方案汇总# 一、图色层面# 🧩 方法1：目标图定位 &#43; 鼠标图校正（图色自校准法）# 原理：
+先用 FindPic 找到目标图坐标 (tx, ty)。 直接移动鼠标到目标位置。由于存在偏移，通常点不中目标。 再次搜索鼠标箭头图片 (mx, my)，计算偏移量： dx = tx - mxdy = ty - my然后执行 MoveR(dx, dy) 进行相对校正。
+说明：
+只要找图准确，基本一到两次修正即可精准定位。 （修正逐渐移动？或者瞬间移动，不知道哪个效果好） 梦幻西游的图色漂移问题，就是通过这种方式解决的。
+二、内存层面# 🧩 方法1：读内存坐标差值修正（内存坐标比对法）# 原理：
+从游戏内存中读取当前鼠标坐标 (gx, gy)；
+同时获取系统鼠标坐标 (sx, sy)；
+计算差值：
+dx = gx - sxdy = gy - sy 执行 MoveR(dx, dy) 修正位置；
+重复检测与移动，直到偏差小于阈值（一般为 1 像素以内）。
+说明：
+这种方法属于“读内存修正法”，适用于可直接读取游戏鼠标坐标的情况。
+其本质是 用游戏坐标与系统坐标做动态闭环调整。
+🧩 方法2：锁定鼠标基址（内存基址追踪法）# 原理：
+使用 CE 搜索鼠标坐标基址： 初始搜索未知数； 向左移动鼠标 → 搜索“变小的值”； 向右移动鼠标 → 搜索“变大的值”； 多次筛选直到锁定两个地址（X、Y）。 右键查看访问指令，找到 [base &#43; offset] 结构； 将该基址固定，循环读取即可获得游戏鼠标的真实位置。 说明：
+梦幻西游的鼠标基址可以直接寻到，不需要下断点。
+找到基址后，可长期稳定读取坐标，并配合图色判断修正漂移。
+简单游上的“果壳梦幻辅助”就是基于这种原理。
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/Game/%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="处理鼠标漂移">
+  <meta property="og:description" content="http://bbs.anjian.com/showtopic-566788-1.aspx https://blog.sina.com.cn/s/blog_9522b30f010119su.html
+https://tieba.baidu.com/p/3989538710?share=9105&amp;fr=sharewise&amp;see_lz=0&amp;share_from=post&amp;sfc=copy&amp;client_type=2&amp;client_version=12.89.1.0&amp;st=1760188693&amp;is_video=false&amp;unique=824A8C4E0644456F60814F8819DB0547
+鼠标漂移的解决方案汇总# 一、图色层面# 🧩 方法1：目标图定位 &#43; 鼠标图校正（图色自校准法）# 原理：
+先用 FindPic 找到目标图坐标 (tx, ty)。 直接移动鼠标到目标位置。由于存在偏移，通常点不中目标。 再次搜索鼠标箭头图片 (mx, my)，计算偏移量： dx = tx - mxdy = ty - my然后执行 MoveR(dx, dy) 进行相对校正。
+说明：
+只要找图准确，基本一到两次修正即可精准定位。 （修正逐渐移动？或者瞬间移动，不知道哪个效果好） 梦幻西游的图色漂移问题，就是通过这种方式解决的。
+二、内存层面# 🧩 方法1：读内存坐标差值修正（内存坐标比对法）# 原理：
+从游戏内存中读取当前鼠标坐标 (gx, gy)；
+同时获取系统鼠标坐标 (sx, sy)；
+计算差值：
+dx = gx - sxdy = gy - sy 执行 MoveR(dx, dy) 修正位置；
+重复检测与移动，直到偏差小于阈值（一般为 1 像素以内）。
+说明：
+这种方法属于“读内存修正法”，适用于可直接读取游戏鼠标坐标的情况。
+其本质是 用游戏坐标与系统坐标做动态闭环调整。
+🧩 方法2：锁定鼠标基址（内存基址追踪法）# 原理：
+使用 CE 搜索鼠标坐标基址： 初始搜索未知数； 向左移动鼠标 → 搜索“变小的值”； 向右移动鼠标 → 搜索“变大的值”； 多次筛选直到锁定两个地址（X、Y）。 右键查看访问指令，找到 [base &#43; offset] 结构； 将该基址固定，循环读取即可获得游戏鼠标的真实位置。 说明：
+梦幻西游的鼠标基址可以直接寻到，不需要下断点。
+找到基址后，可长期稳定读取坐标，并配合图色判断修正漂移。
+简单游上的“果壳梦幻辅助”就是基于这种原理。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="game">
+
+
+  <meta itemprop="name" content="处理鼠标漂移">
+  <meta itemprop="description" content="http://bbs.anjian.com/showtopic-566788-1.aspx https://blog.sina.com.cn/s/blog_9522b30f010119su.html
+https://tieba.baidu.com/p/3989538710?share=9105&amp;fr=sharewise&amp;see_lz=0&amp;share_from=post&amp;sfc=copy&amp;client_type=2&amp;client_version=12.89.1.0&amp;st=1760188693&amp;is_video=false&amp;unique=824A8C4E0644456F60814F8819DB0547
+鼠标漂移的解决方案汇总# 一、图色层面# 🧩 方法1：目标图定位 &#43; 鼠标图校正（图色自校准法）# 原理：
+先用 FindPic 找到目标图坐标 (tx, ty)。 直接移动鼠标到目标位置。由于存在偏移，通常点不中目标。 再次搜索鼠标箭头图片 (mx, my)，计算偏移量： dx = tx - mxdy = ty - my然后执行 MoveR(dx, dy) 进行相对校正。
+说明：
+只要找图准确，基本一到两次修正即可精准定位。 （修正逐渐移动？或者瞬间移动，不知道哪个效果好） 梦幻西游的图色漂移问题，就是通过这种方式解决的。
+二、内存层面# 🧩 方法1：读内存坐标差值修正（内存坐标比对法）# 原理：
+从游戏内存中读取当前鼠标坐标 (gx, gy)；
+同时获取系统鼠标坐标 (sx, sy)；
+计算差值：
+dx = gx - sxdy = gy - sy 执行 MoveR(dx, dy) 修正位置；
+重复检测与移动，直到偏差小于阈值（一般为 1 像素以内）。
+说明：
+这种方法属于“读内存修正法”，适用于可直接读取游戏鼠标坐标的情况。
+其本质是 用游戏坐标与系统坐标做动态闭环调整。
+🧩 方法2：锁定鼠标基址（内存基址追踪法）# 原理：
+使用 CE 搜索鼠标坐标基址： 初始搜索未知数； 向左移动鼠标 → 搜索“变小的值”； 向右移动鼠标 → 搜索“变大的值”； 多次筛选直到锁定两个地址（X、Y）。 右键查看访问指令，找到 [base &#43; offset] 结构； 将该基址固定，循环读取即可获得游戏鼠标的真实位置。 说明：
+梦幻西游的鼠标基址可以直接寻到，不需要下断点。
+找到基址后，可长期稳定读取坐标，并配合图色判断修正漂移。
+简单游上的“果壳梦幻辅助”就是基于这种原理。">
+  <meta itemprop="wordCount" content="143">
+
+<title>处理鼠标漂移 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/Game/%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.9d4fa0048b4786d5be096d98c61a47e02072a87b9dbf0bb86dcd8edf179c4e43.js" integrity="sha256-nU&#43;gBItHhtW&#43;CW2YxhpH4CByqHudvwu4bc2O3xecTkM=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-game">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-204365caa941390a182aeb870c8b397d" class="toggle"  />
+    <label for="section-204365caa941390a182aeb870c8b397d" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f6929f8819239c236e3ff6d9318a645b" class="toggle"  />
+    <label for="section-f6929f8819239c236e3ff6d9318a645b" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-797baf87757652be835bcce5680ea0d4" class="toggle"  />
+    <label for="section-797baf87757652be835bcce5680ea0d4" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0fa9f382cfc268805da9afbea1ac822b" class="toggle"  />
+    <label for="section-0fa9f382cfc268805da9afbea1ac822b" class="flex">
+      <a role="button" class="">
+        Python数据处理</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-938c3edbaa8e3dd01e8b93d6f9361182" class="toggle"  />
+    <label for="section-938c3edbaa8e3dd01e8b93d6f9361182" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-56b62cfe8bd1e3138f346455c7c08d01" class="toggle"  />
+    <label for="section-56b62cfe8bd1e3138f346455c7c08d01" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e12d76c83fadc5077063bd8a06e4974c" class="toggle"  />
+    <label for="section-e12d76c83fadc5077063bd8a06e4974c" class="flex">
+      <a role="button" class="">
+        Linux</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-docker/" class="">
+      安装 Docker 教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-mysql/" class="">
+      安装 mysql 教程</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-23e22f2cefc5200495b10b220f00dc9b" class="toggle"  />
+    <label for="section-23e22f2cefc5200495b10b220f00dc9b" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5f3519d07421b3022c482beb7e53757d" class="toggle"  />
+    <label for="section-5f3519d07421b3022c482beb7e53757d" class="flex">
+      <a role="button" class="">
+        Other</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强平台装机流程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-00896273d6e22b6628839c56863edc57" class="toggle" checked />
+    <label for="section-00896273d6e22b6628839c56863edc57" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-212fbf26dee144498e07df6cb6c18024" class="toggle"  />
+    <label for="section-212fbf26dee144498e07df6cb6c18024" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB/" class="active">
+      处理鼠标漂移</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5b47f8600929668d6470260320a7fd81" class="toggle"  />
+    <label for="section-5b47f8600929668d6470260320a7fd81" class="flex">
+      <a href="/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+        幽灵键鼠</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a>
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E6%B8%B8%E6%88%8F%E8%84%9A%E6%9C%AC%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%9A%94%E7%A6%BB%E6%96%B9%E6%A1%88/" class="">
+      脚本隔离方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c5a43b1f0709f0338f2ab4a52452792c" class="toggle"  />
+    <label for="section-c5a43b1f0709f0338f2ab4a52452792c" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>处理鼠标漂移</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#一图色层面">一、图色层面</a>
+      <ul>
+        <li><a href="#-方法1目标图定位--鼠标图校正图色自校准法">🧩 方法1：目标图定位 + 鼠标图校正（图色自校准法）</a></li>
+      </ul>
+    </li>
+    <li><a href="#二内存层面">二、内存层面</a>
+      <ul>
+        <li><a href="#-方法1读内存坐标差值修正内存坐标比对法">🧩 方法1：读内存坐标差值修正（内存坐标比对法）</a></li>
+        <li><a href="#-方法2锁定鼠标基址内存基址追踪法">🧩 方法2：锁定鼠标基址（内存基址追踪法）</a></li>
+      </ul>
+    </li>
+    <li><a href="#三逻辑层面call级操作">三、逻辑层面（CALL级操作）</a>
+      <ul>
+        <li><a href="#-方法逻辑调用替代鼠标操作逻辑call法">🧩 方法：逻辑调用替代鼠标操作（逻辑CALL法）</a></li>
+      </ul>
+    </li>
+    <li><a href="#-总结对比">✅ 总结对比</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><p><a href="http://bbs.anjian.com/showtopic-566788-1.aspx">http://bbs.anjian.com/showtopic-566788-1.aspx</a>
+<a href="https://blog.sina.com.cn/s/blog_9522b30f010119su.html">https://blog.sina.com.cn/s/blog_9522b30f010119su.html</a></p>
+<p><a href="https://tieba.baidu.com/p/3989538710?share=9105&amp;fr=sharewise&amp;see_lz=0&amp;share_from=post&amp;sfc=copy&amp;client_type=2&amp;client_version=12.89.1.0&amp;st=1760188693&amp;is_video=false&amp;unique=824A8C4E0644456F60814F8819DB0547">https://tieba.baidu.com/p/3989538710?share=9105&fr=sharewise&see_lz=0&share_from=post&sfc=copy&client_type=2&client_version=12.89.1.0&st=1760188693&is_video=false&unique=824A8C4E0644456F60814F8819DB0547</a></p>
+<h1 id="鼠标漂移的解决方案汇总">鼠标漂移的解决方案汇总<a class="anchor" href="#%e9%bc%a0%e6%a0%87%e6%bc%82%e7%a7%bb%e7%9a%84%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88%e6%b1%87%e6%80%bb">#</a></h1>
+<h2 id="一图色层面">一、图色层面<a class="anchor" href="#%e4%b8%80%e5%9b%be%e8%89%b2%e5%b1%82%e9%9d%a2">#</a></h2>
+<h3 id="-方法1目标图定位--鼠标图校正图色自校准法">🧩 方法1：目标图定位 + 鼠标图校正（图色自校准法）<a class="anchor" href="#-%e6%96%b9%e6%b3%951%e7%9b%ae%e6%a0%87%e5%9b%be%e5%ae%9a%e4%bd%8d--%e9%bc%a0%e6%a0%87%e5%9b%be%e6%a0%a1%e6%ad%a3%e5%9b%be%e8%89%b2%e8%87%aa%e6%a0%a1%e5%87%86%e6%b3%95">#</a></h3>
+<p><strong>原理：</strong></p>
+<ol>
+<li>先用 <code>FindPic</code> 找到目标图坐标 <code>(tx, ty)</code>。</li>
+<li>直接移动鼠标到目标位置。由于存在偏移，通常点不中目标。</li>
+<li>再次搜索鼠标箭头图片 <code>(mx, my)</code>，计算偏移量：</li>
+</ol>
+<pre tabindex="0"><code>dx = tx - mx
+dy = ty - my</code></pre><p>然后执行 <code>MoveR(dx, dy)</code> 进行相对校正。</p>
+<p><strong>说明：</strong><br>
+只要找图准确，基本一到两次修正即可精准定位。  （修正逐渐移动？或者瞬间移动，不知道哪个效果好）
+梦幻西游的图色漂移问题，就是通过这种方式解决的。</p>
+<h2 id="二内存层面">二、内存层面<a class="anchor" href="#%e4%ba%8c%e5%86%85%e5%ad%98%e5%b1%82%e9%9d%a2">#</a></h2>
+<h3 id="-方法1读内存坐标差值修正内存坐标比对法">🧩 方法1：读内存坐标差值修正（内存坐标比对法）<a class="anchor" href="#-%e6%96%b9%e6%b3%951%e8%af%bb%e5%86%85%e5%ad%98%e5%9d%90%e6%a0%87%e5%b7%ae%e5%80%bc%e4%bf%ae%e6%ad%a3%e5%86%85%e5%ad%98%e5%9d%90%e6%a0%87%e6%af%94%e5%af%b9%e6%b3%95">#</a></h3>
+<p><strong>原理：</strong></p>
+<ol>
+<li>
+<p>从游戏内存中读取当前鼠标坐标 <code>(gx, gy)</code>；</p>
+</li>
+<li>
+<p>同时获取系统鼠标坐标 <code>(sx, sy)</code>；</p>
+</li>
+<li>
+<p>计算差值：</p>
+</li>
+</ol>
+<pre tabindex="0"><code>dx = gx - sx
+dy = gy - sy</code></pre><ol start="4">
+<li>
+<p>执行 <code>MoveR(dx, dy)</code> 修正位置；</p>
+</li>
+<li>
+<p>重复检测与移动，直到偏差小于阈值（一般为 1 像素以内）。</p>
+</li>
+</ol>
+<p><strong>说明：</strong><br>
+这种方法属于“读内存修正法”，适用于可直接读取游戏鼠标坐标的情况。<br>
+其本质是 <strong>用游戏坐标与系统坐标做动态闭环调整</strong>。</p>
+<h3 id="-方法2锁定鼠标基址内存基址追踪法">🧩 方法2：锁定鼠标基址（内存基址追踪法）<a class="anchor" href="#-%e6%96%b9%e6%b3%952%e9%94%81%e5%ae%9a%e9%bc%a0%e6%a0%87%e5%9f%ba%e5%9d%80%e5%86%85%e5%ad%98%e5%9f%ba%e5%9d%80%e8%bf%bd%e8%b8%aa%e6%b3%95">#</a></h3>
+<p><strong>原理：</strong></p>
+<ol>
+<li>使用 CE 搜索鼠标坐标基址：</li>
+</ol>
+<ul>
+<li>初始搜索未知数；</li>
+<li>向左移动鼠标 → 搜索“变小的值”；</li>
+<li>向右移动鼠标 → 搜索“变大的值”；</li>
+<li>多次筛选直到锁定两个地址（X、Y）。</li>
+</ul>
+<ol start="2">
+<li>右键查看访问指令，找到 <code>[base + offset]</code> 结构；</li>
+<li>将该基址固定，循环读取即可获得游戏鼠标的真实位置。</li>
+</ol>
+<p><strong>说明：</strong><br>
+梦幻西游的鼠标基址可以直接寻到，不需要下断点。<br>
+找到基址后，可长期稳定读取坐标，并配合图色判断修正漂移。<br>
+简单游上的“果壳梦幻辅助”就是基于这种原理。</p>
+<h2 id="三逻辑层面call级操作">三、逻辑层面（CALL级操作）<a class="anchor" href="#%e4%b8%89%e9%80%bb%e8%be%91%e5%b1%82%e9%9d%a2call%e7%ba%a7%e6%93%8d%e4%bd%9c">#</a></h2>
+<h3 id="-方法逻辑调用替代鼠标操作逻辑call法">🧩 方法：逻辑调用替代鼠标操作（逻辑CALL法）<a class="anchor" href="#-%e6%96%b9%e6%b3%95%e9%80%bb%e8%be%91%e8%b0%83%e7%94%a8%e6%9b%bf%e4%bb%a3%e9%bc%a0%e6%a0%87%e6%93%8d%e4%bd%9c%e9%80%bb%e8%be%91call%e6%b3%95">#</a></h3>
+<p><strong>原理：</strong><br>
+不再移动鼠标，而是直接调用游戏内部的逻辑函数（CALL）。<br>
+常见例子：</p>
+<ul>
+<li>NPC对话：遍历到 NPC 基址后，调用 <code>DialogCall(NpcID)</code>；</li>
+<li>背包操作：直接调用物品管理 CALL；</li>
+<li>寻路：调用 <code>MoveTo(x, y)</code> 函数。</li>
+</ul>
+<p><strong>说明：</strong><br>
+这种方式完全绕过鼠标，直接操作游戏逻辑。<br>
+适合高端后台脚本或工作室级辅助，性能稳定且无漂移。</p>
+<hr>
+<h2 id="-总结对比">✅ 总结对比<a class="anchor" href="#-%e6%80%bb%e7%bb%93%e5%af%b9%e6%af%94">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th>类型</th>
+          <th>方法</th>
+          <th>核心手段</th>
+          <th>难度</th>
+          <th>稳定性</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>图色法</td>
+          <td>图色+鼠标图校正</td>
+          <td>二次找图修正</td>
+          <td>★</td>
+          <td>★★★</td>
+          <td>实现简单、兼容性好</td>
+      </tr>
+      <tr>
+          <td>内存法</td>
+          <td>读坐标差值</td>
+          <td>动态比对收敛</td>
+          <td>★★</td>
+          <td>★★★★</td>
+          <td>精度高、可后台</td>
+      </tr>
+      <tr>
+          <td>内存法</td>
+          <td>锁定基址</td>
+          <td>固定地址读取</td>
+          <td>★★★</td>
+          <td>★★★★★</td>
+          <td>稳定、适合长期运行</td>
+      </tr>
+      <tr>
+          <td>CALL法</td>
+          <td>调用游戏函数</td>
+          <td>内部逻辑执行</td>
+          <td>★★★★★</td>
+          <td>★★★★★</td>
+          <td>无漂移、最高级实现</td>
+      </tr>
+  </tbody>
+</table>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>YOLO标注和训练数据</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="flex align-center">
+        <span>大漠插件</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#一图色层面">一、图色层面</a>
+      <ul>
+        <li><a href="#-方法1目标图定位--鼠标图校正图色自校准法">🧩 方法1：目标图定位 + 鼠标图校正（图色自校准法）</a></li>
+      </ul>
+    </li>
+    <li><a href="#二内存层面">二、内存层面</a>
+      <ul>
+        <li><a href="#-方法1读内存坐标差值修正内存坐标比对法">🧩 方法1：读内存坐标差值修正（内存坐标比对法）</a></li>
+        <li><a href="#-方法2锁定鼠标基址内存基址追踪法">🧩 方法2：锁定鼠标基址（内存基址追踪法）</a></li>
+      </ul>
+    </li>
+    <li><a href="#三逻辑层面call级操作">三、逻辑层面（CALL级操作）</a>
+      <ul>
+        <li><a href="#-方法逻辑调用替代鼠标操作逻辑call法">🧩 方法：逻辑调用替代鼠标操作（逻辑CALL法）</a></li>
+      </ul>
+    </li>
+    <li><a href="#-总结对比">✅ 总结对比</a></li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

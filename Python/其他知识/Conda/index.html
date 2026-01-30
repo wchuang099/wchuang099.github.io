@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="一、Conda的作用# python版本和第三方库众多,并且不同版本之间存在兼容性问题,Conda可以帮助我们管理python版本和依赖,避免依赖冲突 1.安装、管理、删除,更新python包 2.版本切换,不同的项目需要不同的python. 3.依赖隔离,比如项目A需要XXX 3.2版本,项目B需要XXX 4.5版本
+二、Anaconda和Miniconda区别# 特性 Anaconda Miniconda 发行公司 Anaconda, Inc. Anaconda, Inc. 安装方式 图形界面 &#43; 命令行 命令行为主 默认包 集成 1500&#43; 科学计算常用包（NumPy、Pandas、Matplotlib、SciPy 等） 仅 Conda 本体 &#43; Python 基础依赖 安装包大小 3~5 GB ~100 MB 环境灵活性 即装即用，适合初学者和数据科学用户 精简灵活，节省空间，可按需安装包 更新管理 包和环境更新方便，但占用空间大 包和环境可完全自定义，依赖需手动安装 使用场景 数据分析、机器学习、科研教学快速入门 节省空间、精简环境、服务器或脚本开发 三、Miniconda 下载地址# 官方（Anaconda 官网）
+https://www.anaconda.com/docs/getting-started/miniconda/main 国内镜像（清华大学 Tuna 镜像）
+https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/ 四、配置源# 1️⃣ 查看当前镜像源
+在 cmd 或 Anaconda Prompt 中输入：
+conda config --show channels #这里可以确认你是否已经使用清华源。 channels: - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/ - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/ - defaults2️⃣ 添加清华镜像源
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="Conda使用教程">
+  <meta property="og:description" content="一、Conda的作用# python版本和第三方库众多,并且不同版本之间存在兼容性问题,Conda可以帮助我们管理python版本和依赖,避免依赖冲突 1.安装、管理、删除,更新python包 2.版本切换,不同的项目需要不同的python. 3.依赖隔离,比如项目A需要XXX 3.2版本,项目B需要XXX 4.5版本
+二、Anaconda和Miniconda区别# 特性 Anaconda Miniconda 发行公司 Anaconda, Inc. Anaconda, Inc. 安装方式 图形界面 &#43; 命令行 命令行为主 默认包 集成 1500&#43; 科学计算常用包（NumPy、Pandas、Matplotlib、SciPy 等） 仅 Conda 本体 &#43; Python 基础依赖 安装包大小 3~5 GB ~100 MB 环境灵活性 即装即用，适合初学者和数据科学用户 精简灵活，节省空间，可按需安装包 更新管理 包和环境更新方便，但占用空间大 包和环境可完全自定义，依赖需手动安装 使用场景 数据分析、机器学习、科研教学快速入门 节省空间、精简环境、服务器或脚本开发 三、Miniconda 下载地址# 官方（Anaconda 官网）
+https://www.anaconda.com/docs/getting-started/miniconda/main 国内镜像（清华大学 Tuna 镜像）
+https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/ 四、配置源# 1️⃣ 查看当前镜像源
+在 cmd 或 Anaconda Prompt 中输入：
+conda config --show channels #这里可以确认你是否已经使用清华源。 channels: - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/ - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/ - defaults2️⃣ 添加清华镜像源">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="python">
+
+
+  <meta itemprop="name" content="Conda使用教程">
+  <meta itemprop="description" content="一、Conda的作用# python版本和第三方库众多,并且不同版本之间存在兼容性问题,Conda可以帮助我们管理python版本和依赖,避免依赖冲突 1.安装、管理、删除,更新python包 2.版本切换,不同的项目需要不同的python. 3.依赖隔离,比如项目A需要XXX 3.2版本,项目B需要XXX 4.5版本
+二、Anaconda和Miniconda区别# 特性 Anaconda Miniconda 发行公司 Anaconda, Inc. Anaconda, Inc. 安装方式 图形界面 &#43; 命令行 命令行为主 默认包 集成 1500&#43; 科学计算常用包（NumPy、Pandas、Matplotlib、SciPy 等） 仅 Conda 本体 &#43; Python 基础依赖 安装包大小 3~5 GB ~100 MB 环境灵活性 即装即用，适合初学者和数据科学用户 精简灵活，节省空间，可按需安装包 更新管理 包和环境更新方便，但占用空间大 包和环境可完全自定义，依赖需手动安装 使用场景 数据分析、机器学习、科研教学快速入门 节省空间、精简环境、服务器或脚本开发 三、Miniconda 下载地址# 官方（Anaconda 官网）
+https://www.anaconda.com/docs/getting-started/miniconda/main 国内镜像（清华大学 Tuna 镜像）
+https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/ 四、配置源# 1️⃣ 查看当前镜像源
+在 cmd 或 Anaconda Prompt 中输入：
+conda config --show channels #这里可以确认你是否已经使用清华源。 channels: - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/ - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/ - defaults2️⃣ 添加清华镜像源">
+  <meta itemprop="wordCount" content="276">
+
+<title>Conda使用教程 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.9d4fa0048b4786d5be096d98c61a47e02072a87b9dbf0bb86dcd8edf179c4e43.js" integrity="sha256-nU&#43;gBItHhtW&#43;CW2YxhpH4CByqHudvwu4bc2O3xecTkM=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-python">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-204365caa941390a182aeb870c8b397d" class="toggle" checked />
+    <label for="section-204365caa941390a182aeb870c8b397d" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f6929f8819239c236e3ff6d9318a645b" class="toggle"  />
+    <label for="section-f6929f8819239c236e3ff6d9318a645b" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-797baf87757652be835bcce5680ea0d4" class="toggle"  />
+    <label for="section-797baf87757652be835bcce5680ea0d4" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0fa9f382cfc268805da9afbea1ac822b" class="toggle"  />
+    <label for="section-0fa9f382cfc268805da9afbea1ac822b" class="flex">
+      <a role="button" class="">
+        Python数据处理</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-938c3edbaa8e3dd01e8b93d6f9361182" class="toggle"  />
+    <label for="section-938c3edbaa8e3dd01e8b93d6f9361182" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-56b62cfe8bd1e3138f346455c7c08d01" class="toggle" checked />
+    <label for="section-56b62cfe8bd1e3138f346455c7c08d01" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="active">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e12d76c83fadc5077063bd8a06e4974c" class="toggle"  />
+    <label for="section-e12d76c83fadc5077063bd8a06e4974c" class="flex">
+      <a role="button" class="">
+        Linux</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-docker/" class="">
+      安装 Docker 教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-mysql/" class="">
+      安装 mysql 教程</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-23e22f2cefc5200495b10b220f00dc9b" class="toggle"  />
+    <label for="section-23e22f2cefc5200495b10b220f00dc9b" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5f3519d07421b3022c482beb7e53757d" class="toggle"  />
+    <label for="section-5f3519d07421b3022c482beb7e53757d" class="flex">
+      <a role="button" class="">
+        Other</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强平台装机流程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-00896273d6e22b6628839c56863edc57" class="toggle"  />
+    <label for="section-00896273d6e22b6628839c56863edc57" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-212fbf26dee144498e07df6cb6c18024" class="toggle"  />
+    <label for="section-212fbf26dee144498e07df6cb6c18024" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB/" class="">
+      处理鼠标漂移</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5b47f8600929668d6470260320a7fd81" class="toggle"  />
+    <label for="section-5b47f8600929668d6470260320a7fd81" class="flex">
+      <a href="/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+        幽灵键鼠</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a>
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E6%B8%B8%E6%88%8F%E8%84%9A%E6%9C%AC%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%9A%94%E7%A6%BB%E6%96%B9%E6%A1%88/" class="">
+      脚本隔离方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c5a43b1f0709f0338f2ab4a52452792c" class="toggle"  />
+    <label for="section-c5a43b1f0709f0338f2ab4a52452792c" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>Conda使用教程</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#一conda的作用">一、Conda的作用</a></li>
+    <li><a href="#二anaconda和miniconda区别">二、Anaconda和Miniconda区别</a></li>
+    <li><a href="#三miniconda-下载地址">三、Miniconda 下载地址</a></li>
+    <li><a href="#四配置源">四、配置源</a></li>
+    <li><a href="#五修改-conda-默认环境路径">五、修改 Conda 默认环境路径</a></li>
+    <li><a href="#六conda-常用命令速查表">六、Conda 常用命令速查表</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h2 id="一conda的作用">一、Conda的作用<a class="anchor" href="#%e4%b8%80conda%e7%9a%84%e4%bd%9c%e7%94%a8">#</a></h2>
+<p>python版本和第三方库众多,并且不同版本之间存在兼容性问题,Conda可以帮助我们管理python版本和依赖,避免依赖冲突
+1.安装、管理、删除,更新python包
+2.版本切换,不同的项目需要不同的python.
+3.依赖隔离,比如项目A需要XXX 3.2版本,项目B需要XXX 4.5版本</p>
+<h2 id="二anaconda和miniconda区别">二、Anaconda和Miniconda区别<a class="anchor" href="#%e4%ba%8canaconda%e5%92%8cminiconda%e5%8c%ba%e5%88%ab">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th>特性</th>
+          <th>Anaconda</th>
+          <th>Miniconda</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>发行公司</strong></td>
+          <td>Anaconda, Inc.</td>
+          <td>Anaconda, Inc.</td>
+      </tr>
+      <tr>
+          <td><strong>安装方式</strong></td>
+          <td>图形界面 + 命令行</td>
+          <td>命令行为主</td>
+      </tr>
+      <tr>
+          <td><strong>默认包</strong></td>
+          <td>集成 1500+ 科学计算常用包（NumPy、Pandas、Matplotlib、SciPy 等）</td>
+          <td>仅 Conda 本体 + Python 基础依赖</td>
+      </tr>
+      <tr>
+          <td><strong>安装包大小</strong></td>
+          <td>3~5 GB</td>
+          <td>~100 MB</td>
+      </tr>
+      <tr>
+          <td><strong>环境灵活性</strong></td>
+          <td>即装即用，适合初学者和数据科学用户</td>
+          <td>精简灵活，节省空间，可按需安装包</td>
+      </tr>
+      <tr>
+          <td><strong>更新管理</strong></td>
+          <td>包和环境更新方便，但占用空间大</td>
+          <td>包和环境可完全自定义，依赖需手动安装</td>
+      </tr>
+      <tr>
+          <td><strong>使用场景</strong></td>
+          <td>数据分析、机器学习、科研教学快速入门</td>
+          <td>节省空间、精简环境、服务器或脚本开发</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="三miniconda-下载地址">三、Miniconda 下载地址<a class="anchor" href="#%e4%b8%89miniconda-%e4%b8%8b%e8%bd%bd%e5%9c%b0%e5%9d%80">#</a></h2>
+<ul>
+<li>官方（Anaconda 官网）<br>
+<a href="https://www.anaconda.com/docs/getting-started/miniconda/main">https://www.anaconda.com/docs/getting-started/miniconda/main</a></li>
+<li>国内镜像（清华大学 Tuna 镜像）<br>
+<a href="https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/">https://mirrors.tuna.tsinghua.edu.cn/anaconda/miniconda/</a></li>
+</ul>
+<h2 id="四配置源">四、配置源<a class="anchor" href="#%e5%9b%9b%e9%85%8d%e7%bd%ae%e6%ba%90">#</a></h2>
+<p>1️⃣ 查看当前镜像源</p>
+<p>在 <strong>cmd</strong> 或 <strong>Anaconda Prompt</strong> 中输入：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>conda config <span style="color:#f92672">--</span>show channels
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#这里可以确认你是否已经使用清华源。</span>
+</span></span><span style="display:flex;"><span>channels:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">-</span> https:<span style="color:#f92672">//</span>mirrors<span style="color:#f92672">.</span>tuna<span style="color:#f92672">.</span>tsinghua<span style="color:#f92672">.</span>edu<span style="color:#f92672">.</span>cn<span style="color:#f92672">/</span>anaconda<span style="color:#f92672">/</span>pkgs<span style="color:#f92672">/</span>free<span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">-</span> https:<span style="color:#f92672">//</span>mirrors<span style="color:#f92672">.</span>tuna<span style="color:#f92672">.</span>tsinghua<span style="color:#f92672">.</span>edu<span style="color:#f92672">.</span>cn<span style="color:#f92672">/</span>anaconda<span style="color:#f92672">/</span>pkgs<span style="color:#f92672">/</span>main<span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">-</span> defaults</span></span></code></pre></div><p>2️⃣ 添加清华镜像源</p>
+<p>执行以下命令：</p>
+<pre tabindex="0"><code>conda config --add channels https://mirrors.cloud.tencent.com/anaconda/pkgs/free/
+conda config --add channels https://mirrors.cloud.tencent.com/anaconda/pkgs/main/
+conda config --add channels https://mirrors.cloud.tencent.com/anaconda/cloud/conda-forge/
+conda config --add channels https://mirrors.cloud.tencent.com/anaconda/cloud/pytorch/
+conda config --add channels https://mirrors.cloud.tencent.com/anaconda/pkgs/pro/
+conda config --set show_channel_urls yes</code></pre><ul>
+<li><code>--set show_channel_urls yes</code> 会在安装包时显示具体源，方便确认。</li>
+</ul>
+<p>⚠️ 添加镜像源后，最好清除索引缓存：</p>
+<pre tabindex="0"><code>conda clean -i</code></pre><p>然后可以创建新环境测试：</p>
+<pre tabindex="0"><code>conda create -n myenv numpy</code></pre><p>3️⃣ 删除指定镜像源</p>
+<p>如果想移除某个镜像：</p>
+<pre tabindex="0"><code>conda config --remove channels &lt;镜像地址&gt;</code></pre><p>例如：</p>
+<pre tabindex="0"><code>conda config --remove channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/</code></pre><p>4️⃣ 恢复默认镜像源 (重置，只保留默认源)</p>
+<pre tabindex="0"><code>conda config --remove-key channels</code></pre><p>执行后，<code>conda</code> 会使用官方默认源。</p>
+<h2 id="五修改-conda-默认环境路径">五、修改 Conda 默认环境路径<a class="anchor" href="#%e4%ba%94%e4%bf%ae%e6%94%b9-conda-%e9%bb%98%e8%ae%a4%e7%8e%af%e5%a2%83%e8%b7%af%e5%be%84">#</a></h2>
+<p>1.开始菜单&ndash;&gt;打开 Miniconda Prompt</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>conda config <span style="color:#f92672">--</span>show envs_dirs
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#注意：Miniconda 的安装目录和环境目录（envs）不能一样。</span>
+</span></span><span style="display:flex;"><span>mkdir D:\conda_envs 
+</span></span><span style="display:flex;"><span>conda config <span style="color:#f92672">--</span>add envs_dirs D:\conda_envs</span></span></code></pre></div><h2 id="六conda-常用命令速查表">六、Conda 常用命令速查表<a class="anchor" href="#%e5%85%adconda-%e5%b8%b8%e7%94%a8%e5%91%bd%e4%bb%a4%e9%80%9f%e6%9f%a5%e8%a1%a8">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">## 环境管理（最常用）</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>创建环境	conda create <span style="color:#f92672">-</span>n xxx python<span style="color:#f92672">=</span><span style="color:#ae81ff">3.</span>x
+</span></span><span style="display:flex;"><span>激活环境	conda activate xxx
+</span></span><span style="display:flex;"><span>安装包	conda install 包名
+</span></span><span style="display:flex;"><span>删除环境	conda env remove <span style="color:#f92672">-</span>n xxx <span style="color:#f92672">--</span>all
+</span></span><span style="display:flex;"><span>克隆环境<span style="color:#960050;background-color:#1e0010">（</span>迁移<span style="color:#960050;background-color:#1e0010">）</span>	conda create <span style="color:#f92672">-</span>n new <span style="color:#f92672">--</span>clone old
+</span></span><span style="display:flex;"><span>清理缓存	conda clean <span style="color:#f92672">-</span>a
+</span></span><span style="display:flex;"><span>查看所有环境	conda env list
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 包管理（最常用）</span>
+</span></span><span style="display:flex;"><span>安装包
+</span></span><span style="display:flex;"><span>conda install 包名
+</span></span><span style="display:flex;"><span>指定 channel<span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span>conda install <span style="color:#f92672">-</span>c conda<span style="color:#f92672">-</span>forge 包名
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>升级包
+</span></span><span style="display:flex;"><span>conda update 包名
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>搜索包
+</span></span><span style="display:flex;"><span>conda search 包名
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>升级 conda 本体<span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>conda update conda
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>卸载包
+</span></span><span style="display:flex;"><span>conda remove 包名
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>查看当前环境安装了哪些包
+</span></span><span style="display:flex;"><span>conda list
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 配置相关</span>
+</span></span><span style="display:flex;"><span>查看配置
+</span></span><span style="display:flex;"><span>conda config <span style="color:#f92672">--</span>show
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>查看配置文件来源
+</span></span><span style="display:flex;"><span>conda config <span style="color:#f92672">--</span>show<span style="color:#f92672">-</span>sources
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>添加环境目录
+</span></span><span style="display:flex;"><span>conda config <span style="color:#f92672">--</span>add envs_dirs D:\conda_envs
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>设置默认频道
+</span></span><span style="display:flex;"><span>conda config <span style="color:#f92672">--</span>add channels conda<span style="color:#f92672">-</span>forge
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>清理缓存<span style="color:#960050;background-color:#1e0010">（</span>非常常用<span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span>conda clean <span style="color:#f92672">-</span>a
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 导出环境（备份/迁移）</span>
+</span></span><span style="display:flex;"><span>导出 yml
+</span></span><span style="display:flex;"><span>conda env export <span style="color:#f92672">&gt;</span> env<span style="color:#f92672">.</span>yaml
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>用 yml 创建环境
+</span></span><span style="display:flex;"><span>conda env create <span style="color:#f92672">-</span>f env<span style="color:#f92672">.</span>yaml</span></span></code></pre></div></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>Pystand打包工具</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="flex align-center">
+        <span>MinGit使用</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#一conda的作用">一、Conda的作用</a></li>
+    <li><a href="#二anaconda和miniconda区别">二、Anaconda和Miniconda区别</a></li>
+    <li><a href="#三miniconda-下载地址">三、Miniconda 下载地址</a></li>
+    <li><a href="#四配置源">四、配置源</a></li>
+    <li><a href="#五修改-conda-默认环境路径">五、修改 Conda 默认环境路径</a></li>
+    <li><a href="#六conda-常用命令速查表">六、Conda 常用命令速查表</a></li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

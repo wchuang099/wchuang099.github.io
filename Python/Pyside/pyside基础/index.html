@@ -1,0 +1,1782 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="一、Qt 是什么？PySide 又是什么？# 名称 说明 Qt 一个跨平台的 C&#43;&#43; 应用程序框架，用于开发 GUI 程序（也支持无界面后台服务）。由 Trolltech 创立，现属 The Qt Company。 PySide Qt 官方提供的 Python 绑定（即用 Python 调用 Qt 功能）。
+• PySide2 → 对应 Qt 5
+• PySide6 → 对应 Qt 6 PyQt Riverbank Computing（第三方公司）提供的 Python 绑定（即用 Python 调用 Qt 功能）。
+PyQt5 → 对应 Qt 5
+PyQt 6 → 对应 Qt 6 如from PySide2.QtWidgets import QPushButton，本质上是在用 Python 调用 C&#43;&#43; 写的 Qt 控件。
+共同基础：PySide和PyQt两者都是 Python 对 Qt C&#43;&#43; 框架的绑定（bindings），用于开发跨平台桌面 GUI 应用（Windows/macOS/Linux）。 功能几乎一致：API 设计高度兼容，95%&#43; 代码可互换。 PySide = 官方亲儿子 &#43; 免费商用；PyQt = 社区老大哥 &#43; 要求衍生作品开源,闭源需买授权。 二、Qt GUI 架构# QtWidgets ← 高层 UI 控件（widget-based 界面） - 提供窗口（QMainWindow、QWidget）、按钮、标签、表格、布局等 - 所有控件的绘制与事件处理依赖 QtGui 实现 ↓ QtGui ← 图形与窗口系统底层 - 2D 绘图支持（QPainter、QPixmap、QImage） - 字体（QFont）、颜色（QColor）、光标（QCursor） - 键盘/鼠标等输入事件（QKeyEvent、QMouseEvent） - 平台窗口抽象（如屏幕、DPI、原生窗口句柄） - OpenGL/Vulkan 集成支持 ↓ QtCore ← 核心非 GUI 功能（所有 Qt 应用的基础） - 信号与槽机制（由 QObject 提供） - 元对象系统（支持运行时类型识别、动态属性） - 线程（QThread）、定时器（QTimer） - 文件 I/O（QFile）、配置存储（QSettings） - 字符串、容器、国际化等基础工具 依赖关系说明：
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="PySide基础">
+  <meta property="og:description" content="一、Qt 是什么？PySide 又是什么？# 名称 说明 Qt 一个跨平台的 C&#43;&#43; 应用程序框架，用于开发 GUI 程序（也支持无界面后台服务）。由 Trolltech 创立，现属 The Qt Company。 PySide Qt 官方提供的 Python 绑定（即用 Python 调用 Qt 功能）。
+• PySide2 → 对应 Qt 5
+• PySide6 → 对应 Qt 6 PyQt Riverbank Computing（第三方公司）提供的 Python 绑定（即用 Python 调用 Qt 功能）。
+PyQt5 → 对应 Qt 5
+PyQt 6 → 对应 Qt 6 如from PySide2.QtWidgets import QPushButton，本质上是在用 Python 调用 C&#43;&#43; 写的 Qt 控件。
+共同基础：PySide和PyQt两者都是 Python 对 Qt C&#43;&#43; 框架的绑定（bindings），用于开发跨平台桌面 GUI 应用（Windows/macOS/Linux）。 功能几乎一致：API 设计高度兼容，95%&#43; 代码可互换。 PySide = 官方亲儿子 &#43; 免费商用；PyQt = 社区老大哥 &#43; 要求衍生作品开源,闭源需买授权。 二、Qt GUI 架构# QtWidgets ← 高层 UI 控件（widget-based 界面） - 提供窗口（QMainWindow、QWidget）、按钮、标签、表格、布局等 - 所有控件的绘制与事件处理依赖 QtGui 实现 ↓ QtGui ← 图形与窗口系统底层 - 2D 绘图支持（QPainter、QPixmap、QImage） - 字体（QFont）、颜色（QColor）、光标（QCursor） - 键盘/鼠标等输入事件（QKeyEvent、QMouseEvent） - 平台窗口抽象（如屏幕、DPI、原生窗口句柄） - OpenGL/Vulkan 集成支持 ↓ QtCore ← 核心非 GUI 功能（所有 Qt 应用的基础） - 信号与槽机制（由 QObject 提供） - 元对象系统（支持运行时类型识别、动态属性） - 线程（QThread）、定时器（QTimer） - 文件 I/O（QFile）、配置存储（QSettings） - 字符串、容器、国际化等基础工具 依赖关系说明：">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="python">
+
+
+  <meta itemprop="name" content="PySide基础">
+  <meta itemprop="description" content="一、Qt 是什么？PySide 又是什么？# 名称 说明 Qt 一个跨平台的 C&#43;&#43; 应用程序框架，用于开发 GUI 程序（也支持无界面后台服务）。由 Trolltech 创立，现属 The Qt Company。 PySide Qt 官方提供的 Python 绑定（即用 Python 调用 Qt 功能）。
+• PySide2 → 对应 Qt 5
+• PySide6 → 对应 Qt 6 PyQt Riverbank Computing（第三方公司）提供的 Python 绑定（即用 Python 调用 Qt 功能）。
+PyQt5 → 对应 Qt 5
+PyQt 6 → 对应 Qt 6 如from PySide2.QtWidgets import QPushButton，本质上是在用 Python 调用 C&#43;&#43; 写的 Qt 控件。
+共同基础：PySide和PyQt两者都是 Python 对 Qt C&#43;&#43; 框架的绑定（bindings），用于开发跨平台桌面 GUI 应用（Windows/macOS/Linux）。 功能几乎一致：API 设计高度兼容，95%&#43; 代码可互换。 PySide = 官方亲儿子 &#43; 免费商用；PyQt = 社区老大哥 &#43; 要求衍生作品开源,闭源需买授权。 二、Qt GUI 架构# QtWidgets ← 高层 UI 控件（widget-based 界面） - 提供窗口（QMainWindow、QWidget）、按钮、标签、表格、布局等 - 所有控件的绘制与事件处理依赖 QtGui 实现 ↓ QtGui ← 图形与窗口系统底层 - 2D 绘图支持（QPainter、QPixmap、QImage） - 字体（QFont）、颜色（QColor）、光标（QCursor） - 键盘/鼠标等输入事件（QKeyEvent、QMouseEvent） - 平台窗口抽象（如屏幕、DPI、原生窗口句柄） - OpenGL/Vulkan 集成支持 ↓ QtCore ← 核心非 GUI 功能（所有 Qt 应用的基础） - 信号与槽机制（由 QObject 提供） - 元对象系统（支持运行时类型识别、动态属性） - 线程（QThread）、定时器（QTimer） - 文件 I/O（QFile）、配置存储（QSettings） - 字符串、容器、国际化等基础工具 依赖关系说明：">
+  <meta itemprop="wordCount" content="454">
+
+<title>PySide基础 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.9d4fa0048b4786d5be096d98c61a47e02072a87b9dbf0bb86dcd8edf179c4e43.js" integrity="sha256-nU&#43;gBItHhtW&#43;CW2YxhpH4CByqHudvwu4bc2O3xecTkM=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-python">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-204365caa941390a182aeb870c8b397d" class="toggle" checked />
+    <label for="section-204365caa941390a182aeb870c8b397d" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f6929f8819239c236e3ff6d9318a645b" class="toggle"  />
+    <label for="section-f6929f8819239c236e3ff6d9318a645b" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-797baf87757652be835bcce5680ea0d4" class="toggle"  />
+    <label for="section-797baf87757652be835bcce5680ea0d4" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0fa9f382cfc268805da9afbea1ac822b" class="toggle"  />
+    <label for="section-0fa9f382cfc268805da9afbea1ac822b" class="flex">
+      <a role="button" class="">
+        Python数据处理</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-938c3edbaa8e3dd01e8b93d6f9361182" class="toggle" checked />
+    <label for="section-938c3edbaa8e3dd01e8b93d6f9361182" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="active">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-56b62cfe8bd1e3138f346455c7c08d01" class="toggle"  />
+    <label for="section-56b62cfe8bd1e3138f346455c7c08d01" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e12d76c83fadc5077063bd8a06e4974c" class="toggle"  />
+    <label for="section-e12d76c83fadc5077063bd8a06e4974c" class="flex">
+      <a role="button" class="">
+        Linux</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-docker/" class="">
+      安装 Docker 教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-mysql/" class="">
+      安装 mysql 教程</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-23e22f2cefc5200495b10b220f00dc9b" class="toggle"  />
+    <label for="section-23e22f2cefc5200495b10b220f00dc9b" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5f3519d07421b3022c482beb7e53757d" class="toggle"  />
+    <label for="section-5f3519d07421b3022c482beb7e53757d" class="flex">
+      <a role="button" class="">
+        Other</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强平台装机流程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-00896273d6e22b6628839c56863edc57" class="toggle"  />
+    <label for="section-00896273d6e22b6628839c56863edc57" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-212fbf26dee144498e07df6cb6c18024" class="toggle"  />
+    <label for="section-212fbf26dee144498e07df6cb6c18024" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB/" class="">
+      处理鼠标漂移</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5b47f8600929668d6470260320a7fd81" class="toggle"  />
+    <label for="section-5b47f8600929668d6470260320a7fd81" class="flex">
+      <a href="/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+        幽灵键鼠</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a>
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E6%B8%B8%E6%88%8F%E8%84%9A%E6%9C%AC%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%9A%94%E7%A6%BB%E6%96%B9%E6%A1%88/" class="">
+      脚本隔离方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c5a43b1f0709f0338f2ab4a52452792c" class="toggle"  />
+    <label for="section-c5a43b1f0709f0338f2ab4a52452792c" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>PySide基础</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1qtwidgets界面层控件--应用窗口类">1、QtWidgets（界面层：控件 + 应用/窗口类）</a></li>
+    <li><a href="#2qtgui图形--字体--事件">2、QtGui（图形 / 字体 / 事件）</a></li>
+    <li><a href="#3qtcore核心逻辑--多线程--工具">3、QtCore（核心逻辑 / 多线程 / 工具）</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h1 id="一qt-是什么pyside-又是什么">一、Qt 是什么？PySide 又是什么？<a class="anchor" href="#%e4%b8%80qt-%e6%98%af%e4%bb%80%e4%b9%88pyside-%e5%8f%88%e6%98%af%e4%bb%80%e4%b9%88">#</a></h1>
+<table>
+  <thead>
+      <tr>
+          <th>名称</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Qt</td>
+          <td>一个跨平台的 C++ 应用程序框架，用于开发 GUI 程序（也支持无界面后台服务）。由 Trolltech 创立，现属 The Qt Company。</td>
+      </tr>
+      <tr>
+          <td>PySide</td>
+          <td>Qt 官方提供的 Python 绑定（即用 Python 调用 Qt 功能）。<br>• PySide2 → 对应 Qt 5<br>• PySide6 → 对应 Qt 6</td>
+      </tr>
+      <tr>
+          <td>PyQt</td>
+          <td>Riverbank Computing（第三方公司）提供的 Python 绑定（即用 Python 调用 Qt 功能）。<br>PyQt5  → 对应 Qt 5<br>PyQt 6 → 对应 Qt 6</td>
+      </tr>
+  </tbody>
+</table>
+<p>如<code>from PySide2.QtWidgets import QPushButton</code>，本质上是在用 Python 调用 C++ 写的 Qt 控件。</p>
+<ul>
+<li><strong>共同基础</strong>：PySide和PyQt两者都是 <strong>Python 对 Qt C++ 框架的绑定（bindings）</strong>，用于开发跨平台桌面 GUI 应用（Windows/macOS/Linux）。</li>
+<li><strong>功能几乎一致</strong>：API 设计高度兼容，95%+ 代码可互换。</li>
+<li><strong>PySide = 官方亲儿子 + 免费商用；PyQt = 社区老大哥 + 要求衍生作品开源,闭源需买授权。</strong></li>
+</ul>
+<h1 id="二qt-gui-架构">二、Qt GUI 架构<a class="anchor" href="#%e4%ba%8cqt-gui-%e6%9e%b6%e6%9e%84">#</a></h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>QtWidgets  <span style="color:#960050;background-color:#1e0010">←</span> 高层 UI 控件<span style="color:#960050;background-color:#1e0010">（</span>widget<span style="color:#f92672">-</span>based 界面<span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">-</span> 提供窗口<span style="color:#960050;background-color:#1e0010">（</span>QMainWindow<span style="color:#960050;background-color:#1e0010">、</span>QWidget<span style="color:#960050;background-color:#1e0010">）、</span>按钮<span style="color:#960050;background-color:#1e0010">、</span>标签<span style="color:#960050;background-color:#1e0010">、</span>表格<span style="color:#960050;background-color:#1e0010">、</span>布局等
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">-</span> 所有控件的绘制与事件处理依赖 QtGui 实现
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#960050;background-color:#1e0010">↓</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>QtGui      <span style="color:#960050;background-color:#1e0010">←</span> 图形与窗口系统底层
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span>D 绘图支持<span style="color:#960050;background-color:#1e0010">（</span>QPainter<span style="color:#960050;background-color:#1e0010">、</span>QPixmap<span style="color:#960050;background-color:#1e0010">、</span>QImage<span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">-</span> 字体<span style="color:#960050;background-color:#1e0010">（</span>QFont<span style="color:#960050;background-color:#1e0010">）、</span>颜色<span style="color:#960050;background-color:#1e0010">（</span>QColor<span style="color:#960050;background-color:#1e0010">）、</span>光标<span style="color:#960050;background-color:#1e0010">（</span>QCursor<span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">-</span> 键盘<span style="color:#f92672">/</span>鼠标等输入事件<span style="color:#960050;background-color:#1e0010">（</span>QKeyEvent<span style="color:#960050;background-color:#1e0010">、</span>QMouseEvent<span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">-</span> 平台窗口抽象<span style="color:#960050;background-color:#1e0010">（</span>如屏幕<span style="color:#960050;background-color:#1e0010">、</span>DPI<span style="color:#960050;background-color:#1e0010">、</span>原生窗口句柄<span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">-</span> OpenGL<span style="color:#f92672">/</span>Vulkan 集成支持
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#960050;background-color:#1e0010">↓</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>QtCore     <span style="color:#960050;background-color:#1e0010">←</span> 核心非 GUI 功能<span style="color:#960050;background-color:#1e0010">（</span>所有 Qt 应用的基础<span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">-</span> 信号与槽机制<span style="color:#960050;background-color:#1e0010">（</span>由 QObject 提供<span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">-</span> 元对象系统<span style="color:#960050;background-color:#1e0010">（</span>支持运行时类型识别<span style="color:#960050;background-color:#1e0010">、</span>动态属性<span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">-</span> 线程<span style="color:#960050;background-color:#1e0010">（</span>QThread<span style="color:#960050;background-color:#1e0010">）、</span>定时器<span style="color:#960050;background-color:#1e0010">（</span>QTimer<span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">-</span> 文件 I<span style="color:#f92672">/</span>O<span style="color:#960050;background-color:#1e0010">（</span>QFile<span style="color:#960050;background-color:#1e0010">）、</span>配置存储<span style="color:#960050;background-color:#1e0010">（</span>QSettings<span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span>           <span style="color:#f92672">-</span> 字符串<span style="color:#960050;background-color:#1e0010">、</span>容器<span style="color:#960050;background-color:#1e0010">、</span>国际化等基础工具</span></span></code></pre></div><blockquote class='book-hint '>
+<p>依赖关系说明：</p>
+<ul>
+<li>QtWidgets依赖QtGui &ndash;&gt; QtGui依赖QtCore &ndash;&gt; 因此使用 QtWidgets时，自动获得了 QtGui 和 QtCore 的能力（如信号槽）</li>
+</ul></blockquote><blockquote class='book-hint '>
+<p>注意：Qt6 中部分功能（如 QApplication）移到了 QtGui，但 PySide2（Qt5）仍保持上述结构。</p></blockquote><h1 id="三pyside2-核心类">三、PySide2 核心类<a class="anchor" href="#%e4%b8%89pyside2-%e6%a0%b8%e5%bf%83%e7%b1%bb">#</a></h1>
+<p>所有控件（如 QPushButton、QLabel）都是独立的类，应按需显式导入
+它们分别定义在以下模块中：</p>
+<ul>
+<li>PySide2.QtWidgets：界面控件（窗口、按钮、布局等）</li>
+<li>PySide2.QtGui：图形、图像、字体、事件等</li>
+<li>PySide2.QtCore：核心功能（信号槽、线程、定时器、文件等）</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide2.QtWidgets <span style="color:#f92672">import</span> QApplication, QPushButton, QLabel
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide2.QtGui <span style="color:#f92672">import</span> QIcon, QFont          <span style="color:#75715e"># 避免 import *</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide2.QtCore <span style="color:#f92672">import</span> QTime, Qt</span></span></code></pre></div><h2 id="1qtwidgets界面层控件--应用窗口类">1、QtWidgets（界面层：控件 + 应用/窗口类）<a class="anchor" href="#1qtwidgets%e7%95%8c%e9%9d%a2%e5%b1%82%e6%8e%a7%e4%bb%b6--%e5%ba%94%e7%94%a8%e7%aa%97%e5%8f%a3%e7%b1%bb">#</a></h2>
+<p>1️⃣ 应用类（非控件）</p>
+<table>
+  <thead>
+      <tr>
+          <th>类名</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>QApplication</code></td>
+          <td>GUI 程序入口，事件循环管理（不是控件）</td>
+      </tr>
+  </tbody>
+</table>
+<p>2️⃣ 窗口类（可作为顶层窗口）</p>
+<table>
+  <thead>
+      <tr>
+          <th>类名</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>QWidget</code></td>
+          <td>所有控件基类</td>
+      </tr>
+      <tr>
+          <td><code>QMainWindow</code></td>
+          <td>主窗口（菜单 / 工具栏 / 状态栏）</td>
+      </tr>
+      <tr>
+          <td><code>QDialog</code></td>
+          <td>对话框窗口</td>
+      </tr>
+      <tr>
+          <td><code>QFrame</code></td>
+          <td>带边框的容器窗口</td>
+      </tr>
+  </tbody>
+</table>
+<p>3️⃣ 布局类（非控件，但必用）</p>
+<table>
+  <thead>
+      <tr>
+          <th>类名</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>QHBoxLayout</code></td>
+          <td>水平布局</td>
+      </tr>
+      <tr>
+          <td><code>QVBoxLayout</code></td>
+          <td>垂直布局</td>
+      </tr>
+      <tr>
+          <td><code>QGridLayout</code></td>
+          <td>网格布局</td>
+      </tr>
+      <tr>
+          <td><code>QFormLayout</code></td>
+          <td>表单布局</td>
+      </tr>
+      <tr>
+          <td><code>QLayout</code></td>
+          <td>布局基类</td>
+      </tr>
+  </tbody>
+</table>
+<p>4️⃣ 基础显示控件</p>
+<table>
+  <thead>
+      <tr>
+          <th>类名</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>QLabel</code></td>
+          <td>文本 / 图片显示</td>
+      </tr>
+      <tr>
+          <td><code>QProgressBar</code></td>
+          <td>进度条</td>
+      </tr>
+      <tr>
+          <td><code>QLCDNumber</code></td>
+          <td>LCD 数字</td>
+      </tr>
+      <tr>
+          <td><code>QStatusBar</code></td>
+          <td>状态栏</td>
+      </tr>
+  </tbody>
+</table>
+<p>5️⃣ 输入与交互控件</p>
+<table>
+  <thead>
+      <tr>
+          <th>类名</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>QLineEdit</code></td>
+          <td>单行输入框</td>
+      </tr>
+      <tr>
+          <td><code>QTextEdit</code></td>
+          <td>富文本编辑</td>
+      </tr>
+      <tr>
+          <td><code>QPlainTextEdit</code></td>
+          <td>纯文本编辑</td>
+      </tr>
+      <tr>
+          <td><code>QSpinBox</code></td>
+          <td>整数输入</td>
+      </tr>
+      <tr>
+          <td><code>QDoubleSpinBox</code></td>
+          <td>浮点输入</td>
+      </tr>
+      <tr>
+          <td><code>QComboBox</code></td>
+          <td>下拉框</td>
+      </tr>
+      <tr>
+          <td><code>QCheckBox</code></td>
+          <td>复选框</td>
+      </tr>
+      <tr>
+          <td><code>QRadioButton</code></td>
+          <td>单选按钮</td>
+      </tr>
+      <tr>
+          <td><code>QSlider</code></td>
+          <td>滑动条</td>
+      </tr>
+  </tbody>
+</table>
+<p>6️⃣ 按钮类</p>
+<table>
+  <thead>
+      <tr>
+          <th>类名</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>QPushButton</code></td>
+          <td>普通按钮</td>
+      </tr>
+      <tr>
+          <td><code>QToolButton</code></td>
+          <td>工具按钮</td>
+      </tr>
+      <tr>
+          <td><code>QCommandLinkButton</code></td>
+          <td>命令链接按钮</td>
+      </tr>
+  </tbody>
+</table>
+<p>7️⃣ 视图控件（数据展示）</p>
+<table>
+  <thead>
+      <tr>
+          <th>类名</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>QListWidget</code></td>
+          <td>列表控件</td>
+      </tr>
+      <tr>
+          <td><code>QTreeWidget</code></td>
+          <td>树控件</td>
+      </tr>
+      <tr>
+          <td><code>QTableWidget</code></td>
+          <td>表格控件</td>
+      </tr>
+      <tr>
+          <td><code>QListView</code></td>
+          <td>列表视图（MVC）</td>
+      </tr>
+      <tr>
+          <td><code>QTreeView</code></td>
+          <td>树视图（MVC）</td>
+      </tr>
+      <tr>
+          <td><code>QTableView</code></td>
+          <td>表视图（MVC）</td>
+      </tr>
+      <tr>
+          <td><code>QHeaderView</code></td>
+          <td>表头控制</td>
+      </tr>
+  </tbody>
+</table>
+<p>8️⃣ 容器控件</p>
+<table>
+  <thead>
+      <tr>
+          <th>类名</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>QTabWidget</code></td>
+          <td>标签页</td>
+      </tr>
+      <tr>
+          <td><code>QStackedWidget</code></td>
+          <td>堆叠页面</td>
+      </tr>
+      <tr>
+          <td><code>QGroupBox</code></td>
+          <td>分组框</td>
+      </tr>
+      <tr>
+          <td><code>QScrollArea</code></td>
+          <td>滚动区域</td>
+      </tr>
+      <tr>
+          <td><code>QSplitter</code></td>
+          <td>可拖拽分割</td>
+      </tr>
+  </tbody>
+</table>
+<p>9️⃣ 菜单 / 对话框</p>
+<table>
+  <thead>
+      <tr>
+          <th>类名</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>QMenuBar</code></td>
+          <td>菜单栏</td>
+      </tr>
+      <tr>
+          <td><code>QMenu</code></td>
+          <td>菜单</td>
+      </tr>
+      <tr>
+          <td><code>QAction</code></td>
+          <td>动作</td>
+      </tr>
+      <tr>
+          <td><code>QToolBar</code></td>
+          <td>工具栏</td>
+      </tr>
+      <tr>
+          <td><code>QMessageBox</code></td>
+          <td>消息框</td>
+      </tr>
+      <tr>
+          <td><code>QFileDialog</code></td>
+          <td>文件选择</td>
+      </tr>
+      <tr>
+          <td><code>QInputDialog</code></td>
+          <td>输入对话框</td>
+      </tr>
+      <tr>
+          <td><code>QColorDialog</code></td>
+          <td>颜色选择</td>
+      </tr>
+      <tr>
+          <td><code>QFontDialog</code></td>
+          <td>字体选择</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="2qtgui图形--字体--事件">2、QtGui（图形 / 字体 / 事件）<a class="anchor" href="#2qtgui%e5%9b%be%e5%bd%a2--%e5%ad%97%e4%bd%93--%e4%ba%8b%e4%bb%b6">#</a></h2>
+<p>1️⃣ 图像与绘制类</p>
+<table>
+  <thead>
+      <tr>
+          <th>类名</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>QPixmap</code></td>
+          <td>GUI 显示图片</td>
+      </tr>
+      <tr>
+          <td><code>QImage</code></td>
+          <td>图像处理</td>
+      </tr>
+      <tr>
+          <td><code>QPainter</code></td>
+          <td>绘图</td>
+      </tr>
+      <tr>
+          <td><code>QPen</code></td>
+          <td>画笔</td>
+      </tr>
+      <tr>
+          <td><code>QBrush</code></td>
+          <td>画刷</td>
+      </tr>
+      <tr>
+          <td><code>QColor</code></td>
+          <td>颜色</td>
+      </tr>
+      <tr>
+          <td><code>QIcon</code></td>
+          <td>图标</td>
+      </tr>
+  </tbody>
+</table>
+<p>2️⃣ 字体与文本</p>
+<table>
+  <thead>
+      <tr>
+          <th>类名</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>QFont</code></td>
+          <td>字体</td>
+      </tr>
+      <tr>
+          <td><code>QFontMetrics</code></td>
+          <td>字体尺寸</td>
+      </tr>
+      <tr>
+          <td><code>QTextCursor</code></td>
+          <td>文本光标</td>
+      </tr>
+      <tr>
+          <td><code>QTextDocument</code></td>
+          <td>文本文档</td>
+      </tr>
+  </tbody>
+</table>
+<p>3️⃣ 输入事件</p>
+<table>
+  <thead>
+      <tr>
+          <th>类名</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>QKeyEvent</code></td>
+          <td>键盘事件</td>
+      </tr>
+      <tr>
+          <td><code>QMouseEvent</code></td>
+          <td>鼠标事件</td>
+      </tr>
+      <tr>
+          <td><code>QWheelEvent</code></td>
+          <td>滚轮事件</td>
+      </tr>
+      <tr>
+          <td><code>QDrag</code></td>
+          <td>拖拽</td>
+      </tr>
+      <tr>
+          <td><code>QClipboard</code></td>
+          <td>剪贴板</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="3qtcore核心逻辑--多线程--工具">3、QtCore（核心逻辑 / 多线程 / 工具）<a class="anchor" href="#3qtcore%e6%a0%b8%e5%bf%83%e9%80%bb%e8%be%91--%e5%a4%9a%e7%ba%bf%e7%a8%8b--%e5%b7%a5%e5%85%b7">#</a></h2>
+<p>1️⃣ 对象与信号槽</p>
+<table>
+  <thead>
+      <tr>
+          <th>类名</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>QObject</code></td>
+          <td>所有 Qt 类基类</td>
+      </tr>
+      <tr>
+          <td><code>Signal</code></td>
+          <td>自定义信号</td>
+      </tr>
+      <tr>
+          <td><code>Slot</code></td>
+          <td>槽</td>
+      </tr>
+      <tr>
+          <td><code>QEvent</code></td>
+          <td>事件基类</td>
+      </tr>
+  </tbody>
+</table>
+<p>2️⃣ 时间与定时</p>
+<table>
+  <thead>
+      <tr>
+          <th>类名</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>QTimer</code></td>
+          <td>定时器</td>
+      </tr>
+      <tr>
+          <td><code>QTime</code></td>
+          <td>时间</td>
+      </tr>
+      <tr>
+          <td><code>QDate</code></td>
+          <td>日期</td>
+      </tr>
+      <tr>
+          <td><code>QDateTime</code></td>
+          <td>日期时间</td>
+      </tr>
+  </tbody>
+</table>
+<p>3️⃣ 多线程与并发（重点）</p>
+<table>
+  <thead>
+      <tr>
+          <th>类名</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>QThread</code></td>
+          <td>线程</td>
+      </tr>
+      <tr>
+          <td><code>QRunnable</code></td>
+          <td>任务</td>
+      </tr>
+      <tr>
+          <td><code>QThreadPool</code></td>
+          <td>线程池</td>
+      </tr>
+      <tr>
+          <td><code>QMutex</code></td>
+          <td>互斥锁</td>
+      </tr>
+      <tr>
+          <td><code>QWaitCondition</code></td>
+          <td>条件变量</td>
+      </tr>
+  </tbody>
+</table>
+<p>4️⃣ 文件 / 路径 / 设置</p>
+<table>
+  <thead>
+      <tr>
+          <th>类名</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>QFile</code></td>
+          <td>文件操作</td>
+      </tr>
+      <tr>
+          <td><code>QDir</code></td>
+          <td>目录操作</td>
+      </tr>
+      <tr>
+          <td><code>QFileInfo</code></td>
+          <td>文件信息</td>
+      </tr>
+      <tr>
+          <td><code>QSettings</code></td>
+          <td>配置存储</td>
+      </tr>
+      <tr>
+          <td><code>QStandardPaths</code></td>
+          <td>标准路径</td>
+      </tr>
+  </tbody>
+</table>
+<p>5️⃣ 基础数据类型</p>
+<table>
+  <thead>
+      <tr>
+          <th>类名</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>QPoint</code></td>
+          <td>点</td>
+      </tr>
+      <tr>
+          <td><code>QSize</code></td>
+          <td>尺寸</td>
+      </tr>
+      <tr>
+          <td><code>QRect</code></td>
+          <td>矩形</td>
+      </tr>
+      <tr>
+          <td><code>QVariant</code></td>
+          <td>通用类型</td>
+      </tr>
+      <tr>
+          <td><code>QUrl</code></td>
+          <td>URL</td>
+      </tr>
+      <tr>
+          <td><code>Qt</code></td>
+          <td>枚举集合</td>
+      </tr>
+  </tbody>
+</table>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>Pandas变形</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="flex align-center">
+        <span>PySide美化界面</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1qtwidgets界面层控件--应用窗口类">1、QtWidgets（界面层：控件 + 应用/窗口类）</a></li>
+    <li><a href="#2qtgui图形--字体--事件">2、QtGui（图形 / 字体 / 事件）</a></li>
+    <li><a href="#3qtcore核心逻辑--多线程--工具">3、QtCore（核心逻辑 / 多线程 / 工具）</a></li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

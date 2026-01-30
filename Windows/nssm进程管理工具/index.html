@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="nssm注册系统服务# 对于Windows平台来说，很多软件或系统的后台服务是基于windows服务的方式运行的，它的优势是稳定可靠，有进程保护，但对于一些普通exe程序（控制台程序或带界面的windows程序）或bat文件是否也可以封装成windows服务进行运行呢？其实windows本身就有SC.exe，它为Windows系统自带工具，可对Windows系统服务进行创建，查询，启动，停止，删除等操作。但是SC.exe 只支持操作服务控制管理器(SCM)接口规范的系统服务，比如一般的网络服务进程如nginx 等无法作为服务直接启动了，因此本文介绍一个可以封装普通exe程序或bat文件的windows服务工具：NSSM。
+NSSM是一个服务封装程序，它可以将普通exe程序或bat文件封装成服务，使之像windows服务一样运行。同类型的工具还有微软自己的srvany，不过nssm更加简单易用，并且功能强大。它的特点如下：
+支持普通exe程序（控制台程序或者带界面的Windows程序都可以）或bat文件 安装简单又方便 可以重定向输出（并且支持Rotation） 可以自动守护封装了的服务，程序挂掉了后可以自动重启 可以自定义环境变量 可以自定义启动参数 从以上可以得知，NSSM每个功能都很实用，可以大大简化开发流程，降低了开发难度，使用和调试起来也非常方便，特别不需要考虑开发一个服务实现服务守护功能，以确保稳定可靠。 NSSM常用命令# 1.安装服务：nssm install 服务名称 2.删除服务：nssm remove 服务名称 3.删除服务确定：nssm remove 服务名称 confirm 4.修改服务（显示界面修改）：nssm edit 服务名称 5.启动服务：nssm start 服务名称 6.停止服务：nssm stop 服务名名称 7.停止服务：nssm stop 服务名称NSSM使用步骤# 下载NSSM# 1.下载NSSM 2.根据windows平台，将32/64位nssm.exe文件解压至任意文件夹 3.cmd进入到nssm.exe所在目录，如你操作系统是32bit，请对应32位的nssm.exe文件，如你操作系统是64bit，请对应64位的nssm.exe 4.输入 nssm install {服务名称}，即注册Windows服务的名称。
+注册服务# 设置说明，如下： 1.Application Path: 选择系统安装的exe或bat。 2.Startup directory: 选择exe或bat项目的根目录。 3.Arguments: 输入启动参数。 4.Service name: 服务名称 上述步骤操作完成，即可点击Install service来注册服务。 在系统服务中services.msc找到刚刚注册的服务，右键属性 - 恢复即可设置此服务挂掉重启等内容。 需要注意一点，安装完服务后，需要启动服务，否则没有生效。
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="nssm进程管理工具">
+  <meta property="og:description" content="nssm注册系统服务# 对于Windows平台来说，很多软件或系统的后台服务是基于windows服务的方式运行的，它的优势是稳定可靠，有进程保护，但对于一些普通exe程序（控制台程序或带界面的windows程序）或bat文件是否也可以封装成windows服务进行运行呢？其实windows本身就有SC.exe，它为Windows系统自带工具，可对Windows系统服务进行创建，查询，启动，停止，删除等操作。但是SC.exe 只支持操作服务控制管理器(SCM)接口规范的系统服务，比如一般的网络服务进程如nginx 等无法作为服务直接启动了，因此本文介绍一个可以封装普通exe程序或bat文件的windows服务工具：NSSM。
+NSSM是一个服务封装程序，它可以将普通exe程序或bat文件封装成服务，使之像windows服务一样运行。同类型的工具还有微软自己的srvany，不过nssm更加简单易用，并且功能强大。它的特点如下：
+支持普通exe程序（控制台程序或者带界面的Windows程序都可以）或bat文件 安装简单又方便 可以重定向输出（并且支持Rotation） 可以自动守护封装了的服务，程序挂掉了后可以自动重启 可以自定义环境变量 可以自定义启动参数 从以上可以得知，NSSM每个功能都很实用，可以大大简化开发流程，降低了开发难度，使用和调试起来也非常方便，特别不需要考虑开发一个服务实现服务守护功能，以确保稳定可靠。 NSSM常用命令# 1.安装服务：nssm install 服务名称 2.删除服务：nssm remove 服务名称 3.删除服务确定：nssm remove 服务名称 confirm 4.修改服务（显示界面修改）：nssm edit 服务名称 5.启动服务：nssm start 服务名称 6.停止服务：nssm stop 服务名名称 7.停止服务：nssm stop 服务名称NSSM使用步骤# 下载NSSM# 1.下载NSSM 2.根据windows平台，将32/64位nssm.exe文件解压至任意文件夹 3.cmd进入到nssm.exe所在目录，如你操作系统是32bit，请对应32位的nssm.exe文件，如你操作系统是64bit，请对应64位的nssm.exe 4.输入 nssm install {服务名称}，即注册Windows服务的名称。
+注册服务# 设置说明，如下： 1.Application Path: 选择系统安装的exe或bat。 2.Startup directory: 选择exe或bat项目的根目录。 3.Arguments: 输入启动参数。 4.Service name: 服务名称 上述步骤操作完成，即可点击Install service来注册服务。 在系统服务中services.msc找到刚刚注册的服务，右键属性 - 恢复即可设置此服务挂掉重启等内容。 需要注意一点，安装完服务后，需要启动服务，否则没有生效。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="windows">
+
+
+  <meta itemprop="name" content="nssm进程管理工具">
+  <meta itemprop="description" content="nssm注册系统服务# 对于Windows平台来说，很多软件或系统的后台服务是基于windows服务的方式运行的，它的优势是稳定可靠，有进程保护，但对于一些普通exe程序（控制台程序或带界面的windows程序）或bat文件是否也可以封装成windows服务进行运行呢？其实windows本身就有SC.exe，它为Windows系统自带工具，可对Windows系统服务进行创建，查询，启动，停止，删除等操作。但是SC.exe 只支持操作服务控制管理器(SCM)接口规范的系统服务，比如一般的网络服务进程如nginx 等无法作为服务直接启动了，因此本文介绍一个可以封装普通exe程序或bat文件的windows服务工具：NSSM。
+NSSM是一个服务封装程序，它可以将普通exe程序或bat文件封装成服务，使之像windows服务一样运行。同类型的工具还有微软自己的srvany，不过nssm更加简单易用，并且功能强大。它的特点如下：
+支持普通exe程序（控制台程序或者带界面的Windows程序都可以）或bat文件 安装简单又方便 可以重定向输出（并且支持Rotation） 可以自动守护封装了的服务，程序挂掉了后可以自动重启 可以自定义环境变量 可以自定义启动参数 从以上可以得知，NSSM每个功能都很实用，可以大大简化开发流程，降低了开发难度，使用和调试起来也非常方便，特别不需要考虑开发一个服务实现服务守护功能，以确保稳定可靠。 NSSM常用命令# 1.安装服务：nssm install 服务名称 2.删除服务：nssm remove 服务名称 3.删除服务确定：nssm remove 服务名称 confirm 4.修改服务（显示界面修改）：nssm edit 服务名称 5.启动服务：nssm start 服务名称 6.停止服务：nssm stop 服务名名称 7.停止服务：nssm stop 服务名称NSSM使用步骤# 下载NSSM# 1.下载NSSM 2.根据windows平台，将32/64位nssm.exe文件解压至任意文件夹 3.cmd进入到nssm.exe所在目录，如你操作系统是32bit，请对应32位的nssm.exe文件，如你操作系统是64bit，请对应64位的nssm.exe 4.输入 nssm install {服务名称}，即注册Windows服务的名称。
+注册服务# 设置说明，如下： 1.Application Path: 选择系统安装的exe或bat。 2.Startup directory: 选择exe或bat项目的根目录。 3.Arguments: 输入启动参数。 4.Service name: 服务名称 上述步骤操作完成，即可点击Install service来注册服务。 在系统服务中services.msc找到刚刚注册的服务，右键属性 - 恢复即可设置此服务挂掉重启等内容。 需要注意一点，安装完服务后，需要启动服务，否则没有生效。">
+  <meta itemprop="wordCount" content="62">
+
+<title>nssm进程管理工具 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.9d4fa0048b4786d5be096d98c61a47e02072a87b9dbf0bb86dcd8edf179c4e43.js" integrity="sha256-nU&#43;gBItHhtW&#43;CW2YxhpH4CByqHudvwu4bc2O3xecTkM=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-windows">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-204365caa941390a182aeb870c8b397d" class="toggle"  />
+    <label for="section-204365caa941390a182aeb870c8b397d" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f6929f8819239c236e3ff6d9318a645b" class="toggle"  />
+    <label for="section-f6929f8819239c236e3ff6d9318a645b" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-797baf87757652be835bcce5680ea0d4" class="toggle"  />
+    <label for="section-797baf87757652be835bcce5680ea0d4" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0fa9f382cfc268805da9afbea1ac822b" class="toggle"  />
+    <label for="section-0fa9f382cfc268805da9afbea1ac822b" class="flex">
+      <a role="button" class="">
+        Python数据处理</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-938c3edbaa8e3dd01e8b93d6f9361182" class="toggle"  />
+    <label for="section-938c3edbaa8e3dd01e8b93d6f9361182" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-56b62cfe8bd1e3138f346455c7c08d01" class="toggle"  />
+    <label for="section-56b62cfe8bd1e3138f346455c7c08d01" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e12d76c83fadc5077063bd8a06e4974c" class="toggle"  />
+    <label for="section-e12d76c83fadc5077063bd8a06e4974c" class="flex">
+      <a role="button" class="">
+        Linux</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-docker/" class="">
+      安装 Docker 教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-mysql/" class="">
+      安装 mysql 教程</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-23e22f2cefc5200495b10b220f00dc9b" class="toggle" checked />
+    <label for="section-23e22f2cefc5200495b10b220f00dc9b" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="active">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5f3519d07421b3022c482beb7e53757d" class="toggle"  />
+    <label for="section-5f3519d07421b3022c482beb7e53757d" class="flex">
+      <a role="button" class="">
+        Other</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强平台装机流程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-00896273d6e22b6628839c56863edc57" class="toggle"  />
+    <label for="section-00896273d6e22b6628839c56863edc57" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-212fbf26dee144498e07df6cb6c18024" class="toggle"  />
+    <label for="section-212fbf26dee144498e07df6cb6c18024" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB/" class="">
+      处理鼠标漂移</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5b47f8600929668d6470260320a7fd81" class="toggle"  />
+    <label for="section-5b47f8600929668d6470260320a7fd81" class="flex">
+      <a href="/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+        幽灵键鼠</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a>
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E6%B8%B8%E6%88%8F%E8%84%9A%E6%9C%AC%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%9A%94%E7%A6%BB%E6%96%B9%E6%A1%88/" class="">
+      脚本隔离方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c5a43b1f0709f0338f2ab4a52452792c" class="toggle"  />
+    <label for="section-c5a43b1f0709f0338f2ab4a52452792c" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>nssm进程管理工具</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#nssm注册系统服务">nssm注册系统服务</a></li>
+    <li><a href="#nssm常用命令">NSSM常用命令</a></li>
+    <li><a href="#nssm使用步骤">NSSM使用步骤</a>
+      <ul>
+        <li><a href="#下载nssm">下载NSSM</a></li>
+        <li><a href="#注册服务">注册服务</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h2 id="nssm注册系统服务">nssm注册系统服务<a class="anchor" href="#nssm%e6%b3%a8%e5%86%8c%e7%b3%bb%e7%bb%9f%e6%9c%8d%e5%8a%a1">#</a></h2>
+<p>对于Windows平台来说，很多软件或系统的后台服务是基于windows服务的方式运行的，它的优势是稳定可靠，有进程保护，但对于一些普通exe程序（控制台程序或带界面的windows程序）或bat文件是否也可以封装成windows服务进行运行呢？其实windows本身就有SC.exe，它为Windows系统自带工具，可对Windows系统服务进行创建，查询，启动，停止，删除等操作。但是SC.exe 只支持操作服务控制管理器(SCM)接口规范的系统服务，比如一般的网络服务进程如nginx 等无法作为服务直接启动了，因此本文介绍一个可以封装普通exe程序或bat文件的windows服务工具：NSSM。</p>
+<p>NSSM是一个服务封装程序，它可以将普通exe程序或bat文件封装成服务，使之像windows服务一样运行。同类型的工具还有微软自己的srvany，不过nssm更加简单易用，并且功能强大。它的特点如下：</p>
+<ul>
+<li>支持普通exe程序（控制台程序或者带界面的Windows程序都可以）或bat文件</li>
+<li>安装简单又方便</li>
+<li>可以重定向输出（并且支持Rotation）</li>
+<li>可以自动守护封装了的服务，程序挂掉了后可以自动重启</li>
+<li>可以自定义环境变量</li>
+<li>可以自定义启动参数
+从以上可以得知，NSSM每个功能都很实用，可以大大简化开发流程，降低了开发难度，使用和调试起来也非常方便，特别不需要考虑开发一个服务实现服务守护功能，以确保稳定可靠。</li>
+</ul>
+<h2 id="nssm常用命令">NSSM常用命令<a class="anchor" href="#nssm%e5%b8%b8%e7%94%a8%e5%91%bd%e4%bb%a4">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>1.安装服务：nssm install 服务名称
+</span></span><span style="display:flex;"><span>2.删除服务：nssm remove 服务名称
+</span></span><span style="display:flex;"><span>3.删除服务确定：nssm remove 服务名称 confirm
+</span></span><span style="display:flex;"><span>4.修改服务（显示界面修改）：nssm edit 服务名称
+</span></span><span style="display:flex;"><span>5.启动服务：nssm start 服务名称
+</span></span><span style="display:flex;"><span>6.停止服务：nssm stop 服务名名称
+</span></span><span style="display:flex;"><span>7.停止服务：nssm stop 服务名称</span></span></code></pre></div><h2 id="nssm使用步骤">NSSM使用步骤<a class="anchor" href="#nssm%e4%bd%bf%e7%94%a8%e6%ad%a5%e9%aa%a4">#</a></h2>
+<h3 id="下载nssm">下载NSSM<a class="anchor" href="#%e4%b8%8b%e8%bd%bdnssm">#</a></h3>
+<p>1.<a href="http://nssm.cc/download">下载NSSM</a>
+2.根据windows平台，将32/64位nssm.exe文件解压至任意文件夹
+3.cmd进入到nssm.exe所在目录，如你操作系统是32bit，请对应32位的nssm.exe文件，如你操作系统是64bit，请对应64位的nssm.exe
+4.输入 nssm install {服务名称}，即注册Windows服务的名称。</p>
+<h3 id="注册服务">注册服务<a class="anchor" href="#%e6%b3%a8%e5%86%8c%e6%9c%8d%e5%8a%a1">#</a></h3>
+<p>设置说明，如下：
+1.Application Path: 选择系统安装的exe或bat。
+2.Startup directory: 选择exe或bat项目的根目录。
+3.Arguments: 输入启动参数。
+4.Service name: 服务名称
+上述步骤操作完成，即可点击Install service来注册服务。
+在系统服务中services.msc找到刚刚注册的服务，右键属性 - 恢复即可设置此服务挂掉重启等内容。
+需要注意一点，安装完服务后，需要启动服务，否则没有生效。</p>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/Linux/install-mysql/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>安装 mysql 教程</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/Other/hugo/" class="flex align-center">
+        <span>hugo使用</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#nssm注册系统服务">nssm注册系统服务</a></li>
+    <li><a href="#nssm常用命令">NSSM常用命令</a></li>
+    <li><a href="#nssm使用步骤">NSSM使用步骤</a>
+      <ul>
+        <li><a href="#下载nssm">下载NSSM</a></li>
+        <li><a href="#注册服务">注册服务</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Jupyter 是一个交互式的计算环境，主要用于写、运行和展示代码（Python、R、Julia 等），非常适合做数据分析、可视化、机器学习实验或者写教程笔记。
+安装 Jupyter# Jupyter 需要 Python 环境
+pip install notebook pip install jupyterlab-language-pack-zh-CN jupyter notebook #进入你想工作的文件夹，然后启动。 jupyter lab #这是另一种启动方式,jupyterlab是jupyter notebook的下一代产品，集成了更多功能 浏览器会自动打开 http://localhost:8888 如果浏览器没自动打开，会在终端看到一个链接，复制到浏览器即可。 启动后在Settings–Language-Chinese (Simplified, China)-中文(简体,中国)，进行切换显示语言。
+基本使用# 创建新 Notebook# 在网页右上角选择 New → Python 3（或其它语言） 会出现一个 .ipynb 文件，分为 Cell（单元格）
+单元格类型
+Code：写代码并运行（Shift &#43; Enter 执行） Markdown：写文字说明（支持标题、公式、图片） Raw：原始文本，不执行常用快捷键（命令模式下）# Esc 进入命令模式，Enter 进入编辑模式 A 在上方插入单元格 B 在下方插入单元格 DD 删除单元格 M 把单元格改为 Markdown Y 把单元格改为 Code Shift &#43; Enter 运行并跳到下一格 在 Jupyter Notebook 里，打开帮助文档的快捷键是： 按 Shift &#43; Tab，把光标放到函数或对象名后面，按一次 Shift &#43; Tab 会弹出简要帮助提示（参数说明）。 连续按 Shift &#43; Tab 两次或三次，会展开更详细的文档窗口。进阶技巧# 可视化示例 import matplotlib.pyplot as plt x = [1, 2, 3, 4] y = [1, 4, 9, 16] plt.plot(x, y) plt.show()Jupyter &#43; Pandas 数据分析入门示例# 安装必要的库
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="Jupyter使用">
+  <meta property="og:description" content="Jupyter 是一个交互式的计算环境，主要用于写、运行和展示代码（Python、R、Julia 等），非常适合做数据分析、可视化、机器学习实验或者写教程笔记。
+安装 Jupyter# Jupyter 需要 Python 环境
+pip install notebook pip install jupyterlab-language-pack-zh-CN jupyter notebook #进入你想工作的文件夹，然后启动。 jupyter lab #这是另一种启动方式,jupyterlab是jupyter notebook的下一代产品，集成了更多功能 浏览器会自动打开 http://localhost:8888 如果浏览器没自动打开，会在终端看到一个链接，复制到浏览器即可。 启动后在Settings–Language-Chinese (Simplified, China)-中文(简体,中国)，进行切换显示语言。
+基本使用# 创建新 Notebook# 在网页右上角选择 New → Python 3（或其它语言） 会出现一个 .ipynb 文件，分为 Cell（单元格）
+单元格类型
+Code：写代码并运行（Shift &#43; Enter 执行） Markdown：写文字说明（支持标题、公式、图片） Raw：原始文本，不执行常用快捷键（命令模式下）# Esc 进入命令模式，Enter 进入编辑模式 A 在上方插入单元格 B 在下方插入单元格 DD 删除单元格 M 把单元格改为 Markdown Y 把单元格改为 Code Shift &#43; Enter 运行并跳到下一格 在 Jupyter Notebook 里，打开帮助文档的快捷键是： 按 Shift &#43; Tab，把光标放到函数或对象名后面，按一次 Shift &#43; Tab 会弹出简要帮助提示（参数说明）。 连续按 Shift &#43; Tab 两次或三次，会展开更详细的文档窗口。进阶技巧# 可视化示例 import matplotlib.pyplot as plt x = [1, 2, 3, 4] y = [1, 4, 9, 16] plt.plot(x, y) plt.show()Jupyter &#43; Pandas 数据分析入门示例# 安装必要的库">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="python">
+
+
+  <meta itemprop="name" content="Jupyter使用">
+  <meta itemprop="description" content="Jupyter 是一个交互式的计算环境，主要用于写、运行和展示代码（Python、R、Julia 等），非常适合做数据分析、可视化、机器学习实验或者写教程笔记。
+安装 Jupyter# Jupyter 需要 Python 环境
+pip install notebook pip install jupyterlab-language-pack-zh-CN jupyter notebook #进入你想工作的文件夹，然后启动。 jupyter lab #这是另一种启动方式,jupyterlab是jupyter notebook的下一代产品，集成了更多功能 浏览器会自动打开 http://localhost:8888 如果浏览器没自动打开，会在终端看到一个链接，复制到浏览器即可。 启动后在Settings–Language-Chinese (Simplified, China)-中文(简体,中国)，进行切换显示语言。
+基本使用# 创建新 Notebook# 在网页右上角选择 New → Python 3（或其它语言） 会出现一个 .ipynb 文件，分为 Cell（单元格）
+单元格类型
+Code：写代码并运行（Shift &#43; Enter 执行） Markdown：写文字说明（支持标题、公式、图片） Raw：原始文本，不执行常用快捷键（命令模式下）# Esc 进入命令模式，Enter 进入编辑模式 A 在上方插入单元格 B 在下方插入单元格 DD 删除单元格 M 把单元格改为 Markdown Y 把单元格改为 Code Shift &#43; Enter 运行并跳到下一格 在 Jupyter Notebook 里，打开帮助文档的快捷键是： 按 Shift &#43; Tab，把光标放到函数或对象名后面，按一次 Shift &#43; Tab 会弹出简要帮助提示（参数说明）。 连续按 Shift &#43; Tab 两次或三次，会展开更详细的文档窗口。进阶技巧# 可视化示例 import matplotlib.pyplot as plt x = [1, 2, 3, 4] y = [1, 4, 9, 16] plt.plot(x, y) plt.show()Jupyter &#43; Pandas 数据分析入门示例# 安装必要的库">
+  <meta itemprop="wordCount" content="212">
+
+<title>Jupyter使用 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.9d4fa0048b4786d5be096d98c61a47e02072a87b9dbf0bb86dcd8edf179c4e43.js" integrity="sha256-nU&#43;gBItHhtW&#43;CW2YxhpH4CByqHudvwu4bc2O3xecTkM=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-python">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-204365caa941390a182aeb870c8b397d" class="toggle" checked />
+    <label for="section-204365caa941390a182aeb870c8b397d" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f6929f8819239c236e3ff6d9318a645b" class="toggle"  />
+    <label for="section-f6929f8819239c236e3ff6d9318a645b" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-797baf87757652be835bcce5680ea0d4" class="toggle" checked />
+    <label for="section-797baf87757652be835bcce5680ea0d4" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="active">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0fa9f382cfc268805da9afbea1ac822b" class="toggle"  />
+    <label for="section-0fa9f382cfc268805da9afbea1ac822b" class="flex">
+      <a role="button" class="">
+        Python数据处理</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-938c3edbaa8e3dd01e8b93d6f9361182" class="toggle"  />
+    <label for="section-938c3edbaa8e3dd01e8b93d6f9361182" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-56b62cfe8bd1e3138f346455c7c08d01" class="toggle"  />
+    <label for="section-56b62cfe8bd1e3138f346455c7c08d01" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e12d76c83fadc5077063bd8a06e4974c" class="toggle"  />
+    <label for="section-e12d76c83fadc5077063bd8a06e4974c" class="flex">
+      <a role="button" class="">
+        Linux</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-docker/" class="">
+      安装 Docker 教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-mysql/" class="">
+      安装 mysql 教程</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-23e22f2cefc5200495b10b220f00dc9b" class="toggle"  />
+    <label for="section-23e22f2cefc5200495b10b220f00dc9b" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5f3519d07421b3022c482beb7e53757d" class="toggle"  />
+    <label for="section-5f3519d07421b3022c482beb7e53757d" class="flex">
+      <a role="button" class="">
+        Other</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强平台装机流程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-00896273d6e22b6628839c56863edc57" class="toggle"  />
+    <label for="section-00896273d6e22b6628839c56863edc57" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-212fbf26dee144498e07df6cb6c18024" class="toggle"  />
+    <label for="section-212fbf26dee144498e07df6cb6c18024" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB/" class="">
+      处理鼠标漂移</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5b47f8600929668d6470260320a7fd81" class="toggle"  />
+    <label for="section-5b47f8600929668d6470260320a7fd81" class="flex">
+      <a href="/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+        幽灵键鼠</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a>
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E6%B8%B8%E6%88%8F%E8%84%9A%E6%9C%AC%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%9A%94%E7%A6%BB%E6%96%B9%E6%A1%88/" class="">
+      脚本隔离方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c5a43b1f0709f0338f2ab4a52452792c" class="toggle"  />
+    <label for="section-c5a43b1f0709f0338f2ab4a52452792c" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>Jupyter使用</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#创建新-notebook">创建新 Notebook</a></li>
+    <li><a href="#常用快捷键命令模式下">常用快捷键（命令模式下）</a></li>
+    <li><a href="#进阶技巧">进阶技巧</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><p>Jupyter 是一个交互式的计算环境，主要用于写、运行和展示代码（Python、R、Julia 等），非常适合做数据分析、可视化、机器学习实验或者写教程笔记。</p>
+<h1 id="安装-jupyter">安装 Jupyter<a class="anchor" href="#%e5%ae%89%e8%a3%85-jupyter">#</a></h1>
+<p>Jupyter 需要 Python 环境</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>pip install notebook
+</span></span><span style="display:flex;"><span>pip install jupyterlab<span style="color:#f92672">-</span>language<span style="color:#f92672">-</span>pack<span style="color:#f92672">-</span>zh<span style="color:#f92672">-</span>CN
+</span></span><span style="display:flex;"><span>jupyter notebook   <span style="color:#75715e">#进入你想工作的文件夹，然后启动。</span>
+</span></span><span style="display:flex;"><span>jupyter lab <span style="color:#75715e">#这是另一种启动方式,jupyterlab是jupyter notebook的下一代产品，集成了更多功能</span></span></span></code></pre></div><blockquote class='book-hint '>
+<p>浏览器会自动打开 <code>http://localhost:8888</code>
+如果浏览器没自动打开，会在终端看到一个链接，复制到浏览器即可。
+启动后在Settings&ndash;Language-Chinese (Simplified, China)-中文(简体,中国)，进行切换显示语言。</p></blockquote><h1 id="基本使用">基本使用<a class="anchor" href="#%e5%9f%ba%e6%9c%ac%e4%bd%bf%e7%94%a8">#</a></h1>
+<h2 id="创建新-notebook">创建新 Notebook<a class="anchor" href="#%e5%88%9b%e5%bb%ba%e6%96%b0-notebook">#</a></h2>
+<p>在网页右上角选择 New → Python 3（或其它语言）
+会出现一个 .ipynb 文件，分为 Cell（单元格）</p>
+<p>单元格类型</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>Code<span style="color:#960050;background-color:#1e0010">：</span>写代码并运行<span style="color:#960050;background-color:#1e0010">（</span>Shift <span style="color:#f92672">+</span> Enter 执行<span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span>Markdown<span style="color:#960050;background-color:#1e0010">：</span>写文字说明<span style="color:#960050;background-color:#1e0010">（</span>支持标题<span style="color:#960050;background-color:#1e0010">、</span>公式<span style="color:#960050;background-color:#1e0010">、</span>图片<span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span>Raw<span style="color:#960050;background-color:#1e0010">：</span>原始文本<span style="color:#960050;background-color:#1e0010">，</span>不执行</span></span></code></pre></div><h2 id="常用快捷键命令模式下">常用快捷键（命令模式下）<a class="anchor" href="#%e5%b8%b8%e7%94%a8%e5%bf%ab%e6%8d%b7%e9%94%ae%e5%91%bd%e4%bb%a4%e6%a8%a1%e5%bc%8f%e4%b8%8b">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>Esc 进入命令模式，Enter 进入编辑模式
+</span></span><span style="display:flex;"><span>A 在上方插入单元格
+</span></span><span style="display:flex;"><span>B 在下方插入单元格
+</span></span><span style="display:flex;"><span>DD 删除单元格
+</span></span><span style="display:flex;"><span>M 把单元格改为 Markdown
+</span></span><span style="display:flex;"><span>Y 把单元格改为 Code
+</span></span><span style="display:flex;"><span>Shift + Enter 运行并跳到下一格
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>在 Jupyter Notebook 里，打开帮助文档的快捷键是：
+</span></span><span style="display:flex;"><span>按 Shift + Tab，把光标放到函数或对象名后面，按一次 Shift + Tab 会弹出简要帮助提示（参数说明）。
+</span></span><span style="display:flex;"><span>连续按 Shift + Tab 两次或三次，会展开更详细的文档窗口。</span></span></code></pre></div><h2 id="进阶技巧">进阶技巧<a class="anchor" href="#%e8%bf%9b%e9%98%b6%e6%8a%80%e5%b7%a7">#</a></h2>
+<ul>
+<li><strong>可视化示例</strong></li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> matplotlib.pyplot <span style="color:#66d9ef">as</span> plt
+</span></span><span style="display:flex;"><span>x <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>]
+</span></span><span style="display:flex;"><span>y <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">9</span>, <span style="color:#ae81ff">16</span>]
+</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>plot(x, y)
+</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>show()</span></span></code></pre></div><h1 id="jupyter--pandas-数据分析入门示例">Jupyter + Pandas 数据分析入门示例<a class="anchor" href="#jupyter--pandas-%e6%95%b0%e6%8d%ae%e5%88%86%e6%9e%90%e5%85%a5%e9%97%a8%e7%a4%ba%e4%be%8b">#</a></h1>
+<ul>
+<li>
+<p>安装必要的库</p>
+<pre tabindex="0"><code>pip install pandas matplotlib</code></pre></li>
+<li>
+<p>代码示例</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>import pandas as pd
+</span></span><span style="display:flex;"><span>import matplotlib.pyplot as plt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 让图表直接显示在 Notebook 中</span>
+</span></span><span style="display:flex;"><span>%matplotlib inline  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 设置中文字体</span>
+</span></span><span style="display:flex;"><span>plt.rcParams<span style="color:#f92672">[</span><span style="color:#e6db74">&#34;font.family&#34;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;Microsoft YaHei&#34;</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>plt.rcParams<span style="color:#f92672">[</span><span style="color:#e6db74">&#34;axes.unicode_minus&#34;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> False
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ===== 1. 创建模拟账单数据 =====</span>
+</span></span><span style="display:flex;"><span>data <span style="color:#f92672">=</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;日期&#34;</span>: <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;2025-08-01&#34;</span>, <span style="color:#e6db74">&#34;2025-08-01&#34;</span>, <span style="color:#e6db74">&#34;2025-08-02&#34;</span>, <span style="color:#e6db74">&#34;2025-08-02&#34;</span>, <span style="color:#e6db74">&#34;2025-08-03&#34;</span><span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;分类&#34;</span>: <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;餐饮&#34;</span>, <span style="color:#e6db74">&#34;交通&#34;</span>, <span style="color:#e6db74">&#34;餐饮&#34;</span>, <span style="color:#e6db74">&#34;购物&#34;</span>, <span style="color:#e6db74">&#34;交通&#34;</span><span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;金额&#34;</span>: <span style="color:#f92672">[</span>35.5, 12.0, 58.0, 200.0, 18.0<span style="color:#f92672">]</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;备注&#34;</span>: <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;早餐&#34;</span>, <span style="color:#e6db74">&#34;地铁&#34;</span>, <span style="color:#e6db74">&#34;午餐&#34;</span>, <span style="color:#e6db74">&#34;超市&#34;</span>, <span style="color:#e6db74">&#34;公交&#34;</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>df <span style="color:#f92672">=</span> pd.DataFrame<span style="color:#f92672">(</span>data<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>df<span style="color:#f92672">[</span><span style="color:#e6db74">&#34;日期&#34;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> pd.to_datetime<span style="color:#f92672">(</span>df<span style="color:#f92672">[</span><span style="color:#e6db74">&#34;日期&#34;</span><span style="color:#f92672">])</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;=== 原始数据 ===&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>print<span style="color:#f92672">(</span>df<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;\n=== 餐饮类消费 ===&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>print<span style="color:#f92672">(</span>df<span style="color:#f92672">[</span>df<span style="color:#f92672">[</span><span style="color:#e6db74">&#34;分类&#34;</span><span style="color:#f92672">]</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;餐饮&#34;</span><span style="color:#f92672">])</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>category_sum <span style="color:#f92672">=</span> df.groupby<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;分类&#34;</span><span style="color:#f92672">)[</span><span style="color:#e6db74">&#34;金额&#34;</span><span style="color:#f92672">]</span>.sum<span style="color:#f92672">()</span>.reset_index<span style="color:#f92672">()</span>
+</span></span><span style="display:flex;"><span>print<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;\n=== 按分类汇总 ===&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>print<span style="color:#f92672">(</span>category_sum<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>plt.figure<span style="color:#f92672">(</span>figsize<span style="color:#f92672">=(</span>5, 5<span style="color:#f92672">))</span>
+</span></span><span style="display:flex;"><span>plt.pie<span style="color:#f92672">(</span>category_sum<span style="color:#f92672">[</span><span style="color:#e6db74">&#34;金额&#34;</span><span style="color:#f92672">]</span>, labels<span style="color:#f92672">=</span>category_sum<span style="color:#f92672">[</span><span style="color:#e6db74">&#34;分类&#34;</span><span style="color:#f92672">]</span>, autopct<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;%.1f%%&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>plt.title<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;各类消费占比&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>plt.show<span style="color:#f92672">()</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>daily_sum <span style="color:#f92672">=</span> df.groupby<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;日期&#34;</span><span style="color:#f92672">)[</span><span style="color:#e6db74">&#34;金额&#34;</span><span style="color:#f92672">]</span>.sum<span style="color:#f92672">()</span>.reset_index<span style="color:#f92672">()</span>
+</span></span><span style="display:flex;"><span>plt.figure<span style="color:#f92672">(</span>figsize<span style="color:#f92672">=(</span>6, 4<span style="color:#f92672">))</span>
+</span></span><span style="display:flex;"><span>plt.plot<span style="color:#f92672">(</span>daily_sum<span style="color:#f92672">[</span><span style="color:#e6db74">&#34;日期&#34;</span><span style="color:#f92672">]</span>, daily_sum<span style="color:#f92672">[</span><span style="color:#e6db74">&#34;金额&#34;</span><span style="color:#f92672">]</span>, marker<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;o&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>plt.title<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;每日总消费趋势&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>plt.xlabel<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;日期&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>plt.ylabel<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;金额 (元)&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>plt.grid<span style="color:#f92672">(</span>True<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>plt.show<span style="color:#f92672">()</span></span></span></code></pre></div></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>functools</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="flex align-center">
+        <span>Loguru</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#创建新-notebook">创建新 Notebook</a></li>
+    <li><a href="#常用快捷键命令模式下">常用快捷键（命令模式下）</a></li>
+    <li><a href="#进阶技巧">进阶技巧</a></li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

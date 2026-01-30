@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>幽灵键鼠 on 碎碎念念</title>
+    <link>http://localhost:1313/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/</link>
+    <description>Recent content in 幽灵键鼠 on 碎碎念念</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <atom:link href="http://localhost:1313/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/index.xml" rel="self" type="application/rss+xml" />
+  </channel>
+</rss>

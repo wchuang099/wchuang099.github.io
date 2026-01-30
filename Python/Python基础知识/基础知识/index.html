@@ -1,0 +1,2619 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="代码首行# Python代码首行一般用下面的,两句分别是用于Linux系统下指定解释器的，第二句是声明代码使用的编码规则的，虽然在Windows系统下作用不大，但是仪式感还是要的
+#!/usr/bin/env python3 # -*- coding: utf-8 -*-代码注释# 用#字符开头的是单行注释 &#34;&#34;&#34; 多行字符串用三个引号&#34;&#34;&#34;
+保留字# 我们知道公司起名字不是随便取得，肯定会有些名字是不能用的，在Python中也是，有些名字是不可以用的，这些名字叫保留字，以下是全部保留字
+[&#39;False&#39;, &#39;None&#39;, &#39;True&#39;, &#39;and&#39;, &#39;as&#39;, &#39;assert&#39;, &#39;break&#39;, &#39;class&#39;, &#39;continue&#39;, &#39;def&#39;, &#39;del&#39;, &#39;elif&#39;, &#39;else&#39;, &#39;except&#39;, &#39;finally&#39;, &#39;for&#39;, &#39;from&#39;, &#39;global&#39;, &#39;if&#39;, &#39;import&#39;, &#39;in&#39;, &#39;is&#39;, &#39;lambda&#39;, &#39;nonlocal&#39;, &#39;not&#39;, &#39;or&#39;, &#39;pass&#39;, &#39;raise&#39;, &#39;return&#39;, &#39;try&#39;, &#39;while&#39;, &#39;with&#39;, &#39;yield&#39;]代码缩进# Python是强制缩进的语言，如果缩进不当，程序会直接无法运行，Python可以使用4个空格作为一个缩进，或者1个TAB作为一个缩进，但是一个代码中不能混用TAB缩进和空格缩进，否则会造成程式报错
+数据类型# Number（数字）# 数字包含整数int，浮点数float以及复数complex
+123 2.36 4 &#43; 3jString（字符串）# &#39;我是字符串&#39; &#34;我是字符串&#34;bool（布尔类型，注意首字母是大写）# True FalseList（列表）# [1, 2, 3] [1, &#39;321&#39;, True]Tuple（元组）# (&#39;Go&#39;, &#39;Run&#39;, 19, 20) 不写括号其实也可以，但是建议是写括号 &#39;Go&#39;, &#39;Run&#39;, 19, 20 (20,) # 当只有一个元素，需要在元素后添加逗号Set（集合）# 创建一个空集合必须用 set( ) {1, 2, 3, 4}Dictionary（字典）# {&#39;name&#39;: &#39;jake&#39;, &#39;age&#39;: &#39;12&#39;}判断数据类型# 使用type()可查看数据类型
+type(233) # int type(&#39;233&#39;) # str但是比较严谨的判断方法建议使用isinstance()
+a = 3 isinstance(a, int) # True简单数学计算# #算术没有什么出乎意料的 1 &#43; 1 # =&gt; 2 8 - 1 # =&gt; 7 10 * 2 # =&gt; 20 # 但是除法例外，会自动转换成浮点数 35 / 5 # =&gt; 7.0 10.0 / 3 # =&gt; 3.3333333333333335 # 整数除法的结果都是向下取整 5 // 3 # =&gt; 1 5.0 // 3.0 # =&gt; 1.0 # 浮点数也可以 -5 // 3 # =&gt; -2 -5.0 // 3.0 # =&gt; -2.0 # 浮点数的运算结果也是浮点数 3 * 2.0 # =&gt; 6.0 # 模除 7 % 3 # =&gt; 1 # i % j 结果的正负符号会和 j 相同，而不是和 i 相同 -7 % 3 # =&gt; 2 # x 的 y 次方 2 ** 4 # =&gt; 16 # 用括号决定优先级 1 &#43; 3 * 2 # =&gt; 7 (1 &#43; 3) * 2 # =&gt; 8判断语法# 最基础的判断语法 if 判断条件: 条件成功则执行的代码 举例说明 if 2 &gt; 1: print(&#39;2大于1&#39;) 判断语法本质是对布尔值的判断 # 布尔值 (注意: 首字母大写) True # =&gt; True False # =&gt; False # 用 not 取非 not True # =&gt; False not False # =&gt; True # 逻辑运算符，注意 and 和 or 都是小写 True and False # =&gt; False False or True # =&gt; True # True 和 False 实质上就是数字 1 和0 True &#43; True # =&gt; 2 True * 8 # =&gt; 8 False - 5 # =&gt; -5 # 数值与 True 和 False 之间的比较运算 0 == False # =&gt; True 2 == True # =&gt; False 1 == True # =&gt; True -5 != False # =&gt; True # 使用布尔逻辑运算符对数字类型的值进行运算时，会把数值强制转换为布尔值进行运算 # 但计算结果会返回它们的强制转换前的值 # 注意不要把 bool(ints) 与位运算的 &#34;按位与&#34;、&#34;按位或&#34; (&amp;, |) 混淆 bool(0) # =&gt; False bool(4) # =&gt; True bool(-6) # =&gt; True 0 and 2 # =&gt; 0 -5 or 0 # =&gt; -5 # 用==判断相等 True 2 == 1 # =&gt; False # 用!=判断不等 False 2 != 1 # =&gt; True # 比较大小 1 &lt; 10 # =&gt; True 1 &gt; 10 # =&gt; False 2 &lt;= 2 # =&gt; True 2 &gt;= 2 # =&gt; True # 判断一个值是否在范围里 1 &lt; 2 and 2 &lt; 3 # =&gt; True 2 &lt; 3 and 3 &lt; 2 # =&gt; False # 大小比较可以连起来！ 1 &lt; 2 &lt; 3 # =&gt; True 2 &lt; 3 &lt; 2 # =&gt; False # (is 对比 ==) is 判断两个变量是否引用同一个对象,是内存级别的比较 # 而 == 判断两个对象是否含有相同的值 a = [1, 2, 3, 4] # 变量 a 是一个新的列表, [1, 2, 3, 4] b = a # 变量 b 赋值了变量 a 的值 b is a # =&gt; True, a 和 b 引用的是同一个对象 b == a # =&gt; True, a 和 b 的对象的值相同 b = [1, 2, 3, 4] # 变量 b 赋值了一个新的列表, [1, 2, 3, 4] b is a # =&gt; False, a 和 b 引用的不是同一个对象 b == a # =&gt; True, a 和 b 的对象的值相同 # None是一个对象 None # =&gt; None # 当与 None 进行比较时不要用 ==，要用 is。is 是用来比较两个变量是否指向同一个对象。 &#34;etc&#34; is None # =&gt; False None is None # =&gt; True # is和in的反义 1 is not None not in导入包/模块# 关于包/模块
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="基础知识">
+  <meta property="og:description" content="代码首行# Python代码首行一般用下面的,两句分别是用于Linux系统下指定解释器的，第二句是声明代码使用的编码规则的，虽然在Windows系统下作用不大，但是仪式感还是要的
+#!/usr/bin/env python3 # -*- coding: utf-8 -*-代码注释# 用#字符开头的是单行注释 &#34;&#34;&#34; 多行字符串用三个引号&#34;&#34;&#34;
+保留字# 我们知道公司起名字不是随便取得，肯定会有些名字是不能用的，在Python中也是，有些名字是不可以用的，这些名字叫保留字，以下是全部保留字
+[&#39;False&#39;, &#39;None&#39;, &#39;True&#39;, &#39;and&#39;, &#39;as&#39;, &#39;assert&#39;, &#39;break&#39;, &#39;class&#39;, &#39;continue&#39;, &#39;def&#39;, &#39;del&#39;, &#39;elif&#39;, &#39;else&#39;, &#39;except&#39;, &#39;finally&#39;, &#39;for&#39;, &#39;from&#39;, &#39;global&#39;, &#39;if&#39;, &#39;import&#39;, &#39;in&#39;, &#39;is&#39;, &#39;lambda&#39;, &#39;nonlocal&#39;, &#39;not&#39;, &#39;or&#39;, &#39;pass&#39;, &#39;raise&#39;, &#39;return&#39;, &#39;try&#39;, &#39;while&#39;, &#39;with&#39;, &#39;yield&#39;]代码缩进# Python是强制缩进的语言，如果缩进不当，程序会直接无法运行，Python可以使用4个空格作为一个缩进，或者1个TAB作为一个缩进，但是一个代码中不能混用TAB缩进和空格缩进，否则会造成程式报错
+数据类型# Number（数字）# 数字包含整数int，浮点数float以及复数complex
+123 2.36 4 &#43; 3jString（字符串）# &#39;我是字符串&#39; &#34;我是字符串&#34;bool（布尔类型，注意首字母是大写）# True FalseList（列表）# [1, 2, 3] [1, &#39;321&#39;, True]Tuple（元组）# (&#39;Go&#39;, &#39;Run&#39;, 19, 20) 不写括号其实也可以，但是建议是写括号 &#39;Go&#39;, &#39;Run&#39;, 19, 20 (20,) # 当只有一个元素，需要在元素后添加逗号Set（集合）# 创建一个空集合必须用 set( ) {1, 2, 3, 4}Dictionary（字典）# {&#39;name&#39;: &#39;jake&#39;, &#39;age&#39;: &#39;12&#39;}判断数据类型# 使用type()可查看数据类型
+type(233) # int type(&#39;233&#39;) # str但是比较严谨的判断方法建议使用isinstance()
+a = 3 isinstance(a, int) # True简单数学计算# #算术没有什么出乎意料的 1 &#43; 1 # =&gt; 2 8 - 1 # =&gt; 7 10 * 2 # =&gt; 20 # 但是除法例外，会自动转换成浮点数 35 / 5 # =&gt; 7.0 10.0 / 3 # =&gt; 3.3333333333333335 # 整数除法的结果都是向下取整 5 // 3 # =&gt; 1 5.0 // 3.0 # =&gt; 1.0 # 浮点数也可以 -5 // 3 # =&gt; -2 -5.0 // 3.0 # =&gt; -2.0 # 浮点数的运算结果也是浮点数 3 * 2.0 # =&gt; 6.0 # 模除 7 % 3 # =&gt; 1 # i % j 结果的正负符号会和 j 相同，而不是和 i 相同 -7 % 3 # =&gt; 2 # x 的 y 次方 2 ** 4 # =&gt; 16 # 用括号决定优先级 1 &#43; 3 * 2 # =&gt; 7 (1 &#43; 3) * 2 # =&gt; 8判断语法# 最基础的判断语法 if 判断条件: 条件成功则执行的代码 举例说明 if 2 &gt; 1: print(&#39;2大于1&#39;) 判断语法本质是对布尔值的判断 # 布尔值 (注意: 首字母大写) True # =&gt; True False # =&gt; False # 用 not 取非 not True # =&gt; False not False # =&gt; True # 逻辑运算符，注意 and 和 or 都是小写 True and False # =&gt; False False or True # =&gt; True # True 和 False 实质上就是数字 1 和0 True &#43; True # =&gt; 2 True * 8 # =&gt; 8 False - 5 # =&gt; -5 # 数值与 True 和 False 之间的比较运算 0 == False # =&gt; True 2 == True # =&gt; False 1 == True # =&gt; True -5 != False # =&gt; True # 使用布尔逻辑运算符对数字类型的值进行运算时，会把数值强制转换为布尔值进行运算 # 但计算结果会返回它们的强制转换前的值 # 注意不要把 bool(ints) 与位运算的 &#34;按位与&#34;、&#34;按位或&#34; (&amp;, |) 混淆 bool(0) # =&gt; False bool(4) # =&gt; True bool(-6) # =&gt; True 0 and 2 # =&gt; 0 -5 or 0 # =&gt; -5 # 用==判断相等 True 2 == 1 # =&gt; False # 用!=判断不等 False 2 != 1 # =&gt; True # 比较大小 1 &lt; 10 # =&gt; True 1 &gt; 10 # =&gt; False 2 &lt;= 2 # =&gt; True 2 &gt;= 2 # =&gt; True # 判断一个值是否在范围里 1 &lt; 2 and 2 &lt; 3 # =&gt; True 2 &lt; 3 and 3 &lt; 2 # =&gt; False # 大小比较可以连起来！ 1 &lt; 2 &lt; 3 # =&gt; True 2 &lt; 3 &lt; 2 # =&gt; False # (is 对比 ==) is 判断两个变量是否引用同一个对象,是内存级别的比较 # 而 == 判断两个对象是否含有相同的值 a = [1, 2, 3, 4] # 变量 a 是一个新的列表, [1, 2, 3, 4] b = a # 变量 b 赋值了变量 a 的值 b is a # =&gt; True, a 和 b 引用的是同一个对象 b == a # =&gt; True, a 和 b 的对象的值相同 b = [1, 2, 3, 4] # 变量 b 赋值了一个新的列表, [1, 2, 3, 4] b is a # =&gt; False, a 和 b 引用的不是同一个对象 b == a # =&gt; True, a 和 b 的对象的值相同 # None是一个对象 None # =&gt; None # 当与 None 进行比较时不要用 ==，要用 is。is 是用来比较两个变量是否指向同一个对象。 &#34;etc&#34; is None # =&gt; False None is None # =&gt; True # is和in的反义 1 is not None not in导入包/模块# 关于包/模块">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="python">
+
+
+  <meta itemprop="name" content="基础知识">
+  <meta itemprop="description" content="代码首行# Python代码首行一般用下面的,两句分别是用于Linux系统下指定解释器的，第二句是声明代码使用的编码规则的，虽然在Windows系统下作用不大，但是仪式感还是要的
+#!/usr/bin/env python3 # -*- coding: utf-8 -*-代码注释# 用#字符开头的是单行注释 &#34;&#34;&#34; 多行字符串用三个引号&#34;&#34;&#34;
+保留字# 我们知道公司起名字不是随便取得，肯定会有些名字是不能用的，在Python中也是，有些名字是不可以用的，这些名字叫保留字，以下是全部保留字
+[&#39;False&#39;, &#39;None&#39;, &#39;True&#39;, &#39;and&#39;, &#39;as&#39;, &#39;assert&#39;, &#39;break&#39;, &#39;class&#39;, &#39;continue&#39;, &#39;def&#39;, &#39;del&#39;, &#39;elif&#39;, &#39;else&#39;, &#39;except&#39;, &#39;finally&#39;, &#39;for&#39;, &#39;from&#39;, &#39;global&#39;, &#39;if&#39;, &#39;import&#39;, &#39;in&#39;, &#39;is&#39;, &#39;lambda&#39;, &#39;nonlocal&#39;, &#39;not&#39;, &#39;or&#39;, &#39;pass&#39;, &#39;raise&#39;, &#39;return&#39;, &#39;try&#39;, &#39;while&#39;, &#39;with&#39;, &#39;yield&#39;]代码缩进# Python是强制缩进的语言，如果缩进不当，程序会直接无法运行，Python可以使用4个空格作为一个缩进，或者1个TAB作为一个缩进，但是一个代码中不能混用TAB缩进和空格缩进，否则会造成程式报错
+数据类型# Number（数字）# 数字包含整数int，浮点数float以及复数complex
+123 2.36 4 &#43; 3jString（字符串）# &#39;我是字符串&#39; &#34;我是字符串&#34;bool（布尔类型，注意首字母是大写）# True FalseList（列表）# [1, 2, 3] [1, &#39;321&#39;, True]Tuple（元组）# (&#39;Go&#39;, &#39;Run&#39;, 19, 20) 不写括号其实也可以，但是建议是写括号 &#39;Go&#39;, &#39;Run&#39;, 19, 20 (20,) # 当只有一个元素，需要在元素后添加逗号Set（集合）# 创建一个空集合必须用 set( ) {1, 2, 3, 4}Dictionary（字典）# {&#39;name&#39;: &#39;jake&#39;, &#39;age&#39;: &#39;12&#39;}判断数据类型# 使用type()可查看数据类型
+type(233) # int type(&#39;233&#39;) # str但是比较严谨的判断方法建议使用isinstance()
+a = 3 isinstance(a, int) # True简单数学计算# #算术没有什么出乎意料的 1 &#43; 1 # =&gt; 2 8 - 1 # =&gt; 7 10 * 2 # =&gt; 20 # 但是除法例外，会自动转换成浮点数 35 / 5 # =&gt; 7.0 10.0 / 3 # =&gt; 3.3333333333333335 # 整数除法的结果都是向下取整 5 // 3 # =&gt; 1 5.0 // 3.0 # =&gt; 1.0 # 浮点数也可以 -5 // 3 # =&gt; -2 -5.0 // 3.0 # =&gt; -2.0 # 浮点数的运算结果也是浮点数 3 * 2.0 # =&gt; 6.0 # 模除 7 % 3 # =&gt; 1 # i % j 结果的正负符号会和 j 相同，而不是和 i 相同 -7 % 3 # =&gt; 2 # x 的 y 次方 2 ** 4 # =&gt; 16 # 用括号决定优先级 1 &#43; 3 * 2 # =&gt; 7 (1 &#43; 3) * 2 # =&gt; 8判断语法# 最基础的判断语法 if 判断条件: 条件成功则执行的代码 举例说明 if 2 &gt; 1: print(&#39;2大于1&#39;) 判断语法本质是对布尔值的判断 # 布尔值 (注意: 首字母大写) True # =&gt; True False # =&gt; False # 用 not 取非 not True # =&gt; False not False # =&gt; True # 逻辑运算符，注意 and 和 or 都是小写 True and False # =&gt; False False or True # =&gt; True # True 和 False 实质上就是数字 1 和0 True &#43; True # =&gt; 2 True * 8 # =&gt; 8 False - 5 # =&gt; -5 # 数值与 True 和 False 之间的比较运算 0 == False # =&gt; True 2 == True # =&gt; False 1 == True # =&gt; True -5 != False # =&gt; True # 使用布尔逻辑运算符对数字类型的值进行运算时，会把数值强制转换为布尔值进行运算 # 但计算结果会返回它们的强制转换前的值 # 注意不要把 bool(ints) 与位运算的 &#34;按位与&#34;、&#34;按位或&#34; (&amp;, |) 混淆 bool(0) # =&gt; False bool(4) # =&gt; True bool(-6) # =&gt; True 0 and 2 # =&gt; 0 -5 or 0 # =&gt; -5 # 用==判断相等 True 2 == 1 # =&gt; False # 用!=判断不等 False 2 != 1 # =&gt; True # 比较大小 1 &lt; 10 # =&gt; True 1 &gt; 10 # =&gt; False 2 &lt;= 2 # =&gt; True 2 &gt;= 2 # =&gt; True # 判断一个值是否在范围里 1 &lt; 2 and 2 &lt; 3 # =&gt; True 2 &lt; 3 and 3 &lt; 2 # =&gt; False # 大小比较可以连起来！ 1 &lt; 2 &lt; 3 # =&gt; True 2 &lt; 3 &lt; 2 # =&gt; False # (is 对比 ==) is 判断两个变量是否引用同一个对象,是内存级别的比较 # 而 == 判断两个对象是否含有相同的值 a = [1, 2, 3, 4] # 变量 a 是一个新的列表, [1, 2, 3, 4] b = a # 变量 b 赋值了变量 a 的值 b is a # =&gt; True, a 和 b 引用的是同一个对象 b == a # =&gt; True, a 和 b 的对象的值相同 b = [1, 2, 3, 4] # 变量 b 赋值了一个新的列表, [1, 2, 3, 4] b is a # =&gt; False, a 和 b 引用的不是同一个对象 b == a # =&gt; True, a 和 b 的对象的值相同 # None是一个对象 None # =&gt; None # 当与 None 进行比较时不要用 ==，要用 is。is 是用来比较两个变量是否指向同一个对象。 &#34;etc&#34; is None # =&gt; False None is None # =&gt; True # is和in的反义 1 is not None not in导入包/模块# 关于包/模块">
+  <meta itemprop="wordCount" content="2481">
+
+<title>基础知识 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.9d4fa0048b4786d5be096d98c61a47e02072a87b9dbf0bb86dcd8edf179c4e43.js" integrity="sha256-nU&#43;gBItHhtW&#43;CW2YxhpH4CByqHudvwu4bc2O3xecTkM=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-python">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-204365caa941390a182aeb870c8b397d" class="toggle" checked />
+    <label for="section-204365caa941390a182aeb870c8b397d" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f6929f8819239c236e3ff6d9318a645b" class="toggle" checked />
+    <label for="section-f6929f8819239c236e3ff6d9318a645b" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="active">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-797baf87757652be835bcce5680ea0d4" class="toggle"  />
+    <label for="section-797baf87757652be835bcce5680ea0d4" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0fa9f382cfc268805da9afbea1ac822b" class="toggle"  />
+    <label for="section-0fa9f382cfc268805da9afbea1ac822b" class="flex">
+      <a role="button" class="">
+        Python数据处理</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-938c3edbaa8e3dd01e8b93d6f9361182" class="toggle"  />
+    <label for="section-938c3edbaa8e3dd01e8b93d6f9361182" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-56b62cfe8bd1e3138f346455c7c08d01" class="toggle"  />
+    <label for="section-56b62cfe8bd1e3138f346455c7c08d01" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e12d76c83fadc5077063bd8a06e4974c" class="toggle"  />
+    <label for="section-e12d76c83fadc5077063bd8a06e4974c" class="flex">
+      <a role="button" class="">
+        Linux</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-docker/" class="">
+      安装 Docker 教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-mysql/" class="">
+      安装 mysql 教程</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-23e22f2cefc5200495b10b220f00dc9b" class="toggle"  />
+    <label for="section-23e22f2cefc5200495b10b220f00dc9b" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5f3519d07421b3022c482beb7e53757d" class="toggle"  />
+    <label for="section-5f3519d07421b3022c482beb7e53757d" class="flex">
+      <a role="button" class="">
+        Other</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强平台装机流程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-00896273d6e22b6628839c56863edc57" class="toggle"  />
+    <label for="section-00896273d6e22b6628839c56863edc57" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-212fbf26dee144498e07df6cb6c18024" class="toggle"  />
+    <label for="section-212fbf26dee144498e07df6cb6c18024" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB/" class="">
+      处理鼠标漂移</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5b47f8600929668d6470260320a7fd81" class="toggle"  />
+    <label for="section-5b47f8600929668d6470260320a7fd81" class="flex">
+      <a href="/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+        幽灵键鼠</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a>
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E6%B8%B8%E6%88%8F%E8%84%9A%E6%9C%AC%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%9A%94%E7%A6%BB%E6%96%B9%E6%A1%88/" class="">
+      脚本隔离方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c5a43b1f0709f0338f2ab4a52452792c" class="toggle"  />
+    <label for="section-c5a43b1f0709f0338f2ab4a52452792c" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>基础知识</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#代码首行">代码首行</a></li>
+    <li><a href="#代码注释">代码注释</a></li>
+    <li><a href="#保留字">保留字</a></li>
+    <li><a href="#代码缩进">代码缩进</a></li>
+    <li><a href="#数据类型">数据类型</a>
+      <ul>
+        <li><a href="#number数字">Number（数字）</a></li>
+        <li><a href="#string字符串">String（字符串）</a></li>
+        <li><a href="#bool布尔类型注意首字母是大写">bool（布尔类型，注意首字母是大写）</a></li>
+        <li><a href="#list列表">List（列表）</a></li>
+        <li><a href="#tuple元组">Tuple（元组）</a></li>
+        <li><a href="#set集合">Set（集合）</a></li>
+        <li><a href="#dictionary字典">Dictionary（字典）</a></li>
+      </ul>
+    </li>
+    <li><a href="#判断数据类型">判断数据类型</a></li>
+    <li><a href="#简单数学计算">简单数学计算</a></li>
+    <li><a href="#判断语法">判断语法</a></li>
+    <li><a href="#导入包模块">导入包/模块</a></li>
+    <li><a href="#字符串处理">字符串处理</a></li>
+    <li><a href="#列表list处理">列表List处理</a></li>
+    <li><a href="#元组">元组</a></li>
+    <li><a href="#字典">字典</a></li>
+    <li><a href="#集合">集合</a></li>
+    <li><a href="#日期时间处理">日期时间处理</a></li>
+    <li><a href="#循环">循环</a></li>
+    <li><a href="#变量常量与函数">变量/常量与函数</a></li>
+    <li><a href="#路径相关">路径相关</a></li>
+    <li><a href="#文件操作">文件操作</a></li>
+    <li><a href="#系统信息">系统信息</a></li>
+    <li><a href="#信息加密解密">信息加密/解密</a></li>
+    <li><a href="#处理json文件">处理JSON文件</a></li>
+    <li><a href="#控制流">控制流</a></li>
+    <li><a href="#报错处理">报错处理</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h2 id="代码首行">代码首行<a class="anchor" href="#%e4%bb%a3%e7%a0%81%e9%a6%96%e8%a1%8c">#</a></h2>
+<p>Python代码首行一般用下面的,两句分别是用于Linux系统下指定解释器的，第二句是声明代码使用的编码规则的，虽然在Windows系统下作用不大，但是仪式感还是要的</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env python3</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># -*- coding: utf-8 -*-</span></span></span></code></pre></div><h2 id="代码注释">代码注释<a class="anchor" href="#%e4%bb%a3%e7%a0%81%e6%b3%a8%e9%87%8a">#</a></h2>
+<p>用#字符开头的是单行注释
+&quot;&quot;&quot; 多行字符串用三个引号&quot;&quot;&quot;</p>
+<h2 id="保留字">保留字<a class="anchor" href="#%e4%bf%9d%e7%95%99%e5%ad%97">#</a></h2>
+<p>我们知道公司起名字不是随便取得，肯定会有些名字是不能用的，在Python中也是，有些名字是不可以用的，这些名字叫保留字，以下是全部保留字</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>[<span style="color:#e6db74">&#39;False&#39;</span>, <span style="color:#e6db74">&#39;None&#39;</span>, <span style="color:#e6db74">&#39;True&#39;</span>, <span style="color:#e6db74">&#39;and&#39;</span>, <span style="color:#e6db74">&#39;as&#39;</span>, <span style="color:#e6db74">&#39;assert&#39;</span>, <span style="color:#e6db74">&#39;break&#39;</span>, <span style="color:#e6db74">&#39;class&#39;</span>, <span style="color:#e6db74">&#39;continue&#39;</span>, <span style="color:#e6db74">&#39;def&#39;</span>, <span style="color:#e6db74">&#39;del&#39;</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> <span style="color:#e6db74">&#39;elif&#39;</span>, <span style="color:#e6db74">&#39;else&#39;</span>, <span style="color:#e6db74">&#39;except&#39;</span>, <span style="color:#e6db74">&#39;finally&#39;</span>, <span style="color:#e6db74">&#39;for&#39;</span>, <span style="color:#e6db74">&#39;from&#39;</span>, <span style="color:#e6db74">&#39;global&#39;</span>, <span style="color:#e6db74">&#39;if&#39;</span>, <span style="color:#e6db74">&#39;import&#39;</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> <span style="color:#e6db74">&#39;in&#39;</span>, <span style="color:#e6db74">&#39;is&#39;</span>, <span style="color:#e6db74">&#39;lambda&#39;</span>, <span style="color:#e6db74">&#39;nonlocal&#39;</span>, <span style="color:#e6db74">&#39;not&#39;</span>, <span style="color:#e6db74">&#39;or&#39;</span>, <span style="color:#e6db74">&#39;pass&#39;</span>, <span style="color:#e6db74">&#39;raise&#39;</span>, <span style="color:#e6db74">&#39;return&#39;</span>, <span style="color:#e6db74">&#39;try&#39;</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> <span style="color:#e6db74">&#39;while&#39;</span>, <span style="color:#e6db74">&#39;with&#39;</span>, <span style="color:#e6db74">&#39;yield&#39;</span>]</span></span></code></pre></div><h2 id="代码缩进">代码缩进<a class="anchor" href="#%e4%bb%a3%e7%a0%81%e7%bc%a9%e8%bf%9b">#</a></h2>
+<p>Python是强制缩进的语言，如果缩进不当，程序会直接无法运行，Python可以使用4个空格作为一个缩进，或者1个TAB作为一个缩进，但是一个代码中不能混用TAB缩进和空格缩进，否则会造成程式报错</p>
+<h2 id="数据类型">数据类型<a class="anchor" href="#%e6%95%b0%e6%8d%ae%e7%b1%bb%e5%9e%8b">#</a></h2>
+<h3 id="number数字">Number（数字）<a class="anchor" href="#number%e6%95%b0%e5%ad%97">#</a></h3>
+<p>数字包含整数int，浮点数float以及复数complex</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#ae81ff">123</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2.36</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">4</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">3</span>j</span></span></code></pre></div><h3 id="string字符串">String（字符串）<a class="anchor" href="#string%e5%ad%97%e7%ac%a6%e4%b8%b2">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#e6db74">&#39;我是字符串&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;我是字符串&#34;</span></span></span></code></pre></div><h3 id="bool布尔类型注意首字母是大写">bool（布尔类型，注意首字母是大写）<a class="anchor" href="#bool%e5%b8%83%e5%b0%94%e7%b1%bb%e5%9e%8b%e6%b3%a8%e6%84%8f%e9%a6%96%e5%ad%97%e6%af%8d%e6%98%af%e5%a4%a7%e5%86%99">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">False</span></span></span></code></pre></div><h3 id="list列表">List（列表）<a class="anchor" href="#list%e5%88%97%e8%a1%a8">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>[<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>]
+</span></span><span style="display:flex;"><span>[<span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#39;321&#39;</span>, <span style="color:#66d9ef">True</span>]</span></span></code></pre></div><h3 id="tuple元组">Tuple（元组）<a class="anchor" href="#tuple%e5%85%83%e7%bb%84">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>(<span style="color:#e6db74">&#39;Go&#39;</span>, <span style="color:#e6db74">&#39;Run&#39;</span>, <span style="color:#ae81ff">19</span>, <span style="color:#ae81ff">20</span>)
+</span></span><span style="display:flex;"><span>不写括号其实也可以<span style="color:#960050;background-color:#1e0010">，</span>但是建议是写括号
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;Go&#39;</span>, <span style="color:#e6db74">&#39;Run&#39;</span>, <span style="color:#ae81ff">19</span>, <span style="color:#ae81ff">20</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#ae81ff">20</span>,)  <span style="color:#75715e"># 当只有一个元素，需要在元素后添加逗号</span></span></span></code></pre></div><h3 id="set集合">Set（集合）<a class="anchor" href="#set%e9%9b%86%e5%90%88">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>创建一个空集合必须用 set( )
+</span></span><span style="display:flex;"><span>{<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>}</span></span></code></pre></div><h3 id="dictionary字典">Dictionary（字典）<a class="anchor" href="#dictionary%e5%ad%97%e5%85%b8">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>{<span style="color:#e6db74">&#39;name&#39;</span>: <span style="color:#e6db74">&#39;jake&#39;</span>, <span style="color:#e6db74">&#39;age&#39;</span>: <span style="color:#e6db74">&#39;12&#39;</span>}</span></span></code></pre></div><h2 id="判断数据类型">判断数据类型<a class="anchor" href="#%e5%88%a4%e6%96%ad%e6%95%b0%e6%8d%ae%e7%b1%bb%e5%9e%8b">#</a></h2>
+<p>使用type()可查看数据类型</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>type(<span style="color:#ae81ff">233</span>)  <span style="color:#75715e"># int</span>
+</span></span><span style="display:flex;"><span>type(<span style="color:#e6db74">&#39;233&#39;</span>)  <span style="color:#75715e"># str</span></span></span></code></pre></div><p>但是比较严谨的判断方法建议使用isinstance()</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>a <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>isinstance(a, int)  <span style="color:#75715e"># True</span></span></span></code></pre></div><h2 id="简单数学计算">简单数学计算<a class="anchor" href="#%e7%ae%80%e5%8d%95%e6%95%b0%e5%ad%a6%e8%ae%a1%e7%ae%97">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#算术没有什么出乎意料的</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>  <span style="color:#75715e"># =&gt; 2</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">8</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>  <span style="color:#75715e"># =&gt; 7</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">10</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>  <span style="color:#75715e"># =&gt; 20</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 但是除法例外，会自动转换成浮点数</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">35</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">5</span>  <span style="color:#75715e"># =&gt; 7.0</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">10.0</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">3</span>  <span style="color:#75715e"># =&gt; 3.3333333333333335</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 整数除法的结果都是向下取整</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">5</span> <span style="color:#f92672">//</span> <span style="color:#ae81ff">3</span>  <span style="color:#75715e"># =&gt; 1</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">5.0</span> <span style="color:#f92672">//</span> <span style="color:#ae81ff">3.0</span>  <span style="color:#75715e"># =&gt; 1.0 # 浮点数也可以</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-</span><span style="color:#ae81ff">5</span> <span style="color:#f92672">//</span> <span style="color:#ae81ff">3</span>  <span style="color:#75715e"># =&gt; -2</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-</span><span style="color:#ae81ff">5.0</span> <span style="color:#f92672">//</span> <span style="color:#ae81ff">3.0</span>  <span style="color:#75715e"># =&gt; -2.0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 浮点数的运算结果也是浮点数</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">3</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">2.0</span>  <span style="color:#75715e"># =&gt; 6.0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 模除</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">7</span> <span style="color:#f92672">%</span> <span style="color:#ae81ff">3</span>  <span style="color:#75715e"># =&gt; 1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># i % j 结果的正负符号会和 j 相同，而不是和 i 相同</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-</span><span style="color:#ae81ff">7</span> <span style="color:#f92672">%</span> <span style="color:#ae81ff">3</span>  <span style="color:#75715e"># =&gt; 2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># x 的 y 次方</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2</span> <span style="color:#f92672">**</span> <span style="color:#ae81ff">4</span>  <span style="color:#75715e"># =&gt; 16</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用括号决定优先级</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>  <span style="color:#75715e"># =&gt; 7</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">3</span>) <span style="color:#f92672">*</span> <span style="color:#ae81ff">2</span>  <span style="color:#75715e"># =&gt; 8</span></span></span></code></pre></div><h2 id="判断语法">判断语法<a class="anchor" href="#%e5%88%a4%e6%96%ad%e8%af%ad%e6%b3%95">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>最基础的判断语法
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> 判断条件:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    条件成功则执行的代码
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>举例说明
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;2大于1&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>判断语法本质是对布尔值的判断
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 布尔值 (注意: 首字母大写)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">True</span>  <span style="color:#75715e"># =&gt; True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">False</span>  <span style="color:#75715e"># =&gt; False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用 not 取非</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">not</span> <span style="color:#66d9ef">True</span>  <span style="color:#75715e"># =&gt; False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">not</span> <span style="color:#66d9ef">False</span>  <span style="color:#75715e"># =&gt; True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 逻辑运算符，注意 and 和 or 都是小写</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">True</span> <span style="color:#f92672">and</span> <span style="color:#66d9ef">False</span>  <span style="color:#75715e"># =&gt; False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">False</span> <span style="color:#f92672">or</span> <span style="color:#66d9ef">True</span>  <span style="color:#75715e"># =&gt; True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># True 和 False 实质上就是数字 1 和0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">True</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">True</span>  <span style="color:#75715e"># =&gt; 2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">True</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">8</span>  <span style="color:#75715e"># =&gt; 8</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">False</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">5</span>  <span style="color:#75715e"># =&gt; -5</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 数值与 True 和 False 之间的比较运算</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">False</span>  <span style="color:#75715e"># =&gt; True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">True</span>  <span style="color:#75715e"># =&gt; False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">True</span>  <span style="color:#75715e"># =&gt; True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-</span><span style="color:#ae81ff">5</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">False</span>  <span style="color:#75715e"># =&gt; True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 使用布尔逻辑运算符对数字类型的值进行运算时，会把数值强制转换为布尔值进行运算</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 但计算结果会返回它们的强制转换前的值</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 注意不要把 bool(ints) 与位运算的 &#34;按位与&#34;、&#34;按位或&#34; (&amp;, |) 混淆</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>bool(<span style="color:#ae81ff">0</span>)  <span style="color:#75715e"># =&gt; False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>bool(<span style="color:#ae81ff">4</span>)  <span style="color:#75715e"># =&gt; True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>bool(<span style="color:#f92672">-</span><span style="color:#ae81ff">6</span>)  <span style="color:#75715e"># =&gt; True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0</span> <span style="color:#f92672">and</span> <span style="color:#ae81ff">2</span>  <span style="color:#75715e"># =&gt; 0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-</span><span style="color:#ae81ff">5</span> <span style="color:#f92672">or</span> <span style="color:#ae81ff">0</span>  <span style="color:#75715e"># =&gt; -5</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用==判断相等</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>  <span style="color:#75715e"># =&gt; False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用!=判断不等</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2</span> <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span>  <span style="color:#75715e"># =&gt; True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 比较大小</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">10</span>  <span style="color:#75715e"># =&gt; True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">10</span>  <span style="color:#75715e"># =&gt; False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2</span> <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">2</span>  <span style="color:#75715e"># =&gt; True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2</span> <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">2</span>  <span style="color:#75715e"># =&gt; True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 判断一个值是否在范围里</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">and</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">3</span>  <span style="color:#75715e"># =&gt; True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">and</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2</span>  <span style="color:#75715e"># =&gt; False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 大小比较可以连起来！</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">3</span>  <span style="color:#75715e"># =&gt; True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">3</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2</span>  <span style="color:#75715e"># =&gt; False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># (is 对比 ==) is 判断两个变量是否引用同一个对象,是内存级别的比较</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 而 == 判断两个对象是否含有相同的值</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>a <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>]  <span style="color:#75715e"># 变量 a 是一个新的列表, [1, 2, 3, 4]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> a  <span style="color:#75715e"># 变量 b 赋值了变量 a 的值</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">is</span> a  <span style="color:#75715e"># =&gt; True, a 和 b 引用的是同一个对象</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">==</span> a  <span style="color:#75715e"># =&gt; True, a 和 b 的对象的值相同</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>]  <span style="color:#75715e"># 变量 b 赋值了一个新的列表, [1, 2, 3, 4]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">is</span> a  <span style="color:#75715e"># =&gt; False, a 和 b 引用的不是同一个对象</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>b <span style="color:#f92672">==</span> a  <span style="color:#75715e"># =&gt; True, a 和 b 的对象的值相同</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># None是一个对象</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">None</span>  <span style="color:#75715e"># =&gt; None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 当与 None 进行比较时不要用 ==，要用 is。is 是用来比较两个变量是否指向同一个对象。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;etc&#34;</span> <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>  <span style="color:#75715e"># =&gt; False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">None</span> <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>  <span style="color:#75715e"># =&gt; True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># is和in的反义</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span> <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">not</span> <span style="color:#f92672">in</span></span></span></code></pre></div><h2 id="导入包模块">导入包/模块<a class="anchor" href="#%e5%af%bc%e5%85%a5%e5%8c%85%e6%a8%a1%e5%9d%97">#</a></h2>
+<p>关于包/模块</p>
+<p>在Python中，包是一个已经写好的软件，可以通俗的理解为Python语言的一个插件，利用各种包可以节省很多时间，提高开发效率，Python自带呢很多的标准库还有海量的第三方包，后续的很多基本都是要学习各种第三方包</p>
+<p>导入包就是一个拆箱子取东西的过程</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#从functools 包里单独导入wraps函数</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> functools <span style="color:#f92672">import</span> wraps
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#导入的包也可以重命名，主要是节省打字内容</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> math <span style="color:#66d9ef">as</span> m
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 下面是偷懒的做法，一次性导入包里面全部函数，等于是把箱子里东西全部扔出来的，一般不建议这样</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> math <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 也可以从包里面一次性导入多个函数</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> math <span style="color:#f92672">import</span> ceil, floor
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 也可以就这样默认的导入一个包</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> math
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 这个是从当前目录导入一个库</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> . <span style="color:#f92672">import</span> mymodul
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>导入包一般有个约定俗成的顺序<span style="color:#960050;background-color:#1e0010">，</span>先导入标准包<span style="color:#960050;background-color:#1e0010">，</span>然后导入第三方包<span style="color:#960050;background-color:#1e0010">，</span>最后导入自己开发的本地包</span></span></code></pre></div><h2 id="字符串处理">字符串处理<a class="anchor" href="#%e5%ad%97%e7%ac%a6%e4%b8%b2%e5%a4%84%e7%90%86">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 创建字符串可以使用单引号（&#39;）或者双引号（&#34;）</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;这是个字符串&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;这也是个字符串&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 字符串可以使用加号连接成新的字符串</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;Hello &#34;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;world!&#34;</span>  <span style="color:#75715e"># =&gt; &#34;Hello world!&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 非变量形式的字符串甚至可以在没有加号的情况下连接</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;Hello &#34;</span> <span style="color:#e6db74">&#34;world!&#34;</span>  <span style="color:#75715e"># =&gt; &#34;Hello world!&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 字符串可以被当作字符列表</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;Hello world!&#34;</span>[<span style="color:#ae81ff">0</span>]  <span style="color:#75715e"># =&gt; &#39;H&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 你可以获得字符串的长度</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>len(<span style="color:#e6db74">&#34;This is a string&#34;</span>)  <span style="color:#75715e"># =&gt; 16</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 你可以使用 f-strings 格式化字符串（python3.6+）</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>name <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Reiko&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;She said her name is </span><span style="color:#e6db74">{</span>name<span style="color:#e6db74">}</span><span style="color:#e6db74">.&#34;</span>  <span style="color:#75715e"># =&gt; &#34;She said her name is Reiko&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 你可以在大括号内几乎加入任何 python 表达式，表达式的结果会以字符串的形式返回</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>name<span style="color:#e6db74">}</span><span style="color:#e6db74"> is </span><span style="color:#e6db74">{</span>len(name)<span style="color:#e6db74">}</span><span style="color:#e6db74"> characters long.&#34;</span>  <span style="color:#75715e"># =&gt; &#34;Reiko is 5 characters long.&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用 .format 来格式化字符串，但是优先使用f-string</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;strings can be interpolated&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 可以重复参数以节省时间</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{0}</span><span style="color:#e6db74"> be nimble, </span><span style="color:#e6db74">{0}</span><span style="color:#e6db74"> be quick, </span><span style="color:#e6db74">{0}</span><span style="color:#e6db74"> jump over the </span><span style="color:#e6db74">{1}</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>format(
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;Jack&#34;</span>, <span style="color:#e6db74">&#34;candle stick&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># =&gt; &#34;Jack be nimble, Jack be quick, Jack jump over the candle stick&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 如果不想数参数，可以用关键字</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{name}</span><span style="color:#e6db74"> wants to eat </span><span style="color:#e6db74">{food}</span><span style="color:#e6db74">&#34;</span><span style="color:#f92672">.</span>format(name<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Bob&#34;</span>, food<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;lasagna&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># =&gt; &#34;Bob wants to eat lasagna&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 转为字符串</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>str(<span style="color:#e6db74">&#39;2&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 字符串去除空格</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>str<span style="color:#f92672">.</span>strip()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 字符串转大写</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>str<span style="color:#f92672">.</span>upper()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 字符串转小写</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>str<span style="color:#f92672">.</span>lower()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 判断某个字符是否包含另外一个字母</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;Py&#39;</span> <span style="color:#f92672">in</span> <span style="color:#e6db74">&#39;Python&#39;</span>  <span style="color:#75715e"># =&gt; True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 生成随机字符串</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> random
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> string
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>salt <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;&#39;</span><span style="color:#f92672">.</span>join(random<span style="color:#f92672">.</span>sample(string<span style="color:#f92672">.</span>ascii_letters <span style="color:#f92672">+</span> string<span style="color:#f92672">.</span>digits, <span style="color:#ae81ff">16</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 获取字符开头和结尾</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>str<span style="color:#f92672">.</span>startswith(<span style="color:#e6db74">&#39;start&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>str<span style="color:#f92672">.</span>endswith(<span style="color:#e6db74">&#39;end&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 把字符分割为列表</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>str<span style="color:#f92672">.</span>split(<span style="color:#e6db74">&#39;,&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 列表按照分隔符组合成字符</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;,&#39;</span><span style="color:#f92672">.</span>join(list)</span></span></code></pre></div><h2 id="列表list处理">列表List处理<a class="anchor" href="#%e5%88%97%e8%a1%a8list%e5%a4%84%e7%90%86">#</a></h2>
+<p>Python中的列表List类似于其他语言中的数组，另外列表是可以修改的</p>
+<p>注意
+列表里面的绝大多数操作也都适用于元组，集合和字典等数据类型</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 直接使用[]可以新建一个空的列表</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 也可以使用list(),但是优先使用[]，这个主要是格式化</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li <span style="color:#f92672">=</span> list()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 创建列表时也可以同时赋给元素</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 增加数据</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用append在列表最后追加元素，增加的内容可以是字符，数字，等等</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li<span style="color:#f92672">.</span>append(<span style="color:#ae81ff">7</span>)  <span style="color:#75715e"># li现在是[1,2,3,4, 5, 6,7]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 在指定索引处插入一个新的元素，这句就是在第4个位置插入2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li<span style="color:#f92672">.</span>insert(<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 注意：li 和 other_li 的值都不变，是被拼接到一起的</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li <span style="color:#f92672">=</span> li <span style="color:#f92672">+</span> other_li
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 上面这个也可以简写为</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li <span style="color:#f92672">+=</span> other_li
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 也可以用 &#34;extend()&#34; 拼接列表</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li<span style="color:#f92672">.</span>extend(other_li)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 查看数据</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 查看列表数量</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>len(li)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 列表存取跟数组一样</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li[<span style="color:#ae81ff">0</span>]  <span style="color:#75715e"># =&gt; 1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 取出最后一个元素</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]  <span style="color:#75715e"># =&gt; 3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 越界存取会造成 IndexError</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li[<span style="color:#ae81ff">4</span>]  <span style="color:#75715e"># 抛出 IndexError</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 列表也支持切片语法</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 取前面第2个到第3个</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li[<span style="color:#ae81ff">1</span>:<span style="color:#ae81ff">3</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 前2个去掉不要，其他都要</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li[<span style="color:#ae81ff">2</span>:]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 取前3个</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li[:<span style="color:#ae81ff">3</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 取后3个</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li[<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>:]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 后3个去掉不要，其他都要</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li[:<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 隔一个取一个，也就是每2个取1个</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li[::<span style="color:#ae81ff">2</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 颠倒列表排序</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li[::<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]  <span style="color:#75715e"># =&gt; [3, 4, 2, 1]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 也可以用这个</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li<span style="color:#f92672">.</span>reverse()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 统计列表中同样值的个数，和len(0)不一样的</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li<span style="color:#f92672">.</span>count(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 可以用三个参数的任何组合来构建切割</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># li[始:终:步伐]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 获得列表第一个匹配的值的索引,也就是根据值查序号</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li<span style="color:#f92672">.</span>index(<span style="color:#ae81ff">2</span>)  <span style="color:#75715e"># =&gt; 1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li<span style="color:#f92672">.</span>index(<span style="color:#ae81ff">4</span>)  <span style="color:#75715e"># 值不存在会抛出一个 ValueError: 4 is not in the list</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用 &#34;in&#34; 测试列表是否包含值</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span> <span style="color:#f92672">in</span> li  <span style="color:#75715e"># =&gt; True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 值的修改</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li[<span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;新的值&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用pop默认删除最后一个</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li<span style="color:#f92672">.</span>pop()  <span style="color:#75715e"># =&gt; 3 且li现在是[1, 2, 4]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用pop也可以删除指定序号的</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li<span style="color:#f92672">.</span>pop(<span style="color:#ae81ff">0</span>)  <span style="color:#75715e"># 删除第一个，返回被删除的那个，</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 删除第一个匹配的元素</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li<span style="color:#f92672">.</span>remove(<span style="color:#ae81ff">2</span>)  <span style="color:#75715e"># li 现在为 [1, 3]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li<span style="color:#f92672">.</span>remove(<span style="color:#ae81ff">2</span>)  <span style="color:#75715e"># 抛出错误 ValueError: 2 is not in the list</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 注意remove和pop的区别，pop是根据序号删除，remove是根据值找序号，再根据序号删除</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 可清空整个列表</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>li<span style="color:#f92672">.</span>clear()</span></span></code></pre></div><h2 id="元组">元组<a class="anchor" href="#%e5%85%83%e7%bb%84">#</a></h2>
+<p>元组是非常类似于列表的一种数据类型，很多方法和列表一样，最大的区别就是元组是只读的，所以在某些时候，元组可以认为是安全的</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 元组类似列表，但是不允许修改</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>tup <span style="color:#f92672">=</span> (<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>tup[<span style="color:#ae81ff">0</span>]  <span style="color:#75715e"># =&gt; 1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>tup[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>  <span style="color:#75715e"># 抛出 TypeError,因为元组是不可以修改的</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 如果元素数量为 1 的元组必须在元素之后加一个逗号</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>tup <span style="color:#f92672">=</span> (<span style="color:#ae81ff">1</span>,)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 其他元素数量的元组，包括空元组，都不需要</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>type((<span style="color:#ae81ff">1</span>))  <span style="color:#75715e"># =&gt; &lt;class &#39;int&#39;&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>type((<span style="color:#ae81ff">1</span>,))  <span style="color:#75715e"># =&gt; &lt;class &#39;tuple&#39;&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>type(())  <span style="color:#75715e"># =&gt; &lt;class &#39;tuple&#39;&gt;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 列表允许的操作元组大多都可以</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>len(tup)  <span style="color:#75715e"># =&gt; 3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>tup <span style="color:#f92672">+</span> (<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>)  <span style="color:#75715e"># =&gt; (1, 2, 3, 4, 5, 6)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>tup[:<span style="color:#ae81ff">2</span>]  <span style="color:#75715e"># =&gt; (1, 2)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2</span> <span style="color:#f92672">in</span> tup  <span style="color:#75715e"># =&gt; True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 可以把元组合列表解包，赋值给变量</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>a, b, c <span style="color:#f92672">=</span> (<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>)  <span style="color:#75715e"># 现在 a 是 1，b 是 2，c 是 3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 也可以做扩展解包</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>a, <span style="color:#f92672">*</span>b, c <span style="color:#f92672">=</span> (<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>)  <span style="color:#75715e"># 现在 a 是 1, b 是 [2, 3]， c 是 4</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 元组周围的括号是可以省略的</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>d, e, f <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>  <span style="color:#75715e"># 元组 4, 5, 6 通过解包被赋值给变量 d, e, f</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 交换两个变量的值就这么简单</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>e, d <span style="color:#f92672">=</span> d, e  <span style="color:#75715e"># 现在 d 是 5，e 是 4</span></span></span></code></pre></div><h2 id="字典">字典<a class="anchor" href="#%e5%ad%97%e5%85%b8">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 字典用来存储 key 到 value 的映射关系</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>empty_dict <span style="color:#f92672">=</span> {}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 初始化的字典</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>filled_dict <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;one&#34;</span>: <span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#34;two&#34;</span>: <span style="color:#ae81ff">2</span>, <span style="color:#e6db74">&#34;three&#34;</span>: <span style="color:#ae81ff">3</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 字典的 key 必须为不可变类型。 这是为了确保 key 被转换为唯一的哈希值以用于快速查询</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 不可变类型包括整数、浮点、字符串、元组</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>invalid_dict <span style="color:#f92672">=</span> {[<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>]: <span style="color:#e6db74">&#34;123&#34;</span>}  <span style="color:#75715e"># =&gt; 抛出 TypeError: unhashable type: &#39;list&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>valid_dict <span style="color:#f92672">=</span> {(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>): [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>]}  <span style="color:#75715e"># 然而 value 可以是任何类型</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用[]取值</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>filled_dict[<span style="color:#e6db74">&#34;one&#34;</span>]  <span style="color:#75715e"># =&gt; 1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用items可以返回键值关系对</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>list(filled_dict<span style="color:#f92672">.</span>items())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用 keys 获得所有的键。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 因为 keys 返回一个可迭代对象，所以我们需要把它包在 &#34;list()&#34; 里才能转换为列表。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 我们下面会详细介绍可迭代。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 注意: 对于版本 &lt; 3.7 的 python, 字典的 key 的排序是无序的。你的运行结果</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 可能与下面的例子不符，但是在 3.7 版本，字典中的项会按照他们被插入到字典的顺序进行排序</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>list(filled_dict<span style="color:#f92672">.</span>keys())  <span style="color:#75715e"># =&gt; [&#34;one&#34;, &#34;two&#34;, &#34;three&#34;] Python 版本 3.7+</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用 &#34;values()&#34; 获得所有的值。跟 keys 一样也是可迭代对象，要使用 &#34;list()&#34; 才能转换为列表。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 注意: 排序顺序和 keys 的情况相同。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>list(filled_dict<span style="color:#f92672">.</span>values())  <span style="color:#75715e"># =&gt; [1, 2, 3] Python 版本 3.7+</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用in测试一个字典是否包含一个键</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;one&#34;</span> <span style="color:#f92672">in</span> filled_dict  <span style="color:#75715e"># =&gt; True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span> <span style="color:#f92672">in</span> filled_dict  <span style="color:#75715e"># =&gt; False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 访问不存在的键会导致 KeyError</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>filled_dict[<span style="color:#e6db74">&#34;four&#34;</span>]  <span style="color:#75715e"># KeyError</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用 &#34;get()&#34; 来避免KeyError,所以最好是用get()来获取数据</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>filled_dict<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;one&#34;</span>)  <span style="color:#75715e"># =&gt; 1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 当键不存在的时候 &#34;get()&#34; 方法可以返回默认值</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>filled_dict<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#34;one&#34;</span>, <span style="color:#ae81ff">4</span>)  <span style="color:#75715e"># =&gt; 1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># &#34;setdefault()&#34; 方法只有当键不存在的时候插入新值</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>filled_dict<span style="color:#f92672">.</span>setdefault(<span style="color:#e6db74">&#34;five&#34;</span>, <span style="color:#ae81ff">5</span>)  <span style="color:#75715e"># filled_dict[&#34;five&#34;] 设为5</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 字典赋值</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># =&gt; {&#34;one&#34;: 1, &#34;two&#34;: 2, &#34;three&#34;: 3, &#34;four&#34;: 4}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>filled_dict[<span style="color:#e6db74">&#34;four&#34;</span>] <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>  <span style="color:#75715e"># 另一种赋值方法</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用 del 删除项</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">del</span> filled_dict[<span style="color:#e6db74">&#34;one&#34;</span>]  <span style="color:#75715e"># 从 filled_dict 中把 one 删除</span></span></span></code></pre></div><h2 id="集合">集合<a class="anchor" href="#%e9%9b%86%e5%90%88">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 用 set 表达集合</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>empty_set <span style="color:#f92672">=</span> set()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 初始化一个集合，语法跟字典相似。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>some_set <span style="color:#f92672">=</span> {<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 类似字典的 keys，set 的元素也必须是不可变类型</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>invalid_set <span style="color:#f92672">=</span> {[<span style="color:#ae81ff">1</span>], <span style="color:#ae81ff">1</span>}  <span style="color:#75715e"># =&gt; Raises a TypeError: unhashable type: &#39;list&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>valid_set <span style="color:#f92672">=</span> {(<span style="color:#ae81ff">1</span>,), <span style="color:#ae81ff">1</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 可以把集合赋值于变量</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>filled_set <span style="color:#f92672">=</span> some_set
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 为集合添加元素</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>filled_set<span style="color:#f92672">.</span>add(<span style="color:#ae81ff">5</span>)  <span style="color:#75715e"># filled_set 现在是 {1, 2, 3, 4, 5}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># set 没有重复的元素</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>filled_set<span style="color:#f92672">.</span>add(<span style="color:#ae81ff">5</span>)  <span style="color:#75715e"># filled_set 依然是 {1, 2, 3, 4, 5},不报错也不会增加</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># &#34;&amp;&#34; 取交集</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>other_set <span style="color:#f92672">=</span> {<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>filled_set <span style="color:#f92672">&amp;</span> other_set  <span style="color:#75715e"># =&gt; {3, 4, 5}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># &#34;|&#34; 取并集</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>filled_set <span style="color:#f92672">|</span> other_set  <span style="color:#75715e"># =&gt; {1, 2, 3, 4, 5, 6}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># &#34;-&#34; 取补集</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>{<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>} <span style="color:#f92672">-</span> {<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>}  <span style="color:#75715e"># =&gt; {1, 4}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># &#34;^&#34; 取异或集（对称差）</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>{<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>} <span style="color:#f92672">^</span> {<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">5</span>}  <span style="color:#75715e"># =&gt; {1, 4, 5}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 判断左边的集合是否是右边集合的超集</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>{<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>} <span style="color:#f92672">&gt;=</span> {<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>}  <span style="color:#75715e"># =&gt; False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 判断左边的集合是否是右边集合的子集</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>{<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>} <span style="color:#f92672">&lt;=</span> {<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>}  <span style="color:#75715e"># =&gt; True</span></span></span></code></pre></div><h2 id="日期时间处理">日期时间处理<a class="anchor" href="#%e6%97%a5%e6%9c%9f%e6%97%b6%e9%97%b4%e5%a4%84%e7%90%86">#</a></h2>
+<p>Python里面处理日期主要是time和datetime模块</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 需要导入这两个模块</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 只处理时间可以用time，如果包含日期就要用datetime了</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> datetime <span style="color:#f92672">import</span> date, timedelta, datetime
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 获取现在时间</span>
+</span></span><span style="display:flex;"><span>now <span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>strftime(<span style="color:#e6db74">&#39;%Y-%m-</span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> %H:%M:%S&#39;</span>)
+</span></span><span style="display:flex;"><span>now <span style="color:#f92672">=</span> datetime<span style="color:#f92672">.</span>now()<span style="color:#f92672">.</span>strftime(<span style="color:#e6db74">&#39;%Y-%m-</span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> %H:%M:%S&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 获取第几周</span>
+</span></span><span style="display:flex;"><span>time<span style="color:#f92672">.</span>strftime(<span style="color:#e6db74">&#39;%U&#39;</span>)
+</span></span><span style="display:flex;"><span>在处理时间中<span style="color:#960050;background-color:#1e0010">，</span>有2个函数是非常重要的<span style="color:#960050;background-color:#1e0010">，</span>分别是strftime函数和strptime,分别是时间格式转化为字符串格式和字符串格式转化为时间格式<span style="color:#960050;background-color:#1e0010">，</span>大致用法如下
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># strftime用法</span>
+</span></span><span style="display:flex;"><span>time<span style="color:#f92672">.</span>strftime(<span style="color:#e6db74">&#39;%Y-%m-</span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> %H:%M:%S&#39;</span>)  <span style="color:#75715e"># 把时间转化为%Y-%m-%d %H:%M:%S 类型字符串</span>
+</span></span><span style="display:flex;"><span>time<span style="color:#f92672">.</span>strftime(<span style="color:#e6db74">&#39;%Y/%m/</span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> %H:%M:%S&#39;</span>)  <span style="color:#75715e"># 把时间转化为%Y/%m/%d %H:%M:%S 类型字符串</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># strptime用法</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 时间日期字符串转换</span>
+</span></span><span style="display:flex;"><span>str111 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;2022-04-14 16:41:03&#39;</span>
+</span></span><span style="display:flex;"><span>date <span style="color:#f92672">=</span> datetime<span style="color:#f92672">.</span>strptime(str111, <span style="color:#e6db74">&#39;%Y-%m-</span><span style="color:#e6db74">%d</span><span style="color:#e6db74"> %H:%M:%S&#39;</span>)  <span style="color:#75715e"># 字符串转日期，注意字符串时间格式需要和后面的规则匹配，不一致会报错</span>
+</span></span><span style="display:flex;"><span>date<span style="color:#f92672">.</span>strftime(<span style="color:#e6db74">&#39;%Y-%m-</span><span style="color:#e6db74">%d</span><span style="color:#e6db74">&#39;</span>)  <span style="color:#75715e"># 一般进行strptime之后，还是会进行strftime一次的，时间格式的无法输出的</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#超时保护机制，主要用于防止无限循环或长时间阻塞。</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span>timeout <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>  <span style="color:#75715e"># 设置5秒超时</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#1970年1月1日00:00:00</span>
+</span></span><span style="display:flex;"><span>start <span style="color:#f92672">=</span> time<span style="color:#f92672">.</span>time()
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 执行某些操作</span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;hello&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 当前时间 - 开始时间  &gt; 大于超时时间</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> time<span style="color:#f92672">.</span>time() <span style="color:#f92672">-</span> start <span style="color:#f92672">&gt;</span> timeout:
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#34;操作超时，重新开始...&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#start = time.time()  # 重置计时器</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">continue</span>  <span style="color:#75715e"># 或其他处理逻辑</span></span></span></code></pre></div><h2 id="循环">循环<a class="anchor" href="#%e5%be%aa%e7%8e%af">#</a></h2>
+<p>Python中循环类型较少，只有while和for，其实都差不多</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># for 循环，循环一个列表</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> animal <span style="color:#f92672">in</span> [<span style="color:#e6db74">&#34;dog&#34;</span>, <span style="color:#e6db74">&#34;cat&#34;</span>, <span style="color:#e6db74">&#34;mouse&#34;</span>]:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 你可以使用 format() 格式化字符串并插入值</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>animal<span style="color:#e6db74">}</span><span style="color:#e6db74"> is a mammal&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 有时候不仅仅要循环，还要看循环的第几个</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>animals <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;dog&#34;</span>, <span style="color:#e6db74">&#34;cat&#34;</span>, <span style="color:#e6db74">&#34;mouse&#34;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i, value <span style="color:#f92672">in</span> enumerate(animals):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(i, value)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 0 dog</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 1 cat</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 循环一个字典</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ddict <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;key1&#34;</span>: <span style="color:#e6db74">&#34;val1&#34;</span>, <span style="color:#e6db74">&#34;key2&#34;</span>: <span style="color:#e6db74">&#34;val2&#34;</span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> k, v <span style="color:#f92672">in</span> ddict<span style="color:#f92672">.</span>items():
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(k, v)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># key1 val1</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># key2 val2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 指定循环次数</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># range(lower, upper, step)&#34; 会返回一个，从 lower 到 upper、并且间隔值为 step 的迭代器。如果 step 未传入则会使用默认值 1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 注意 range(4) = 0,1,2,3，其中4是不包含的</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">4</span>):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(i)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 有时候也可以跳着循环</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># range(4, 8) 是指4,5,6,7</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">8</span>):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(i)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 有时候会需要跳着循环</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># range(4, 8, 2) = 4,6</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">2</span>):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(i)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 计数循环也可以用while</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>x <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> x <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">4</span>:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(x)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    x <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>  <span style="color:#75715e"># x = x + 1 的简写</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 通过一个while True来个死循环</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>x <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(x)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    x <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>  <span style="color:#75715e"># x = x + 1 的简写</span></span></span></code></pre></div><h2 id="变量常量与函数">变量/常量与函数<a class="anchor" href="#%e5%8f%98%e9%87%8f%e5%b8%b8%e9%87%8f%e4%b8%8e%e5%87%bd%e6%95%b0">#</a></h2>
+<p>变量和函数是Python中最常用的类型【在其他语言里面也一样】 变量和函数有些命名规则一样，主要由以下几点：</p>
+<blockquote class='book-hint '>
+<p>由大小写字母和下划线和数字组成
+不能用数字开头
+不能和Python内置关键字和内置函数重复
+区分大小写
+不能包含空格
+可以是汉字，但是真心没必要
+应该简短且可意义识别</p></blockquote><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># Python中变量创建的时候必须要赋值</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># = 是赋值符号</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 基本语法是：name = value</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>my_age <span style="color:#f92672">=</span> <span style="color:#ae81ff">18</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 常量一般定义那些不会修改的内容</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 常量一般用全部大写来表示</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>DEVELOPER <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Pein&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 变量的最基础用法就是和其他数据组合</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;我的年龄是</span><span style="color:#e6db74">{</span>my_age<span style="color:#e6db74">}</span><span style="color:#e6db74">&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 如下，直接定义但是不赋值，会被认为是调用，而报错</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>some_var
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 变量是不可以同名的，否则会被替换</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>some_var <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>  <span style="color:#75715e"># 输出5</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>some_var <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>  <span style="color:#75715e"># 输出2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 变量名不能是Python关键字以及不可以是数字开头</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 变量命名要能简单认识,如下从名字就可以猜出来意义</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>my_pc_size <span style="color:#f92672">=</span> <span style="color:#ae81ff">123</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 下面这种，语法上是可以的，就是容易会被打，极度不推荐</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>aaaaaaaaaaaa <span style="color:#f92672">=</span> <span style="color:#ae81ff">123</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 变量是有作用域的</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 主要是分为局部变量和全局变量</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>a <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>  <span style="color:#75715e"># a 是全局变量，任何函数都可以使用，属于公交车</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add</span>():
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    b <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>  <span style="color:#75715e"># b是局部变量，只能在add函数下使用，属于私家车</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> b
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 调用变量看下</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>a  <span style="color:#75715e"># 输出1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>b  <span style="color:#75715e"># 报错，提示未定义，因为他不是全局变量</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 使用global关键字可以调用全局变量</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add</span>():
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">global</span> a
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    b <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>  <span style="color:#75715e"># b是局部变量，只能在add函数下使用，属于私家车</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> a <span style="color:#f92672">+</span> b
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>add()  <span style="color:#75715e"># 输出3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 全局变量使用内存较多，局部变量内存较小，所以能使用局部变量的就不要使用全局变量</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>函数本质上是一套代码的组合封装<span style="color:#960050;background-color:#1e0010">，</span>做到代码的重复使用
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用def定义新函数</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add</span>(x, y):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;x is </span><span style="color:#e6db74">{</span>x<span style="color:#e6db74">}</span><span style="color:#e6db74"> and y is </span><span style="color:#e6db74">{</span>y<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> x <span style="color:#f92672">+</span> y  <span style="color:#75715e"># 用 return 语句返回</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 定义新函数也可以指定类型,Python并不会对类型进行验证，还是需要手动验证</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add</span>(x: int, y: int) <span style="color:#f92672">-&gt;</span> int:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> x <span style="color:#f92672">+</span> y  <span style="color:#75715e"># 用 return 语句返回</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 也可以加一个默认参数，这样调用的时候可以节省打字</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 但是注意，默认参数只能放在最后面</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add</span>(x, y, z<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;x is </span><span style="color:#e6db74">{</span>x<span style="color:#e6db74">}</span><span style="color:#e6db74"> and y is </span><span style="color:#e6db74">{</span>y<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> x <span style="color:#f92672">+</span> y <span style="color:#f92672">+</span> z
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 调用函数</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>add(<span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>)  <span style="color:#75715e"># =&gt; 打印 &#34;x is 5 and y is 6&#34; 并且返回 11</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 也可以用关键字参数来调用函数</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>add(y<span style="color:#f92672">=</span><span style="color:#ae81ff">6</span>, x<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span>)  <span style="color:#75715e"># 关键字参数可以用任何顺序</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 使用返回多个数值（返回值为元组类型，也可以是其他类型）</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">swap</span>(x, y):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> y, x  <span style="color:#75715e"># 用不带括号的元组的格式来返回多个数值</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># (注意: 括号不需要加，但是也可以加)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>x, y <span style="color:#f92672">=</span> swap(x, y)  <span style="color:#75715e"># =&gt; x = 2, y = 1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 也有匿名函数,匿名函数是没有函数名的函数，一般用于简短的小函数</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">lambda</span> x: x <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">2</span>)(<span style="color:#ae81ff">3</span>)  <span style="color:#75715e"># =&gt; True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">lambda</span> x, y: x <span style="color:#f92672">**</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> y <span style="color:#f92672">**</span> <span style="color:#ae81ff">2</span>)(<span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">1</span>)  <span style="color:#75715e"># =&gt; 5</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 内置的高阶函数</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>list(map(add_10, [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>]))  <span style="color:#75715e"># =&gt; [11, 12, 13]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>list(map(max, [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>], [<span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">1</span>]))  <span style="color:#75715e"># =&gt; [4, 2, 3]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>list(filter(<span style="color:#66d9ef">lambda</span> x: x <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">5</span>, [<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">7</span>]))  <span style="color:#75715e"># =&gt; [6, 7]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用列表推导式可以简化映射和过滤。列表推导式的返回值是另一个列表。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[add_10(i) <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>]]  <span style="color:#75715e"># =&gt; [11, 12, 13]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[x <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> [<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>, <span style="color:#ae81ff">7</span>] <span style="color:#66d9ef">if</span> x <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">5</span>]  <span style="color:#75715e"># =&gt; [6, 7]</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 你也可以用这种方式实现对集合和字典的构建</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>{x <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> <span style="color:#e6db74">&#39;abcddeef&#39;</span> <span style="color:#66d9ef">if</span> x <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> <span style="color:#e6db74">&#39;abc&#39;</span>}  <span style="color:#75715e"># =&gt; {&#39;d&#39;, &#39;e&#39;, &#39;f&#39;}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>{x: x <span style="color:#f92672">**</span> <span style="color:#ae81ff">2</span> <span style="color:#66d9ef">for</span> x <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">5</span>)}  <span style="color:#75715e"># =&gt; {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}</span></span></span></code></pre></div><h2 id="路径相关">路径相关<a class="anchor" href="#%e8%b7%af%e5%be%84%e7%9b%b8%e5%85%b3">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>Python的路径操作基本在 os 模块下
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 判断文件是否存在，其实文件夹也可以的</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>exists(path)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 拼接路径</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(<span style="color:#e6db74">&#39;D&#39;</span>, <span style="color:#e6db74">&#39;MY&#39;</span>, <span style="color:#e6db74">&#39;FILE&#39;</span>)  <span style="color:#75715e"># =&gt;D:\\MY\\FILE</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 返回绝对路径，一般是把相对路径转化为绝对路径</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>abspath(path)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 返回文件的最后修改时间</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>getmtime(path)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 返回文件的创建时间</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>getctime(path)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 返回文件大小</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>getsize(path)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 是文件</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>isfile(path)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 是目录</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>isdir(path)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 拆分文件路径</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>split(path)  <span style="color:#75715e"># =&gt;(&#39;D:\\沈鵬\\Code\\Projects\\HA03追溯\\trunk&#39;, &#39;run.py&#39;)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 获取文件上层目录名字</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>basename(path)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 查看目录下所有文件和文件</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>os<span style="color:#f92672">.</span>listdir(path)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 查看目录下所有文件，不包含目录</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>next(os<span style="color:#f92672">.</span>walk(path), (<span style="color:#66d9ef">None</span>, <span style="color:#66d9ef">None</span>, []))[<span style="color:#ae81ff">2</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 获取子目录清单</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>next(os<span style="color:#f92672">.</span>walk(path))[<span style="color:#ae81ff">1</span>]</span></span></code></pre></div><h2 id="文件操作">文件操作<a class="anchor" href="#%e6%96%87%e4%bb%b6%e6%93%8d%e4%bd%9c">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">with</span> open(xlsx, <span style="color:#e6db74">&#39;r&#39;</span>, encoding<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;utf-8&#39;</span>) <span style="color:#66d9ef">as</span> f:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    res <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>read()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>字符含意注意事项
+</span></span><span style="display:flex;"><span>r只读读取文本<span style="color:#960050;background-color:#1e0010">（</span>默认<span style="color:#960050;background-color:#1e0010">）</span>文件必须存在<span style="color:#960050;background-color:#1e0010">，</span>否则报错
+</span></span><span style="display:flex;"><span>rb只读打开二进制文件<span style="color:#960050;background-color:#1e0010">，</span>不需要编码<span style="color:#960050;background-color:#1e0010">，</span>一般是非文本文件<span style="color:#960050;background-color:#1e0010">，</span>比如图片文件必须存在<span style="color:#960050;background-color:#1e0010">，</span>否则报错
+</span></span><span style="display:flex;"><span>rb<span style="color:#f92672">+</span>读写打开二进制文件<span style="color:#960050;background-color:#1e0010">，</span>不需要编码<span style="color:#960050;background-color:#1e0010">，</span>一般是非文本文件<span style="color:#960050;background-color:#1e0010">，</span>比如图片文件必须存在<span style="color:#960050;background-color:#1e0010">，</span>否则报错
+</span></span><span style="display:flex;"><span>w只写模式打开文件如已存在文件则清空重写<span style="color:#960050;background-color:#1e0010">，</span>不存在则新建
+</span></span><span style="display:flex;"><span>wb只写打开二进制文件<span style="color:#960050;background-color:#1e0010">，</span>不需要编码<span style="color:#960050;background-color:#1e0010">，</span>一般是非文本文件<span style="color:#960050;background-color:#1e0010">，</span>比如图片如已存在文件则清空重写<span style="color:#960050;background-color:#1e0010">，</span>不存在则新建
+</span></span><span style="display:flex;"><span>w<span style="color:#f92672">+</span>打开文件清空文件<span style="color:#960050;background-color:#1e0010">，</span>具有读写权限注意事项
+</span></span><span style="display:flex;"><span>wb<span style="color:#f92672">+</span>打开二进制文件<span style="color:#960050;background-color:#1e0010">，</span>具有读写权限注意事项
+</span></span><span style="display:flex;"><span>a已追加默认打开文件<span style="color:#960050;background-color:#1e0010">，</span>只有写入权限<span style="color:#960050;background-color:#1e0010">，</span>写在文件最后面原来的内容不会清空
+</span></span><span style="display:flex;"><span>a<span style="color:#f92672">+</span>打开二进制文件<span style="color:#960050;background-color:#1e0010">，</span>具有读写权限注意事项
+</span></span><span style="display:flex;"><span>ab打开二进制文件<span style="color:#960050;background-color:#1e0010">，</span>具有读写权限注意事项
+</span></span><span style="display:flex;"><span>ab<span style="color:#f92672">+</span>打开二进制文件<span style="color:#960050;background-color:#1e0010">，</span>具有读写权限注意事项
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> open(xlsx, <span style="color:#e6db74">&#39;r&#39;</span>, encoding<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;utf-8&#39;</span>) <span style="color:#66d9ef">as</span> f:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    lines <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>read()  <span style="color:#75715e"># 返回全部文本</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    lines_list <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>readlines()  <span style="color:#75715e"># 按照每行返回列表</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    line <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>readline()  <span style="color:#75715e"># 只返回一行数据</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 也可以循环读取文件</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> line1 <span style="color:#f92672">in</span> f:
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        print(line1)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>str1 <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;32123&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> open(xlsx, <span style="color:#e6db74">&#39;w&#39;</span>, encoding<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;utf-8&#39;</span>) <span style="color:#66d9ef">as</span> f:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    f<span style="color:#f92672">.</span>write(str1)  <span style="color:#75715e"># 把字符串写入文本中</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>注意
+</span></span><span style="display:flex;"><span>文件读写编码问题是个坑<span style="color:#960050;background-color:#1e0010">，</span>一定要摸清楚所要读写的文件的编码<span style="color:#960050;background-color:#1e0010">，</span>可以用 notepad<span style="color:#f92672">++</span> 打开看下是什么编码
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>除了上面读取写入<span style="color:#960050;background-color:#1e0010">，</span>还有文件删除等操作
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>os<span style="color:#f92672">.</span>remove(file_path)</span></span></code></pre></div><h2 id="系统信息">系统信息<a class="anchor" href="#%e7%b3%bb%e7%bb%9f%e4%bf%a1%e6%81%af">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 获取登录名</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>user_name <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>getlogin()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 获取环境变量</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pc_env <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>environ
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 环境变量是个字典，可以拉取一些信息</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pc_name <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#39;COMPUTERNAME&#39;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 可以把指定路径加入到系统环境变量里面</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>my_path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;D:</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">Python310</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">DLLs&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#39;PATH&#39;</span>] <span style="color:#f92672">+=</span> os<span style="color:#f92672">.</span>pathsep <span style="color:#f92672">+</span> my_path</span></span></code></pre></div><h2 id="信息加密解密">信息加密/解密<a class="anchor" href="#%e4%bf%a1%e6%81%af%e5%8a%a0%e5%af%86%e8%a7%a3%e5%af%86">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># base64加密</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> base64
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;123456&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 把字符进行base64加密</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>jiamistr <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64encode(str<span style="color:#f92672">.</span>encode())<span style="color:#f92672">.</span>decode()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 把已加密的字符进行解密</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>str <span style="color:#f92672">=</span> base64<span style="color:#f92672">.</span>b64decode(jiamistr)<span style="color:#f92672">.</span>decode()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># base64只是简单的加密，不算真正的加密</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> hashlib
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 其中支持几种加密方法</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># &#39;md5&#39;,  &#39;sha256&#39;, &#39;sha512&#39;这几种常用的就可以了</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>hashlib<span style="color:#f92672">.</span>sha256(<span style="color:#e6db74">&#34;Nobody inspects the spammish repetition&#34;</span><span style="color:#f92672">.</span>encode())<span style="color:#f92672">.</span>hexdigest()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># &#39;031edd7d41651593c5fe5c006fa5752b37fddff7bc4e843aa6af0c950f4b9406&#39;</span></span></span></code></pre></div><h2 id="处理json文件">处理JSON文件<a class="anchor" href="#%e5%a4%84%e7%90%86json%e6%96%87%e4%bb%b6">#</a></h2>
+<p>先来一个json文件范例，在json中，请使用&quot;双引号，不能使用单引号</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;numbers&#34;</span>: <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;strings&#34;</span>: <span style="color:#e6db74">&#34;Hellø, wørld. All unicode is allowed, along with </span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">escaping</span><span style="color:#ae81ff">\&#34;</span><span style="color:#e6db74">.&#34;</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;has bools?&#34;</span>: true,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;nothingness&#34;</span>: null,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;big number&#34;</span>: <span style="color:#ae81ff">1.2e+100</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;objects&#34;</span>: {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;comment&#34;</span>: <span style="color:#e6db74">&#34;Most of your structure will come from objects.&#34;</span>,
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;array&#34;</span>: [
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>      <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>      <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>      <span style="color:#ae81ff">2</span>,
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>      <span style="color:#ae81ff">3</span>,
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;Arrays can have anything in them.&#34;</span>,
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>      <span style="color:#ae81ff">5</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    ],
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;another object&#34;</span>: {
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;comment&#34;</span>: <span style="color:#e6db74">&#34;These things can be nested, very useful.&#34;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  },
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;silliness&#34;</span>: [
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>      <span style="color:#e6db74">&#34;sources of potassium&#34;</span>: [
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;bananas&#34;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>      ]
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    [
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>      [
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>      ],
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>      [
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>      ],
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>      [
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;neo&#34;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>      ],
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>      [
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>      ]
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    ]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  ],
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;that was short&#34;</span>: <span style="color:#e6db74">&#34;And, you&#39;re done. You now know everything JSON has to offer.&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Python的json操作需要导入库json,主要就是2种方法<span style="color:#960050;background-color:#1e0010">，</span><span style="color:#ae81ff">4</span>个函数<span style="color:#960050;background-color:#1e0010">，</span>其中带s的是指数据流转换
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> json
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 把json字符串转为json对象</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>json<span style="color:#f92672">.</span>loads(reponse)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 把json对象转化为json字符串</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>json<span style="color:#f92672">.</span>dumps(reponse)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 从文件把json字符串转为json对象</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>json<span style="color:#f92672">.</span>load(reponse)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 从文件把json对象转化为json字符串</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>json<span style="color:#f92672">.</span>dump(reponse)</span></span></code></pre></div><h2 id="控制流">控制流<a class="anchor" href="#%e6%8e%a7%e5%88%b6%e6%b5%81">#</a></h2>
+<p>逻辑判断主要点就是以下几点：</p>
+<pre><code>判断的值数据类型要对，可以看下上面的布尔值数据类型
+要做判空，数据是否为空
+用=判断注意，是双等于号 ==
+优先判断最常出现的项目
+判断层别不宜超出3层，如果超出3层，那就是代码有问题
+</code></pre>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>x <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> x <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;Negative changed to zero&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">elif</span> x <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;Zero&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">elif</span> x <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;Single&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pass</span>  <span style="color:#75715e"># 这个是Python中的最无用的代码，意思就是这里不需要写代码，先占个位，防止没代码报错的</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># &#34;if&#34; 可以用作表达式，它的作用等同于 C 语言的三元运算符 &#34;?:&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;yay!&#34;</span> <span style="color:#66d9ef">if</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">else</span> <span style="color:#e6db74">&#34;nay!&#34;</span>  <span style="color:#75715e"># =&gt; &#34;nay!&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Python中类似于其他语言的switch在Python3<span style="color:#ae81ff">.10</span>里面才有<span style="color:#960050;background-color:#1e0010">，</span>所以为了兼容性考虑<span style="color:#960050;background-color:#1e0010">，</span>暂时就不用这玩意了<span style="color:#960050;background-color:#1e0010">。</span>另外pass 这个意思是先占个坑的意思<span style="color:#960050;background-color:#1e0010">，</span>没有任何功能</span></span></code></pre></div><h2 id="报错处理">报错处理<a class="anchor" href="#%e6%8a%a5%e9%94%99%e5%a4%84%e7%90%86">#</a></h2>
+<p>如果不想自己写的代码莫米奇妙的死了，就必须要要做一定的报错处理，这个可以给任何错误兜底，最起码软件不是还在跑嘛？</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 用 try/except 块处理异常状况</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;我是正常的代码,一般的代码都会写在这里&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">except</span> (<span style="color:#a6e22e">TypeError</span>, <span style="color:#a6e22e">NameError</span>):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;我是发生TypeError, NameError报错时候的代码&#39;</span>)  <span style="color:#75715e"># 可以同时处理不同类的错误</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;我是报错时候的代码，我也不知道是什么错误&#39;</span>, e)  <span style="color:#75715e"># 任何除之前已经注明的报错都会触发这个代码</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>:  <span style="color:#75715e"># else语句是可选的，但必须在所有的except之后</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;All good!&#34;</span>)  <span style="color:#75715e"># 只有当try运行完没有错误的时候这句才会运行</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">finally</span>:  <span style="color:#75715e"># 在任何情况下都会执行</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;我不管有木有报错都会运行的&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>上面是个完整些的报错处理代码<span style="color:#960050;background-color:#1e0010">，</span>但是实际用的比较多的可能是下面这样的
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;我是正常的代码,一般的代码都会写在这里&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;我是报错时候的代码，我也不知道是什么错误&#39;</span>, e)  <span style="color:#75715e"># 任何除之前已经注明的报错都会触发这个代码</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>关于程序处理错误的问题<span style="color:#960050;background-color:#1e0010">，</span>有两种思想LBYL<span style="color:#f92672">/</span>EAFP<span style="color:#960050;background-color:#1e0010">，</span>以下是一些说明
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    LBYL:<span style="color:#960050;background-color:#1e0010">“</span>先查看后跳跃<span style="color:#960050;background-color:#1e0010">”</span>的英文缩写<span style="color:#960050;background-color:#1e0010">。</span>这种代码编写风格会在进行调用或查找之前显式地检查前提条件<span style="color:#960050;background-color:#1e0010">，</span>其特点是大量使用 <span style="color:#66d9ef">if</span> 语句<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 以下是伪代码,仅表达思想</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> x是个人:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> x是个男人:
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> x年龄大于18岁:
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> x有抽样习惯:
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>                print(<span style="color:#e6db74">&#39;来，x大佬，抽根烟&#39;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    EAFP:<span style="color:#960050;background-color:#1e0010">“</span>求原谅比求许可更容易<span style="color:#960050;background-color:#1e0010">”</span>的英文缩写<span style="color:#960050;background-color:#1e0010">。</span>这种 Python 常用代码编写风格会假定所需的键或属性存在<span style="color:#960050;background-color:#1e0010">，</span>并在假定错误时捕获异常<span style="color:#960050;background-color:#1e0010">。</span>这种简洁快速风格的特点就是大量运用 <span style="color:#66d9ef">try</span> 和 <span style="color:#66d9ef">except</span> 语句<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 以下是伪代码,仅表达思想</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;来，x大佬，抽根烟&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;大佬不抽烟，原因：&#39;</span>, e)  <span style="color:#75715e"># 报错输出：大佬不抽烟，原因：x是条狗</span></span></span></code></pre></div></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+    </span>
+    <span>
+    
+      <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="flex align-center">
+        <span>Python函数</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#代码首行">代码首行</a></li>
+    <li><a href="#代码注释">代码注释</a></li>
+    <li><a href="#保留字">保留字</a></li>
+    <li><a href="#代码缩进">代码缩进</a></li>
+    <li><a href="#数据类型">数据类型</a>
+      <ul>
+        <li><a href="#number数字">Number（数字）</a></li>
+        <li><a href="#string字符串">String（字符串）</a></li>
+        <li><a href="#bool布尔类型注意首字母是大写">bool（布尔类型，注意首字母是大写）</a></li>
+        <li><a href="#list列表">List（列表）</a></li>
+        <li><a href="#tuple元组">Tuple（元组）</a></li>
+        <li><a href="#set集合">Set（集合）</a></li>
+        <li><a href="#dictionary字典">Dictionary（字典）</a></li>
+      </ul>
+    </li>
+    <li><a href="#判断数据类型">判断数据类型</a></li>
+    <li><a href="#简单数学计算">简单数学计算</a></li>
+    <li><a href="#判断语法">判断语法</a></li>
+    <li><a href="#导入包模块">导入包/模块</a></li>
+    <li><a href="#字符串处理">字符串处理</a></li>
+    <li><a href="#列表list处理">列表List处理</a></li>
+    <li><a href="#元组">元组</a></li>
+    <li><a href="#字典">字典</a></li>
+    <li><a href="#集合">集合</a></li>
+    <li><a href="#日期时间处理">日期时间处理</a></li>
+    <li><a href="#循环">循环</a></li>
+    <li><a href="#变量常量与函数">变量/常量与函数</a></li>
+    <li><a href="#路径相关">路径相关</a></li>
+    <li><a href="#文件操作">文件操作</a></li>
+    <li><a href="#系统信息">系统信息</a></li>
+    <li><a href="#信息加密解密">信息加密/解密</a></li>
+    <li><a href="#处理json文件">处理JSON文件</a></li>
+    <li><a href="#控制流">控制流</a></li>
+    <li><a href="#报错处理">报错处理</a></li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

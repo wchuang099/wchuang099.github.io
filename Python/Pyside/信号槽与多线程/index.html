@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="一、 信号&amp;槽（Signals &amp; Slots）# 1.信号（Signal）和槽（Slot）概念
+信号（Signal）
+表示“发生了什么事”（如：按钮被点击、文本发生变化）
+槽（Slot）
+表示“当事件发生时要执行的动作”（如：打印日志、更新界面）
+可以理解为：
+信号 = 广播消息
+槽 = 监听并响应消息的函数
+2.PyQt/PySide 与 PySimpleGUI 事件处理机制对比
+控件事件触发方式 框架 如何标识控件 如何响应事件 是否需要主循环 PySimpleGUI 通过 key=&#34;xxx&#34; 字符串标识（如 sg.Button(&#34;OK&#34;, key=&#34;-OK-&#34;)） 在 while True 循环中判断 event == &#34;-OK-&#34; ✅ 必须显式编写 while 事件读取循环 PyQt / PySide 控件本身就是对象（如 self.btn = QPushButton(&#34;OK&#34;)） 直接连接对象的内置信号：self.btn.clicked.connect(self.handler) ❌ 不需要；由 QApplication.exec_() 启动 Qt 内置事件循环 3.PyQt/PySide 标准控件自带信号示例 QtWidgets依赖QtGui –&gt; QtGui依赖QtCore –&gt; 因此使用 QtWidgets 时，自动获得了 QtGui 和 QtCore 的能力（如信号槽） 所以QtWidgets下面的控件内置了信号槽能力
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="PySide信号槽与多线程">
+  <meta property="og:description" content="一、 信号&amp;槽（Signals &amp; Slots）# 1.信号（Signal）和槽（Slot）概念
+信号（Signal）
+表示“发生了什么事”（如：按钮被点击、文本发生变化）
+槽（Slot）
+表示“当事件发生时要执行的动作”（如：打印日志、更新界面）
+可以理解为：
+信号 = 广播消息
+槽 = 监听并响应消息的函数
+2.PyQt/PySide 与 PySimpleGUI 事件处理机制对比
+控件事件触发方式 框架 如何标识控件 如何响应事件 是否需要主循环 PySimpleGUI 通过 key=&#34;xxx&#34; 字符串标识（如 sg.Button(&#34;OK&#34;, key=&#34;-OK-&#34;)） 在 while True 循环中判断 event == &#34;-OK-&#34; ✅ 必须显式编写 while 事件读取循环 PyQt / PySide 控件本身就是对象（如 self.btn = QPushButton(&#34;OK&#34;)） 直接连接对象的内置信号：self.btn.clicked.connect(self.handler) ❌ 不需要；由 QApplication.exec_() 启动 Qt 内置事件循环 3.PyQt/PySide 标准控件自带信号示例 QtWidgets依赖QtGui –&gt; QtGui依赖QtCore –&gt; 因此使用 QtWidgets 时，自动获得了 QtGui 和 QtCore 的能力（如信号槽） 所以QtWidgets下面的控件内置了信号槽能力">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="python">
+
+
+  <meta itemprop="name" content="PySide信号槽与多线程">
+  <meta itemprop="description" content="一、 信号&amp;槽（Signals &amp; Slots）# 1.信号（Signal）和槽（Slot）概念
+信号（Signal）
+表示“发生了什么事”（如：按钮被点击、文本发生变化）
+槽（Slot）
+表示“当事件发生时要执行的动作”（如：打印日志、更新界面）
+可以理解为：
+信号 = 广播消息
+槽 = 监听并响应消息的函数
+2.PyQt/PySide 与 PySimpleGUI 事件处理机制对比
+控件事件触发方式 框架 如何标识控件 如何响应事件 是否需要主循环 PySimpleGUI 通过 key=&#34;xxx&#34; 字符串标识（如 sg.Button(&#34;OK&#34;, key=&#34;-OK-&#34;)） 在 while True 循环中判断 event == &#34;-OK-&#34; ✅ 必须显式编写 while 事件读取循环 PyQt / PySide 控件本身就是对象（如 self.btn = QPushButton(&#34;OK&#34;)） 直接连接对象的内置信号：self.btn.clicked.connect(self.handler) ❌ 不需要；由 QApplication.exec_() 启动 Qt 内置事件循环 3.PyQt/PySide 标准控件自带信号示例 QtWidgets依赖QtGui –&gt; QtGui依赖QtCore –&gt; 因此使用 QtWidgets 时，自动获得了 QtGui 和 QtCore 的能力（如信号槽） 所以QtWidgets下面的控件内置了信号槽能力">
+  <meta itemprop="wordCount" content="391">
+
+<title>PySide信号槽与多线程 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.9d4fa0048b4786d5be096d98c61a47e02072a87b9dbf0bb86dcd8edf179c4e43.js" integrity="sha256-nU&#43;gBItHhtW&#43;CW2YxhpH4CByqHudvwu4bc2O3xecTkM=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-python">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-204365caa941390a182aeb870c8b397d" class="toggle" checked />
+    <label for="section-204365caa941390a182aeb870c8b397d" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f6929f8819239c236e3ff6d9318a645b" class="toggle"  />
+    <label for="section-f6929f8819239c236e3ff6d9318a645b" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-797baf87757652be835bcce5680ea0d4" class="toggle"  />
+    <label for="section-797baf87757652be835bcce5680ea0d4" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0fa9f382cfc268805da9afbea1ac822b" class="toggle"  />
+    <label for="section-0fa9f382cfc268805da9afbea1ac822b" class="flex">
+      <a role="button" class="">
+        Python数据处理</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-938c3edbaa8e3dd01e8b93d6f9361182" class="toggle" checked />
+    <label for="section-938c3edbaa8e3dd01e8b93d6f9361182" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="active">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-56b62cfe8bd1e3138f346455c7c08d01" class="toggle"  />
+    <label for="section-56b62cfe8bd1e3138f346455c7c08d01" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e12d76c83fadc5077063bd8a06e4974c" class="toggle"  />
+    <label for="section-e12d76c83fadc5077063bd8a06e4974c" class="flex">
+      <a role="button" class="">
+        Linux</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-docker/" class="">
+      安装 Docker 教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-mysql/" class="">
+      安装 mysql 教程</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-23e22f2cefc5200495b10b220f00dc9b" class="toggle"  />
+    <label for="section-23e22f2cefc5200495b10b220f00dc9b" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5f3519d07421b3022c482beb7e53757d" class="toggle"  />
+    <label for="section-5f3519d07421b3022c482beb7e53757d" class="flex">
+      <a role="button" class="">
+        Other</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强平台装机流程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-00896273d6e22b6628839c56863edc57" class="toggle"  />
+    <label for="section-00896273d6e22b6628839c56863edc57" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-212fbf26dee144498e07df6cb6c18024" class="toggle"  />
+    <label for="section-212fbf26dee144498e07df6cb6c18024" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB/" class="">
+      处理鼠标漂移</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5b47f8600929668d6470260320a7fd81" class="toggle"  />
+    <label for="section-5b47f8600929668d6470260320a7fd81" class="flex">
+      <a href="/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+        幽灵键鼠</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a>
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E6%B8%B8%E6%88%8F%E8%84%9A%E6%9C%AC%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%9A%94%E7%A6%BB%E6%96%B9%E6%A1%88/" class="">
+      脚本隔离方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c5a43b1f0709f0338f2ab4a52452792c" class="toggle"  />
+    <label for="section-c5a43b1f0709f0338f2ab4a52452792c" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>PySide信号槽与多线程</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#pyside2--pyqt-中的多线程与信号机制">PySide2 / PyQt 中的多线程与信号机制</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h1 id="一-信号槽signals--slots">一、 信号&amp;槽（Signals &amp; Slots）<a class="anchor" href="#%e4%b8%80-%e4%bf%a1%e5%8f%b7%e6%a7%bdsignals--slots">#</a></h1>
+<p><strong>1.信号（Signal）和槽（Slot）概念</strong></p>
+<ul>
+<li>
+<p><strong>信号（Signal）</strong><br>
+表示“发生了什么事”（如：按钮被点击、文本发生变化）</p>
+</li>
+<li>
+<p><strong>槽（Slot）</strong><br>
+表示“当事件发生时要执行的动作”（如：打印日志、更新界面）</p>
+</li>
+</ul>
+<blockquote class='book-hint '>
+<p>可以理解为：<br>
+<strong>信号 = 广播消息</strong><br>
+<strong>槽 = 监听并响应消息的函数</strong></p></blockquote><p><strong>2.PyQt/PySide 与 PySimpleGUI 事件处理机制对比</strong></p>
+<ul>
+<li>控件事件触发方式</li>
+</ul>
+<table>
+  <thead>
+      <tr>
+          <th>框架</th>
+          <th>如何标识控件</th>
+          <th>如何响应事件</th>
+          <th>是否需要主循环</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>PySimpleGUI</strong></td>
+          <td>通过 <code>key=&quot;xxx&quot;</code> 字符串标识（如 <code>sg.Button(&quot;OK&quot;, key=&quot;-OK-&quot;)</code>）</td>
+          <td>在 <code>while True</code> 循环中判断 <code>event == &quot;-OK-&quot;</code></td>
+          <td>✅ 必须显式编写 <code>while</code> 事件读取循环</td>
+      </tr>
+      <tr>
+          <td><strong>PyQt / PySide</strong></td>
+          <td>控件本身就是对象（如 <code>self.btn = QPushButton(&quot;OK&quot;)</code>）</td>
+          <td>直接连接对象的内置信号：<code>self.btn.clicked.connect(self.handler)</code></td>
+          <td>❌ 不需要；由 <code>QApplication.exec_()</code> 启动 Qt 内置事件循环</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>3.PyQt/PySide 标准控件自带信号示例</strong>
+QtWidgets依赖QtGui &ndash;&gt; QtGui依赖QtCore &ndash;&gt; 因此使用 QtWidgets 时，自动获得了 QtGui 和 QtCore 的能力（如信号槽）
+所以QtWidgets下面的控件内置了信号槽能力</p>
+<table>
+  <thead>
+      <tr>
+          <th>控件类型</th>
+          <th>常用内置信号</th>
+          <th>触发时机</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>QPushButton</code></td>
+          <td><code>clicked()</code></td>
+          <td>用户点击按钮</td>
+      </tr>
+      <tr>
+          <td><code>QLineEdit</code></td>
+          <td><code>textChanged(str)</code><br><code>returnPressed()</code></td>
+          <td>文本内容变化<br>用户按下回车</td>
+      </tr>
+      <tr>
+          <td><code>QComboBox</code></td>
+          <td><code>currentIndexChanged(int)</code><br><code>currentTextChanged(str)</code></td>
+          <td>选中项索引改变<br>选中项文本改变</td>
+      </tr>
+      <tr>
+          <td><code>QCheckBox</code></td>
+          <td><code>toggled(bool)</code><br><code>stateChanged(int)</code></td>
+          <td>勾选状态切换<br>状态值变化（0/1/2）</td>
+      </tr>
+      <tr>
+          <td><code>QRadioButton</code></td>
+          <td><code>toggled(bool)</code></td>
+          <td>选中或取消选中</td>
+      </tr>
+      <tr>
+          <td><code>QSlider</code></td>
+          <td><code>valueChanged(int)</code></td>
+          <td>滑块值变化</td>
+      </tr>
+      <tr>
+          <td><code>QTimer</code></td>
+          <td><code>timeout()</code></td>
+          <td>定时器超时</td>
+      </tr>
+      <tr>
+          <td><code>QThread</code></td>
+          <td><code>started()</code><br><code>finished()</code></td>
+          <td>线程启动<br>线程执行结束</td>
+      </tr>
+  </tbody>
+</table>
+<p>4.关键结论</p>
+<p><strong>所有标准控件都自带信号</strong></p>
+<ul>
+<li><strong>只有在以下情况才需要自定义信号</strong>：
+<ul>
+<li>自己写控件类</li>
+<li>子线程需要向 UI 传递业务数据</li>
+</ul>
+</li>
+<li>槽必须是 <strong>可调用对象</strong>
+<ul>
+<li>函数 / 方法 / lambda</li>
+</ul>
+</li>
+<li>槽对象必须被持有引用<br>
+否则可能被 GC 回收，导致信号失效</li>
+</ul>
+<blockquote class='book-hint '>
+<p>✔ 一个信号可以连接多个槽<br>
+✔ 一个槽也可以监听多个信号</p></blockquote><p>5.基础示例（单线程）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide2.QtWidgets <span style="color:#f92672">import</span> QApplication, QWidget, QPushButton, QVBoxLayout
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> sys
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MainWindow</span>(QWidget):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#f92672">.</span><span style="color:#a6e22e">__init__</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 窗口设置</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setWindowTitle(<span style="color:#e6db74">&#34;信号与槽示例&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 创建控件</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>button <span style="color:#f92672">=</span> QPushButton(<span style="color:#e6db74">&#34;点我&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 布局</span>
+</span></span><span style="display:flex;"><span>        layout <span style="color:#f92672">=</span> QVBoxLayout(self)
+</span></span><span style="display:flex;"><span>        layout<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>button)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 信号绑定</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>button<span style="color:#f92672">.</span>clicked<span style="color:#f92672">.</span>connect(self<span style="color:#f92672">.</span>on_button_clicked)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 槽函数（类方法）</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">on_button_clicked</span>(self):
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#34;按钮被点击了！&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    app <span style="color:#f92672">=</span> QApplication(sys<span style="color:#f92672">.</span>argv)
+</span></span><span style="display:flex;"><span>    window <span style="color:#f92672">=</span> MainWindow()
+</span></span><span style="display:flex;"><span>    window<span style="color:#f92672">.</span>show()
+</span></span><span style="display:flex;"><span>    sys<span style="color:#f92672">.</span>exit(app<span style="color:#f92672">.</span>exec_())</span></span></code></pre></div><h1 id="二自定义信号槽与多线程">二、自定义信号槽与多线程<a class="anchor" href="#%e4%ba%8c%e8%87%aa%e5%ae%9a%e4%b9%89%e4%bf%a1%e5%8f%b7%e6%a7%bd%e4%b8%8e%e5%a4%9a%e7%ba%bf%e7%a8%8b">#</a></h1>
+<h2 id="pyside2--pyqt-中的多线程与信号机制">PySide2 / PyQt 中的多线程与信号机制<a class="anchor" href="#pyside2--pyqt-%e4%b8%ad%e7%9a%84%e5%a4%9a%e7%ba%bf%e7%a8%8b%e4%b8%8e%e4%bf%a1%e5%8f%b7%e6%9c%ba%e5%88%b6">#</a></h2>
+<p>1.在 <strong>PySide2 / PyQt 的 GUI 编程中</strong>， <strong>多线程几乎总是要配合自定义信号（Signal）使用</strong>， 才能 <strong>安全、可靠</strong> 地实现子线程与主线程（UI）的通信。这是因为 Qt 有两条“铁律”。</p>
+<ul>
+<li><strong>所有 UI 操作必须在主线程执行</strong><br>
+否则属于未定义行为，可能直接崩溃。</li>
+<li><strong>不同线程之间不能直接操作对方的对象</strong><br>
+包括调用方法、访问属性，都是非线程安全的。</li>
+</ul>
+<p><strong>2、多线程的真实目的</strong></p>
+<ul>
+<li>在 <strong>子线程</strong> 执行耗时任务<br>
+（如：下载、计算、读文件等）</li>
+<li>在 <strong>任务完成后通知 UI 更新</strong><br>
+（显示结果、更新进度条、启用按钮等）</li>
+</ul>
+<p>这就不可避免地产生了 <strong>跨线程通信需求</strong>。</p>
+<p><strong>3.Qt 官方唯一安全的跨线程通信方式</strong></p>
+<p><strong>信号 / 槽（Signal / Slot）机制</strong></p>
+<ul>
+<li>信号可以在 <strong>子线程发出</strong></li>
+<li>槽函数在 <strong>主线程执行</strong></li>
+<li>通过 <strong>信号参数传递数据</strong></li>
+<li>自动使用 <strong>队列连接（Queued Connection）</strong></li>
+<li>线程安全</li>
+</ul>
+<p><strong>4.为什么必须自定义信号？</strong></p>
+<p>Qt <strong>没有提供通用的内置信号</strong><br>
+用于传递你的业务数据，例如：</p>
+<ul>
+<li><code>int</code>：进度值</li>
+<li><code>str</code>：结果文本</li>
+<li><code>list</code>：计算数据</li>
+</ul>
+<blockquote class='book-hint '>
+<p>只要子线程需要向 UI 传递数据，<br>
+<strong>就必须自定义信号。</strong></p></blockquote><p><strong>5.总结</strong></p>
+<p><strong>Qt 多线程的正确模式：</strong><br>
+子线程做耗时工作 → 发信号 → 主线程更新 UI</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide2.QtCore <span style="color:#f92672">import</span> QThread, Signal
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide2.QtWidgets <span style="color:#f92672">import</span> (
+</span></span><span style="display:flex;"><span>    QApplication, QLabel, QWidget, QVBoxLayout, QPushButton
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">模拟快递员会将包裹放到快递驿站，然后由机器人送到家
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">机器人：Signal定义信号 + emit 发射信号（信号本身是广播式的，谁连了谁就能收到）
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">家(主界面)：connect(订阅信号)+绑定响应动作(槽) + 更新显示器(界面) 
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">##################################
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">Qt 信号槽心法”：
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">信号是广播，槽是听众
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">子线程只“说”，不“改 UI”
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">主线程负责“听”和“显示”
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#  快递机器人</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DeliveryBot</span>(QThread):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># -----------------------------------第一步：自定义信号和工作线程------------------------------------</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 【0】机器人出厂自带“按门铃”的能力（定义信号）</span>
+</span></span><span style="display:flex;"><span>    update_signal <span style="color:#f92672">=</span> Signal(str)  <span style="color:#75715e"># 门铃只能传递一句话，比如“1号包裹到了”</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 【5】机器人开始送货（工作线程）</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> pkg <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">6</span>):
+</span></span><span style="display:flex;"><span>            time<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">1</span>)  <span style="color:#75715e"># 走路上楼需要时间（模拟耗时任务）</span>
+</span></span><span style="display:flex;"><span>            message <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34; 第</span><span style="color:#e6db74">{</span>pkg<span style="color:#e6db74">}</span><span style="color:#e6db74">个包裹已送到门口！&#34;</span>
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>update_signal<span style="color:#f92672">.</span>emit(message)  <span style="color:#75715e"># 【6】按你家门铃！（发射信号）</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#  家（主界面）</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyGui</span>(QWidget):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#f92672">.</span><span style="color:#a6e22e">__init__</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 显示器：显示快递状态 和 一个“叫机器人送到家”按钮</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>notebook <span style="color:#f92672">=</span> QLabel(<span style="color:#e6db74">&#34;快件已到驿站，等待派送...&#34;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>call_button <span style="color:#f92672">=</span> QPushButton(<span style="color:#e6db74">&#34;呼叫送货机器人&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        layout <span style="color:#f92672">=</span> QVBoxLayout()
+</span></span><span style="display:flex;"><span>        layout<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>notebook)
+</span></span><span style="display:flex;"><span>        layout<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>call_button)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setLayout(layout)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#-----------------------------------第二步：信号绑定到槽------------------------------------</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 【1】预约一个快递机器人：该机器人内置了信号</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>worker <span style="color:#f92672">=</span> DeliveryBot()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 【2】【worker信号发送者】+【update_signal信号名称】+[connect订阅该信号]+[绑定响应动作(槽)]</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>worker<span style="color:#f92672">.</span>update_signal<span style="color:#f92672">.</span>connect(self<span style="color:#f92672">.</span>hear_doorbell)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 【3】设置按钮：点一下机器人出发，</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 【call_button信号发送者】+【clicked信号名称】+【connect订阅该信号】+【绑定响应动作(槽)】</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># clicked 是 QPushButton 内置信号，你同样用 connect 订阅它。</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>call_button<span style="color:#f92672">.</span>clicked<span style="color:#f92672">.</span>connect(self<span style="color:#f92672">.</span>send_bot)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#-----------------------------------第三步：让线程开始工作，并发送信号------------------------------------</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 【4】你按下按钮（在主线程中）</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">send_bot</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>notebook<span style="color:#f92672">.</span>setText(<span style="color:#e6db74">&#34; 机器人已出发...&#34;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>call_button<span style="color:#f92672">.</span>setEnabled(<span style="color:#66d9ef">False</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>worker<span style="color:#f92672">.</span>start()  <span style="color:#75715e"># 机器人开始后台送货！</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#-----------------------------------第四步：处理接收到的信号------------------------------------</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 【7】你听到门铃响（槽函数）→ 更新显示器（在主线程！）</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">hear_doorbell</span>(self, message):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>notebook<span style="color:#f92672">.</span>setText(message)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#  启动整个系统</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    app <span style="color:#f92672">=</span> QApplication([])
+</span></span><span style="display:flex;"><span>    home <span style="color:#f92672">=</span> MyGui()
+</span></span><span style="display:flex;"><span>    home<span style="color:#f92672">.</span>show()
+</span></span><span style="display:flex;"><span>    app<span style="color:#f92672">.</span>exec_()</span></span></code></pre></div></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>PySide美化界面</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="flex align-center">
+        <span>Pystand打包工具</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#pyside2--pyqt-中的多线程与信号机制">PySide2 / PyQt 中的多线程与信号机制</a></li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

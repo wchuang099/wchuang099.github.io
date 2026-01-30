@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Docker on 碎碎念念</title>
+    <link>http://localhost:1313/tags/docker/</link>
+    <description>Recent content in Docker on 碎碎念念</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 07 Aug 2025 10:30:00 +0800</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>安装 Docker 教程</title>
+      <link>http://localhost:1313/Linux/install-docker/</link>
+      <pubDate>Wed, 06 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/Linux/install-docker/</guid>
+      <description>&lt;h2 id=&#34;目录&#34;&gt;目录&lt;a class=&#34;anchor&#34; href=&#34;#%e7%9b%ae%e5%bd%95&#34;&gt;#&lt;/a&gt;&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;#%e7%ae%80%e4%bb%8b&#34;&gt;简介&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;#%e5%ae%89%e8%a3%85%e6%ad%a5%e9%aa%a4&#34;&gt;安装步骤&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;#%e9%aa%8c%e8%af%81%e5%ae%89%e8%a3%85&#34;&gt;验证安装&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;#%e6%80%bb%e7%bb%93&#34;&gt;总结&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;简介&#34;&gt;简介&lt;a class=&#34;anchor&#34; href=&#34;#%e7%ae%80%e4%bb%8b&#34;&gt;#&lt;/a&gt;&lt;/h2&gt;&#xA;&lt;p&gt;本文将介绍如何在 Linux 系统上安装 Docker，适合初学者快速上手。&lt;/p&gt;&#xA;&lt;h2 id=&#34;安装步骤&#34;&gt;安装步骤&lt;a class=&#34;anchor&#34; href=&#34;#%e5%ae%89%e8%a3%85%e6%ad%a5%e9%aa%a4&#34;&gt;#&lt;/a&gt;&lt;/h2&gt;&#xA;&lt;p&gt;步骤1&#xA;步骤2&lt;/p&gt;&#xA;&lt;h2 id=&#34;总结&#34;&gt;总结&lt;a class=&#34;anchor&#34; href=&#34;#%e6%80%bb%e7%bb%93&#34;&gt;#&lt;/a&gt;&lt;/h2&gt;&#xA;&lt;p&gt;完成安装&#xA;123456&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

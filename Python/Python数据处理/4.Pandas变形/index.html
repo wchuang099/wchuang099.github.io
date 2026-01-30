@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="长宽表的变形# pivot将长表转为宽表（单个聚合函数）# 功能：将一列作为新列名，一列作为新行索引，填充值来自另一列。
+限制：索引和列的组合必须唯一（不能有重复）。
+语法：df.pivot(index=&#39;行索引&#39;, columns=&#39;列名&#39;, values=&#39;值&#39;)
+案例：学生成绩表（长 → 宽）
+import pandas as pd # 原始长表 df_long = pd.DataFrame({ &#39;学生&#39;: [&#39;小明&#39;, &#39;小明&#39;, &#39;小红&#39;, &#39;小红&#39;], &#39;科目&#39;: [&#39;数学&#39;, &#39;语文&#39;, &#39;数学&#39;, &#39;语文&#39;], &#39;成绩&#39;: [85, 90, 78, 92] }) print(&#34;原始长表：&#34;) print(df_long) # 转为宽表 df_wide = df_long.pivot(index=&#39;学生&#39;, columns=&#39;科目&#39;, values=&#39;成绩&#39;) print(&#34;\npivot 转宽表：&#34;) print(df_wide) #输出 原始长表： 学生 科目 成绩 0 小明 数学 85 1 小明 语文 90 2 小红 数学 78 3 小红 语文 92 pivot 转宽表： 科目 数学 语文 学生 小明 85 90 小红 78 92pivot_table支持聚合的宽表转换（pivot 的增强版）# 功能：支持聚合（如 mean, sum），可处理重复索引。
+语法:df.pivot_table(index=&#39;行&#39;,columns=&#39;列&#39;, values=&#39;值&#39;, aggfunc=&#39;mean&#39;) 案例：带重复数据的成绩表
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="Pandas变形">
+  <meta property="og:description" content="长宽表的变形# pivot将长表转为宽表（单个聚合函数）# 功能：将一列作为新列名，一列作为新行索引，填充值来自另一列。
+限制：索引和列的组合必须唯一（不能有重复）。
+语法：df.pivot(index=&#39;行索引&#39;, columns=&#39;列名&#39;, values=&#39;值&#39;)
+案例：学生成绩表（长 → 宽）
+import pandas as pd # 原始长表 df_long = pd.DataFrame({ &#39;学生&#39;: [&#39;小明&#39;, &#39;小明&#39;, &#39;小红&#39;, &#39;小红&#39;], &#39;科目&#39;: [&#39;数学&#39;, &#39;语文&#39;, &#39;数学&#39;, &#39;语文&#39;], &#39;成绩&#39;: [85, 90, 78, 92] }) print(&#34;原始长表：&#34;) print(df_long) # 转为宽表 df_wide = df_long.pivot(index=&#39;学生&#39;, columns=&#39;科目&#39;, values=&#39;成绩&#39;) print(&#34;\npivot 转宽表：&#34;) print(df_wide) #输出 原始长表： 学生 科目 成绩 0 小明 数学 85 1 小明 语文 90 2 小红 数学 78 3 小红 语文 92 pivot 转宽表： 科目 数学 语文 学生 小明 85 90 小红 78 92pivot_table支持聚合的宽表转换（pivot 的增强版）# 功能：支持聚合（如 mean, sum），可处理重复索引。
+语法:df.pivot_table(index=&#39;行&#39;,columns=&#39;列&#39;, values=&#39;值&#39;, aggfunc=&#39;mean&#39;) 案例：带重复数据的成绩表">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="python">
+
+
+  <meta itemprop="name" content="Pandas变形">
+  <meta itemprop="description" content="长宽表的变形# pivot将长表转为宽表（单个聚合函数）# 功能：将一列作为新列名，一列作为新行索引，填充值来自另一列。
+限制：索引和列的组合必须唯一（不能有重复）。
+语法：df.pivot(index=&#39;行索引&#39;, columns=&#39;列名&#39;, values=&#39;值&#39;)
+案例：学生成绩表（长 → 宽）
+import pandas as pd # 原始长表 df_long = pd.DataFrame({ &#39;学生&#39;: [&#39;小明&#39;, &#39;小明&#39;, &#39;小红&#39;, &#39;小红&#39;], &#39;科目&#39;: [&#39;数学&#39;, &#39;语文&#39;, &#39;数学&#39;, &#39;语文&#39;], &#39;成绩&#39;: [85, 90, 78, 92] }) print(&#34;原始长表：&#34;) print(df_long) # 转为宽表 df_wide = df_long.pivot(index=&#39;学生&#39;, columns=&#39;科目&#39;, values=&#39;成绩&#39;) print(&#34;\npivot 转宽表：&#34;) print(df_wide) #输出 原始长表： 学生 科目 成绩 0 小明 数学 85 1 小明 语文 90 2 小红 数学 78 3 小红 语文 92 pivot 转宽表： 科目 数学 语文 学生 小明 85 90 小红 78 92pivot_table支持聚合的宽表转换（pivot 的增强版）# 功能：支持聚合（如 mean, sum），可处理重复索引。
+语法:df.pivot_table(index=&#39;行&#39;,columns=&#39;列&#39;, values=&#39;值&#39;, aggfunc=&#39;mean&#39;) 案例：带重复数据的成绩表">
+  <meta itemprop="wordCount" content="507">
+
+<title>Pandas变形 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.9d4fa0048b4786d5be096d98c61a47e02072a87b9dbf0bb86dcd8edf179c4e43.js" integrity="sha256-nU&#43;gBItHhtW&#43;CW2YxhpH4CByqHudvwu4bc2O3xecTkM=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-python">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-204365caa941390a182aeb870c8b397d" class="toggle" checked />
+    <label for="section-204365caa941390a182aeb870c8b397d" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f6929f8819239c236e3ff6d9318a645b" class="toggle"  />
+    <label for="section-f6929f8819239c236e3ff6d9318a645b" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-797baf87757652be835bcce5680ea0d4" class="toggle"  />
+    <label for="section-797baf87757652be835bcce5680ea0d4" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0fa9f382cfc268805da9afbea1ac822b" class="toggle" checked />
+    <label for="section-0fa9f382cfc268805da9afbea1ac822b" class="flex">
+      <a role="button" class="">
+        Python数据处理</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="active">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-938c3edbaa8e3dd01e8b93d6f9361182" class="toggle"  />
+    <label for="section-938c3edbaa8e3dd01e8b93d6f9361182" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-56b62cfe8bd1e3138f346455c7c08d01" class="toggle"  />
+    <label for="section-56b62cfe8bd1e3138f346455c7c08d01" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e12d76c83fadc5077063bd8a06e4974c" class="toggle"  />
+    <label for="section-e12d76c83fadc5077063bd8a06e4974c" class="flex">
+      <a role="button" class="">
+        Linux</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-docker/" class="">
+      安装 Docker 教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-mysql/" class="">
+      安装 mysql 教程</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-23e22f2cefc5200495b10b220f00dc9b" class="toggle"  />
+    <label for="section-23e22f2cefc5200495b10b220f00dc9b" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5f3519d07421b3022c482beb7e53757d" class="toggle"  />
+    <label for="section-5f3519d07421b3022c482beb7e53757d" class="flex">
+      <a role="button" class="">
+        Other</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强平台装机流程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-00896273d6e22b6628839c56863edc57" class="toggle"  />
+    <label for="section-00896273d6e22b6628839c56863edc57" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-212fbf26dee144498e07df6cb6c18024" class="toggle"  />
+    <label for="section-212fbf26dee144498e07df6cb6c18024" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB/" class="">
+      处理鼠标漂移</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5b47f8600929668d6470260320a7fd81" class="toggle"  />
+    <label for="section-5b47f8600929668d6470260320a7fd81" class="flex">
+      <a href="/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+        幽灵键鼠</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a>
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E6%B8%B8%E6%88%8F%E8%84%9A%E6%9C%AC%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%9A%94%E7%A6%BB%E6%96%B9%E6%A1%88/" class="">
+      脚本隔离方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c5a43b1f0709f0338f2ab4a52452792c" class="toggle"  />
+    <label for="section-c5a43b1f0709f0338f2ab4a52452792c" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>Pandas变形</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#长宽表的变形">长宽表的变形</a>
+      <ul>
+        <li><a href="#pivot将长表转为宽表单个聚合函数">pivot将长表转为宽表（单个聚合函数）</a></li>
+        <li><a href="#pivot_table支持聚合的宽表转换pivot-的增强版">pivot_table支持聚合的宽表转换（pivot 的增强版）</a></li>
+        <li><a href="#melt将宽表转为长表">melt将宽表转为长表</a></li>
+        <li><a href="#wide_to_long处理复杂列名的宽转长">wide_to_long处理复杂列名的宽转长</a></li>
+      </ul>
+    </li>
+    <li><a href="#索引的变形">索引的变形</a>
+      <ul>
+        <li><a href="#stack-与-unstack">stack 与 unstack</a></li>
+        <li><a href="#聚合与变形的关系">聚合与变形的关系</a></li>
+      </ul>
+    </li>
+    <li><a href="#其他变形函数">其他变形函数</a>
+      <ul>
+        <li><a href="#crosstab交叉表频次统计">crosstab交叉表（频次统计）</a></li>
+        <li><a href="#explode将列表元素展开为多行">explode将列表元素展开为多行</a></li>
+        <li><a href="#get_dummies独热编码one-hot-encoding">get_dummies独热编码（One-Hot Encoding）</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结何时使用哪种变形">总结：何时使用哪种变形？</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h2 id="长宽表的变形">长宽表的变形<a class="anchor" href="#%e9%95%bf%e5%ae%bd%e8%a1%a8%e7%9a%84%e5%8f%98%e5%bd%a2">#</a></h2>
+<h3 id="pivot将长表转为宽表单个聚合函数">pivot将长表转为宽表（单个聚合函数）<a class="anchor" href="#pivot%e5%b0%86%e9%95%bf%e8%a1%a8%e8%bd%ac%e4%b8%ba%e5%ae%bd%e8%a1%a8%e5%8d%95%e4%b8%aa%e8%81%9a%e5%90%88%e5%87%bd%e6%95%b0">#</a></h3>
+<p><strong>功能</strong>：将一列作为新列名，一列作为新行索引，填充值来自另一列。<br>
+<strong>限制</strong>：索引和列的组合必须唯一（不能有重复）。</p>
+<p>语法：<code>df.pivot(index='行索引', columns='列名', values='值')</code></p>
+<p>案例：学生成绩表（长 → 宽）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas <span style="color:#66d9ef">as</span> pd
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 原始长表</span>
+</span></span><span style="display:flex;"><span>df_long <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame({
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;学生&#39;</span>: [<span style="color:#e6db74">&#39;小明&#39;</span>, <span style="color:#e6db74">&#39;小明&#39;</span>, <span style="color:#e6db74">&#39;小红&#39;</span>, <span style="color:#e6db74">&#39;小红&#39;</span>],
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;科目&#39;</span>: [<span style="color:#e6db74">&#39;数学&#39;</span>, <span style="color:#e6db74">&#39;语文&#39;</span>, <span style="color:#e6db74">&#39;数学&#39;</span>, <span style="color:#e6db74">&#39;语文&#39;</span>],
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;成绩&#39;</span>: [<span style="color:#ae81ff">85</span>, <span style="color:#ae81ff">90</span>, <span style="color:#ae81ff">78</span>, <span style="color:#ae81ff">92</span>]
+</span></span><span style="display:flex;"><span>})
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;原始长表：&#34;</span>)
+</span></span><span style="display:flex;"><span>print(df_long)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 转为宽表</span>
+</span></span><span style="display:flex;"><span>df_wide <span style="color:#f92672">=</span> df_long<span style="color:#f92672">.</span>pivot(index<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;学生&#39;</span>, columns<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;科目&#39;</span>, values<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;成绩&#39;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">pivot 转宽表：&#34;</span>)
+</span></span><span style="display:flex;"><span>print(df_wide)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#输出</span>
+</span></span><span style="display:flex;"><span>原始长表<span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span>   学生  科目  成绩
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0</span>  小明  数学  <span style="color:#ae81ff">85</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span>  小明  语文  <span style="color:#ae81ff">90</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2</span>  小红  数学  <span style="color:#ae81ff">78</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">3</span>  小红  语文  <span style="color:#ae81ff">92</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>pivot 转宽表<span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span>科目  数学  语文
+</span></span><span style="display:flex;"><span>学生
+</span></span><span style="display:flex;"><span>小明   <span style="color:#ae81ff">85</span>   <span style="color:#ae81ff">90</span>
+</span></span><span style="display:flex;"><span>小红   <span style="color:#ae81ff">78</span>   <span style="color:#ae81ff">92</span></span></span></code></pre></div><h3 id="pivot_table支持聚合的宽表转换pivot-的增强版">pivot_table支持聚合的宽表转换（pivot 的增强版）<a class="anchor" href="#pivot_table%e6%94%af%e6%8c%81%e8%81%9a%e5%90%88%e7%9a%84%e5%ae%bd%e8%a1%a8%e8%bd%ac%e6%8d%a2pivot-%e7%9a%84%e5%a2%9e%e5%bc%ba%e7%89%88">#</a></h3>
+<p>功能：支持聚合（如 mean, sum），可处理重复索引。</p>
+<p>语法:<code>df.pivot_table(index='行',columns='列', values='值', aggfunc='mean')</code>
+案例：带重复数据的成绩表</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 含重复数据（小明考了两次数学）</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>df_repeat <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame({
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;学生&#39;</span>: [<span style="color:#e6db74">&#39;小明&#39;</span>, <span style="color:#e6db74">&#39;小明&#39;</span>, <span style="color:#e6db74">&#39;小明&#39;</span>, <span style="color:#e6db74">&#39;小红&#39;</span>],
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;科目&#39;</span>: [<span style="color:#e6db74">&#39;数学&#39;</span>, <span style="color:#e6db74">&#39;数学&#39;</span>, <span style="color:#e6db74">&#39;语文&#39;</span>, <span style="color:#e6db74">&#39;数学&#39;</span>],
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;成绩&#39;</span>: [<span style="color:#ae81ff">85</span>, <span style="color:#ae81ff">88</span>, <span style="color:#ae81ff">90</span>, <span style="color:#ae81ff">78</span>]
+</span></span><span style="display:flex;"><span>})
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 使用 pivot_table 计算平均分</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>df_pivot_table <span style="color:#f92672">=</span> df_repeat<span style="color:#f92672">.</span>pivot_table(
+</span></span><span style="display:flex;"><span>    index<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;学生&#39;</span>,
+</span></span><span style="display:flex;"><span>    columns<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;科目&#39;</span>,
+</span></span><span style="display:flex;"><span>    values<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;成绩&#39;</span>,
+</span></span><span style="display:flex;"><span>    aggfunc<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;mean&#39;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;pivot_table（平均分）：&#34;</span>)
+</span></span><span style="display:flex;"><span>print(df_pivot_table)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#输出</span>
+</span></span><span style="display:flex;"><span>科目     数学   语文
+</span></span><span style="display:flex;"><span>学生
+</span></span><span style="display:flex;"><span>小明  <span style="color:#ae81ff">86.5</span>   <span style="color:#ae81ff">90</span>
+</span></span><span style="display:flex;"><span>小红  <span style="color:#ae81ff">78.0</span>  NaN</span></span></code></pre></div><h3 id="melt将宽表转为长表">melt将宽表转为长表<a class="anchor" href="#melt%e5%b0%86%e5%ae%bd%e8%a1%a8%e8%bd%ac%e4%b8%ba%e9%95%bf%e8%a1%a8">#</a></h3>
+<p><strong>功能</strong>：将多列合并为两列（变量名 + 值），是 <code>pivot</code> 的逆操作。</p>
+<p>语法:<code>df.melt(id_vars='不变列', value_vars='要合并的列', var_name='变量名', value_name='值')</code></p>
+<p>案例：宽表转长表</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 宽表</span>
+</span></span><span style="display:flex;"><span>df_wide <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame({
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;学生&#39;</span>: [<span style="color:#e6db74">&#39;小明&#39;</span>, <span style="color:#e6db74">&#39;小红&#39;</span>],
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;数学&#39;</span>: [<span style="color:#ae81ff">85</span>, <span style="color:#ae81ff">78</span>],
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;语文&#39;</span>: [<span style="color:#ae81ff">90</span>, <span style="color:#ae81ff">92</span>]
+</span></span><span style="display:flex;"><span>})
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 转为长表</span>
+</span></span><span style="display:flex;"><span>df_melt <span style="color:#f92672">=</span> df_wide<span style="color:#f92672">.</span>melt(
+</span></span><span style="display:flex;"><span>    id_vars<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;学生&#39;</span>,
+</span></span><span style="display:flex;"><span>    value_vars<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;数学&#39;</span>, <span style="color:#e6db74">&#39;语文&#39;</span>],
+</span></span><span style="display:flex;"><span>    var_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;科目&#39;</span>,
+</span></span><span style="display:flex;"><span>    value_name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;成绩&#39;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;melt 转长表：&#34;</span>)
+</span></span><span style="display:flex;"><span>print(df_melt)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>输出<span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   学生  科目  成绩
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0</span>  小明  数学  <span style="color:#ae81ff">85</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span>  小红  数学  <span style="color:#ae81ff">78</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2</span>  小明  语文  <span style="color:#ae81ff">90</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">3</span>  小红  语文  <span style="color:#ae81ff">92</span></span></span></code></pre></div><h3 id="wide_to_long处理复杂列名的宽转长">wide_to_long处理复杂列名的宽转长<a class="anchor" href="#wide_to_long%e5%a4%84%e7%90%86%e5%a4%8d%e6%9d%82%e5%88%97%e5%90%8d%e7%9a%84%e5%ae%bd%e8%bd%ac%e9%95%bf">#</a></h3>
+<p><strong>功能</strong>：适用于列名有规律（如 <code>score_math</code>, <code>score_chinese</code>）的宽表。</p>
+<p>案例：带前缀的宽表</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df_complex <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame({
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;学生&#39;</span>: [<span style="color:#e6db74">&#39;小明&#39;</span>, <span style="color:#e6db74">&#39;小红&#39;</span>],
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;score_math&#39;</span>: [<span style="color:#ae81ff">85</span>, <span style="color:#ae81ff">78</span>],
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;score_chinese&#39;</span>: [<span style="color:#ae81ff">90</span>, <span style="color:#ae81ff">92</span>],
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;time_math&#39;</span>: [<span style="color:#e6db74">&#39;2023&#39;</span>, <span style="color:#e6db74">&#39;2023&#39;</span>],
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;time_chinese&#39;</span>: [<span style="color:#e6db74">&#39;2023&#39;</span>, <span style="color:#e6db74">&#39;2023&#39;</span>]
+</span></span><span style="display:flex;"><span>})
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 转换</span>
+</span></span><span style="display:flex;"><span>df_long <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>wide_to_long(
+</span></span><span style="display:flex;"><span>    df_complex,
+</span></span><span style="display:flex;"><span>    stubnames<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;score&#39;</span>, <span style="color:#e6db74">&#39;time&#39;</span>],
+</span></span><span style="display:flex;"><span>    i<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;学生&#39;</span>,
+</span></span><span style="display:flex;"><span>    j<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;科目&#39;</span>,
+</span></span><span style="display:flex;"><span>    sep<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;_&#39;</span>,
+</span></span><span style="display:flex;"><span>    suffix<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;\w+&#39;</span>
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;wide_to_long 结果：&#34;</span>)
+</span></span><span style="display:flex;"><span>print(df_long)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>输出<span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span>              score   time
+</span></span><span style="display:flex;"><span>学生  科目
+</span></span><span style="display:flex;"><span>小明  math       <span style="color:#ae81ff">85</span>   <span style="color:#ae81ff">2023</span>
+</span></span><span style="display:flex;"><span>小红  math       <span style="color:#ae81ff">78</span>   <span style="color:#ae81ff">2023</span>
+</span></span><span style="display:flex;"><span>小明  chinese    <span style="color:#ae81ff">90</span>   <span style="color:#ae81ff">2023</span>
+</span></span><span style="display:flex;"><span>小红  chinese    <span style="color:#ae81ff">92</span>   <span style="color:#ae81ff">2023</span></span></span></code></pre></div><h2 id="索引的变形">索引的变形<a class="anchor" href="#%e7%b4%a2%e5%bc%95%e7%9a%84%e5%8f%98%e5%bd%a2">#</a></h2>
+<h3 id="stack-与-unstack">stack 与 unstack<a class="anchor" href="#stack-%e4%b8%8e-unstack">#</a></h3>
+<p>stack()：列转为行索引（列 → 行）
+unstack()：行索引转为列（行 → 列）</p>
+<p>案例</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame(
+</span></span><span style="display:flex;"><span>    [[<span style="color:#ae81ff">85</span>, <span style="color:#ae81ff">90</span>], [<span style="color:#ae81ff">78</span>, <span style="color:#ae81ff">92</span>]],
+</span></span><span style="display:flex;"><span>    index<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;小明&#39;</span>, <span style="color:#e6db74">&#39;小红&#39;</span>],
+</span></span><span style="display:flex;"><span>    columns<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;数学&#39;</span>, <span style="color:#e6db74">&#39;语文&#39;</span>]
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;原表：&#34;</span>)
+</span></span><span style="display:flex;"><span>print(df)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># stack：列转为内层索引</span>
+</span></span><span style="display:flex;"><span>stacked <span style="color:#f92672">=</span> df<span style="color:#f92672">.</span>stack()
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">stack()：&#34;</span>)
+</span></span><span style="display:flex;"><span>print(stacked)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># unstack：内层索引转为列</span>
+</span></span><span style="display:flex;"><span>unstacked <span style="color:#f92672">=</span> stacked<span style="color:#f92672">.</span>unstack()
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">unstack()：&#34;</span>)
+</span></span><span style="display:flex;"><span>print(unstacked)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>输出<span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>原表<span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span>     数学  语文
+</span></span><span style="display:flex;"><span>小明  <span style="color:#ae81ff">85</span>  <span style="color:#ae81ff">90</span>
+</span></span><span style="display:flex;"><span>小红  <span style="color:#ae81ff">78</span>  <span style="color:#ae81ff">92</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>stack()<span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span>小明  数学    <span style="color:#ae81ff">85</span>
+</span></span><span style="display:flex;"><span>     语文    <span style="color:#ae81ff">90</span>
+</span></span><span style="display:flex;"><span>小红  数学    <span style="color:#ae81ff">78</span>
+</span></span><span style="display:flex;"><span>     语文    <span style="color:#ae81ff">92</span>
+</span></span><span style="display:flex;"><span>dtype: int64
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>unstack()<span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span>     数学  语文
+</span></span><span style="display:flex;"><span>小明  <span style="color:#ae81ff">85</span>  <span style="color:#ae81ff">90</span>
+</span></span><span style="display:flex;"><span>小红  <span style="color:#ae81ff">78</span>  <span style="color:#ae81ff">92</span></span></span></code></pre></div><h3 id="聚合与变形的关系">聚合与变形的关系<a class="anchor" href="#%e8%81%9a%e5%90%88%e4%b8%8e%e5%8f%98%e5%bd%a2%e7%9a%84%e5%85%b3%e7%b3%bb">#</a></h3>
+<ul>
+<li>pivot_table 本质是 先聚合，再变形</li>
+<li>groupby + unstack 可实现类似 pivot_table 的效果</li>
+</ul>
+<p>案例：等价操作</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame({
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;A&#39;</span>: [<span style="color:#e6db74">&#39;a&#39;</span>, <span style="color:#e6db74">&#39;a&#39;</span>, <span style="color:#e6db74">&#39;b&#39;</span>, <span style="color:#e6db74">&#39;b&#39;</span>],
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;B&#39;</span>: [<span style="color:#e6db74">&#39;x&#39;</span>, <span style="color:#e6db74">&#39;y&#39;</span>, <span style="color:#e6db74">&#39;x&#39;</span>, <span style="color:#e6db74">&#39;y&#39;</span>],
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#39;C&#39;</span>: [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>]
+</span></span><span style="display:flex;"><span>})
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 方法1：pivot_table</span>
+</span></span><span style="display:flex;"><span>pt <span style="color:#f92672">=</span> df<span style="color:#f92672">.</span>pivot_table(index<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;A&#39;</span>, columns<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;B&#39;</span>, values<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;C&#39;</span>, aggfunc<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;sum&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 方法2：groupby + unstack</span>
+</span></span><span style="display:flex;"><span>gb <span style="color:#f92672">=</span> df<span style="color:#f92672">.</span>groupby([<span style="color:#e6db74">&#39;A&#39;</span>, <span style="color:#e6db74">&#39;B&#39;</span>])[<span style="color:#e6db74">&#39;C&#39;</span>]<span style="color:#f92672">.</span>sum()<span style="color:#f92672">.</span>unstack()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;pivot_table:&#34;</span>)
+</span></span><span style="display:flex;"><span>print(pt)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">groupby + unstack:&#34;</span>)
+</span></span><span style="display:flex;"><span>print(gb)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>输出一致<span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>B  x  y
+</span></span><span style="display:flex;"><span>A
+</span></span><span style="display:flex;"><span>a  <span style="color:#ae81ff">1</span>  <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>b  <span style="color:#ae81ff">3</span>  <span style="color:#ae81ff">4</span></span></span></code></pre></div><h2 id="其他变形函数">其他变形函数<a class="anchor" href="#%e5%85%b6%e4%bb%96%e5%8f%98%e5%bd%a2%e5%87%bd%e6%95%b0">#</a></h2>
+<h3 id="crosstab交叉表频次统计">crosstab交叉表（频次统计）<a class="anchor" href="#crosstab%e4%ba%a4%e5%8f%89%e8%a1%a8%e9%a2%91%e6%ac%a1%e7%bb%9f%e8%ae%a1">#</a></h3>
+<p><strong>功能</strong>：计算两个或多个变量的频数表。</p>
+<p>案例：性别与科目交叉表</p>
+<pre tabindex="0"><code>df = pd.DataFrame({
+    &#39;性别&#39;: [&#39;男&#39;, &#39;女&#39;, &#39;男&#39;, &#39;女&#39;],
+    &#39;科目&#39;: [&#39;数学&#39;, &#39;数学&#39;, &#39;语文&#39;, &#39;语文&#39;]
+})
+
+ct = pd.crosstab(df[&#39;性别&#39;], df[&#39;科目&#39;])
+print(&#34;crosstab 交叉表：&#34;)
+print(ct)</code></pre><p>输出：</p>
+<pre tabindex="0"><code>科目  数学  语文
+性别
+女     1    1
+男     1    1</code></pre><h3 id="explode将列表元素展开为多行">explode将列表元素展开为多行<a class="anchor" href="#explode%e5%b0%86%e5%88%97%e8%a1%a8%e5%85%83%e7%b4%a0%e5%b1%95%e5%bc%80%e4%b8%ba%e5%a4%9a%e8%a1%8c">#</a></h3>
+<p><strong>功能</strong>：将一列中的列表/元组展开，每元素占一行。</p>
+<p>案例：学生兴趣班</p>
+<pre tabindex="0"><code>df = pd.DataFrame({
+    &#39;学生&#39;: [&#39;小明&#39;, &#39;小红&#39;],
+    &#39;兴趣&#39;: [[&#39;篮球&#39;, &#39;音乐&#39;], [&#39;绘画&#39;]]
+})
+
+df_exploded = df.explode(&#39;兴趣&#39;)
+print(&#34;explode 展开：&#34;)
+print(df_exploded)
+
+
+输出：
+   学生  兴趣
+0  小明  篮球
+0  小明  音乐
+1  小红  绘画</code></pre><h3 id="get_dummies独热编码one-hot-encoding">get_dummies独热编码（One-Hot Encoding）<a class="anchor" href="#get_dummies%e7%8b%ac%e7%83%ad%e7%bc%96%e7%a0%81one-hot-encoding">#</a></h3>
+<p><strong>功能</strong>：将分类变量转为多列 0/1。</p>
+<p>案例：科目独热编码</p>
+<pre tabindex="0"><code>df = pd.DataFrame({&#39;科目&#39;: [&#39;数学&#39;, &#39;语文&#39;, &#39;数学&#39;]})
+dummies = pd.get_dummies(df[&#39;科目&#39;], prefix=&#39;科目&#39;)
+print(&#34;get_dummies 独热编码：&#34;)
+print(dummies)
+
+
+输出：
+
+
+   科目_数学  科目_语文
+0      1      0
+1      0      1
+2      1      0</code></pre><h2 id="总结何时使用哪种变形">总结：何时使用哪种变形？<a class="anchor" href="#%e6%80%bb%e7%bb%93%e4%bd%95%e6%97%b6%e4%bd%bf%e7%94%a8%e5%93%aa%e7%a7%8d%e5%8f%98%e5%bd%a2">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th>场景</th>
+          <th>推荐函数</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>长表 → 宽表（无重复）</td>
+          <td><code>pivot</code></td>
+      </tr>
+      <tr>
+          <td>长表 → 宽表（有重复，需聚合）</td>
+          <td><code>pivot_table</code></td>
+      </tr>
+      <tr>
+          <td>宽表 → 长表</td>
+          <td><code>melt</code> / <code>wide_to_long</code></td>
+      </tr>
+      <tr>
+          <td>列 ↔ 行索引转换</td>
+          <td><code>stack</code> / <code>unstack</code></td>
+      </tr>
+      <tr>
+          <td>频次统计表</td>
+          <td><code>crosstab</code></td>
+      </tr>
+      <tr>
+          <td>列表展开为行</td>
+          <td><code>explode</code></td>
+      </tr>
+      <tr>
+          <td>分类变量编码</td>
+          <td><code>get_dummies</code></td>
+      </tr>
+  </tbody>
+</table>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>Pandas分组</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="flex align-center">
+        <span>PySide基础</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#长宽表的变形">长宽表的变形</a>
+      <ul>
+        <li><a href="#pivot将长表转为宽表单个聚合函数">pivot将长表转为宽表（单个聚合函数）</a></li>
+        <li><a href="#pivot_table支持聚合的宽表转换pivot-的增强版">pivot_table支持聚合的宽表转换（pivot 的增强版）</a></li>
+        <li><a href="#melt将宽表转为长表">melt将宽表转为长表</a></li>
+        <li><a href="#wide_to_long处理复杂列名的宽转长">wide_to_long处理复杂列名的宽转长</a></li>
+      </ul>
+    </li>
+    <li><a href="#索引的变形">索引的变形</a>
+      <ul>
+        <li><a href="#stack-与-unstack">stack 与 unstack</a></li>
+        <li><a href="#聚合与变形的关系">聚合与变形的关系</a></li>
+      </ul>
+    </li>
+    <li><a href="#其他变形函数">其他变形函数</a>
+      <ul>
+        <li><a href="#crosstab交叉表频次统计">crosstab交叉表（频次统计）</a></li>
+        <li><a href="#explode将列表元素展开为多行">explode将列表元素展开为多行</a></li>
+        <li><a href="#get_dummies独热编码one-hot-encoding">get_dummies独热编码（One-Hot Encoding）</a></li>
+      </ul>
+    </li>
+    <li><a href="#总结何时使用哪种变形">总结：何时使用哪种变形？</a></li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

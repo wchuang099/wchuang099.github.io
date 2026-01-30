@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="一个简单的使用# from datetime import datetime, timedelta, time import schedule import time def job(): print(&#34;I&#39;m working...&#34;) def greet(name): print(&#39;Hello&#39;, name) ## 随机时间执行 schedule.every(5).to(10).seconds.do(job) ## 带参数执行 schedule.every(2).seconds.do(greet, name=&#39;Alice&#39;) schedule.every(4).seconds.do(greet, name=&#39;Bob&#39;) ## 每 3 second/minute/hour/day/week 执行一次 schedule.every(3).seconds.do(job) schedule.every(3).minutes.do(job) schedule.every(3).hours.do(job) schedule.every(3).days.do(job) schedule.every(3).weeks.do(job) # 每小时执行，直到指定时间停止 schedule.every().hour.until(&#34;2030-01-01 18:33&#34;).do(job) # 每小时执行，直到8小时后停止 schedule.every(2).hours.until(timedelta(hours=8)).do(job) # 每分钟指定秒执行一次 schedule.every().minute.at(&#34;:23&#34;).do(job) # 每小时指定分执行一次 schedule.every().hour.at(&#34;:42&#34;).do(job) # 每小时指定分/秒执行一次 schedule.every(5).hours.at(&#34;20:30&#34;).do(job) # 每天指定时间执行一次 schedule.every().day.at(&#34;10:30&#34;).do(job) schedule.every().day.at(&#34;10:30:42&#34;).do(job) schedule.every().day.at(&#34;12:42&#34;, &#34;Europe/Amsterdam&#34;).do(job) # 每周指定天执行一次 schedule.every().monday.do(job) schedule.every().wednesday.at(&#34;13:15&#34;).do(job) schedule.every().minute.at(&#34;:17&#34;).do(job) # 立刻把全部任务跑一遍 schedule.run_all() # 取消任务 schedule.cancel_job(job) # 获取全部任务 all_jobs = schedule.get_jobs() # 取消全部任务 schedule.clear() while True: schedule.run_pending() time.sleep(1)使用装饰器# from schedule import every, repeat, run_pending import time @repeat(every(10).minutes) def job(): print(&#34;I am a scheduled job&#34;) while True: run_pending() time.sleep(1)多进程定时任务# import threading import time import schedule def job(): print(&#34;I&#39;m running on thread %s&#34; % threading.current_thread()) def run_threaded(job_func): job_thread = threading.Thread(target=job_func) job_thread.start() schedule.every(10).seconds.do(run_threaded, job) schedule.every(10).seconds.do(run_threaded, job) schedule.every(10).seconds.do(run_threaded, job) schedule.every(10).seconds.do(run_threaded, job) schedule.every(10).seconds.do(run_threaded, job) while 1: schedule.run_pending() time.sleep(1)">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="定时任务-schedule">
+  <meta property="og:description" content="一个简单的使用# from datetime import datetime, timedelta, time import schedule import time def job(): print(&#34;I&#39;m working...&#34;) def greet(name): print(&#39;Hello&#39;, name) ## 随机时间执行 schedule.every(5).to(10).seconds.do(job) ## 带参数执行 schedule.every(2).seconds.do(greet, name=&#39;Alice&#39;) schedule.every(4).seconds.do(greet, name=&#39;Bob&#39;) ## 每 3 second/minute/hour/day/week 执行一次 schedule.every(3).seconds.do(job) schedule.every(3).minutes.do(job) schedule.every(3).hours.do(job) schedule.every(3).days.do(job) schedule.every(3).weeks.do(job) # 每小时执行，直到指定时间停止 schedule.every().hour.until(&#34;2030-01-01 18:33&#34;).do(job) # 每小时执行，直到8小时后停止 schedule.every(2).hours.until(timedelta(hours=8)).do(job) # 每分钟指定秒执行一次 schedule.every().minute.at(&#34;:23&#34;).do(job) # 每小时指定分执行一次 schedule.every().hour.at(&#34;:42&#34;).do(job) # 每小时指定分/秒执行一次 schedule.every(5).hours.at(&#34;20:30&#34;).do(job) # 每天指定时间执行一次 schedule.every().day.at(&#34;10:30&#34;).do(job) schedule.every().day.at(&#34;10:30:42&#34;).do(job) schedule.every().day.at(&#34;12:42&#34;, &#34;Europe/Amsterdam&#34;).do(job) # 每周指定天执行一次 schedule.every().monday.do(job) schedule.every().wednesday.at(&#34;13:15&#34;).do(job) schedule.every().minute.at(&#34;:17&#34;).do(job) # 立刻把全部任务跑一遍 schedule.run_all() # 取消任务 schedule.cancel_job(job) # 获取全部任务 all_jobs = schedule.get_jobs() # 取消全部任务 schedule.clear() while True: schedule.run_pending() time.sleep(1)使用装饰器# from schedule import every, repeat, run_pending import time @repeat(every(10).minutes) def job(): print(&#34;I am a scheduled job&#34;) while True: run_pending() time.sleep(1)多进程定时任务# import threading import time import schedule def job(): print(&#34;I&#39;m running on thread %s&#34; % threading.current_thread()) def run_threaded(job_func): job_thread = threading.Thread(target=job_func) job_thread.start() schedule.every(10).seconds.do(run_threaded, job) schedule.every(10).seconds.do(run_threaded, job) schedule.every(10).seconds.do(run_threaded, job) schedule.every(10).seconds.do(run_threaded, job) schedule.every(10).seconds.do(run_threaded, job) while 1: schedule.run_pending() time.sleep(1)">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="python">
+
+
+  <meta itemprop="name" content="定时任务-schedule">
+  <meta itemprop="description" content="一个简单的使用# from datetime import datetime, timedelta, time import schedule import time def job(): print(&#34;I&#39;m working...&#34;) def greet(name): print(&#39;Hello&#39;, name) ## 随机时间执行 schedule.every(5).to(10).seconds.do(job) ## 带参数执行 schedule.every(2).seconds.do(greet, name=&#39;Alice&#39;) schedule.every(4).seconds.do(greet, name=&#39;Bob&#39;) ## 每 3 second/minute/hour/day/week 执行一次 schedule.every(3).seconds.do(job) schedule.every(3).minutes.do(job) schedule.every(3).hours.do(job) schedule.every(3).days.do(job) schedule.every(3).weeks.do(job) # 每小时执行，直到指定时间停止 schedule.every().hour.until(&#34;2030-01-01 18:33&#34;).do(job) # 每小时执行，直到8小时后停止 schedule.every(2).hours.until(timedelta(hours=8)).do(job) # 每分钟指定秒执行一次 schedule.every().minute.at(&#34;:23&#34;).do(job) # 每小时指定分执行一次 schedule.every().hour.at(&#34;:42&#34;).do(job) # 每小时指定分/秒执行一次 schedule.every(5).hours.at(&#34;20:30&#34;).do(job) # 每天指定时间执行一次 schedule.every().day.at(&#34;10:30&#34;).do(job) schedule.every().day.at(&#34;10:30:42&#34;).do(job) schedule.every().day.at(&#34;12:42&#34;, &#34;Europe/Amsterdam&#34;).do(job) # 每周指定天执行一次 schedule.every().monday.do(job) schedule.every().wednesday.at(&#34;13:15&#34;).do(job) schedule.every().minute.at(&#34;:17&#34;).do(job) # 立刻把全部任务跑一遍 schedule.run_all() # 取消任务 schedule.cancel_job(job) # 获取全部任务 all_jobs = schedule.get_jobs() # 取消全部任务 schedule.clear() while True: schedule.run_pending() time.sleep(1)使用装饰器# from schedule import every, repeat, run_pending import time @repeat(every(10).minutes) def job(): print(&#34;I am a scheduled job&#34;) while True: run_pending() time.sleep(1)多进程定时任务# import threading import time import schedule def job(): print(&#34;I&#39;m running on thread %s&#34; % threading.current_thread()) def run_threaded(job_func): job_thread = threading.Thread(target=job_func) job_thread.start() schedule.every(10).seconds.do(run_threaded, job) schedule.every(10).seconds.do(run_threaded, job) schedule.every(10).seconds.do(run_threaded, job) schedule.every(10).seconds.do(run_threaded, job) schedule.every(10).seconds.do(run_threaded, job) while 1: schedule.run_pending() time.sleep(1)">
+  <meta itemprop="wordCount" content="138">
+
+<title>定时任务-schedule | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.9d4fa0048b4786d5be096d98c61a47e02072a87b9dbf0bb86dcd8edf179c4e43.js" integrity="sha256-nU&#43;gBItHhtW&#43;CW2YxhpH4CByqHudvwu4bc2O3xecTkM=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-python">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-204365caa941390a182aeb870c8b397d" class="toggle" checked />
+    <label for="section-204365caa941390a182aeb870c8b397d" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f6929f8819239c236e3ff6d9318a645b" class="toggle"  />
+    <label for="section-f6929f8819239c236e3ff6d9318a645b" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-797baf87757652be835bcce5680ea0d4" class="toggle" checked />
+    <label for="section-797baf87757652be835bcce5680ea0d4" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="active">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0fa9f382cfc268805da9afbea1ac822b" class="toggle"  />
+    <label for="section-0fa9f382cfc268805da9afbea1ac822b" class="flex">
+      <a role="button" class="">
+        Python数据处理</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-938c3edbaa8e3dd01e8b93d6f9361182" class="toggle"  />
+    <label for="section-938c3edbaa8e3dd01e8b93d6f9361182" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-56b62cfe8bd1e3138f346455c7c08d01" class="toggle"  />
+    <label for="section-56b62cfe8bd1e3138f346455c7c08d01" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e12d76c83fadc5077063bd8a06e4974c" class="toggle"  />
+    <label for="section-e12d76c83fadc5077063bd8a06e4974c" class="flex">
+      <a role="button" class="">
+        Linux</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-docker/" class="">
+      安装 Docker 教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-mysql/" class="">
+      安装 mysql 教程</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-23e22f2cefc5200495b10b220f00dc9b" class="toggle"  />
+    <label for="section-23e22f2cefc5200495b10b220f00dc9b" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5f3519d07421b3022c482beb7e53757d" class="toggle"  />
+    <label for="section-5f3519d07421b3022c482beb7e53757d" class="flex">
+      <a role="button" class="">
+        Other</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强平台装机流程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-00896273d6e22b6628839c56863edc57" class="toggle"  />
+    <label for="section-00896273d6e22b6628839c56863edc57" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-212fbf26dee144498e07df6cb6c18024" class="toggle"  />
+    <label for="section-212fbf26dee144498e07df6cb6c18024" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB/" class="">
+      处理鼠标漂移</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5b47f8600929668d6470260320a7fd81" class="toggle"  />
+    <label for="section-5b47f8600929668d6470260320a7fd81" class="flex">
+      <a href="/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+        幽灵键鼠</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a>
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E6%B8%B8%E6%88%8F%E8%84%9A%E6%9C%AC%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%9A%94%E7%A6%BB%E6%96%B9%E6%A1%88/" class="">
+      脚本隔离方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c5a43b1f0709f0338f2ab4a52452792c" class="toggle"  />
+    <label for="section-c5a43b1f0709f0338f2ab4a52452792c" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>定时任务-schedule</h3>
+
+  <label for="toc-control">
+    
+  </label>
+</div>
+
+
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h1 id="一个简单的使用">一个简单的使用<a class="anchor" href="#%e4%b8%80%e4%b8%aa%e7%ae%80%e5%8d%95%e7%9a%84%e4%bd%bf%e7%94%a8">#</a></h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> datetime <span style="color:#f92672">import</span> datetime, timedelta, time
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> schedule
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">job</span>():
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;I&#39;m working...&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">greet</span>(name):
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;Hello&#39;</span>, name)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 随机时间执行</span>
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every(<span style="color:#ae81ff">5</span>)<span style="color:#f92672">.</span>to(<span style="color:#ae81ff">10</span>)<span style="color:#f92672">.</span>seconds<span style="color:#f92672">.</span>do(job)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 带参数执行</span>
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every(<span style="color:#ae81ff">2</span>)<span style="color:#f92672">.</span>seconds<span style="color:#f92672">.</span>do(greet, name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Alice&#39;</span>)
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every(<span style="color:#ae81ff">4</span>)<span style="color:#f92672">.</span>seconds<span style="color:#f92672">.</span>do(greet, name<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;Bob&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 每 3 second/minute/hour/day/week 执行一次</span>
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every(<span style="color:#ae81ff">3</span>)<span style="color:#f92672">.</span>seconds<span style="color:#f92672">.</span>do(job)
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every(<span style="color:#ae81ff">3</span>)<span style="color:#f92672">.</span>minutes<span style="color:#f92672">.</span>do(job)
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every(<span style="color:#ae81ff">3</span>)<span style="color:#f92672">.</span>hours<span style="color:#f92672">.</span>do(job)
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every(<span style="color:#ae81ff">3</span>)<span style="color:#f92672">.</span>days<span style="color:#f92672">.</span>do(job)
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every(<span style="color:#ae81ff">3</span>)<span style="color:#f92672">.</span>weeks<span style="color:#f92672">.</span>do(job)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 每小时执行，直到指定时间停止</span>
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every()<span style="color:#f92672">.</span>hour<span style="color:#f92672">.</span>until(<span style="color:#e6db74">&#34;2030-01-01 18:33&#34;</span>)<span style="color:#f92672">.</span>do(job)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 每小时执行，直到8小时后停止</span>
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every(<span style="color:#ae81ff">2</span>)<span style="color:#f92672">.</span>hours<span style="color:#f92672">.</span>until(timedelta(hours<span style="color:#f92672">=</span><span style="color:#ae81ff">8</span>))<span style="color:#f92672">.</span>do(job)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 每分钟指定秒执行一次</span>
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every()<span style="color:#f92672">.</span>minute<span style="color:#f92672">.</span>at(<span style="color:#e6db74">&#34;:23&#34;</span>)<span style="color:#f92672">.</span>do(job)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 每小时指定分执行一次</span>
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every()<span style="color:#f92672">.</span>hour<span style="color:#f92672">.</span>at(<span style="color:#e6db74">&#34;:42&#34;</span>)<span style="color:#f92672">.</span>do(job)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 每小时指定分/秒执行一次</span>
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every(<span style="color:#ae81ff">5</span>)<span style="color:#f92672">.</span>hours<span style="color:#f92672">.</span>at(<span style="color:#e6db74">&#34;20:30&#34;</span>)<span style="color:#f92672">.</span>do(job)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 每天指定时间执行一次</span>
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every()<span style="color:#f92672">.</span>day<span style="color:#f92672">.</span>at(<span style="color:#e6db74">&#34;10:30&#34;</span>)<span style="color:#f92672">.</span>do(job)
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every()<span style="color:#f92672">.</span>day<span style="color:#f92672">.</span>at(<span style="color:#e6db74">&#34;10:30:42&#34;</span>)<span style="color:#f92672">.</span>do(job)
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every()<span style="color:#f92672">.</span>day<span style="color:#f92672">.</span>at(<span style="color:#e6db74">&#34;12:42&#34;</span>, <span style="color:#e6db74">&#34;Europe/Amsterdam&#34;</span>)<span style="color:#f92672">.</span>do(job)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 每周指定天执行一次</span>
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every()<span style="color:#f92672">.</span>monday<span style="color:#f92672">.</span>do(job)
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every()<span style="color:#f92672">.</span>wednesday<span style="color:#f92672">.</span>at(<span style="color:#e6db74">&#34;13:15&#34;</span>)<span style="color:#f92672">.</span>do(job)
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every()<span style="color:#f92672">.</span>minute<span style="color:#f92672">.</span>at(<span style="color:#e6db74">&#34;:17&#34;</span>)<span style="color:#f92672">.</span>do(job)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 立刻把全部任务跑一遍</span>
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>run_all()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 取消任务</span>
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>cancel_job(job)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 获取全部任务</span>
+</span></span><span style="display:flex;"><span>all_jobs <span style="color:#f92672">=</span> schedule<span style="color:#f92672">.</span>get_jobs()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 取消全部任务</span>
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>clear()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>    schedule<span style="color:#f92672">.</span>run_pending()
+</span></span><span style="display:flex;"><span>    time<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">1</span>)</span></span></code></pre></div><h1 id="使用装饰器">使用装饰器<a class="anchor" href="#%e4%bd%bf%e7%94%a8%e8%a3%85%e9%a5%b0%e5%99%a8">#</a></h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> schedule <span style="color:#f92672">import</span> every, repeat, run_pending
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@repeat</span>(every(<span style="color:#ae81ff">10</span>)<span style="color:#f92672">.</span>minutes)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">job</span>():
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;I am a scheduled job&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>    run_pending()
+</span></span><span style="display:flex;"><span>    time<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">1</span>)</span></span></code></pre></div><h1 id="多进程定时任务">多进程定时任务<a class="anchor" href="#%e5%a4%9a%e8%bf%9b%e7%a8%8b%e5%ae%9a%e6%97%b6%e4%bb%bb%e5%8a%a1">#</a></h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> threading
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> schedule
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">job</span>():
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#34;I&#39;m running on thread </span><span style="color:#e6db74">%s</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">%</span> threading<span style="color:#f92672">.</span>current_thread())
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">run_threaded</span>(job_func):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    job_thread <span style="color:#f92672">=</span> threading<span style="color:#f92672">.</span>Thread(target<span style="color:#f92672">=</span>job_func)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    job_thread<span style="color:#f92672">.</span>start()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every(<span style="color:#ae81ff">10</span>)<span style="color:#f92672">.</span>seconds<span style="color:#f92672">.</span>do(run_threaded, job)
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every(<span style="color:#ae81ff">10</span>)<span style="color:#f92672">.</span>seconds<span style="color:#f92672">.</span>do(run_threaded, job)
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every(<span style="color:#ae81ff">10</span>)<span style="color:#f92672">.</span>seconds<span style="color:#f92672">.</span>do(run_threaded, job)
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every(<span style="color:#ae81ff">10</span>)<span style="color:#f92672">.</span>seconds<span style="color:#f92672">.</span>do(run_threaded, job)
+</span></span><span style="display:flex;"><span>schedule<span style="color:#f92672">.</span>every(<span style="color:#ae81ff">10</span>)<span style="color:#f92672">.</span>seconds<span style="color:#f92672">.</span>do(run_threaded, job)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>    schedule<span style="color:#f92672">.</span>run_pending()  
+</span></span><span style="display:flex;"><span>    time<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">1</span>)</span></span></code></pre></div></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>WatchDog</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="flex align-center">
+        <span>配置文件</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

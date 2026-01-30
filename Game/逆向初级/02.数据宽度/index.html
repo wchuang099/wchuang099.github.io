@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="什么是数据宽度# 计算机中存储的数据最终都是二进制存储的，计算机只认识1和0，但是不是一下子全部存进去的，而是分成很多的容器，每个容器都有最大容量，比如有的可以装4个二进制数，有的可以装8个二进制数。所以在计算机中，由于受硬件的制约，数据都是有长度限制的（我们称为数据宽度）
+如果要存储的数超过了容器的数据宽度计算机怎么处理呢？直接将高位多出来的位丢弃！
+比如一个容器的数据宽度为4位，那么如果我现在存一个数16，化为二进制为10000，由于只能存4位，那么进位的多出来的位会被丢弃，最终读到的是0000，即0
+存储过程
+容器只有 4 位，意味着它本质就是一个 4 位寄存器/存储单元。 当你把 16（二进制 10000）写进去时，计算机会 只保留低 4 位： 10000 （5 位原始数据） ↓ 截断高位 0000 （只剩 4 位） 结果：读出来是 0 再看几个例子
+存 8（二进制 1000） → 1000（还能放得下） → 结果 = 8 存 15（二进制 1111） → 1111 → 结果 = 15 存 16（二进制 10000） → 截断 → 0000 → 结果 = 0 存 17（二进制 10001） → 截断 → 0001 → 结果 = 1 存 18（二进制 10010） → 截断 → 0010 → 结果 = 2 无符号数、有符号数# 以前我们只是记住：如果一个存储单元只有 4 位，
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="02.数据宽度">
+  <meta property="og:description" content="什么是数据宽度# 计算机中存储的数据最终都是二进制存储的，计算机只认识1和0，但是不是一下子全部存进去的，而是分成很多的容器，每个容器都有最大容量，比如有的可以装4个二进制数，有的可以装8个二进制数。所以在计算机中，由于受硬件的制约，数据都是有长度限制的（我们称为数据宽度）
+如果要存储的数超过了容器的数据宽度计算机怎么处理呢？直接将高位多出来的位丢弃！
+比如一个容器的数据宽度为4位，那么如果我现在存一个数16，化为二进制为10000，由于只能存4位，那么进位的多出来的位会被丢弃，最终读到的是0000，即0
+存储过程
+容器只有 4 位，意味着它本质就是一个 4 位寄存器/存储单元。 当你把 16（二进制 10000）写进去时，计算机会 只保留低 4 位： 10000 （5 位原始数据） ↓ 截断高位 0000 （只剩 4 位） 结果：读出来是 0 再看几个例子
+存 8（二进制 1000） → 1000（还能放得下） → 结果 = 8 存 15（二进制 1111） → 1111 → 结果 = 15 存 16（二进制 10000） → 截断 → 0000 → 结果 = 0 存 17（二进制 10001） → 截断 → 0001 → 结果 = 1 存 18（二进制 10010） → 截断 → 0010 → 结果 = 2 无符号数、有符号数# 以前我们只是记住：如果一个存储单元只有 4 位，">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="game">
+
+
+  <meta itemprop="name" content="02.数据宽度">
+  <meta itemprop="description" content="什么是数据宽度# 计算机中存储的数据最终都是二进制存储的，计算机只认识1和0，但是不是一下子全部存进去的，而是分成很多的容器，每个容器都有最大容量，比如有的可以装4个二进制数，有的可以装8个二进制数。所以在计算机中，由于受硬件的制约，数据都是有长度限制的（我们称为数据宽度）
+如果要存储的数超过了容器的数据宽度计算机怎么处理呢？直接将高位多出来的位丢弃！
+比如一个容器的数据宽度为4位，那么如果我现在存一个数16，化为二进制为10000，由于只能存4位，那么进位的多出来的位会被丢弃，最终读到的是0000，即0
+存储过程
+容器只有 4 位，意味着它本质就是一个 4 位寄存器/存储单元。 当你把 16（二进制 10000）写进去时，计算机会 只保留低 4 位： 10000 （5 位原始数据） ↓ 截断高位 0000 （只剩 4 位） 结果：读出来是 0 再看几个例子
+存 8（二进制 1000） → 1000（还能放得下） → 结果 = 8 存 15（二进制 1111） → 1111 → 结果 = 15 存 16（二进制 10000） → 截断 → 0000 → 结果 = 0 存 17（二进制 10001） → 截断 → 0001 → 结果 = 1 存 18（二进制 10010） → 截断 → 0010 → 结果 = 2 无符号数、有符号数# 以前我们只是记住：如果一个存储单元只有 4 位，">
+  <meta itemprop="wordCount" content="635">
+
+<title>02.数据宽度 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.9d4fa0048b4786d5be096d98c61a47e02072a87b9dbf0bb86dcd8edf179c4e43.js" integrity="sha256-nU&#43;gBItHhtW&#43;CW2YxhpH4CByqHudvwu4bc2O3xecTkM=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-game">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-204365caa941390a182aeb870c8b397d" class="toggle"  />
+    <label for="section-204365caa941390a182aeb870c8b397d" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f6929f8819239c236e3ff6d9318a645b" class="toggle"  />
+    <label for="section-f6929f8819239c236e3ff6d9318a645b" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-797baf87757652be835bcce5680ea0d4" class="toggle"  />
+    <label for="section-797baf87757652be835bcce5680ea0d4" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0fa9f382cfc268805da9afbea1ac822b" class="toggle"  />
+    <label for="section-0fa9f382cfc268805da9afbea1ac822b" class="flex">
+      <a role="button" class="">
+        Python数据处理</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-938c3edbaa8e3dd01e8b93d6f9361182" class="toggle"  />
+    <label for="section-938c3edbaa8e3dd01e8b93d6f9361182" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-56b62cfe8bd1e3138f346455c7c08d01" class="toggle"  />
+    <label for="section-56b62cfe8bd1e3138f346455c7c08d01" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e12d76c83fadc5077063bd8a06e4974c" class="toggle"  />
+    <label for="section-e12d76c83fadc5077063bd8a06e4974c" class="flex">
+      <a role="button" class="">
+        Linux</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-docker/" class="">
+      安装 Docker 教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-mysql/" class="">
+      安装 mysql 教程</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-23e22f2cefc5200495b10b220f00dc9b" class="toggle"  />
+    <label for="section-23e22f2cefc5200495b10b220f00dc9b" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5f3519d07421b3022c482beb7e53757d" class="toggle"  />
+    <label for="section-5f3519d07421b3022c482beb7e53757d" class="flex">
+      <a role="button" class="">
+        Other</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强平台装机流程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-00896273d6e22b6628839c56863edc57" class="toggle" checked />
+    <label for="section-00896273d6e22b6628839c56863edc57" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-212fbf26dee144498e07df6cb6c18024" class="toggle"  />
+    <label for="section-212fbf26dee144498e07df6cb6c18024" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB/" class="">
+      处理鼠标漂移</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5b47f8600929668d6470260320a7fd81" class="toggle"  />
+    <label for="section-5b47f8600929668d6470260320a7fd81" class="flex">
+      <a href="/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+        幽灵键鼠</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a>
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E6%B8%B8%E6%88%8F%E8%84%9A%E6%9C%AC%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%9A%94%E7%A6%BB%E6%96%B9%E6%A1%88/" class="">
+      脚本隔离方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c5a43b1f0709f0338f2ab4a52452792c" class="toggle" checked />
+    <label for="section-c5a43b1f0709f0338f2ab4a52452792c" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="active">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>02.数据宽度</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#4位宽度理论示例">4位宽度(理论示例)</a></li>
+    <li><a href="#8位宽度">8位宽度</a></li>
+    <li><a href="#16位宽度">16位宽度</a></li>
+    <li><a href="#32位宽度">32位宽度</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#为什么需要补码">为什么需要补码</a></li>
+    <li><a href="#补码的基本概念">补码的基本概念</a></li>
+    <li><a href="#补码规则与原码转换">补码规则与原码转换</a>
+      <ul>
+        <li><a href="#负数原码--补码">负数：原码 → 补码</a></li>
+        <li><a href="#负数补码--原码">负数：补码 → 原码</a></li>
+        <li><a href="#总结转换口诀">总结：转换口诀</a></li>
+      </ul>
+    </li>
+    <li><a href="#补码加减法案例8位">补码加减法案例（8位）</a>
+      <ul>
+        <li><a href="#加法">加法</a></li>
+        <li><a href="#减法转加法">减法（转加法）</a></li>
+        <li><a href="#特殊">特殊</a></li>
+        <li><a href="#补码计算结果解读流程图">补码计算结果解读流程图</a></li>
+      </ul>
+    </li>
+    <li><a href="#数据单位">数据单位</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h1 id="什么是数据宽度">什么是数据宽度<a class="anchor" href="#%e4%bb%80%e4%b9%88%e6%98%af%e6%95%b0%e6%8d%ae%e5%ae%bd%e5%ba%a6">#</a></h1>
+<p>计算机中存储的数据最终都是二进制存储的，计算机只认识1和0，但是不是一下子全部存进去的，而是分成很多的容器，每个容器都有最大容量，比如有的可以装4个二进制数，有的可以装8个二进制数。所以在计算机中，由于受硬件的制约，数据都是有长度限制的（我们称为数据宽度）</p>
+<p>如果要存储的数超过了容器的数据宽度计算机怎么处理呢？直接将高位多出来的位丢弃！</p>
+<blockquote class='book-hint '>
+<p>比如一个容器的数据宽度为4位，那么如果我现在存一个数16，化为二进制为10000，由于只能存4位，那么进位的多出来的位会被丢弃，最终读到的是0000，即0</p>
+<p><strong>存储过程</strong></p>
+<ul>
+<li>容器只有 <strong>4 位</strong>，意味着它本质就是一个 <strong>4 位寄存器/存储单元</strong>。</li>
+<li>当你把 <code>16</code>（二进制 <code>10000</code>）写进去时，计算机会 <strong>只保留低 4 位</strong>：</li>
+<li>10000   （5 位原始数据）</li>
+<li>↓ 截断高位</li>
+<li>0000    （只剩 4 位）</li>
+<li>结果：读出来是 <strong>0</strong></li>
+</ul>
+<p><strong>再看几个例子</strong></p>
+<ul>
+<li>存  8（二进制 <code>1000</code>） → <code>1000</code>（还能放得下） → 结果 = 8</li>
+<li>存 15（二进制 <code>1111</code>） → <code>1111</code> → 结果 = 15</li>
+<li>存 16（二进制 <code>10000</code>） → 截断 → <code>0000</code> → 结果 = 0</li>
+<li>存 17（二进制 <code>10001</code>） → 截断 → <code>0001</code> → 结果 = 1</li>
+<li>存 18（二进制 <code>10010</code>） → 截断 → <code>0010</code> → 结果 = 2</li>
+</ul></blockquote><h1 id="无符号数有符号数">无符号数、有符号数<a class="anchor" href="#%e6%97%a0%e7%ac%a6%e5%8f%b7%e6%95%b0%e6%9c%89%e7%ac%a6%e5%8f%b7%e6%95%b0">#</a></h1>
+<p>以前我们只是记住：如果一个存储单元只有 <strong>4 位</strong>，</p>
+<ul>
+<li><strong>无符号数</strong>：4 位全部用来表示数值，可表示 <code>0000</code> 到 <code>1111</code>，总共有 16 种可能。</li>
+<li><strong>有符号数</strong>：最高位作为符号位，<code>0000</code> 到 <code>0111</code>（最高位 0）表示正数，<code>1000</code> 到 <code>1111</code>（最高位 1）表示负数。</li>
+</ul>
+<p>但实际上，<strong>计算机并不“认识”正负号</strong>。原码、反码、补码只是人类为了表示有符号数和方便运算而制定的规则，硬件只处理 0 和 1，并不会理解这些数的正负意义。</p>
+<h2 id="4位宽度理论示例">4位宽度(理论示例)<a class="anchor" href="#4%e4%bd%8d%e5%ae%bd%e5%ba%a6%e7%90%86%e8%ae%ba%e7%a4%ba%e4%be%8b">#</a></h2>
+<blockquote class='book-hint '>
+<p>注意：1 位是理论上的最小存储单位，但在现代 CPU 和汇编实践中，最小的可操作单位通常是 8 位（1 字节），所以计算机中没有4位容器，我们只是为了引入方便理解。</p></blockquote><p>假设计算机只能存 <strong>4 位二进制数</strong></p>
+<ul>
+<li>一共可以表示2^4=16 种数</li>
+<li>对应十六进制：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>二进制：0000 <span style="color:#ae81ff">0001</span> <span style="color:#ae81ff">0010</span> <span style="color:#ae81ff">0011</span> <span style="color:#ae81ff">0100</span> <span style="color:#ae81ff">0101</span> <span style="color:#ae81ff">0110</span> <span style="color:#ae81ff">0111</span> <span style="color:#ae81ff">1000</span> <span style="color:#ae81ff">1001</span> <span style="color:#ae81ff">1010</span> <span style="color:#ae81ff">1011</span> <span style="color:#ae81ff">1100</span> <span style="color:#ae81ff">1101</span> <span style="color:#ae81ff">1110</span> <span style="color:#ae81ff">1111</span>
+</span></span><span style="display:flex;"><span>16进制： <span style="color:#ae81ff">0</span>    <span style="color:#ae81ff">1</span>    <span style="color:#ae81ff">2</span>    <span style="color:#ae81ff">3</span>    <span style="color:#ae81ff">4</span>    <span style="color:#ae81ff">5</span>    <span style="color:#ae81ff">6</span>    <span style="color:#ae81ff">7</span>    <span style="color:#ae81ff">8</span>    <span style="color:#ae81ff">9</span>   A<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> B<span style="color:#f92672">=</span><span style="color:#ae81ff">11</span> C<span style="color:#f92672">=</span><span style="color:#ae81ff">12</span> D<span style="color:#f92672">=</span><span style="color:#ae81ff">13</span> E<span style="color:#f92672">=</span><span style="color:#ae81ff">14</span> F<span style="color:#f92672">=</span><span style="color:#ae81ff">15</span></span></span></code></pre></div><p>1️⃣ <strong>无符号数</strong>（Unsigned）</p>
+<ul>
+<li><strong>定义</strong>：全部4位都用来表示数值，不区分正负</li>
+<li><strong>范围</strong>：0~15</li>
+<li><strong>规则</strong>：超过15再加1会绕到0（如16→0，17→1）</li>
+<li><strong>理解</strong>：计算机只认识0和1，它不“知道”正负。正负只是我们人为定义的解释方式。</li>
+</ul>
+<p>2️⃣ <strong>有符号数</strong>（Signed，补码表示）</p>
+<ul>
+<li>
+<p><strong>问题</strong>：4 位二进制数，同时要表示正数和负数</p>
+</li>
+<li>
+<p><strong>解决</strong>：用 <strong>最高位</strong> 作为符号位（0正，1负），剩下3位表示数值</p>
+</li>
+<li>
+<p><strong>范围</strong>：</p>
+<ul>
+<li>正数：000-0111 → 0到7</li>
+<li>负数：1000-1111 → -8到-1</li>
+</ul>
+</li>
+<li>
+<p><strong>为什么 F 是 -1？</strong></p>
+<ol>
+<li>
+<p>4位补码规则：负数存储为 <strong>补码</strong></p>
+<ul>
+<li>负数的补码 = 正数原码取反 + 1</li>
+</ul>
+</li>
+<li>
+<p>以 <code>1111</code> 为例：</p>
+<ul>
+<li>
+<p>最高位是1 → 是负数</p>
+</li>
+<li>
+<p>取反 + 1：
+补码：1111
+取反：0000
++1   ：0001</p>
+</li>
+<li>
+<p>得到原码 = 0001 → 十进制 1</p>
+</li>
+<li>
+<p>加上符号 → -1</p>
+</li>
+</ul>
+</li>
+<li>
+<p>类似地：</p>
+</li>
+</ol>
+<p>1110 → 取反 0001 → +1 → 0010 → -2
+1101 → 取反 0010 → +1 → 0011 → -3
+1000 → 取反 0111 → +1 → 1000（其实是4位的原码表示-8）</p>
+</li>
+</ul>
+<blockquote class='book-hint '>
+<p>补码的主要作用 <strong>是为了让负数可以在计算机中表示，并且加减运算可以统一</strong>。</p>
+<p>所以说它是 <strong>存储负数的一种方法</strong>，但更准确是 <strong>存储整数（正负数）的一种编码方式</strong></p></blockquote><p><img src="../images/4%e4%bd%8d%e5%ae%bd%e5%ba%a6.png" alt="4位宽度" /></p>
+<h2 id="8位宽度">8位宽度<a class="anchor" href="#8%e4%bd%8d%e5%ae%bd%e5%ba%a6">#</a></h2>
+<p>假设现在4位不够表示我要存的数了，我换一个大一点的容器，存储数据的范围为0x00到0xFF，即数据宽度为8位，那么此时容器如何表示</p>
+<p><strong>1. 无符号数表示</strong></p>
+<p>对于 <strong>8位无符号数</strong>，范围从 <code>0x00</code> 到 <code>0xFF</code>，也就是从 <code>0</code> 到 <code>255</code>，共有 <strong>256</strong> 个可能的数值。这是因为每个位置上可以是 <code>0</code> 或 <code>1</code>，所以有 <code>2^8 = 256</code> 种不同的组合。</p>
+<ul>
+<li>最小值：<code>0x00</code>，即 <code>0</code>。</li>
+<li>最大值：<code>0xFF</code>，即 <code>255</code>。</li>
+</ul>
+<p><strong>2. 有符号数表示</strong></p>
+<p>对于 <strong>8位有符号数</strong>，我们需要使用 <strong>补码表示法</strong>。为了表示正负数，通常约定 <strong>最高位</strong>（即 <strong>符号位</strong>）为 <code>0</code> 时表示正数，符号位为 <code>1</code> 时表示负数。根据补码的规则，范围被分为两半：</p>
+<p><strong>正数范围</strong>：<code>0x00</code> 到 <code>0x7F</code>，即从 <code>0</code> 到 <code>127</code>，这部分数据用补码表示时，符号位为 <code>0</code>，其余 7 位表示正数。</p>
+<ul>
+<li>
+<p><code>0x00</code> = <code>00000000</code>，表示正数 <code>0</code>。</p>
+</li>
+<li>
+<p><code>0x7F</code> = <code>01111111</code>，表示正数 <code>127</code>（符号位为 0）。</p>
+</li>
+</ul>
+<p><strong>负数范围</strong>：<code>0x80</code> 到 <code>0xFF</code>，即从 <code>-128</code> 到 <code>-1</code>，符号位为 <code>1</code>，剩余部分表示负数。负数的补码是通过对正数取反加 1 来得到的。</p>
+<ul>
+<li>
+<p><code>0x80</code> = <code>10000000</code>，表示负数 <code>-128</code>（符号位为 1）。</p>
+</li>
+<li>
+<p><code>0xFF</code> = <code>11111111</code>，表示负数 <code>-1</code>。即11111111 → 取反 00000000 → +1 → 00000000 → -1</p>
+</li>
+</ul>
+<p><img src="../images/8%e4%bd%8d%e5%ae%bd%e5%ba%a6.png" alt="8位宽度" /></p>
+<h2 id="16位宽度">16位宽度<a class="anchor" href="#16%e4%bd%8d%e5%ae%bd%e5%ba%a6">#</a></h2>
+<p>16位数据宽度容器存储无符号数范围是从0到FFFF
+存储有符号数从0到7FFF表示正数，从8000到FFFF表示负数
+<img src="../images/16%e4%bd%8d%e5%ae%bd%e5%ba%a6.png" alt="16位宽度" /></p>
+<h2 id="32位宽度">32位宽度<a class="anchor" href="#32%e4%bd%8d%e5%ae%bd%e5%ba%a6">#</a></h2>
+<blockquote class='book-hint '>
+<p>目前计算机中最常见的也是这个数据宽度的容器</p></blockquote><p>32位数据宽度容器存储无符号数范围是从0到FFFFFFFF
+存储有符号数从0到7FFFFFFF表示正数，从80000000到FFFFFFFF表示负数
+<img src="../images/32%e4%bd%8d%e5%ae%bd%e5%ba%a6.png" alt="32位宽度" /></p>
+<h1 id="补码">补码<a class="anchor" href="#%e8%a1%a5%e7%a0%81">#</a></h1>
+<h2 id="为什么需要补码">为什么需要补码<a class="anchor" href="#%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81%e8%a1%a5%e7%a0%81">#</a></h2>
+<p>现代计算机的 CPU 通常没有独立的“减法器”电路，它通过“补码 + 加法器”来实现减法。
+换句话说：计算机“假装”能做减法，其实是用加法“模拟”出来的。</p>
+<blockquote class='book-hint '>
+<p>补码的核心目的： 让减法变成加法，从而只用一个加法器就能处理所有整数运算。</p></blockquote><h2 id="补码的基本概念">补码的基本概念<a class="anchor" href="#%e8%a1%a5%e7%a0%81%e7%9a%84%e5%9f%ba%e6%9c%ac%e6%a6%82%e5%bf%b5">#</a></h2>
+<p>补码是一种二进制编码方式，用于在计算机中表示有符号整数（正数、负数、零）,这使得计算机能通过加法器来同时执行加法和减法运算。</p>
+<ol>
+<li>补码是存储整数的编码方式</li>
+</ol>
+<ul>
+<li>正数的补码：和原码是一样的，保持不变。</li>
+<li>负数的补码：是通过对其原码取反然后加1。</li>
+</ul>
+<ol start="2">
+<li>为什么补码统一了加法和减法？
+补码的最大优势之一就是它让计算机的硬件（加法器）可以 统一处理加法和减法。具体来说：</li>
+</ol>
+<ul>
+<li>加法：对于正数，补码的加法就像普通的加法一样；对于负数，计算机会使用补码来进行加法，从而正确地计算出负数的加法结果。</li>
+<li>减法：减法可以通过加法来转换。比如 A - B 可以转换为 A + (-B)，也就是说，计算机通过补码将减法问题转化为加法问题。</li>
+</ul>
+<h2 id="补码规则与原码转换">补码规则与原码转换<a class="anchor" href="#%e8%a1%a5%e7%a0%81%e8%a7%84%e5%88%99%e4%b8%8e%e5%8e%9f%e7%a0%81%e8%bd%ac%e6%8d%a2">#</a></h2>
+<blockquote class='book-hint '>
+<p><strong>核心规则：</strong></p>
+<ul>
+<li><strong>正数</strong>：原码 = 补码（无需转换）</li>
+<li><strong>负数</strong>：需要转换</li>
+<li><strong>0</strong>：原码和补码都是 <code>00000000</code>（补码只有一个 0）</li>
+</ul></blockquote><h3 id="负数原码--补码">负数：原码 → 补码<a class="anchor" href="#%e8%b4%9f%e6%95%b0%e5%8e%9f%e7%a0%81--%e8%a1%a5%e7%a0%81">#</a></h3>
+<p><strong>示例：<code>-5</code> 的原码 → 补码</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>步骤</th>
+          <th>二进制</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>原码</td>
+          <td><code>10000101</code></td>
+          <td>符号位 <code>1</code>，数值 <code>5=0000101</code></td>
+      </tr>
+      <tr>
+          <td>取反</td>
+          <td><code>11111010</code></td>
+          <td>符号位不变，数值位取反</td>
+      </tr>
+      <tr>
+          <td>加 1</td>
+          <td><code>11111011</code></td>
+          <td><code>11111010 + 1 = 11111011</code></td>
+      </tr>
+  </tbody>
+</table>
+<p>所以 <code>-5</code> 的补码是：<code>11111011</code></p>
+<h3 id="负数补码--原码">负数：补码 → 原码<a class="anchor" href="#%e8%b4%9f%e6%95%b0%e8%a1%a5%e7%a0%81--%e5%8e%9f%e7%a0%81">#</a></h3>
+<p>负数的补码再求一次补码，就变回原码！</p>
+<p><strong>示例：补码 <code>11111011</code> → 原码</strong></p>
+<ol>
+<li>取反：<code>10000100</code></li>
+<li>加 1：<code>10000101</code> = 5</li>
+<li>加负号：<strong>-5</strong></li>
+<li>原码：<code>10000101</code></li>
+</ol>
+<h3 id="总结转换口诀">总结：转换口诀<a class="anchor" href="#%e6%80%bb%e7%bb%93%e8%bd%ac%e6%8d%a2%e5%8f%a3%e8%af%80">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>转换方向</th>
+          <th>口诀</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>原码 → 补码</strong></td>
+          <td>“取反加一”</td>
+      </tr>
+      <tr>
+          <td><strong>补码 → 原码</strong></td>
+          <td>“再求一次补码”</td>
+      </tr>
+      <tr>
+          <td><strong>正数/0</strong></td>
+          <td>原码 = 补码，无需转换</td>
+      </tr>
+  </tbody>
+</table>
+<h2 id="补码加减法案例8位">补码加减法案例（8位）<a class="anchor" href="#%e8%a1%a5%e7%a0%81%e5%8a%a0%e5%87%8f%e6%b3%95%e6%a1%88%e4%be%8b8%e4%bd%8d">#</a></h2>
+<h3 id="加法">加法<a class="anchor" href="#%e5%8a%a0%e6%b3%95">#</a></h3>
+<p><code>5 + 3 = 8</code></p>
+<pre tabindex="0"><code>00000101 (5)
+00000011 (3) 
+00001000 = 8</code></pre><p><code>5 + (-3) = 2</code></p>
+<pre tabindex="0"><code>- `-3` 补码：`11111101`
+00000101 (5)
+11111101 (-3)
+00000010 = 2</code></pre><p><code>(-3) + (-2) = -5</code></p>
+<pre tabindex="0"><code>- `-2` 补码：`11111110`
+11111101 (-3)
+11111110 (-2) 
+11111011 → 取反加1 → 5 → -5</code></pre><h3 id="减法转加法">减法（转加法）<a class="anchor" href="#%e5%87%8f%e6%b3%95%e8%bd%ac%e5%8a%a0%e6%b3%95">#</a></h3>
+<p><code>7 - 3 = 4</code></p>
+<pre tabindex="0"><code>00000111 (7)
+11111101 (-3) 
+00000100 = 4</code></pre><p><code>5 - (-3) = 8</code></p>
+<pre tabindex="0"><code>00000101 (5)
+00000011 (3) 
+00001000 = 8</code></pre><p><code>(-3) - 2 = -5</code></p>
+<pre tabindex="0"><code>11111101 (-3)
+11111110 (-2) 
+------------
+11111011 → -5</code></pre><h3 id="特殊">特殊<a class="anchor" href="#%e7%89%b9%e6%ae%8a">#</a></h3>
+<p><code>127 + 1 = -128</code>（溢出）</p>
+<pre tabindex="0"><code>01111111 (127)
+00000001 (1) 
+--------------
+10000000 → -128</code></pre><p><code>3 + (-3) = 0</code></p>
+<pre tabindex="0"><code>00000011
+11111101
+00000000 = 0</code></pre><blockquote class='book-hint '>
+<p>所有运算 = <strong>补码 + 加法器</strong></p></blockquote><h3 id="补码计算结果解读流程图">补码计算结果解读流程图<a class="anchor" href="#%e8%a1%a5%e7%a0%81%e8%ae%a1%e7%ae%97%e7%bb%93%e6%9e%9c%e8%a7%a3%e8%af%bb%e6%b5%81%e7%a8%8b%e5%9b%be">#</a></h3>
+<pre tabindex="0"><code>         开始
+          ↓
+     看结果的最高位
+          ↓
+   ┌───────────────┐
+   ↓               ↓
+  是 0？          是 1？
+   ↓               ↓
+  正数或 0        负数
+   ↓               ↓
+直接转十进制    取反 → 加1 → 得正数 → 加负号
+   ↓               ↓
+  完成            完成</code></pre><h2 id="数据单位">数据单位<a class="anchor" href="#%e6%95%b0%e6%8d%ae%e5%8d%95%e4%bd%8d">#</a></h2>
+<p>存储单位</p>
+<table>
+  <thead>
+      <tr>
+          <th>名称</th>
+          <th>大小</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>位-BIT</td>
+          <td>█（1位）</td>
+      </tr>
+      <tr>
+          <td>字节-Byte</td>
+          <td>█|█|█|█|█|█|█|█（8位）</td>
+      </tr>
+      <tr>
+          <td>字-Word</td>
+          <td>█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█（16位）</td>
+      </tr>
+      <tr>
+          <td>双字-Doubleword</td>
+          <td>█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█|█（32位）</td>
+      </tr>
+  </tbody>
+</table>
+<p>存储范围</p>
+<table>
+  <thead>
+      <tr>
+          <th>名称</th>
+          <th>大小</th>
+          <th>二进制位数</th>
+          <th>十六进制范围</th>
+          <th>十进制范围</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>位（Bit）</td>
+          <td>1 位</td>
+          <td>1</td>
+          <td>0 – 1</td>
+          <td>0 – 1</td>
+      </tr>
+      <tr>
+          <td>字节（Byte）</td>
+          <td>8 位 = 1 字节</td>
+          <td>8</td>
+          <td>0x00 – 0xFF</td>
+          <td>0 – 255</td>
+      </tr>
+      <tr>
+          <td>字（Word）</td>
+          <td>16 位 = 2 字节</td>
+          <td>16</td>
+          <td>0x0000 – 0xFFFF</td>
+          <td>0 – 65,535</td>
+      </tr>
+      <tr>
+          <td>双字（Double Word, DWORD）</td>
+          <td>32 位 = 4 字节</td>
+          <td>32</td>
+          <td>0x00000000 – 0xFFFFFFFF</td>
+          <td>0 – 4,294,967,295</td>
+      </tr>
+  </tbody>
+</table>
+<p>当我们存储数据的时候，需要知道自己存储的数据的数据宽度是什么，假设你要存储一个1，要存入字节中，那么以二进制的表示即为：0000 0001，转为十六进制即为0x01
+**字节（Byte）**的存储范围使用十六进制表示则为：<strong>0 - 0xFF</strong>
+**字（Word）**的存储范围：<strong>0 - 0xFFFF</strong>
+**双字（Doubleword）**的存储范围：<strong>0 - 0xFFFFFFFF</strong></p>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>01.进制基础</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="flex align-center">
+        <span>03.逻辑运算</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#4位宽度理论示例">4位宽度(理论示例)</a></li>
+    <li><a href="#8位宽度">8位宽度</a></li>
+    <li><a href="#16位宽度">16位宽度</a></li>
+    <li><a href="#32位宽度">32位宽度</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#为什么需要补码">为什么需要补码</a></li>
+    <li><a href="#补码的基本概念">补码的基本概念</a></li>
+    <li><a href="#补码规则与原码转换">补码规则与原码转换</a>
+      <ul>
+        <li><a href="#负数原码--补码">负数：原码 → 补码</a></li>
+        <li><a href="#负数补码--原码">负数：补码 → 原码</a></li>
+        <li><a href="#总结转换口诀">总结：转换口诀</a></li>
+      </ul>
+    </li>
+    <li><a href="#补码加减法案例8位">补码加减法案例（8位）</a>
+      <ul>
+        <li><a href="#加法">加法</a></li>
+        <li><a href="#减法转加法">减法（转加法）</a></li>
+        <li><a href="#特殊">特殊</a></li>
+        <li><a href="#补码计算结果解读流程图">补码计算结果解读流程图</a></li>
+      </ul>
+    </li>
+    <li><a href="#数据单位">数据单位</a></li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

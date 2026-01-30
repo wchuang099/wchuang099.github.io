@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="如何调用大漠# Python调用大漠插件注意事项# PyCharm 必须 以管理员身份运行（或者你用 python.exe 直接运行也要管理员权限）。 大漠插件本身是 32 位的 COM 组件，所以只能在 32 位 Python 下调用。 解决64调用： C/S架构 s运行在32位,c运行在64，c发送调用到s
+注册方式# 传统方式（注册调用） 以前要调用大漠插件（dm.dll），需要先用 regsvr32 dm.dll来进行注册。这样做的实质是把COM 组件的信息写入 Windows 注册表，让系统知道 dm.dll 是一个 COM 对象，可以用 CreateObject(&#34;dm.dmsoft&#34;) 或者 new ActiveXObject(&#34;dm.dmsoft&#34;) 来创建。
+缺点：必须有管理员权限才能注册。污染注册表，易被游戏检测
+免注册调用
+从 大漠插件 3.1235 版本开始，可以用 DmReg.dll来绕过注册表，直接加载对应的dm.dll，也就是说你不需要再用regsvr32，只要在程序启动时调用 DmReg.dll 的接口就行。
+DmReg.dll暴露了 两个导出函数：
+SetDllPathA(const char* path, int mode) 参数 1：ASCII 字符串（插件所在路径，比如 &#34;C:\\dm&#34;）。 参数 2：线程模型（0=STA，1=MTA）。 SetDllPathW(const wchar_t* path, int mode) 参数 1：Unicode 字符串（同上）。 参数 2：线程模型（0=STA，1=MTA）。 调用这个函数后，dmreg.dll 会把路径下的 dm.dll 注册到内存中（只对当前进程生效），不依赖系统注册表。
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="大漠插件">
+  <meta property="og:description" content="如何调用大漠# Python调用大漠插件注意事项# PyCharm 必须 以管理员身份运行（或者你用 python.exe 直接运行也要管理员权限）。 大漠插件本身是 32 位的 COM 组件，所以只能在 32 位 Python 下调用。 解决64调用： C/S架构 s运行在32位,c运行在64，c发送调用到s
+注册方式# 传统方式（注册调用） 以前要调用大漠插件（dm.dll），需要先用 regsvr32 dm.dll来进行注册。这样做的实质是把COM 组件的信息写入 Windows 注册表，让系统知道 dm.dll 是一个 COM 对象，可以用 CreateObject(&#34;dm.dmsoft&#34;) 或者 new ActiveXObject(&#34;dm.dmsoft&#34;) 来创建。
+缺点：必须有管理员权限才能注册。污染注册表，易被游戏检测
+免注册调用
+从 大漠插件 3.1235 版本开始，可以用 DmReg.dll来绕过注册表，直接加载对应的dm.dll，也就是说你不需要再用regsvr32，只要在程序启动时调用 DmReg.dll 的接口就行。
+DmReg.dll暴露了 两个导出函数：
+SetDllPathA(const char* path, int mode) 参数 1：ASCII 字符串（插件所在路径，比如 &#34;C:\\dm&#34;）。 参数 2：线程模型（0=STA，1=MTA）。 SetDllPathW(const wchar_t* path, int mode) 参数 1：Unicode 字符串（同上）。 参数 2：线程模型（0=STA，1=MTA）。 调用这个函数后，dmreg.dll 会把路径下的 dm.dll 注册到内存中（只对当前进程生效），不依赖系统注册表。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="website">
+
+
+  <meta itemprop="name" content="大漠插件">
+  <meta itemprop="description" content="如何调用大漠# Python调用大漠插件注意事项# PyCharm 必须 以管理员身份运行（或者你用 python.exe 直接运行也要管理员权限）。 大漠插件本身是 32 位的 COM 组件，所以只能在 32 位 Python 下调用。 解决64调用： C/S架构 s运行在32位,c运行在64，c发送调用到s
+注册方式# 传统方式（注册调用） 以前要调用大漠插件（dm.dll），需要先用 regsvr32 dm.dll来进行注册。这样做的实质是把COM 组件的信息写入 Windows 注册表，让系统知道 dm.dll 是一个 COM 对象，可以用 CreateObject(&#34;dm.dmsoft&#34;) 或者 new ActiveXObject(&#34;dm.dmsoft&#34;) 来创建。
+缺点：必须有管理员权限才能注册。污染注册表，易被游戏检测
+免注册调用
+从 大漠插件 3.1235 版本开始，可以用 DmReg.dll来绕过注册表，直接加载对应的dm.dll，也就是说你不需要再用regsvr32，只要在程序启动时调用 DmReg.dll 的接口就行。
+DmReg.dll暴露了 两个导出函数：
+SetDllPathA(const char* path, int mode) 参数 1：ASCII 字符串（插件所在路径，比如 &#34;C:\\dm&#34;）。 参数 2：线程模型（0=STA，1=MTA）。 SetDllPathW(const wchar_t* path, int mode) 参数 1：Unicode 字符串（同上）。 参数 2：线程模型（0=STA，1=MTA）。 调用这个函数后，dmreg.dll 会把路径下的 dm.dll 注册到内存中（只对当前进程生效），不依赖系统注册表。">
+  <meta itemprop="wordCount" content="497">
+
+<title>大漠插件 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.9d4fa0048b4786d5be096d98c61a47e02072a87b9dbf0bb86dcd8edf179c4e43.js" integrity="sha256-nU&#43;gBItHhtW&#43;CW2YxhpH4CByqHudvwu4bc2O3xecTkM=" crossorigin="anonymous"></script>
+
+
+<link rel="alternate" type="application/rss+xml" href="http://localhost:1313/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/index.xml" title="碎碎念念" />
+
+  
+</head>
+<body dir="ltr" class="book-kind-section book-type-game">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-204365caa941390a182aeb870c8b397d" class="toggle"  />
+    <label for="section-204365caa941390a182aeb870c8b397d" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f6929f8819239c236e3ff6d9318a645b" class="toggle"  />
+    <label for="section-f6929f8819239c236e3ff6d9318a645b" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-797baf87757652be835bcce5680ea0d4" class="toggle"  />
+    <label for="section-797baf87757652be835bcce5680ea0d4" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0fa9f382cfc268805da9afbea1ac822b" class="toggle"  />
+    <label for="section-0fa9f382cfc268805da9afbea1ac822b" class="flex">
+      <a role="button" class="">
+        Python数据处理</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-938c3edbaa8e3dd01e8b93d6f9361182" class="toggle"  />
+    <label for="section-938c3edbaa8e3dd01e8b93d6f9361182" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-56b62cfe8bd1e3138f346455c7c08d01" class="toggle"  />
+    <label for="section-56b62cfe8bd1e3138f346455c7c08d01" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e12d76c83fadc5077063bd8a06e4974c" class="toggle"  />
+    <label for="section-e12d76c83fadc5077063bd8a06e4974c" class="flex">
+      <a role="button" class="">
+        Linux</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-docker/" class="">
+      安装 Docker 教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-mysql/" class="">
+      安装 mysql 教程</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-23e22f2cefc5200495b10b220f00dc9b" class="toggle"  />
+    <label for="section-23e22f2cefc5200495b10b220f00dc9b" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5f3519d07421b3022c482beb7e53757d" class="toggle"  />
+    <label for="section-5f3519d07421b3022c482beb7e53757d" class="flex">
+      <a role="button" class="">
+        Other</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强平台装机流程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-00896273d6e22b6628839c56863edc57" class="toggle" checked />
+    <label for="section-00896273d6e22b6628839c56863edc57" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-212fbf26dee144498e07df6cb6c18024" class="toggle"  />
+    <label for="section-212fbf26dee144498e07df6cb6c18024" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB/" class="">
+      处理鼠标漂移</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="active">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5b47f8600929668d6470260320a7fd81" class="toggle"  />
+    <label for="section-5b47f8600929668d6470260320a7fd81" class="flex">
+      <a href="/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+        幽灵键鼠</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a>
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E6%B8%B8%E6%88%8F%E8%84%9A%E6%9C%AC%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%9A%94%E7%A6%BB%E6%96%B9%E6%A1%88/" class="">
+      脚本隔离方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c5a43b1f0709f0338f2ab4a52452792c" class="toggle"  />
+    <label for="section-c5a43b1f0709f0338f2ab4a52452792c" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>大漠插件</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#python调用大漠插件注意事项">Python调用大漠插件注意事项</a></li>
+    <li><a href="#注册方式">注册方式</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#setpath">SetPath</a></li>
+    <li><a href="#bindwindow">BindWindow</a></li>
+    <li><a href="#capturepic">CapturePic</a></li>
+    <li><a href="#getcolornum">GetColorNum</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#1大漠找图">1.大漠找图</a>
+      <ul>
+        <li><a href="#什么透明图">什么<strong>透明图</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#2大漠文字识别">2.大漠文字识别</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h1 id="如何调用大漠">如何调用大漠<a class="anchor" href="#%e5%a6%82%e4%bd%95%e8%b0%83%e7%94%a8%e5%a4%a7%e6%bc%a0">#</a></h1>
+<h2 id="python调用大漠插件注意事项">Python调用大漠插件注意事项<a class="anchor" href="#python%e8%b0%83%e7%94%a8%e5%a4%a7%e6%bc%a0%e6%8f%92%e4%bb%b6%e6%b3%a8%e6%84%8f%e4%ba%8b%e9%a1%b9">#</a></h2>
+<ul>
+<li>PyCharm 必须 <strong>以管理员身份运行</strong>（或者你用 <code>python.exe</code> 直接运行也要管理员权限）。</li>
+<li>大漠插件本身是 32 位的 COM 组件，所以只能在 <strong>32 位 Python</strong> 下调用。</li>
+</ul>
+<blockquote class='book-hint '>
+<p>解决64调用： C/S架构    s运行在32位,c运行在64，c发送调用到s</p></blockquote><h2 id="注册方式">注册方式<a class="anchor" href="#%e6%b3%a8%e5%86%8c%e6%96%b9%e5%bc%8f">#</a></h2>
+<p>传统方式（注册调用）
+以前要调用大漠插件（dm.dll），需要先用 <strong>regsvr32  dm.dll</strong>来进行注册。这样做的实质是把COM 组件的信息写入 Windows 注册表，让系统知道 <code>dm.dll</code> 是一个 COM 对象，可以用 <code>CreateObject(&quot;dm.dmsoft&quot;)</code> 或者 <code>new ActiveXObject(&quot;dm.dmsoft&quot;)</code> 来创建。</p>
+<p>缺点：必须有管理员权限才能注册。污染注册表，易被游戏检测</p>
+<p>免注册调用</p>
+<p>从 <strong>大漠插件 3.1235 版本</strong>开始，可以用 <strong>DmReg.dll</strong>来绕过注册表，直接加载对应的<code>dm.dll</code>，也就是说你不需要再用<code>regsvr32</code>，只要在程序启动时调用 <code>DmReg.dll</code> 的接口就行。</p>
+<p>DmReg.dll暴露了 <strong>两个导出函数</strong>：</p>
+<ul>
+<li><code>SetDllPathA(const char* path, int mode)</code>
+<ul>
+<li>参数 1：ASCII 字符串（插件所在路径，比如 <code>&quot;C:\\dm&quot;</code>）。</li>
+<li>参数 2：线程模型（0=STA，1=MTA）。</li>
+</ul>
+</li>
+<li><code>SetDllPathW(const wchar_t* path, int mode)</code>
+<ul>
+<li>参数 1：Unicode 字符串（同上）。</li>
+<li>参数 2：线程模型（0=STA，1=MTA）。</li>
+</ul>
+</li>
+</ul>
+<p>调用这个函数后，dmreg.dll 会把路径下的 <strong>dm.dll</strong> 注册到内存中（只对当前进程生效），不依赖系统注册表。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> ctypes
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> win32com.client <span style="color:#f92672">import</span> Dispatch
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">注册大漠</span>(注册码<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>, 附加码<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;&#39;</span>):
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;正在初始化&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">#  通过调用DmReg.dll注册大漠 这样不会把dm.dll写到系统中，从而实现免注册</span>
+</span></span><span style="display:flex;"><span>    patch <span style="color:#f92672">=</span> ctypes<span style="color:#f92672">.</span>windll<span style="color:#f92672">.</span>LoadLibrary(os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>dirname(__file__) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;./DmReg.dll&#39;</span>)
+</span></span><span style="display:flex;"><span>    patch<span style="color:#f92672">.</span>SetDllPathW(os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>dirname(__file__) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;./dm.dll&#39;</span>, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>    dm_主对象 <span style="color:#f92672">=</span> Dispatch(<span style="color:#e6db74">&#39;dm.dmsoft&#39;</span>)  <span style="color:#75715e"># 创建对象</span>
+</span></span><span style="display:flex;"><span>    ver <span style="color:#f92672">=</span> dm_主对象<span style="color:#f92672">.</span>ver()
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;免注册调用初始化成功 版本号为:&#39;</span>, ver)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 注册大漠VIP</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> ver <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;&#39;</span>:
+</span></span><span style="display:flex;"><span>        reg <span style="color:#f92672">=</span> dm_主对象<span style="color:#f92672">.</span>reg(注册码, 附加码)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> reg <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">&#34;大漠vip注册成功&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> dm_主对象
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;大漠注册失败,错误代码: </span><span style="color:#e6db74">{</span>reg<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)</span></span></code></pre></div><h1 id="大漠函数">大漠函数<a class="anchor" href="#%e5%a4%a7%e6%bc%a0%e5%87%bd%e6%95%b0">#</a></h1>
+<h2 id="setpath">SetPath<a class="anchor" href="#setpath">#</a></h2>
+<p>设置全局路径,设置了此路径后,所有接口调用中,相关的文件都相对于此路径. 比如图片,字库等.</p>
+<h2 id="bindwindow">BindWindow<a class="anchor" href="#bindwindow">#</a></h2>
+<p>BindWindow是大漠插件的核心函数，建立上下文,用于将鼠标、键盘、图色等操作绑定到指定窗口，实现前台或后台自动化。</p>
+<p>BindWindow共有5个参数，其中第5个可选。</p>
+<pre tabindex="0"><code>result = dm.BindWindow(hwnd, display, mouse, keypad, mode)</code></pre><table>
+  <thead>
+      <tr>
+          <th>参数</th>
+          <th>类型</th>
+          <th>必填</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong><code>hwnd</code></strong></td>
+          <td>整数 (Integer)</td>
+          <td>必填</td>
+          <td>窗口句柄（Window Handle）。通常通过 <code>dm.FindWindow</code> 或 <code>dm.FindWindowEx</code> 获取。代表你要绑定的目标窗口。</td>
+      </tr>
+      <tr>
+          <td><strong><code>display</code></strong></td>
+          <td>字符串 (String)</td>
+          <td>必填</td>
+          <td><strong>显示模式</strong>，决定如何获取窗口图像（用于图色、截图）。<br>常见值：<br>- <code>&quot;gdi&quot;</code>：GDI 模式，兼容性好，仅支持前台。<br>- <code>&quot;dx&quot;</code> / <code>&quot;dx2&quot;</code>：DirectX 模式，支持后台截图和图色。<br>- <code>&quot;opengl&quot;</code>：OpenGL 模式，用于 OpenGL 应用。<br>- <code>&quot;normal&quot;</code>：普通模式。</td>
+      </tr>
+      <tr>
+          <td><strong><code>mouse</code></strong></td>
+          <td>字符串 (String)</td>
+          <td>必填</td>
+          <td><strong>鼠标模式</strong>，决定鼠标操作的方式。<br>常见值：<br>- <code>&quot;windows&quot;</code>：前台鼠标（真实移动）。<br>- <code>&quot;dx&quot;</code> / <code>&quot;dx2&quot;</code>：后台鼠标（发送消息）。<br>- <code>&quot;windows2&quot;</code>：前台鼠标，支持某些特殊窗口。<br>- <code>&quot;dx.mouse.position&quot;</code>：DX 高精度鼠标定位。</td>
+      </tr>
+      <tr>
+          <td><strong><code>keypad</code></strong></td>
+          <td>字符串 (String)</td>
+          <td>必填</td>
+          <td><strong>键盘模式</strong>，决定键盘输入的方式。<br>常见值：<br>- <code>&quot;windows&quot;</code>：前台按键（真实按键）。<br>- <code>&quot;dx&quot;</code> / <code>&quot;dx2&quot;</code>：后台按键（发送消息）。<br>- <code>&quot;dx.keypad&quot;</code>：DX 优化键盘输入。<br>- <code>&quot;normal&quot;</code>：普通键盘模式。</td>
+      </tr>
+      <tr>
+          <td><strong><code>mode</code></strong></td>
+          <td>整数 (Integer)</td>
+          <td>可选</td>
+          <td><strong>附加模式</strong>，用于控制绑定行为。<br>常用值：<br>- <code>0</code>：默认模式。<br>- <code>1</code>：强制绑定，即使窗口不可见也尝试绑定。<br>- <code>2</code>：绑定时不激活窗口（推荐用于后台脚本）。<br>- <code>3</code>：组合模式（如 <code>1+2</code>）。<br>默认值为 <code>0</code>。</td>
+      </tr>
+      <tr>
+          <td>参数使用示例</td>
+          <td></td>
+          <td></td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+<ol>
+<li>普通前台绑定（适用于记事本、浏览器等）</li>
+</ol>
+<pre tabindex="0"><code>hwnd = dm.FindWindow(&#34;Notepad&#34;, &#34;无标题 - 记事本&#34;)
+dm.BindWindow(hwnd, &#34;gdi&#34;, &#34;windows&#34;, &#34;windows&#34;, 0)</code></pre><ol start="2">
+<li>DX 游戏后台绑定（推荐）</li>
+</ol>
+<pre tabindex="0"><code>hwnd = dm.FindWindow(&#34;GameWindow&#34;, &#34;My Game&#34;)
+dm.BindWindow(hwnd, &#34;dx&#34;, &#34;dx&#34;, &#34;dx&#34;, 2) #mode=2: 不激活窗口</code></pre><ol start="3">
+<li>OpenGL应用绑定</li>
+</ol>
+<pre tabindex="0"><code>hwnd = dm.FindWindow(&#34;GLApp&#34;, &#34;OpenGL Viewer&#34;)
+dm.BindWindow(hwnd, &#34;opengl&#34;, &#34;opengl&#34;, &#34;opengl&#34;, 0)</code></pre><p>关键要点</p>
+<ul>
+<li>五个参数必须匹配：display、mouse、keypad 建议使用相同技术（如都用 &ldquo;dx2&rdquo;），避免兼容性问题。</li>
+<li>mode=2 很重要：用于后台脚本，防止窗口被意外激活。</li>
+<li>绑定后需验证：检查返回值： 1：绑定成功 0：失败（可能模式不支持或窗口无效）</li>
+</ul>
+<pre tabindex="0"><code>if dm.BindWindow(hwnd, &#34;dx2&#34;, &#34;dx2&#34;, &#34;dx2&#34;, 2) == 1:
+    print(&#34;绑定成功，可进行后台操作&#34;)
+else:
+    print(&#34;绑定失败，请检查模式或窗口&#34;)</code></pre><p>总结BindWindow 的 5 个参数分别控制：</p>
+<ol>
+<li>绑定哪个窗口（hwnd）</li>
+<li>如何显示/截图（display）</li>
+<li>如何模拟鼠标（mouse）</li>
+<li>如何模拟键盘（keypad）</li>
+<li>附加行为控制（mode）
+正确配置这5个参数，是实现稳定、高效自动化（尤其是后台操作）的基础。</li>
+</ol>
+<h2 id="capturepic">CapturePic<a class="anchor" href="#capturepic">#</a></h2>
+<p>CapturePic的基本用法</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>dm<span style="color:#f92672">.</span>CapturePic(x1, y1, x2, y2, <span style="color:#e6db74">&#34;output.bmp&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">•</span>参数<span style="color:#960050;background-color:#1e0010">：</span>x1, y1, x2, y2 是屏幕绝对坐标<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">•</span>原理<span style="color:#960050;background-color:#1e0010">：</span>直接从屏幕缓冲区读取指定矩形区域的像素<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">•</span>不依赖句柄<span style="color:#960050;background-color:#1e0010">：</span>即使不调用 BindWindow<span style="color:#960050;background-color:#1e0010">，</span>也能执行
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">。</span> 所以严格来说<span style="color:#960050;background-color:#1e0010">，</span>CapturePic不是<span style="color:#960050;background-color:#1e0010">“</span>根据窗口句柄<span style="color:#960050;background-color:#1e0010">”</span>截图<span style="color:#960050;background-color:#1e0010">，</span>而是<span style="color:#960050;background-color:#1e0010">“</span>根据屏幕坐标<span style="color:#960050;background-color:#1e0010">”</span>截图<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2.</span> 为什么感觉<span style="color:#960050;background-color:#1e0010">“</span>根据句柄截图<span style="color:#960050;background-color:#1e0010">”？</span>因为最佳实践流程中<span style="color:#960050;background-color:#1e0010">，</span>我们通过句柄获取窗口位置<span style="color:#960050;background-color:#1e0010">，</span>再用位置去截图<span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 1. 通过窗口类名/标题找到句柄</span>
+</span></span><span style="display:flex;"><span>hwnd <span style="color:#f92672">=</span> dm<span style="color:#f92672">.</span>FindWindow(<span style="color:#e6db74">&#34;Notepad&#34;</span>, <span style="color:#e6db74">&#34;无标题 - 记事本&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. 获取窗口在屏幕上的位置</span>
+</span></span><span style="display:flex;"><span>left, top, right, bottom <span style="color:#f92672">=</span> dm<span style="color:#f92672">.</span>GetWindowRect(hwnd)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 例如：(100, 100, 900, 700)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 3. 截取整个窗口区域</span>
+</span></span><span style="display:flex;"><span>dm<span style="color:#f92672">.</span>CapturePic(left, top, right, bottom, <span style="color:#e6db74">&#34;window.bmp&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 4. 或只截客户区（游戏画面区域）</span>
+</span></span><span style="display:flex;"><span>client_left, client_top, client_right, client_bottom <span style="color:#f92672">=</span> dm<span style="color:#f92672">.</span>GetClientSize(hwnd)
+</span></span><span style="display:flex;"><span>dm<span style="color:#f92672">.</span>CapturePic(left <span style="color:#f92672">+</span> client_left, top <span style="color:#f92672">+</span> client_top, 
+</span></span><span style="display:flex;"><span>              left <span style="color:#f92672">+</span> client_right, top <span style="color:#f92672">+</span> client_bottom, <span style="color:#e6db74">&#34;client.bmp&#34;</span>)
+</span></span><span style="display:flex;"><span> 在这个流程中<span style="color:#960050;background-color:#1e0010">：•</span>句柄 (hwnd) 用于获取窗口位置<span style="color:#960050;background-color:#1e0010">。•</span>位置 转化为屏幕坐标<span style="color:#960050;background-color:#1e0010">。•</span>CapturePic 使用这些坐标截图<span style="color:#960050;background-color:#1e0010">。</span>所以<span style="color:#960050;background-color:#1e0010">，</span>句柄是<span style="color:#960050;background-color:#1e0010">“</span>间接工具<span style="color:#960050;background-color:#1e0010">”，</span>真正截图的是坐标<span style="color:#960050;background-color:#1e0010">。</span> 对比<span style="color:#960050;background-color:#1e0010">：</span>绑定窗口后截图<span style="color:#960050;background-color:#1e0010">（</span>更推荐<span style="color:#960050;background-color:#1e0010">）</span><span style="color:#75715e"># 绑定窗口（内部保存了句柄和上下文）</span>
+</span></span><span style="display:flex;"><span>dm<span style="color:#f92672">.</span>BindWindow(hwnd, <span style="color:#e6db74">&#34;gdi&#34;</span>, <span style="color:#e6db74">&#34;windows&#34;</span>, <span style="color:#e6db74">&#34;0&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 获取窗口矩形</span>
+</span></span><span style="display:flex;"><span>left, top, right, bottom <span style="color:#f92672">=</span> dm<span style="color:#f92672">.</span>GetWindowRect(hwnd)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 基于句柄获取的位置截图</span>
+</span></span><span style="display:flex;"><span>dm<span style="color:#f92672">.</span>CapturePic(left, top, right, bottom, <span style="color:#e6db74">&#34;game.bmp&#34;</span>)
+</span></span><span style="display:flex;"><span> BindWindow 后<span style="color:#960050;background-color:#1e0010">，</span>大漠插件可以更高效地管理窗口上下文<span style="color:#960050;background-color:#1e0010">，</span>确保截图与图色<span style="color:#960050;background-color:#1e0010">、</span>鼠标操作坐标系统一致<span style="color:#960050;background-color:#1e0010">。</span></span></span></code></pre></div><h2 id="getcolornum">GetColorNum<a class="anchor" href="#getcolornum">#</a></h2>
+<p>获取指定区域的颜色数量,颜色格式&quot;RRGGBB-DRDGDB&quot;,注意,和按键的颜色格式相反</p>
+<h1 id="大漠找图找字原理">大漠找图找字原理<a class="anchor" href="#%e5%a4%a7%e6%bc%a0%e6%89%be%e5%9b%be%e6%89%be%e5%ad%97%e5%8e%9f%e7%90%86">#</a></h1>
+<p>大漠找字原理：</p>
+<ol>
+<li>提取目标区域的像素特征</li>
+<li>与字库中的特征模板匹配</li>
+<li>返回匹配结果</li>
+</ol>
+<p>找图原理：</p>
+<ol>
+<li>提取整个图片的像素矩阵</li>
+<li>与目标图片矩阵逐像素对比</li>
+</ol>
+<blockquote class='book-hint '>
+<p>→ 从底层来看，找字和找图本质上都是<strong>图像特征匹配</strong>问题，因此它们可以互通：</p>
+<ul>
+<li><strong>字当作图来找</strong>：把字符截图当小图片，用找图方法识别；</li>
+<li><strong>图当作字来识别</strong>：把固定图案加入字库，用找字方法识别。
+在实际应用中，更常用的方式是<strong>把字当作图来处理</strong>，尤其是面对动态背景、发光描边或颜色变化的文字。</li>
+</ul></blockquote><h2 id="1大漠找图">1.大漠找图<a class="anchor" href="#1%e5%a4%a7%e6%bc%a0%e6%89%be%e5%9b%be">#</a></h2>
+<p><strong>本质</strong>：把目标图当作<strong>整图或局部图</strong>去匹配</p>
+<p><strong>优化</strong>：</p>
+<ul>
+<li>可以是像素对比，也可以是特征点匹配</li>
+<li>可以处理旋转、缩放、色差</li>
+</ul>
+<p><strong>特点</strong>：识别任意图案，灵活但相对慢</p>
+<h3 id="什么透明图">什么<strong>透明图</strong><a class="anchor" href="#%e4%bb%80%e4%b9%88%e9%80%8f%e6%98%8e%e5%9b%be">#</a></h3>
+<p><strong>透明图就是把图片里不重要的像素变成“透明”，大漠找图时只匹配你要的部分，背景全部忽略。</strong></p>
+<p>当图像上下左右4个顶点的颜色一样时,则这个颜色将作为透明图处理.</p>
+<p><strong>为什么要用透明图？</strong></p>
+<ul>
+<li>背景会变</li>
+<li>颜色会变</li>
+<li>UI 会闪</li>
+<li>字会发光、描边
+透明图能把这些<strong>统统过滤掉</strong>。</li>
+</ul>
+<p><strong>字也能做透明图</strong></p>
+<p>文字本质就是“小图片”：</p>
+<ul>
+<li>字形固定</li>
+<li>背景常变</li>
+<li>颜色偏差大</li>
+<li>描边/发光干扰多</li>
+</ul>
+<p>用透明图找字 = <strong>按形状匹配，不看颜色</strong>。</p>
+<p>所以完全不需要字库，也不怕偏色。</p>
+<p><strong>透明图适用场景</strong></p>
+<ul>
+<li>技能 CD 数字</li>
+<li>血量数字、跳字</li>
+<li>按钮文字</li>
+<li>背包、强化、购买等 UI 字</li>
+<li>任何背景复杂、颜色不稳定的字或图标</li>
+</ul>
+<h2 id="2大漠文字识别">2.大漠文字识别<a class="anchor" href="#2%e5%a4%a7%e6%bc%a0%e6%96%87%e5%ad%97%e8%af%86%e5%88%ab">#</a></h2>
+<p>如果是纯色的文字，背景也不变， 那么直接用找字就行，而面对复杂的文字，那么就改用找图的方式了。大致处理逻辑如下</p>
+<ul>
+<li>背景变 → <strong>透明图</strong></li>
+<li>字体色变 → <strong>找图</strong></li>
+<li>字形变 → <strong>弃用透明图</strong></li>
+</ul>
+<table>
+  <thead>
+      <tr>
+          <th>字体特性</th>
+          <th>背景特性</th>
+          <th>优选方案</th>
+          <th>关键理由</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>纯色稳定</td>
+          <td>稳定</td>
+          <td>字库-&gt;找字</td>
+          <td>速度最快，实现简单</td>
+      </tr>
+      <tr>
+          <td>纯色稳定</td>
+          <td>动态</td>
+          <td>透明图-&gt;找图 (字库可选)</td>
+          <td>消除背景干扰</td>
+      </tr>
+      <tr>
+          <td>渐变/发光</td>
+          <td>稳定</td>
+          <td>普通找图</td>
+          <td>颜色变化使字库失效</td>
+      </tr>
+      <tr>
+          <td>渐变/发光</td>
+          <td>动态</td>
+          <td>透明图-&gt;找图</td>
+          <td>双重抗干扰</td>
+      </tr>
+      <tr>
+          <td>字形动态变化</td>
+          <td>任意</td>
+          <td>字库/OCR/颜色识别</td>
+          <td>透明图依赖固定形状</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<p>关键洞察</p>
+<ul>
+<li><strong>统一处理逻辑</strong>：数字、符号、汉字在大漠中均为“图像对象”</li>
+<li><strong>透明图本质</strong>：通过透明色屏蔽背景干扰，保留字体轮廓</li>
+<li><strong>OCR局限性</strong>：大漠OCR基于字库，对动态变色/变形文字识别率低</li>
+</ul>
+<p>实战要点</p>
+<ul>
+<li><strong>常规场景</strong>：透明图 + 找图组合可解决 80% 识别问题</li>
+<li><strong>动态数字</strong>（伤害值/坐标）：需使用高级 OCR 或深度学习方案</li>
+<li><strong>进阶方案</strong>：YOLO 目标检测 + OCR 应对复杂动态文字</li>
+</ul>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/Game/%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>处理鼠标漂移</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="flex align-center">
+        <span>幽灵键鼠</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#python调用大漠插件注意事项">Python调用大漠插件注意事项</a></li>
+    <li><a href="#注册方式">注册方式</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#setpath">SetPath</a></li>
+    <li><a href="#bindwindow">BindWindow</a></li>
+    <li><a href="#capturepic">CapturePic</a></li>
+    <li><a href="#getcolornum">GetColorNum</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#1大漠找图">1.大漠找图</a>
+      <ul>
+        <li><a href="#什么透明图">什么<strong>透明图</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#2大漠文字识别">2.大漠文字识别</a></li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

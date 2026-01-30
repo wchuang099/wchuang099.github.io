@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="CPU 的“位”# 32 位指的是什么？# CPU 的位数 = 寄存器宽度 &#43; ALU 运算位宽 &#43; 地址总线宽度 寄存器宽度 = 32 位 → 每个寄存器能存 4 字节数据 ALU = 32 位 → 一次运算处理 32 位数据 地址总线 = 32 位 → 可寻址空间 = 2³² 字节 = 4GB ✅ 关键点：“32 位”不是随便说的，而是 CPU 各个核心部件设计的一致结果。
+寄存器宽度 → 决定数据存储/运算能力 地址总线宽度 → 决定最大内存寻址范围 ALU 宽度 → 决定一次能处理多少位的数据 CPU 操作寄存器与内存的区别# CPU 访问寄存器的方式# 位置：CPU 内部的小型高速存储 寄存器存的是什么：数据本身（整数、浮点数、指针等） 访问方式：直接访问 例：MOV EAX, 5 → EAX 直接存储数值 5（32 位） 特点：容量小、速度最快 CPU 访问内存的方式# 位置：CPU 外部的大容量存储
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="05.内存">
+  <meta property="og:description" content="CPU 的“位”# 32 位指的是什么？# CPU 的位数 = 寄存器宽度 &#43; ALU 运算位宽 &#43; 地址总线宽度 寄存器宽度 = 32 位 → 每个寄存器能存 4 字节数据 ALU = 32 位 → 一次运算处理 32 位数据 地址总线 = 32 位 → 可寻址空间 = 2³² 字节 = 4GB ✅ 关键点：“32 位”不是随便说的，而是 CPU 各个核心部件设计的一致结果。
+寄存器宽度 → 决定数据存储/运算能力 地址总线宽度 → 决定最大内存寻址范围 ALU 宽度 → 决定一次能处理多少位的数据 CPU 操作寄存器与内存的区别# CPU 访问寄存器的方式# 位置：CPU 内部的小型高速存储 寄存器存的是什么：数据本身（整数、浮点数、指针等） 访问方式：直接访问 例：MOV EAX, 5 → EAX 直接存储数值 5（32 位） 特点：容量小、速度最快 CPU 访问内存的方式# 位置：CPU 外部的大容量存储">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="game">
+
+
+  <meta itemprop="name" content="05.内存">
+  <meta itemprop="description" content="CPU 的“位”# 32 位指的是什么？# CPU 的位数 = 寄存器宽度 &#43; ALU 运算位宽 &#43; 地址总线宽度 寄存器宽度 = 32 位 → 每个寄存器能存 4 字节数据 ALU = 32 位 → 一次运算处理 32 位数据 地址总线 = 32 位 → 可寻址空间 = 2³² 字节 = 4GB ✅ 关键点：“32 位”不是随便说的，而是 CPU 各个核心部件设计的一致结果。
+寄存器宽度 → 决定数据存储/运算能力 地址总线宽度 → 决定最大内存寻址范围 ALU 宽度 → 决定一次能处理多少位的数据 CPU 操作寄存器与内存的区别# CPU 访问寄存器的方式# 位置：CPU 内部的小型高速存储 寄存器存的是什么：数据本身（整数、浮点数、指针等） 访问方式：直接访问 例：MOV EAX, 5 → EAX 直接存储数值 5（32 位） 特点：容量小、速度最快 CPU 访问内存的方式# 位置：CPU 外部的大容量存储">
+  <meta itemprop="wordCount" content="401">
+
+<title>05.内存 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.9d4fa0048b4786d5be096d98c61a47e02072a87b9dbf0bb86dcd8edf179c4e43.js" integrity="sha256-nU&#43;gBItHhtW&#43;CW2YxhpH4CByqHudvwu4bc2O3xecTkM=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-game">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-204365caa941390a182aeb870c8b397d" class="toggle"  />
+    <label for="section-204365caa941390a182aeb870c8b397d" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f6929f8819239c236e3ff6d9318a645b" class="toggle"  />
+    <label for="section-f6929f8819239c236e3ff6d9318a645b" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-797baf87757652be835bcce5680ea0d4" class="toggle"  />
+    <label for="section-797baf87757652be835bcce5680ea0d4" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0fa9f382cfc268805da9afbea1ac822b" class="toggle"  />
+    <label for="section-0fa9f382cfc268805da9afbea1ac822b" class="flex">
+      <a role="button" class="">
+        Python数据处理</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-938c3edbaa8e3dd01e8b93d6f9361182" class="toggle"  />
+    <label for="section-938c3edbaa8e3dd01e8b93d6f9361182" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-56b62cfe8bd1e3138f346455c7c08d01" class="toggle"  />
+    <label for="section-56b62cfe8bd1e3138f346455c7c08d01" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e12d76c83fadc5077063bd8a06e4974c" class="toggle"  />
+    <label for="section-e12d76c83fadc5077063bd8a06e4974c" class="flex">
+      <a role="button" class="">
+        Linux</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-docker/" class="">
+      安装 Docker 教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-mysql/" class="">
+      安装 mysql 教程</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-23e22f2cefc5200495b10b220f00dc9b" class="toggle"  />
+    <label for="section-23e22f2cefc5200495b10b220f00dc9b" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5f3519d07421b3022c482beb7e53757d" class="toggle"  />
+    <label for="section-5f3519d07421b3022c482beb7e53757d" class="flex">
+      <a role="button" class="">
+        Other</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强平台装机流程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-00896273d6e22b6628839c56863edc57" class="toggle" checked />
+    <label for="section-00896273d6e22b6628839c56863edc57" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-212fbf26dee144498e07df6cb6c18024" class="toggle"  />
+    <label for="section-212fbf26dee144498e07df6cb6c18024" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB/" class="">
+      处理鼠标漂移</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5b47f8600929668d6470260320a7fd81" class="toggle"  />
+    <label for="section-5b47f8600929668d6470260320a7fd81" class="flex">
+      <a href="/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+        幽灵键鼠</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a>
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E6%B8%B8%E6%88%8F%E8%84%9A%E6%9C%AC%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%9A%94%E7%A6%BB%E6%96%B9%E6%A1%88/" class="">
+      脚本隔离方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c5a43b1f0709f0338f2ab4a52452792c" class="toggle" checked />
+    <label for="section-c5a43b1f0709f0338f2ab4a52452792c" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="active">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>05.内存</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#32-位指的是什么">32 位指的是什么？</a></li>
+    <li><a href="#cpu-操作寄存器与内存的区别">CPU 操作寄存器与内存的区别</a>
+      <ul>
+        <li><a href="#cpu-访问寄存器的方式">CPU 访问寄存器的方式</a></li>
+        <li><a href="#cpu-访问内存的方式">CPU 访问内存的方式</a></li>
+        <li><a href="#对比总结">对比总结</a></li>
+        <li><a href="#类比记忆">类比记忆</a></li>
+        <li><a href="#核心结论">核心结论</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#内存与寄存器的区别">内存与寄存器的区别</a></li>
+    <li><a href="#cpu-访问内存的数据单位">CPU 访问内存的数据单位</a></li>
+    <li><a href="#寄存器与内存的区别">寄存器与内存的区别</a>
+      <ul>
+        <li><a href="#基本特点">基本特点</a></li>
+        <li><a href="#计量单位">计量单位</a></li>
+        <li><a href="#32-位--64-位计算机的含义">32 位 / 64 位计算机的含义</a></li>
+        <li><a href="#内存编号与地址">内存编号与地址</a></li>
+        <li><a href="#32-位地址表示">32 位地址表示</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h1 id="cpu-的位">CPU 的“位”<a class="anchor" href="#cpu-%e7%9a%84%e4%bd%8d">#</a></h1>
+<h2 id="32-位指的是什么">32 位指的是什么？<a class="anchor" href="#32-%e4%bd%8d%e6%8c%87%e7%9a%84%e6%98%af%e4%bb%80%e4%b9%88">#</a></h2>
+<ul>
+<li><strong>CPU 的位数</strong> = <strong>寄存器宽度 + ALU 运算位宽 + 地址总线宽度</strong>
+<ul>
+<li><strong>寄存器宽度 = 32 位</strong> → 每个寄存器能存 4 字节数据</li>
+<li><strong>ALU = 32 位</strong> → 一次运算处理 32 位数据</li>
+<li><strong>地址总线 = 32 位</strong> → 可寻址空间 = 2³² 字节 = 4GB</li>
+</ul>
+</li>
+</ul>
+<p>✅ 关键点：<strong>“32 位”不是随便说的，而是 CPU 各个核心部件设计的一致结果。</strong></p>
+<ul>
+<li><strong>寄存器宽度</strong> → 决定数据存储/运算能力</li>
+<li><strong>地址总线宽度</strong> → 决定最大内存寻址范围</li>
+<li><strong>ALU 宽度</strong> → 决定一次能处理多少位的数据</li>
+</ul>
+<h2 id="cpu-操作寄存器与内存的区别">CPU 操作寄存器与内存的区别<a class="anchor" href="#cpu-%e6%93%8d%e4%bd%9c%e5%af%84%e5%ad%98%e5%99%a8%e4%b8%8e%e5%86%85%e5%ad%98%e7%9a%84%e5%8c%ba%e5%88%ab">#</a></h2>
+<h3 id="cpu-访问寄存器的方式">CPU 访问寄存器的方式<a class="anchor" href="#cpu-%e8%ae%bf%e9%97%ae%e5%af%84%e5%ad%98%e5%99%a8%e7%9a%84%e6%96%b9%e5%bc%8f">#</a></h3>
+<ul>
+<li><strong>位置</strong>：CPU 内部的小型高速存储</li>
+<li><strong>寄存器存的是什么</strong>：数据本身（整数、浮点数、指针等）</li>
+<li><strong>访问方式</strong>：直接访问
+<ul>
+<li>例：<code>MOV EAX, 5</code> → EAX 直接存储数值 5（32 位）</li>
+</ul>
+</li>
+<li><strong>特点</strong>：容量小、速度最快</li>
+</ul>
+<h3 id="cpu-访问内存的方式">CPU 访问内存的方式<a class="anchor" href="#cpu-%e8%ae%bf%e9%97%ae%e5%86%85%e5%ad%98%e7%9a%84%e6%96%b9%e5%bc%8f">#</a></h3>
+<ul>
+<li>
+<p><strong>位置</strong>：CPU 外部的大容量存储</p>
+</li>
+<li>
+<p><strong>内存存的是什么</strong>：数据（通过地址编号访问）</p>
+</li>
+<li>
+<p><strong>访问方式</strong>：CPU 自身不能“存储”内存地址编号，它只是通过<strong>地址总线</strong>发出地址信号到内存，从而读写对应位置的数据。</p>
+<ul>
+<li>例：<code>MOV EAX, [0x1000]</code> → CPU 按地址 0x1000 取数据到 EAX</li>
+</ul>
+</li>
+</ul>
+<p><strong>CPU 内存寻址规则</strong></p>
+<ul>
+<li>
+<p><strong>地址总线宽度</strong>：32 位 → 可表示 2³² 个不同的地址编号</p>
+</li>
+<li>
+<p><strong>最小寻址单位</strong>：1 个地址编号对应 <strong>1 字节（8 位）</strong></p>
+</li>
+<li>
+<p><strong>最大寻址范围</strong>：2³² × 1B = <strong>4GB</strong></p>
+</li>
+<li>
+<p><strong>关键点</strong>：</p>
+<ul>
+<li>CPU 访问的是 <strong>地址编号</strong>，而不是数据本身</li>
+<li>数据必须通过地址读取到寄存器或 ALU 才能操作</li>
+</ul>
+</li>
+</ul>
+<h3 id="对比总结">对比总结<a class="anchor" href="#%e5%af%b9%e6%af%94%e6%80%bb%e7%bb%93">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>存储位置</th>
+          <th>存储内容</th>
+          <th>访问方式</th>
+          <th>特点</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>寄存器</td>
+          <td>数据本身</td>
+          <td>直接读写</td>
+          <td>极快，数量少</td>
+      </tr>
+      <tr>
+          <td>内存</td>
+          <td>数据（地址定位）</td>
+          <td>先通过地址寻址再取/存</td>
+          <td>容量大，速度慢</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="类比记忆">类比记忆<a class="anchor" href="#%e7%b1%bb%e6%af%94%e8%ae%b0%e5%bf%86">#</a></h3>
+<ul>
+<li><strong>寄存器 = 手里的小盒子</strong>
+<ul>
+<li>直接装数据，随取随用</li>
+</ul>
+</li>
+<li><strong>内存 = 仓库</strong>
+<ul>
+<li>需要地址（门牌号）才能去取东西</li>
+<li>寄存器可以先装一个地址，再让 CPU 按地址访问仓库</li>
+</ul>
+</li>
+</ul>
+<h3 id="核心结论">核心结论<a class="anchor" href="#%e6%a0%b8%e5%bf%83%e7%bb%93%e8%ae%ba">#</a></h3>
+<ol>
+<li><strong>寄存器宽度 = CPU 位数</strong>，决定一次能存多少数据（32 位 = 4 字节）。</li>
+<li><strong>地址总线宽度 = CPU 位数</strong>，决定最大可寻址内存（32 位 = 4GB）。</li>
+<li><strong>寄存器存的是数据</strong>，<strong>内存是通过地址访问的数据</strong>。</li>
+<li>CPU 运行时往往是：<strong>寄存器里存放一个地址 → 再去内存取数据</strong>。</li>
+</ol>
+<h1 id="内存">内存<a class="anchor" href="#%e5%86%85%e5%ad%98">#</a></h1>
+<p>每个应用程序都会有自己的独立 <strong>4GB 内存空间</strong>。</p>
+<blockquote class='book-hint '>
+<p>注意：这里的“内存”指的是程序可用的虚拟内存空间，而不是物理内存条。</p></blockquote><hr>
+<h2 id="内存与寄存器的区别">内存与寄存器的区别<a class="anchor" href="#%e5%86%85%e5%ad%98%e4%b8%8e%e5%af%84%e5%ad%98%e5%99%a8%e7%9a%84%e5%8c%ba%e5%88%ab">#</a></h2>
+<ul>
+<li>
+<p><strong>寄存器</strong></p>
+<ul>
+<li>CPU 内部的小型高速存储</li>
+<li>数量有限、造价高</li>
+<li>可以给每个寄存器取名字（例如 EAX、EBX）</li>
+</ul>
+</li>
+<li>
+<p><strong>内存</strong></p>
+<ul>
+<li>外部大容量存储</li>
+<li>太大无法命名，因此使用 <strong>编号</strong></li>
+<li>编号称为 <strong>内存地址</strong></li>
+</ul>
+</li>
+</ul>
+<h2 id="cpu-访问内存的数据单位">CPU 访问内存的数据单位<a class="anchor" href="#cpu-%e8%ae%bf%e9%97%ae%e5%86%85%e5%ad%98%e7%9a%84%e6%95%b0%e6%8d%ae%e5%8d%95%e4%bd%8d">#</a></h2>
+<ul>
+<li>
+<p><strong>内存地址宽度</strong>：32 位 → 地址编号由 32 个二进制位表示</p>
+<ul>
+<li>一般使用 <strong>16 进制表示</strong>，例如：<code>0x00000000</code></li>
+</ul>
+</li>
+<li>
+<p><strong>最小寻址单位</strong>：1 个地址对应 1 字节（8 位）</p>
+</li>
+<li>
+<p><strong>程序可访问内存范围</strong>：0x00000000 ~ 0xFFFFFFFF</p>
+</li>
+<li>
+<p><strong>可存储的位数计算</strong>：</p>
+<ul>
+<li>总块数 = 0xFFFFFFFF + 1（加 1 是因为编号从 0 开始）</li>
+<li>每块 1 字节 = 8 位</li>
+<li>总位数 = (0xFFFFFFFF + 1) × 8</li>
+<li>换算为容量：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>34359738368 Bit ÷ 8 = 4294967296 Byte
+</span></span><span style="display:flex;"><span>4294967296 Byte ÷ 1024 = 4194304 KB
+</span></span><span style="display:flex;"><span>4194304 KB ÷ 1024 = 4096 MB
+</span></span><span style="display:flex;"><span>4096 MB ÷ 1024 = 4 GB</span></span></code></pre></div></li>
+</ul>
+</li>
+<li>
+<p>✅ 因此，每个程序都有独立的 <strong>4GB 虚拟内存空间</strong>。</p>
+</li>
+</ul>
+<h2 id="寄存器与内存的区别">寄存器与内存的区别<a class="anchor" href="#%e5%af%84%e5%ad%98%e5%99%a8%e4%b8%8e%e5%86%85%e5%ad%98%e7%9a%84%e5%8c%ba%e5%88%ab">#</a></h2>
+<h3 id="基本特点">基本特点<a class="anchor" href="#%e5%9f%ba%e6%9c%ac%e7%89%b9%e7%82%b9">#</a></h3>
+<ul>
+<li>
+<p><strong>寄存器</strong></p>
+<ul>
+<li>位于 CPU 内部，高速执行</li>
+<li>数量有限、造价高</li>
+<li>可以命名（如 EAX、BX、AH 等）</li>
+</ul>
+</li>
+<li>
+<p><strong>内存</strong></p>
+<ul>
+<li>外部大容量存储，速度相对较慢</li>
+<li>成本低，可以做得很大</li>
+<li>数量庞大，无法逐个命名，只能用编号（地址）代替</li>
+</ul>
+</li>
+<li>
+<p><strong>共同点</strong></p>
+<ul>
+<li>都是存储数据的容器</li>
+<li>都是定宽的（都有最大存储范围）</li>
+</ul>
+</li>
+</ul>
+<h3 id="计量单位">计量单位<a class="anchor" href="#%e8%ae%a1%e9%87%8f%e5%8d%95%e4%bd%8d">#</a></h3>
+<p>计算机常用</p>
+<ul>
+<li><strong>BYTE（字节）</strong> = 8 bit</li>
+<li><strong>WORD（字）</strong> = 16 bit</li>
+<li><strong>DWORD（双字）</strong> = 32 bit</li>
+</ul>
+<p>生活中常用</p>
+<ul>
+<li>1 KB = 1024 Byte</li>
+<li>1 MB = 1024 KB</li>
+<li>1 GB = 1024 MB</li>
+</ul>
+<h3 id="32-位--64-位计算机的含义">32 位 / 64 位计算机的含义<a class="anchor" href="#32-%e4%bd%8d--64-%e4%bd%8d%e8%ae%a1%e7%ae%97%e6%9c%ba%e7%9a%84%e5%90%ab%e4%b9%89">#</a></h3>
+<ul>
+<li><strong>误区</strong>：不是说 32 位 CPU 寄存器或内存最大宽度是 32 bit</li>
+<li><strong>正确理解</strong>：
+<ul>
+<li>CPU 的位数主要指 <strong>最大寻址范围</strong></li>
+<li>CPU 中可能存在大于 32 位的寄存器，但寻址时地址不能超过 32 位</li>
+<li>CPU 通过地址编号找到内存或寄存器中的数据</li>
+</ul>
+</li>
+</ul>
+<h3 id="内存编号与地址">内存编号与地址<a class="anchor" href="#%e5%86%85%e5%ad%98%e7%bc%96%e5%8f%b7%e4%b8%8e%e5%9c%b0%e5%9d%80">#</a></h3>
+<ul>
+<li><strong>寄存器命名</strong>：数量少，可以取名字</li>
+<li><strong>内存编号</strong>：数量庞大，无法命名，用编号表示 → 这就是 <strong>内存地址</strong></li>
+</ul>
+<p>编号生成原理</p>
+<ul>
+<li>32 位地址线 = 32 根线路，每根线 0 或 1</li>
+<li>32 根线的组合可表示 2³² 个编号</li>
+<li>每个编号对应 <strong>1 字节（8 位）</strong></li>
+<li>通过编号 CPU 可以找到对应的内存单元</li>
+</ul>
+<h3 id="32-位地址表示">32 位地址表示<a class="anchor" href="#32-%e4%bd%8d%e5%9c%b0%e5%9d%80%e8%a1%a8%e7%a4%ba">#</a></h3>
+<ul>
+<li>用 <strong>16 进制</strong> 表示：8 位十六进制数，如 <code>0x00000000</code> ~ <code>0xFFFFFFFF</code></li>
+<li>每个地址编号对应 <strong>1 字节（8 位）</strong></li>
+</ul>
+<p>可寻址内存计算</p>
+<ul>
+<li>地址总数：<code>0xFFFFFFFF - 0x00000000 + 1 = 0x100000000</code></li>
+<li>转换为十进制：<code>2^32 = 4,294,967,296</code> 个字节 = <strong>约 4 GB</strong></li>
+</ul>
+<p>换算过程</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>4,294,967,296 Byte ÷ 1024 = 4,194,304 KB
+</span></span><span style="display:flex;"><span>4,194,304 KB ÷ 1024 = 4,096 MB
+</span></span><span style="display:flex;"><span>4,096 MB ÷ 1024 = 4 GB</span></span></code></pre></div></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>04.寄存器</span>
+      </a>
+    
+    </span>
+    <span>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#32-位指的是什么">32 位指的是什么？</a></li>
+    <li><a href="#cpu-操作寄存器与内存的区别">CPU 操作寄存器与内存的区别</a>
+      <ul>
+        <li><a href="#cpu-访问寄存器的方式">CPU 访问寄存器的方式</a></li>
+        <li><a href="#cpu-访问内存的方式">CPU 访问内存的方式</a></li>
+        <li><a href="#对比总结">对比总结</a></li>
+        <li><a href="#类比记忆">类比记忆</a></li>
+        <li><a href="#核心结论">核心结论</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#内存与寄存器的区别">内存与寄存器的区别</a></li>
+    <li><a href="#cpu-访问内存的数据单位">CPU 访问内存的数据单位</a></li>
+    <li><a href="#寄存器与内存的区别">寄存器与内存的区别</a>
+      <ul>
+        <li><a href="#基本特点">基本特点</a></li>
+        <li><a href="#计量单位">计量单位</a></li>
+        <li><a href="#32-位--64-位计算机的含义">32 位 / 64 位计算机的含义</a></li>
+        <li><a href="#内存编号与地址">内存编号与地址</a></li>
+        <li><a href="#32-位地址表示">32 位地址表示</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

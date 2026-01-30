@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="https://docs.ultralytics.com/zh/quickstart/ https://blog.csdn.net/Scoful/article/details/131209347
+YOLO发展历史# 1.起源与核心思想的开放性 (Open Source) 开创者：YOLO最初确实是由Joseph Redmon等人作为学术研究项目创建的，并发表了论文。 开源：他们秉承开源精神，将代码公开。这一举动瞬间吸引了全世界的研究者和开发者。这意味着，任何人都可以获取、使用、修改和分发这些代码。
+2.创始人的“退出”与社区的“接管” 这是一个非常关键的转折点。 伦理担忧：在YOLOv3之后，创始人Joseph Redmon因担心其技术被用于军事、监控等恶性用途，产生了严重的伦理担忧，并宣布停止继续参与YOLO相关的研究。 权力真空与机遇：核心创始人的离开，并没有让市场和研究对高效目标检测的需求消失。这直接催生了两个结果：
+官方分支的延续：YOLOv4由原YOLOv3社区的活跃维护者（Alexey Bochkovskiy等）接手开发，延续了“官方”血脉。 新玩家的涌入：巨大的需求和开源代码的可得性，使得其他有实力的团队可以基于YOLO的核心思想，开发自己的版本。 3.不同的团队，不同的目标和优势 各个团队基于自身的技术栈和商业目标，对YOLO进行了不同的优化：
+团队 / 维护者 背景与目标 主要YOLO版本 版本特点与优势 Ultralytics 一家专注于AI工具的软件公司 YOLOv5, v8, v10, v11 工程化极致：基于PyTorch，易用性无敌，文档完善，生态强大，非常适合工业界和初学者。 美团 中国领先的生活服务电子商务平台 YOLOv6 工业应用驱动：针对自身业务中的硬件进行极致优化，追求在特定芯片上的最快速度。 Academic Researchers 大学和研究机构的人员 YOLOv7, YOLOv9 学术创新：关注于发表顶会论文，提出新的网络结构、训练方法等前沿思想。 Deci.ai 一家专注于AI模型效率的公司 YOLO-NAS 工具驱动：使用神经架构搜索工具，自动搜索出在精度和速度上最优的模型结构。 环境准备# 安装Miniconda和PyCharm# 用于管理 Python 虚拟环境和依赖库，下载地址：Anaconda 官网
+更新最新的显卡驱动# 打开NVIDA更新驱动的官网地址
+根据下图的选择，记得Windows驱动程序类型要选标准，如图
+点击搜索，下面就会列出一大堆的历史驱动，选择第一个，也就是最新的，当前是472.12，点开再点下载，再点同意并下载 下载完毕后，双击安装，会提示选择一个解压缩的目录，建议选一个空闲空间大一点的盘来存放，这个安装完毕后会自动删除的 等解压缩完毕后，会自动检查系统是否可以安装这个驱动，等检查完毕后，选择NVIDA图形驱动程序，上面的NVIDIA显卡驱动和GeForce Experience，会多安装GeForce Experience，给可怜的C盘更多的负担，不建议选择 同意并继续后，选择精简，下一步 等待安装完成，关闭就行了，建议重启电脑一下 右键点击桌面空白处，选择NVIDIA 控制面板，打开后，点击左下角的系统信息，查看驱动程序版本是否是安装的472.12 ">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="YOLO环境安装">
+  <meta property="og:description" content="https://docs.ultralytics.com/zh/quickstart/ https://blog.csdn.net/Scoful/article/details/131209347
+YOLO发展历史# 1.起源与核心思想的开放性 (Open Source) 开创者：YOLO最初确实是由Joseph Redmon等人作为学术研究项目创建的，并发表了论文。 开源：他们秉承开源精神，将代码公开。这一举动瞬间吸引了全世界的研究者和开发者。这意味着，任何人都可以获取、使用、修改和分发这些代码。
+2.创始人的“退出”与社区的“接管” 这是一个非常关键的转折点。 伦理担忧：在YOLOv3之后，创始人Joseph Redmon因担心其技术被用于军事、监控等恶性用途，产生了严重的伦理担忧，并宣布停止继续参与YOLO相关的研究。 权力真空与机遇：核心创始人的离开，并没有让市场和研究对高效目标检测的需求消失。这直接催生了两个结果：
+官方分支的延续：YOLOv4由原YOLOv3社区的活跃维护者（Alexey Bochkovskiy等）接手开发，延续了“官方”血脉。 新玩家的涌入：巨大的需求和开源代码的可得性，使得其他有实力的团队可以基于YOLO的核心思想，开发自己的版本。 3.不同的团队，不同的目标和优势 各个团队基于自身的技术栈和商业目标，对YOLO进行了不同的优化：
+团队 / 维护者 背景与目标 主要YOLO版本 版本特点与优势 Ultralytics 一家专注于AI工具的软件公司 YOLOv5, v8, v10, v11 工程化极致：基于PyTorch，易用性无敌，文档完善，生态强大，非常适合工业界和初学者。 美团 中国领先的生活服务电子商务平台 YOLOv6 工业应用驱动：针对自身业务中的硬件进行极致优化，追求在特定芯片上的最快速度。 Academic Researchers 大学和研究机构的人员 YOLOv7, YOLOv9 学术创新：关注于发表顶会论文，提出新的网络结构、训练方法等前沿思想。 Deci.ai 一家专注于AI模型效率的公司 YOLO-NAS 工具驱动：使用神经架构搜索工具，自动搜索出在精度和速度上最优的模型结构。 环境准备# 安装Miniconda和PyCharm# 用于管理 Python 虚拟环境和依赖库，下载地址：Anaconda 官网
+更新最新的显卡驱动# 打开NVIDA更新驱动的官网地址
+根据下图的选择，记得Windows驱动程序类型要选标准，如图
+点击搜索，下面就会列出一大堆的历史驱动，选择第一个，也就是最新的，当前是472.12，点开再点下载，再点同意并下载 下载完毕后，双击安装，会提示选择一个解压缩的目录，建议选一个空闲空间大一点的盘来存放，这个安装完毕后会自动删除的 等解压缩完毕后，会自动检查系统是否可以安装这个驱动，等检查完毕后，选择NVIDA图形驱动程序，上面的NVIDIA显卡驱动和GeForce Experience，会多安装GeForce Experience，给可怜的C盘更多的负担，不建议选择 同意并继续后，选择精简，下一步 等待安装完成，关闭就行了，建议重启电脑一下 右键点击桌面空白处，选择NVIDIA 控制面板，打开后，点击左下角的系统信息，查看驱动程序版本是否是安装的472.12">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="game">
+
+
+  <meta itemprop="name" content="YOLO环境安装">
+  <meta itemprop="description" content="https://docs.ultralytics.com/zh/quickstart/ https://blog.csdn.net/Scoful/article/details/131209347
+YOLO发展历史# 1.起源与核心思想的开放性 (Open Source) 开创者：YOLO最初确实是由Joseph Redmon等人作为学术研究项目创建的，并发表了论文。 开源：他们秉承开源精神，将代码公开。这一举动瞬间吸引了全世界的研究者和开发者。这意味着，任何人都可以获取、使用、修改和分发这些代码。
+2.创始人的“退出”与社区的“接管” 这是一个非常关键的转折点。 伦理担忧：在YOLOv3之后，创始人Joseph Redmon因担心其技术被用于军事、监控等恶性用途，产生了严重的伦理担忧，并宣布停止继续参与YOLO相关的研究。 权力真空与机遇：核心创始人的离开，并没有让市场和研究对高效目标检测的需求消失。这直接催生了两个结果：
+官方分支的延续：YOLOv4由原YOLOv3社区的活跃维护者（Alexey Bochkovskiy等）接手开发，延续了“官方”血脉。 新玩家的涌入：巨大的需求和开源代码的可得性，使得其他有实力的团队可以基于YOLO的核心思想，开发自己的版本。 3.不同的团队，不同的目标和优势 各个团队基于自身的技术栈和商业目标，对YOLO进行了不同的优化：
+团队 / 维护者 背景与目标 主要YOLO版本 版本特点与优势 Ultralytics 一家专注于AI工具的软件公司 YOLOv5, v8, v10, v11 工程化极致：基于PyTorch，易用性无敌，文档完善，生态强大，非常适合工业界和初学者。 美团 中国领先的生活服务电子商务平台 YOLOv6 工业应用驱动：针对自身业务中的硬件进行极致优化，追求在特定芯片上的最快速度。 Academic Researchers 大学和研究机构的人员 YOLOv7, YOLOv9 学术创新：关注于发表顶会论文，提出新的网络结构、训练方法等前沿思想。 Deci.ai 一家专注于AI模型效率的公司 YOLO-NAS 工具驱动：使用神经架构搜索工具，自动搜索出在精度和速度上最优的模型结构。 环境准备# 安装Miniconda和PyCharm# 用于管理 Python 虚拟环境和依赖库，下载地址：Anaconda 官网
+更新最新的显卡驱动# 打开NVIDA更新驱动的官网地址
+根据下图的选择，记得Windows驱动程序类型要选标准，如图
+点击搜索，下面就会列出一大堆的历史驱动，选择第一个，也就是最新的，当前是472.12，点开再点下载，再点同意并下载 下载完毕后，双击安装，会提示选择一个解压缩的目录，建议选一个空闲空间大一点的盘来存放，这个安装完毕后会自动删除的 等解压缩完毕后，会自动检查系统是否可以安装这个驱动，等检查完毕后，选择NVIDA图形驱动程序，上面的NVIDIA显卡驱动和GeForce Experience，会多安装GeForce Experience，给可怜的C盘更多的负担，不建议选择 同意并继续后，选择精简，下一步 等待安装完成，关闭就行了，建议重启电脑一下 右键点击桌面空白处，选择NVIDIA 控制面板，打开后，点击左下角的系统信息，查看驱动程序版本是否是安装的472.12">
+  <meta itemprop="wordCount" content="367">
+
+<title>YOLO环境安装 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.9d4fa0048b4786d5be096d98c61a47e02072a87b9dbf0bb86dcd8edf179c4e43.js" integrity="sha256-nU&#43;gBItHhtW&#43;CW2YxhpH4CByqHudvwu4bc2O3xecTkM=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-game">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-204365caa941390a182aeb870c8b397d" class="toggle"  />
+    <label for="section-204365caa941390a182aeb870c8b397d" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f6929f8819239c236e3ff6d9318a645b" class="toggle"  />
+    <label for="section-f6929f8819239c236e3ff6d9318a645b" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-797baf87757652be835bcce5680ea0d4" class="toggle"  />
+    <label for="section-797baf87757652be835bcce5680ea0d4" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0fa9f382cfc268805da9afbea1ac822b" class="toggle"  />
+    <label for="section-0fa9f382cfc268805da9afbea1ac822b" class="flex">
+      <a role="button" class="">
+        Python数据处理</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-938c3edbaa8e3dd01e8b93d6f9361182" class="toggle"  />
+    <label for="section-938c3edbaa8e3dd01e8b93d6f9361182" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-56b62cfe8bd1e3138f346455c7c08d01" class="toggle"  />
+    <label for="section-56b62cfe8bd1e3138f346455c7c08d01" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e12d76c83fadc5077063bd8a06e4974c" class="toggle"  />
+    <label for="section-e12d76c83fadc5077063bd8a06e4974c" class="flex">
+      <a role="button" class="">
+        Linux</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-docker/" class="">
+      安装 Docker 教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-mysql/" class="">
+      安装 mysql 教程</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-23e22f2cefc5200495b10b220f00dc9b" class="toggle"  />
+    <label for="section-23e22f2cefc5200495b10b220f00dc9b" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5f3519d07421b3022c482beb7e53757d" class="toggle"  />
+    <label for="section-5f3519d07421b3022c482beb7e53757d" class="flex">
+      <a role="button" class="">
+        Other</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强平台装机流程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-00896273d6e22b6628839c56863edc57" class="toggle" checked />
+    <label for="section-00896273d6e22b6628839c56863edc57" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-212fbf26dee144498e07df6cb6c18024" class="toggle" checked />
+    <label for="section-212fbf26dee144498e07df6cb6c18024" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="active">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB/" class="">
+      处理鼠标漂移</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5b47f8600929668d6470260320a7fd81" class="toggle"  />
+    <label for="section-5b47f8600929668d6470260320a7fd81" class="flex">
+      <a href="/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+        幽灵键鼠</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a>
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E6%B8%B8%E6%88%8F%E8%84%9A%E6%9C%AC%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%9A%94%E7%A6%BB%E6%96%B9%E6%A1%88/" class="">
+      脚本隔离方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c5a43b1f0709f0338f2ab4a52452792c" class="toggle"  />
+    <label for="section-c5a43b1f0709f0338f2ab4a52452792c" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>YOLO环境安装</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#安装miniconda和pycharm">安装Miniconda和PyCharm</a></li>
+    <li><a href="#更新最新的显卡驱动">更新最新的显卡驱动</a></li>
+    <li><a href="#安装cuda">安装CUDA</a></li>
+    <li><a href="#安装cudnn">安装cuDNN</a></li>
+    <li><a href="#安装pytorch">安装pytorch</a></li>
+    <li><a href="#安装yolo">安装yolo</a></li>
+    <li><a href="#pycharm">pycharm</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><p><a href="https://docs.ultralytics.com/zh/quickstart/">https://docs.ultralytics.com/zh/quickstart/</a>
+<a href="https://blog.csdn.net/Scoful/article/details/131209347">https://blog.csdn.net/Scoful/article/details/131209347</a></p>
+<h1 id="yolo发展历史">YOLO发展历史<a class="anchor" href="#yolo%e5%8f%91%e5%b1%95%e5%8e%86%e5%8f%b2">#</a></h1>
+<p><strong>1.起源与核心思想的开放性 (Open Source)</strong>
+开创者：YOLO最初确实是由Joseph Redmon等人作为学术研究项目创建的，并发表了论文。
+开源：他们秉承开源精神，将代码公开。这一举动瞬间吸引了全世界的研究者和开发者。这意味着，任何人都可以获取、使用、修改和分发这些代码。</p>
+<p><strong>2.创始人的“退出”与社区的“接管”</strong>
+这是一个非常关键的转折点。
+伦理担忧：在YOLOv3之后，创始人Joseph Redmon因担心其技术被用于军事、监控等恶性用途，产生了严重的伦理担忧，并宣布停止继续参与YOLO相关的研究。
+权力真空与机遇：核心创始人的离开，并没有让市场和研究对高效目标检测的需求消失。这直接催生了两个结果：</p>
+<ul>
+<li>官方分支的延续：YOLOv4由原YOLOv3社区的活跃维护者（Alexey Bochkovskiy等）接手开发，延续了“官方”血脉。</li>
+<li>新玩家的涌入：巨大的需求和开源代码的可得性，使得其他有实力的团队可以基于YOLO的核心思想，开发自己的版本。</li>
+</ul>
+<p><strong>3.不同的团队，不同的目标和优势</strong>
+各个团队基于自身的技术栈和商业目标，对YOLO进行了不同的优化：</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">团队 / 维护者</th>
+          <th style="text-align: left">背景与目标</th>
+          <th style="text-align: left">主要YOLO版本</th>
+          <th style="text-align: left">版本特点与优势</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>Ultralytics</strong></td>
+          <td style="text-align: left">一家专注于AI工具的软件公司</td>
+          <td style="text-align: left">YOLOv5, v8, v10, v11</td>
+          <td style="text-align: left"><strong>工程化极致</strong>：基于PyTorch，易用性无敌，文档完善，生态强大，非常适合工业界和初学者。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>美团</strong></td>
+          <td style="text-align: left">中国领先的生活服务电子商务平台</td>
+          <td style="text-align: left">YOLOv6</td>
+          <td style="text-align: left"><strong>工业应用驱动</strong>：针对自身业务中的硬件进行极致优化，追求在特定芯片上的最快速度。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Academic Researchers</strong></td>
+          <td style="text-align: left">大学和研究机构的人员</td>
+          <td style="text-align: left">YOLOv7, YOLOv9</td>
+          <td style="text-align: left"><strong>学术创新</strong>：关注于发表顶会论文，提出新的网络结构、训练方法等前沿思想。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>Deci.ai</strong></td>
+          <td style="text-align: left">一家专注于AI模型效率的公司</td>
+          <td style="text-align: left">YOLO-NAS</td>
+          <td style="text-align: left"><strong>工具驱动</strong>：使用神经架构搜索工具，自动搜索出在精度和速度上最优的模型结构。</td>
+      </tr>
+  </tbody>
+</table>
+<h1 id="环境准备">环境准备<a class="anchor" href="#%e7%8e%af%e5%a2%83%e5%87%86%e5%a4%87">#</a></h1>
+<h2 id="安装miniconda和pycharm">安装Miniconda和PyCharm<a class="anchor" href="#%e5%ae%89%e8%a3%85miniconda%e5%92%8cpycharm">#</a></h2>
+<p>用于管理 Python 虚拟环境和依赖库，下载地址：<a href="https://www.anaconda.com/download">Anaconda 官网</a></p>
+<p><img src="../images/%e4%b8%8b%e8%bd%bdMiniconda.png" alt="下载Miniconda" /></p>
+<h2 id="更新最新的显卡驱动">更新最新的显卡驱动<a class="anchor" href="#%e6%9b%b4%e6%96%b0%e6%9c%80%e6%96%b0%e7%9a%84%e6%98%be%e5%8d%a1%e9%a9%b1%e5%8a%a8">#</a></h2>
+<ul>
+<li>
+<p>打开NVIDA更新驱动的<a href="https://www.nvidia.cn/Download/Find.aspx?lang=cn">官网地址</a></p>
+</li>
+<li>
+<p>根据下图的选择，记得Windows驱动程序类型要选标准，如图<br>
+<img src="../images/001.png" alt="在这里插入图片描述" /></p>
+</li>
+<li>
+<p>点击搜索，下面就会列出一大堆的历史驱动，选择第一个，也就是最新的，当前是472.12，点开再点下载，再点同意并下载
+<img src="../images/002.png" alt="在这里插入图片描述" /></p>
+</li>
+<li>
+<p>下载完毕后，双击安装，会提示选择一个解压缩的目录，建议选一个空闲空间大一点的盘来存放，这个安装完毕后会自动删除的
+<img src="../images/003.png" alt="在这里插入图片描述" /></p>
+</li>
+<li>
+<p>等解压缩完毕后，会自动检查系统是否可以安装这个驱动，等检查完毕后，选择NVIDA图形驱动程序，上面的NVIDIA显卡驱动和GeForce Experience，会多安装GeForce Experience，给可怜的C盘更多的负担，不建议选择
+<img src="../images/004.png" alt="在这里插入图片描述" /></p>
+</li>
+<li>
+<p>同意并继续后，选择精简，下一步
+<img src="../images/005.png" alt="在这里插入图片描述" /></p>
+</li>
+<li>
+<p>等待安装完成，关闭就行了，建议重启电脑一下
+<img src="../images/006.png" alt="在这里插入图片描述" /></p>
+</li>
+<li>
+<p>右键点击桌面空白处，选择NVIDIA 控制面板，打开后，点击左下角的系统信息，查看驱动程序版本是否是安装的472.12
+<img src="../images/007.png" alt="在这里插入图片描述" /></p>
+</li>
+</ul>
+<h2 id="安装cuda">安装CUDA<a class="anchor" href="#%e5%ae%89%e8%a3%85cuda">#</a></h2>
+<p>打开cmd，输入命令：nvidia-smi，会列出当前的驱动版本和支持的CUDA的最高版本，如果提示命令不存在，建议用软件everything，搜索nvidia-smi.exe，然后自行把目录添加到环境变量里，或者直接进入nvidia-smi.exe的目录里再运行命令</p>
+<p>检查显卡驱动兼容性：命令行输入 <code>nvidia-smi</code>，确认 CUDA 版本</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>nvidia-smi  <span style="color:#75715e">#查看驱动版本，最高支持13.0，可以向下兼容 </span>
+</span></span><span style="display:flex;"><span>+-----------------------------------------------------------------------------------------+
+</span></span><span style="display:flex;"><span>| NVIDIA-SMI <span style="color:#ae81ff">581.57</span>                 Driver Version<span style="color:#960050;background-color:#1e0010">:</span> <span style="color:#ae81ff">581.57</span>         CUDA Version<span style="color:#960050;background-color:#1e0010">:</span> <span style="color:#ae81ff">13.0</span>     |
+</span></span><span style="display:flex;"><span>+-----------------------------------------+------------------------+----------------------+</span></span></code></pre></div><ul>
+<li>右上角显示的13.0就是当前电脑能够支持CUDA的最高版本，可以向下兼容，去CUDA的<a href="https://developer.nvidia.com/cuda-toolkit-archive">官方地址下载</a>，选择低于可支持版本的，比如我选择了<a href="https://developer.nvidia.com/cuda-11-8-0-download-archive">CUDA Toolkit 11.8.0</a></li>
+<li>下载完毕后，双击安装，会提示选择一个解压缩的目录，建议选一个空闲空间大一点的盘来存放，这个安装完毕后会自动删除的
+<img src="../images/012.png" alt="在这里插入图片描述" /></li>
+<li>等解压缩完毕后，会自动检查系统是否可以安装这个驱动，等检查完毕后，同意并继续</li>
+<li>选自定义，下一步
+<img src="../images/013.png" alt="在这里插入图片描述" /></li>
+<li>点开CUDA，找到Visual Studio Integration，取消勾选，如图所示
+<img src="../images/014.png" alt="在这里插入图片描述" /></li>
+<li>跟CUDA同级别的也都取消勾选，如图所示，下一步<br>
+<img src="../images/015.png" alt="在这里插入图片描述" /></li>
+<li>等待安装完成，下一步，关闭就行了，建议重启电脑一下
+<img src="../images/016.png" alt="在这里插入图片描述" /></li>
+<li>打开cmd，输入命令：nvcc -V ，能正常输出版本信息等，就说明安装成功了
+<img src="images/017.png" alt="在这里插入图片描述" /></li>
+<li>(可选)，做一下GPU带宽测试，用软件everything，搜bandwidthTest.exe，找到文件所在地址，然后打开cmd，输入命令：bandwidthTest.exe，看到结果有输出pass，说明测试成功
+<img src="images/018.png" alt="在这里插入图片描述" /></li>
+<li>(可选)，获取CUDA可使用的GPU的信息，用软件everything，搜deviceQuery.exe，找到文件所在地址，然后打开cmd，输入命令：deviceQuery.exe，看到结果有输出pass，说明测试成功，根据结果也可知，集显是不能被CUDA操控的。
+<img src="images/019.png" alt="在这里插入图片描述" /></li>
+</ul>
+<h2 id="安装cudnn">安装cuDNN<a class="anchor" href="#%e5%ae%89%e8%a3%85cudnn">#</a></h2>
+<ul>
+<li>
+<p>先注册一个NVIDIA的开发者账号，打开<a href="https://developer.nvidia.com/login">地址</a>，根据提示验证并注册</p>
+</li>
+<li>
+<p>打开cuDNN的<a href="https://developer.nvidia.com/rdp/cudnn-archive">官方下载地址</a>，需要根据已经安装的CUDA的版本选择
+<a href="https://developer.download.nvidia.cn/compute/cudnn/redist/cudnn/windows-x86_64/cudnn-windows-x86_64-8.9.0.131_cuda11-archive.zip">cuda11</a>
+<img src="../images/020.png" alt="在这里插入图片描述" /></p>
+</li>
+<li>
+<p>点开后，找到Windows的，点开，下载<br>
+<img src="../images/021.png" alt="在这里插入图片描述" /></p>
+</li>
+<li>
+<p>cuDNN其实称不上安装，只需要将下载下来的压缩包解压后，将对应文件夹的文件放到CUDA安装路径下的对应文件夹里即可(cuDNN可以认为是CUDA的补充，可以加速深层神经网络的速度)
+<img src="../images/022.png" alt="在这里插入图片描述" /></p>
+</li>
+<li>
+<p>复制上图的三个文件夹里面文件，然后找到CUDA的安装文件夹，也是一样有bin、include、lib，分别复制到里面即可，如果找不到，用软件everything，搜CUDA_Toolkit_Release_Notes.txt或者nvcc.exe，</p>
+</li>
+</ul>
+<h2 id="安装pytorch">安装pytorch<a class="anchor" href="#%e5%ae%89%e8%a3%85pytorch">#</a></h2>
+<p><a href="https://pytorch.org/get-started/previous-versions/">https://pytorch.org/get-started/previous-versions/</a></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span><span style="color:#75715e">#创建名字yolov10环境，指定python版本3.9</span>
+</span></span><span style="display:flex;"><span>conda create -n yolov10 python=<span style="color:#ae81ff">3.9</span> -y
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#激活yolov10环境</span>
+</span></span><span style="display:flex;"><span>conda activate yolov10
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#安装PyTorch</span>
+</span></span><span style="display:flex;"><span>pip install torch==<span style="color:#ae81ff">2.0</span>.1 torchvision==<span style="color:#ae81ff">0.15</span>.2 --index-url https<span style="color:#960050;background-color:#1e0010">:</span>//download.pytorch.org/whl/cu118
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#如果没有显卡，可以安装CPU版本</span>
+</span></span><span style="display:flex;"><span>pip install torch torchvision torchaudio</span></span></code></pre></div><blockquote class='book-hint '>
+<p>同一个 PyTorch 版本有两种安装方式
+pip：一般pip安装会比conda安装较高效
+conda：需要安装Anaconda 或 Miniconda</p></blockquote><h2 id="安装yolo">安装yolo<a class="anchor" href="#%e5%ae%89%e8%a3%85yolo">#</a></h2>
+<p><a href="https://github.com/THU-MIG/yolov10">获取YOLOv10源码</a></p>
+<p>1.三种安装方式
+1）直接使用源码(不推荐，无法使用命令行工具)
+<a href="https://github.com/ultralytics/ultralytics">https://github.com/ultralytics/ultralytics</a>
+2）pip直接安装(官方推荐)
+pip install ultralytics
+3）pip源码安装(个人推荐)  我是采用此方法</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#激活yolov10环境</span>
+</span></span><span style="display:flex;"><span>conda activate yolov10
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#进入项目目录</span>
+</span></span><span style="display:flex;"><span>cd D:\PyProject\yolov10<span style="color:#f92672">-</span>main
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#!!!打开requirements.txt，把torch和torchvision注释掉,防止安装的不匹配.#如果不小心安装了torch,先卸载所有torch相关包，再重新安装</span>
+</span></span><span style="display:flex;"><span>pip uninstally torch torchvision torchaudio torchtext
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#安装依赖</span>
+</span></span><span style="display:flex;"><span>pip install <span style="color:#f92672">-</span>r requirements<span style="color:#f92672">.</span>txt
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#安装项目 -e参数必须要有，否则后续修改代码无效</span>
+</span></span><span style="display:flex;"><span>pip install <span style="color:#f92672">-</span>e <span style="color:#f92672">.</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#可以看到已经安装了ultralytics ，并且源码在D:\PyProject\ultralytics-8.2.0目录下</span>
+</span></span><span style="display:flex;"><span>pip list 
+</span></span><span style="display:flex;"><span>ultralytics               <span style="color:#ae81ff">8.1.34</span>               D:\PyProject\yolov10<span style="color:#f92672">-</span>main <span style="color:#75715e">#源码方式安装</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#验证安装</span>
+</span></span><span style="display:flex;"><span>python <span style="color:#f92672">-</span>c <span style="color:#e6db74">&#34;from ultralytics import YOLOv10;print(&#39;成功导入YOLOv10!&#39;)&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#验证cuda</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> torch
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;CUDA available:</span><span style="color:#e6db74">{</span>torch<span style="color:#f92672">.</span>cuda<span style="color:#f92672">.</span><span style="color:#f92672">is</span> available()<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)<span style="color:#75715e">#状态正常返回True</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(D:\conda_envs\yolov10) C:\Users\wchuang<span style="color:#f92672">&gt;</span> python
+</span></span><span style="display:flex;"><span>Python <span style="color:#ae81ff">3.9.25</span> (main, Nov  <span style="color:#ae81ff">3</span> <span style="color:#ae81ff">2025</span>, <span style="color:#ae81ff">22</span>:<span style="color:#ae81ff">44</span>:<span style="color:#ae81ff">01</span>) [MSC v<span style="color:#ae81ff">.1929</span> <span style="color:#ae81ff">64</span> bit (AMD64)] on win32
+</span></span><span style="display:flex;"><span>Type <span style="color:#e6db74">&#34;help&#34;</span>, <span style="color:#e6db74">&#34;copyright&#34;</span>, <span style="color:#e6db74">&#34;credits&#34;</span> <span style="color:#f92672">or</span> <span style="color:#e6db74">&#34;license&#34;</span> <span style="color:#66d9ef">for</span> more information<span style="color:#f92672">.</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> <span style="color:#f92672">import</span> torch
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> print(torch<span style="color:#f92672">.</span>__version__)
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2.0.1</span><span style="color:#f92672">+</span>cu118
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> torch<span style="color:#f92672">.</span>cuda<span style="color:#f92672">.</span>is_available()
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> torch<span style="color:#f92672">.</span>version<span style="color:#f92672">.</span>cuda
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#39;11.8&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#验证CuDNN</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> torch<span style="color:#f92672">.</span>backends<span style="color:#f92672">.</span>cudnn<span style="color:#f92672">.</span>version()
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">8700</span> <span style="color:#75715e">#输出cudnn版本号</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;&gt;&gt;</span> torch<span style="color:#f92672">.</span>backends<span style="color:#f92672">.</span>cudnn<span style="color:#f92672">.</span>enabled
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">True</span> <span style="color:#75715e">#是否启用</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">//</span>常见问题
+</span></span><span style="display:flex;"><span>NVIDIA<span style="color:#f92672">-</span>SMI有显示但torch<span style="color:#f92672">.</span>cuda<span style="color:#f92672">.</span>is_available()返回 <span style="color:#66d9ef">False</span>:
+</span></span><span style="display:flex;"><span><span style="color:#f92672">//</span>重新安装 PyTorch 匹配 CUDA 版本
+</span></span><span style="display:flex;"><span>pip uninstall torch torchvision
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>(D:\conda_envs\yolov10) D:\PyProject\yolov10<span style="color:#f92672">-</span>main<span style="color:#f92672">&gt;</span>yolo predict model<span style="color:#f92672">=</span>yolov10n<span style="color:#f92672">.</span>pt source<span style="color:#f92672">=</span>ultralytics<span style="color:#f92672">/</span>assets<span style="color:#f92672">/</span>bus<span style="color:#f92672">.</span>jpg
+</span></span><span style="display:flex;"><span>Ultralytics YOLOv8<span style="color:#ae81ff">.1.34</span> <span style="color:#960050;background-color:#1e0010">🚀</span> Python<span style="color:#f92672">-</span><span style="color:#ae81ff">3.9.25</span> torch<span style="color:#f92672">-</span><span style="color:#ae81ff">2.0.1</span><span style="color:#f92672">+</span>cu118 CUDA:<span style="color:#ae81ff">0</span> (NVIDIA GeForce MX250, <span style="color:#ae81ff">2048</span>MiB)
+</span></span><span style="display:flex;"><span>YOLOv10n summary (fused): <span style="color:#ae81ff">285</span> layers, <span style="color:#ae81ff">2762608</span> parameters, <span style="color:#ae81ff">63840</span> gradients, <span style="color:#ae81ff">8.6</span> GFLOPs
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>image <span style="color:#ae81ff">1</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1</span> D:\PyProject\yolov10<span style="color:#f92672">-</span>main\ultralytics\assets\bus<span style="color:#f92672">.</span>jpg: <span style="color:#ae81ff">640</span>x480 <span style="color:#ae81ff">4</span> <span style="color:#ae81ff">0</span>s, <span style="color:#ae81ff">1</span> <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">55.8</span>ms
+</span></span><span style="display:flex;"><span>Speed: <span style="color:#ae81ff">5.3</span>ms preprocess, <span style="color:#ae81ff">55.8</span>ms inference, <span style="color:#ae81ff">5.0</span>ms postprocess per image at shape (<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">640</span>, <span style="color:#ae81ff">480</span>)
+</span></span><span style="display:flex;"><span>Results saved to runs\detect\predict  <span style="color:#75715e">#预测结果输出在 runs/detect/predict 文件夹</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">💡</span> Learn more at https:<span style="color:#f92672">//</span>docs<span style="color:#f92672">.</span>ultralytics<span style="color:#f92672">.</span>com<span style="color:#f92672">/</span>modes<span style="color:#f92672">/</span>predict</span></span></code></pre></div><h2 id="pycharm">pycharm<a class="anchor" href="#pycharm">#</a></h2>
+<p>pycharm打开项目D:\PyProject\yolov10-main</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> ultralytics <span style="color:#f92672">import</span> YOLOv10
+</span></span><span style="display:flex;"><span>yolo <span style="color:#f92672">=</span> YOLO(<span style="color:#e6db74">&#34;yolov10n.pt&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># result = yolo(source=&#34;./test.mp4&#34;) #逐帧视频检测</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># result = yolo(source=&#34;screen&#34;)  #屏幕检测</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># result = yolo(source=&#34;0&#34;)  #摄像头检测</span>
+</span></span><span style="display:flex;"><span>result <span style="color:#f92672">=</span> yolo(source<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;./ultralytics/assets/bus.jpg&#34;</span>,save<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>,conf<span style="color:#f92672">=</span><span style="color:#ae81ff">0.3</span>) <span style="color:#75715e">#图片检测</span>
+</span></span><span style="display:flex;"><span>print(result)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sava参数<span style="color:#960050;background-color:#1e0010">：</span>保存结果到runs目录下
+</span></span><span style="display:flex;"><span>conf参数<span style="color:#960050;background-color:#1e0010">：</span>置信度阈值
+</span></span><span style="display:flex;"><span>取值范围<span style="color:#960050;background-color:#1e0010">：</span> <span style="color:#ae81ff">0.0</span> <span style="color:#f92672">~</span> <span style="color:#ae81ff">1.0</span></span></span></code></pre></div><table>
+  <thead>
+      <tr>
+          <th>conf</th>
+          <th>含义</th>
+          <th>结果</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>0.05</td>
+          <td>“模型只要稍微觉得像，我就信”</td>
+          <td>检测多，误检也多</td>
+      </tr>
+      <tr>
+          <td>0.25</td>
+          <td>“模型要比较确定我才信”</td>
+          <td>默认设置，平衡准确率</td>
+      </tr>
+      <tr>
+          <td>0.5</td>
+          <td>“模型要很确定我才信”</td>
+          <td>检测少，误检少</td>
+      </tr>
+      <tr>
+          <td>1.0</td>
+          <td>“模型必须百分百确定我才信”</td>
+          <td>几乎检测不到任何目标</td>
+      </tr>
+  </tbody>
+</table>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>志强平台装机流程</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="flex align-center">
+        <span>YOLO标注和训练数据</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#安装miniconda和pycharm">安装Miniconda和PyCharm</a></li>
+    <li><a href="#更新最新的显卡驱动">更新最新的显卡驱动</a></li>
+    <li><a href="#安装cuda">安装CUDA</a></li>
+    <li><a href="#安装cudnn">安装cuDNN</a></li>
+    <li><a href="#安装pytorch">安装pytorch</a></li>
+    <li><a href="#安装yolo">安装yolo</a></li>
+    <li><a href="#pycharm">pycharm</a></li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="数据准备# ├─data │ └─shubiao │ ├─images # 放所有待标注图片 │ └─labels # 标注生成的 YOLO txt 文件 #创建数据目录 ⚠️ 注意：路径不能包含中文或空格，否则 LabelImg 无法保存。 图片无需处理，直接进入标注阶段即可。 视频类型数据
+需要将视频抽帧为图片，再进行标注。 import cv2 import os video = cv2.VideoCapture(&#34;./wendao.mkv&#34;) num = 0 save_step = 30 # 每隔 30 帧保存一张 save_dir = &#34;./data/shubiao/images/&#34; os.makedirs(save_dir, exist_ok=True) while True: ret, frame = video.read() if not ret: break num &#43;= 1 if num % save_step == 0: cv2.imwrite(f&#34;{save_dir}/{num}.bmp&#34;, frame) video.release()标注工具# 标注工具LabelImg LabelImg 是一款常用的图像标注工具，可输出以下格式： Pascal VOC（.xml） YOLO（.txt）CreateML（.json） 在线标注工具 https://www.makesense.ai/ 中文版：http://makesense.bimant.com/ 常用公开数据集 https://public.roboflow.com/object-detection 安装LabelImg# 方式一：Python 环境
+pip install labelimg -i https://pypi.tuna.tsinghua.edu.cn/simplelabelimg方式二：无 Python 环境
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="YOLO标注和训练数据">
+  <meta property="og:description" content="数据准备# ├─data │ └─shubiao │ ├─images # 放所有待标注图片 │ └─labels # 标注生成的 YOLO txt 文件 #创建数据目录 ⚠️ 注意：路径不能包含中文或空格，否则 LabelImg 无法保存。 图片无需处理，直接进入标注阶段即可。 视频类型数据
+需要将视频抽帧为图片，再进行标注。 import cv2 import os video = cv2.VideoCapture(&#34;./wendao.mkv&#34;) num = 0 save_step = 30 # 每隔 30 帧保存一张 save_dir = &#34;./data/shubiao/images/&#34; os.makedirs(save_dir, exist_ok=True) while True: ret, frame = video.read() if not ret: break num &#43;= 1 if num % save_step == 0: cv2.imwrite(f&#34;{save_dir}/{num}.bmp&#34;, frame) video.release()标注工具# 标注工具LabelImg LabelImg 是一款常用的图像标注工具，可输出以下格式： Pascal VOC（.xml） YOLO（.txt）CreateML（.json） 在线标注工具 https://www.makesense.ai/ 中文版：http://makesense.bimant.com/ 常用公开数据集 https://public.roboflow.com/object-detection 安装LabelImg# 方式一：Python 环境
+pip install labelimg -i https://pypi.tuna.tsinghua.edu.cn/simplelabelimg方式二：无 Python 环境">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="game">
+
+
+  <meta itemprop="name" content="YOLO标注和训练数据">
+  <meta itemprop="description" content="数据准备# ├─data │ └─shubiao │ ├─images # 放所有待标注图片 │ └─labels # 标注生成的 YOLO txt 文件 #创建数据目录 ⚠️ 注意：路径不能包含中文或空格，否则 LabelImg 无法保存。 图片无需处理，直接进入标注阶段即可。 视频类型数据
+需要将视频抽帧为图片，再进行标注。 import cv2 import os video = cv2.VideoCapture(&#34;./wendao.mkv&#34;) num = 0 save_step = 30 # 每隔 30 帧保存一张 save_dir = &#34;./data/shubiao/images/&#34; os.makedirs(save_dir, exist_ok=True) while True: ret, frame = video.read() if not ret: break num &#43;= 1 if num % save_step == 0: cv2.imwrite(f&#34;{save_dir}/{num}.bmp&#34;, frame) video.release()标注工具# 标注工具LabelImg LabelImg 是一款常用的图像标注工具，可输出以下格式： Pascal VOC（.xml） YOLO（.txt）CreateML（.json） 在线标注工具 https://www.makesense.ai/ 中文版：http://makesense.bimant.com/ 常用公开数据集 https://public.roboflow.com/object-detection 安装LabelImg# 方式一：Python 环境
+pip install labelimg -i https://pypi.tuna.tsinghua.edu.cn/simplelabelimg方式二：无 Python 环境">
+  <meta itemprop="wordCount" content="608">
+
+<title>YOLO标注和训练数据 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.9d4fa0048b4786d5be096d98c61a47e02072a87b9dbf0bb86dcd8edf179c4e43.js" integrity="sha256-nU&#43;gBItHhtW&#43;CW2YxhpH4CByqHudvwu4bc2O3xecTkM=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-game">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-204365caa941390a182aeb870c8b397d" class="toggle"  />
+    <label for="section-204365caa941390a182aeb870c8b397d" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f6929f8819239c236e3ff6d9318a645b" class="toggle"  />
+    <label for="section-f6929f8819239c236e3ff6d9318a645b" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-797baf87757652be835bcce5680ea0d4" class="toggle"  />
+    <label for="section-797baf87757652be835bcce5680ea0d4" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0fa9f382cfc268805da9afbea1ac822b" class="toggle"  />
+    <label for="section-0fa9f382cfc268805da9afbea1ac822b" class="flex">
+      <a role="button" class="">
+        Python数据处理</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-938c3edbaa8e3dd01e8b93d6f9361182" class="toggle"  />
+    <label for="section-938c3edbaa8e3dd01e8b93d6f9361182" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-56b62cfe8bd1e3138f346455c7c08d01" class="toggle"  />
+    <label for="section-56b62cfe8bd1e3138f346455c7c08d01" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e12d76c83fadc5077063bd8a06e4974c" class="toggle"  />
+    <label for="section-e12d76c83fadc5077063bd8a06e4974c" class="flex">
+      <a role="button" class="">
+        Linux</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-docker/" class="">
+      安装 Docker 教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-mysql/" class="">
+      安装 mysql 教程</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-23e22f2cefc5200495b10b220f00dc9b" class="toggle"  />
+    <label for="section-23e22f2cefc5200495b10b220f00dc9b" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5f3519d07421b3022c482beb7e53757d" class="toggle"  />
+    <label for="section-5f3519d07421b3022c482beb7e53757d" class="flex">
+      <a role="button" class="">
+        Other</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强平台装机流程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-00896273d6e22b6628839c56863edc57" class="toggle" checked />
+    <label for="section-00896273d6e22b6628839c56863edc57" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-212fbf26dee144498e07df6cb6c18024" class="toggle" checked />
+    <label for="section-212fbf26dee144498e07df6cb6c18024" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="active">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB/" class="">
+      处理鼠标漂移</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5b47f8600929668d6470260320a7fd81" class="toggle"  />
+    <label for="section-5b47f8600929668d6470260320a7fd81" class="flex">
+      <a href="/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+        幽灵键鼠</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a>
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E6%B8%B8%E6%88%8F%E8%84%9A%E6%9C%AC%E8%99%9A%E6%8B%9F%E6%9C%BA%E9%9A%94%E7%A6%BB%E6%96%B9%E6%A1%88/" class="">
+      脚本隔离方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c5a43b1f0709f0338f2ab4a52452792c" class="toggle"  />
+    <label for="section-c5a43b1f0709f0338f2ab4a52452792c" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>YOLO标注和训练数据</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#安装labelimg">安装LabelImg</a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#打开-labelimg-并设置保存路径">打开 LabelImg 并设置保存路径</a></li>
+        <li><a href="#开始标注图片">开始标注图片</a></li>
+        <li><a href="#保存标注">保存标注</a></li>
+        <li><a href="#标注结束后验证目录">标注结束后验证目录</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#标注结束后划分-trainval">标注结束后划分 train/val</a></li>
+    <li><a href="#生成-datasetyaml">生成 dataset.yaml</a></li>
+    <li><a href="#最终目录结构">最终目录结构</a></li>
+    <li><a href="#训练">训练</a></li>
+    <li><a href="#推理">推理</a></li>
+    <li><a href="#导出onnx">导出onnx</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h1 id="数据准备">数据准备<a class="anchor" href="#%e6%95%b0%e6%8d%ae%e5%87%86%e5%a4%87">#</a></h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">├─</span>data
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span>  <span style="color:#960050;background-color:#1e0010">└─</span>shubiao
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span>      <span style="color:#960050;background-color:#1e0010">├─</span>images    <span style="color:#75715e"># 放所有待标注图片</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span>      <span style="color:#960050;background-color:#1e0010">└─</span>labels    <span style="color:#75715e"># 标注生成的 YOLO txt 文件</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#创建数据目录  ⚠️ 注意：路径不能包含中文或空格，否则 LabelImg 无法保存。</span></span></span></code></pre></div><ul>
+<li>图片无需处理，直接进入标注阶段即可。</li>
+</ul>
+<p>视频类型数据</p>
+<ul>
+<li>需要将视频抽帧为图片，再进行标注。</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> cv2
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>video <span style="color:#f92672">=</span> cv2<span style="color:#f92672">.</span>VideoCapture(<span style="color:#e6db74">&#34;./wendao.mkv&#34;</span>)  
+</span></span><span style="display:flex;"><span>num <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>save_step <span style="color:#f92672">=</span> <span style="color:#ae81ff">30</span>  <span style="color:#75715e"># 每隔 30 帧保存一张</span>
+</span></span><span style="display:flex;"><span>save_dir <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;./data/shubiao/images/&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>os<span style="color:#f92672">.</span>makedirs(save_dir, exist_ok<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>    ret, frame <span style="color:#f92672">=</span> video<span style="color:#f92672">.</span>read()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> ret:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>    num <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> num <span style="color:#f92672">%</span> save_step <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>        cv2<span style="color:#f92672">.</span>imwrite(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>save_dir<span style="color:#e6db74">}</span><span style="color:#e6db74">/</span><span style="color:#e6db74">{</span>num<span style="color:#e6db74">}</span><span style="color:#e6db74">.bmp&#34;</span>, frame)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>video<span style="color:#f92672">.</span>release()</span></span></code></pre></div><h1 id="标注工具">标注工具<a class="anchor" href="#%e6%a0%87%e6%b3%a8%e5%b7%a5%e5%85%b7">#</a></h1>
+<ul>
+<li>标注工具LabelImg
+LabelImg 是一款常用的图像标注工具，可输出以下格式：
+Pascal VOC（.xml） YOLO（.txt）CreateML（.json）</li>
+<li>在线标注工具 <a href="https://www.makesense.ai/">https://www.makesense.ai/</a>       中文版：http://makesense.bimant.com/</li>
+<li>常用公开数据集 <a href="https://public.roboflow.com/object-detection">https://public.roboflow.com/object-detection</a></li>
+</ul>
+<h2 id="安装labelimg">安装LabelImg<a class="anchor" href="#%e5%ae%89%e8%a3%85labelimg">#</a></h2>
+<p>方式一：Python 环境</p>
+<pre tabindex="0"><code>pip install labelimg -i https://pypi.tuna.tsinghua.edu.cn/simple
+labelimg</code></pre><p>方式二：无 Python 环境</p>
+<p>下载 Windows/Linux 版本可执行文件，直接运行：</p>
+<p><a href="https://github.com/HumanSignal/labelImg/releases">GitHub Releases</a></p>
+<p><img src="../images/YOLO%e6%a0%87%e6%b3%a8%e5%92%8c%e8%ae%ad%e7%bb%83%e6%95%b0%e6%8d%ae_%e8%ae%a4%e8%af%86labelimg%e7%95%8c%e9%9d%a2.png" alt="认识labelimg界面" /></p>
+<p><strong>LabelImg 界面功能说明</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>按钮</th>
+          <th>功能</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Open</td>
+          <td>打开单张图片</td>
+      </tr>
+      <tr>
+          <td>Open Dir</td>
+          <td>打开整个图片文件夹</td>
+      </tr>
+      <tr>
+          <td>Change Save Dir</td>
+          <td>设置标注文件保存路径</td>
+      </tr>
+      <tr>
+          <td>Next Image</td>
+          <td>下一张图片</td>
+      </tr>
+      <tr>
+          <td>Prev Image</td>
+          <td>上一张图片</td>
+      </tr>
+      <tr>
+          <td>Verify Image</td>
+          <td>校验图片</td>
+      </tr>
+      <tr>
+          <td>Save</td>
+          <td>保存标注</td>
+      </tr>
+      <tr>
+          <td>Create RectBox</td>
+          <td>绘制矩形标注框</td>
+      </tr>
+      <tr>
+          <td>Duplicate RectBox</td>
+          <td>复制已有标注框</td>
+      </tr>
+      <tr>
+          <td>Delete RectBox</td>
+          <td>删除当前标注框</td>
+      </tr>
+      <tr>
+          <td>Zoom In</td>
+          <td>放大</td>
+      </tr>
+      <tr>
+          <td>Zoom Out</td>
+          <td>缩小</td>
+      </tr>
+      <tr>
+          <td>Fit Window</td>
+          <td>自适应窗口</td>
+      </tr>
+      <tr>
+          <td>Fit Width</td>
+          <td>宽度适配</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>LabelImg 快捷键列表</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>快捷键</th>
+          <th>功能</th>
+          <th>快捷键</th>
+          <th>功能</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Ctrl + Q</td>
+          <td>退出软件</td>
+          <td>Ctrl + +</td>
+          <td>放大</td>
+      </tr>
+      <tr>
+          <td>Ctrl + U</td>
+          <td>Open Dir</td>
+          <td>Ctrl + =</td>
+          <td>原始大小</td>
+      </tr>
+      <tr>
+          <td>Ctrl + R</td>
+          <td>Change Save Dir</td>
+          <td>Ctrl + F</td>
+          <td>图像适应窗口</td>
+      </tr>
+      <tr>
+          <td>Ctrl + S</td>
+          <td>保存图像</td>
+          <td>Ctrl + E</td>
+          <td>编辑标签</td>
+      </tr>
+      <tr>
+          <td>Ctrl + L</td>
+          <td>线框颜色</td>
+          <td>W</td>
+          <td>画框</td>
+      </tr>
+      <tr>
+          <td>Ctrl + J</td>
+          <td>移动编辑标注框</td>
+          <td>Delete</td>
+          <td>删除框</td>
+      </tr>
+      <tr>
+          <td>Ctrl + D</td>
+          <td>复制框</td>
+          <td>Ctrl + Shift + F</td>
+          <td>图像适应宽度</td>
+      </tr>
+      <tr>
+          <td>Ctrl + H</td>
+          <td>隐藏所有的框</td>
+          <td>D</td>
+          <td>Next Image</td>
+      </tr>
+      <tr>
+          <td>Ctrl + A</td>
+          <td>显示所有的框</td>
+          <td>A</td>
+          <td>Prev Image</td>
+      </tr>
+      <tr>
+          <td>Space</td>
+          <td>标记当前图片已标记</td>
+          <td>Ctrl + Shift + O</td>
+          <td>打开的文件夹只显示 .xml 文件</td>
+      </tr>
+  </tbody>
+</table>
+<h1 id="labelimg-数据标注流程">LabelImg 数据标注流程<a class="anchor" href="#labelimg-%e6%95%b0%e6%8d%ae%e6%a0%87%e6%b3%a8%e6%b5%81%e7%a8%8b">#</a></h1>
+<h3 id="打开-labelimg-并设置保存路径">打开 LabelImg 并设置保存路径<a class="anchor" href="#%e6%89%93%e5%bc%80-labelimg-%e5%b9%b6%e8%ae%be%e7%bd%ae%e4%bf%9d%e5%ad%98%e8%b7%af%e5%be%84">#</a></h3>
+<ol>
+<li>点击 <strong>Open Dir</strong> → 选择 <code>dataset/images</code></li>
+<li>点击 <strong>Change Save Dir</strong> → 选择 <code>dataset/labels</code></li>
+<li>在右侧选择标注格式：
+<ul>
+<li>YOLO（推荐）</li>
+<li>PascalVOC（XML）</li>
+</ul>
+</li>
+</ol>
+<h3 id="开始标注图片">开始标注图片<a class="anchor" href="#%e5%bc%80%e5%a7%8b%e6%a0%87%e6%b3%a8%e5%9b%be%e7%89%87">#</a></h3>
+<ol>
+<li>按 <strong>W</strong> 或点击 Create RectBox 进入画框模式</li>
+<li>鼠标拖动框选目标</li>
+<li>松开后弹出类别选择窗口 → 配置类别</li>
+<li>点击 <strong>Next Image</strong> 切换下一张</li>
+</ol>
+<h3 id="保存标注">保存标注<a class="anchor" href="#%e4%bf%9d%e5%ad%98%e6%a0%87%e6%b3%a8">#</a></h3>
+<ul>
+<li>如果未开启自动保存，每张图片标注完成后需要点击 <strong>Save</strong></li>
+<li>生成的 txt 文件出现在：./data/shubiao//labels/xxx.txt</li>
+</ul>
+<blockquote class='book-hint '>
+<p>开启自动保存（强烈推荐）
+路径：Menu → View → Auto Save Mode
+开启后：</p>
+<ul>
+<li>每画一个框</li>
+<li>每修改一个框</li>
+<li>每切换一张图都会自动保存标注文件，无需再点击 Save。</li>
+</ul></blockquote><h3 id="标注结束后验证目录">标注结束后验证目录<a class="anchor" href="#%e6%a0%87%e6%b3%a8%e7%bb%93%e6%9d%9f%e5%90%8e%e9%aa%8c%e8%af%81%e7%9b%ae%e5%bd%95">#</a></h3>
+<p>最终数据应如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">./</span>data<span style="color:#f92672">/</span>shubiao<span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">├──</span> images<span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span>     <span style="color:#960050;background-color:#1e0010">├──</span> <span style="color:#ae81ff">001.</span>jpg
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span>     <span style="color:#960050;background-color:#1e0010">├──</span> <span style="color:#ae81ff">002.</span>jpg
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span>     <span style="color:#960050;background-color:#1e0010">└──</span> <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">└──</span> labels<span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#960050;background-color:#1e0010">├──</span> <span style="color:#ae81ff">001.</span>txt
+</span></span><span style="display:flex;"><span>      <span style="color:#960050;background-color:#1e0010">├──</span> <span style="color:#ae81ff">002.</span>txt
+</span></span><span style="display:flex;"><span>      <span style="color:#960050;background-color:#1e0010">└──</span> classes<span style="color:#f92672">.</span>txt
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>确保<span style="color:#960050;background-color:#1e0010">：</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-</span> 图片与标注文件一一对应
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-</span> 文件名一致
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-</span> txt 内容符合 YOLO 格式</span></span></code></pre></div><h1 id="训练数据">训练数据<a class="anchor" href="#%e8%ae%ad%e7%bb%83%e6%95%b0%e6%8d%ae">#</a></h1>
+<h2 id="标注结束后划分-trainval">标注结束后划分 train/val<a class="anchor" href="#%e6%a0%87%e6%b3%a8%e7%bb%93%e6%9d%9f%e5%90%8e%e5%88%92%e5%88%86-trainval">#</a></h2>
+<p>Python 自动划分脚本
+下面示例按 <strong>80% 训练 / 20% 验证</strong> 划分：</p>
+<p>脚本放在dataset同级目录</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> shutil
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> random
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 原始路径</span>
+</span></span><span style="display:flex;"><span>images_dir <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;./data/shubiao/images&#34;</span>
+</span></span><span style="display:flex;"><span>labels_dir <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;./data/shubiao/labels&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 目标路径</span>
+</span></span><span style="display:flex;"><span>train_images <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;./data/shubiao/train/images&#34;</span>
+</span></span><span style="display:flex;"><span>train_labels <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;./data/shubiao/train/labels&#34;</span>
+</span></span><span style="display:flex;"><span>val_images <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;./data/shubiao/val/images&#34;</span>
+</span></span><span style="display:flex;"><span>val_labels <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;./data/shubiao/val/labels&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 创建目录</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> path <span style="color:#f92672">in</span> [train_images, train_labels, val_images, val_labels]:
+</span></span><span style="display:flex;"><span>    os<span style="color:#f92672">.</span>makedirs(path, exist_ok<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 获取所有图片</span>
+</span></span><span style="display:flex;"><span>images <span style="color:#f92672">=</span> [f <span style="color:#66d9ef">for</span> f <span style="color:#f92672">in</span> os<span style="color:#f92672">.</span>listdir(images_dir) <span style="color:#66d9ef">if</span> f<span style="color:#f92672">.</span>endswith(<span style="color:#e6db74">&#34;.bmp&#34;</span>) <span style="color:#f92672">or</span> f<span style="color:#f92672">.</span>endswith(<span style="color:#e6db74">&#34;.bmp&#34;</span>)]
+</span></span><span style="display:flex;"><span>images<span style="color:#f92672">.</span>sort()  <span style="color:#75715e"># 保持顺序，可选</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 打乱顺序</span>
+</span></span><span style="display:flex;"><span>random<span style="color:#f92672">.</span>shuffle(images)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 划分比例</span>
+</span></span><span style="display:flex;"><span>train_ratio <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.8</span>
+</span></span><span style="display:flex;"><span>train_count <span style="color:#f92672">=</span> int(len(images) <span style="color:#f92672">*</span> train_ratio)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>train_files <span style="color:#f92672">=</span> images[:train_count]
+</span></span><span style="display:flex;"><span>val_files <span style="color:#f92672">=</span> images[train_count:]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 复制训练集</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> f <span style="color:#f92672">in</span> train_files:
+</span></span><span style="display:flex;"><span>    shutil<span style="color:#f92672">.</span>copy(os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(images_dir, f), train_images)
+</span></span><span style="display:flex;"><span>    txt_file <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;.jpg&#34;</span>, <span style="color:#e6db74">&#34;.txt&#34;</span>)<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;.bmp&#34;</span>, <span style="color:#e6db74">&#34;.txt&#34;</span>)
+</span></span><span style="display:flex;"><span>    shutil<span style="color:#f92672">.</span>copy(os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(labels_dir, txt_file), train_labels)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 复制验证集</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> f <span style="color:#f92672">in</span> val_files:
+</span></span><span style="display:flex;"><span>    shutil<span style="color:#f92672">.</span>copy(os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(images_dir, f), val_images)
+</span></span><span style="display:flex;"><span>    txt_file <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;.jpg&#34;</span>, <span style="color:#e6db74">&#34;.txt&#34;</span>)<span style="color:#f92672">.</span>replace(<span style="color:#e6db74">&#34;.bmp&#34;</span>, <span style="color:#e6db74">&#34;.txt&#34;</span>)
+</span></span><span style="display:flex;"><span>    shutil<span style="color:#f92672">.</span>copy(os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>join(labels_dir, txt_file), val_labels)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;训练集: </span><span style="color:#e6db74">{</span>len(train_files)<span style="color:#e6db74">}</span><span style="color:#e6db74"> 张图片&#34;</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;验证集: </span><span style="color:#e6db74">{</span>len(val_files)<span style="color:#e6db74">}</span><span style="color:#e6db74"> 张图片&#34;</span>)</span></span></code></pre></div><h2 id="生成-datasetyaml">生成 dataset.yaml<a class="anchor" href="#%e7%94%9f%e6%88%90-datasetyaml">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#75715e"># dataset.yaml</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">path</span>: <span style="color:#ae81ff">./dataset</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">train</span>: <span style="color:#ae81ff">train/images</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">val</span>: <span style="color:#ae81ff">val/images</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 类别数</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">nc</span>: <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 类别名称</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">names</span>: [<span style="color:#e6db74">&#39;gamer&#39;</span>]</span></span></code></pre></div><h2 id="最终目录结构">最终目录结构<a class="anchor" href="#%e6%9c%80%e7%bb%88%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">./</span>data<span style="color:#f92672">/</span>shubiao<span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">├──</span> images<span style="color:#f92672">/</span>         <span style="color:#75715e"># 原始所有图片</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">├──</span> labels<span style="color:#f92672">/</span>         <span style="color:#75715e"># 原始所有标注</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">├──</span> train<span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span>     <span style="color:#960050;background-color:#1e0010">├──</span> images<span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">│</span>     <span style="color:#960050;background-color:#1e0010">└──</span> labels<span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">└──</span> val<span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#960050;background-color:#1e0010">├──</span> images<span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#960050;background-color:#1e0010">└──</span> labels<span style="color:#f92672">/</span>
+</span></span><span style="display:flex;"><span>shubiao<span style="color:#f92672">.</span>yaml   <span style="color:#75715e"># YOLO 训练配置文件  放到data目录下</span></span></span></code></pre></div><h2 id="训练">训练<a class="anchor" href="#%e8%ae%ad%e7%bb%83">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> ultralytics <span style="color:#f92672">import</span> YOLOv10
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    model_yaml_path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;ultralytics</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">cfg</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">models</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">v10</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">yolov10n.yaml&#34;</span>
+</span></span><span style="display:flex;"><span>    model <span style="color:#f92672">=</span> YOLOv10(model_yaml_path)<span style="color:#f92672">.</span>load(<span style="color:#e6db74">&#34;yolov10n.pt&#34;</span>)
+</span></span><span style="display:flex;"><span>    data_path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;.</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">data</span><span style="color:#ae81ff">\\</span><span style="color:#e6db74">shubiao.yaml&#39;</span>
+</span></span><span style="display:flex;"><span>    results <span style="color:#f92672">=</span> model<span style="color:#f92672">.</span>train(
+</span></span><span style="display:flex;"><span>            data<span style="color:#f92672">=</span>data_path,
+</span></span><span style="display:flex;"><span>            imgsz<span style="color:#f92672">=</span><span style="color:#ae81ff">640</span>,
+</span></span><span style="display:flex;"><span>            epochs<span style="color:#f92672">=</span><span style="color:#ae81ff">50</span>,
+</span></span><span style="display:flex;"><span>            batch<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>            workers<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>            device<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;0&#39;</span>
+</span></span><span style="display:flex;"><span>            )</span></span></code></pre></div><p>参数：
+<code>task=detect</code> ：目标检测
+<code>mode=train</code> ：训练模式
+<code>model=yolov8s.pt</code> ：使用预训练的 yolov8 small
+<code>data</code> ：数据集 yaml 文件
+<code>epochs</code> ：训练轮数
+<code>batch</code> ：batch 大小</p>
+<p>训练输出说明</p>
+<p>/runs/detect
+├── weights/
+│    ├── best.pt       # 最佳权重
+│    └── last.pt       # 最后轮权重
+├── results.png        # 精度曲线
+└── events.out.tfevents.xxx</p>
+<h2 id="推理">推理<a class="anchor" href="#%e6%8e%a8%e7%90%86">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> ultralytics <span style="color:#f92672">import</span> YOLOv10
+</span></span><span style="display:flex;"><span>model <span style="color:#f92672">=</span> YOLOv10(<span style="color:#e6db74">&#39;best.pt&#39;</span>)
+</span></span><span style="display:flex;"><span>model<span style="color:#f92672">.</span>predict(source<span style="color:#f92672">=</span><span style="color:#e6db74">r</span><span style="color:#e6db74">&#39;D:\PyProject\yolov10-main\data\shubiao\val\images&#39;</span>,save<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)</span></span></code></pre></div><h2 id="导出onnx">导出onnx<a class="anchor" href="#%e5%af%bc%e5%87%baonnx">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> ultralytics <span style="color:#f92672">import</span> YOLOv10
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 加载需要导出的模型</span>
+</span></span><span style="display:flex;"><span>model <span style="color:#f92672">=</span> YOLOv10(<span style="color:#e6db74">&#39;best.pt&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 导出ONNX模型</span>
+</span></span><span style="display:flex;"><span>model<span style="color:#f92672">.</span>export(
+</span></span><span style="display:flex;"><span>    format<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;onnx&#39;</span>,        <span style="color:#75715e"># 指定导出格式为ONNX</span>
+</span></span><span style="display:flex;"><span>    imgsz<span style="color:#f92672">=</span><span style="color:#ae81ff">640</span>,            <span style="color:#75715e"># 输入图像尺寸 (训练默认640x640)</span>
+</span></span><span style="display:flex;"><span>    opset<span style="color:#f92672">=</span><span style="color:#ae81ff">17</span>,             <span style="color:#75715e"># ONNX算子集版本 (推荐12-18)</span>
+</span></span><span style="display:flex;"><span>    simplify<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>,        <span style="color:#75715e"># 启用模型简化 (强烈推荐)</span>
+</span></span><span style="display:flex;"><span>    dynamic<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>,         <span style="color:#75715e"># 允许动态输入尺寸 (可选)</span>
+</span></span><span style="display:flex;"><span>    batch<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>,              <span style="color:#75715e"># 批次大小 (默认1)</span>
+</span></span><span style="display:flex;"><span>    device<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;cpu&#39;</span>,         <span style="color:#75715e"># 使用CPU导出 (避免CUDA兼容性问题)</span>
+</span></span><span style="display:flex;"><span>    half<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>,           <span style="color:#75715e"># 禁用FP16 (避免某些设备兼容性问题)</span>
+</span></span><span style="display:flex;"><span>    workspace<span style="color:#f92672">=</span><span style="color:#ae81ff">4</span>,          <span style="color:#75715e"># TensorRT工作空间大小 (GB), ONNX导出可忽略</span>
+</span></span><span style="display:flex;"><span>)</span></span></code></pre></div><p>常见问题：</p>
+<p>调整数据集目录后再次训练
+需要线删除~/AppData/Roaming/Ultralytics文件夹下的settings.yaml</p>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>YOLO环境安装</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/Game/%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB/" class="flex align-center">
+        <span>处理鼠标漂移</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#安装labelimg">安装LabelImg</a></li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#打开-labelimg-并设置保存路径">打开 LabelImg 并设置保存路径</a></li>
+        <li><a href="#开始标注图片">开始标注图片</a></li>
+        <li><a href="#保存标注">保存标注</a></li>
+        <li><a href="#标注结束后验证目录">标注结束后验证目录</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#标注结束后划分-trainval">标注结束后划分 train/val</a></li>
+    <li><a href="#生成-datasetyaml">生成 dataset.yaml</a></li>
+    <li><a href="#最终目录结构">最终目录结构</a></li>
+    <li><a href="#训练">训练</a></li>
+    <li><a href="#推理">推理</a></li>
+    <li><a href="#导出onnx">导出onnx</a></li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
