@@ -1,0 +1,2560 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="迁移流程总结(阿里云)# 一、云迁移整体架构# 云迁移涉及 七大核心模块（云厂商常见分类）
+类别 内容 计算 ECS、CVM 存储 OSS、NAS 网络 VPC、SLB 数据库 RDS、Redis 中间件 Kafka、RabbitMQ 安全 WAF、DDoS 大数据 Elasticsearch 等 迁移时通常需要逐个模块进行迁移。
+二、迁移需确认通用的问题点# 在实施迁移前，需要与客户确认以下关键问题：
+1. 数据迁移时间# 指：
+腾讯云 → 阿里云数据复制时间例如：
+系统盘 数据盘 数据库 需要给客户 大致时间预估
+例如：
+数据量：500GB预计迁移时间：3~5小时 2. 切换时间# 即：
+业务切换到新环境的时间例如：
+DNS切换负载均衡切换应用地址切换通常需要：
+运维护航 技术人员待命 3. 停机窗口（空窗期）# 必须确认客户是否允许停机：
+类型 说明 有停机窗口 可以停机迁移 无停机窗口 必须在线迁移 例如：
+凌晨 2:00 ~ 4:00如果：
+空窗期 = 0意味着：
+必须不停机迁移难度会大很多。
+4.业务迁移风险点# 迁移可能影响：
+项目 说明 IP地址 内网IP会变化 公网IP 云平台不同 License 可能绑定IP MAC地址 部分软件绑定 需要客户确认：
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E8%BF%81%E7%A7%BB%E6%B5%81%E7%A8%8B%E9%98%BF%E9%87%8C%E4%BA%91/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="迁移流程总结">
+  <meta property="og:description" content="迁移流程总结(阿里云)# 一、云迁移整体架构# 云迁移涉及 七大核心模块（云厂商常见分类）
+类别 内容 计算 ECS、CVM 存储 OSS、NAS 网络 VPC、SLB 数据库 RDS、Redis 中间件 Kafka、RabbitMQ 安全 WAF、DDoS 大数据 Elasticsearch 等 迁移时通常需要逐个模块进行迁移。
+二、迁移需确认通用的问题点# 在实施迁移前，需要与客户确认以下关键问题：
+1. 数据迁移时间# 指：
+腾讯云 → 阿里云数据复制时间例如：
+系统盘 数据盘 数据库 需要给客户 大致时间预估
+例如：
+数据量：500GB预计迁移时间：3~5小时 2. 切换时间# 即：
+业务切换到新环境的时间例如：
+DNS切换负载均衡切换应用地址切换通常需要：
+运维护航 技术人员待命 3. 停机窗口（空窗期）# 必须确认客户是否允许停机：
+类型 说明 有停机窗口 可以停机迁移 无停机窗口 必须在线迁移 例如：
+凌晨 2:00 ~ 4:00如果：
+空窗期 = 0意味着：
+必须不停机迁移难度会大很多。
+4.业务迁移风险点# 迁移可能影响：
+项目 说明 IP地址 内网IP会变化 公网IP 云平台不同 License 可能绑定IP MAC地址 部分软件绑定 需要客户确认：">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="linux">
+
+
+  <meta itemprop="name" content="迁移流程总结">
+  <meta itemprop="description" content="迁移流程总结(阿里云)# 一、云迁移整体架构# 云迁移涉及 七大核心模块（云厂商常见分类）
+类别 内容 计算 ECS、CVM 存储 OSS、NAS 网络 VPC、SLB 数据库 RDS、Redis 中间件 Kafka、RabbitMQ 安全 WAF、DDoS 大数据 Elasticsearch 等 迁移时通常需要逐个模块进行迁移。
+二、迁移需确认通用的问题点# 在实施迁移前，需要与客户确认以下关键问题：
+1. 数据迁移时间# 指：
+腾讯云 → 阿里云数据复制时间例如：
+系统盘 数据盘 数据库 需要给客户 大致时间预估
+例如：
+数据量：500GB预计迁移时间：3~5小时 2. 切换时间# 即：
+业务切换到新环境的时间例如：
+DNS切换负载均衡切换应用地址切换通常需要：
+运维护航 技术人员待命 3. 停机窗口（空窗期）# 必须确认客户是否允许停机：
+类型 说明 有停机窗口 可以停机迁移 无停机窗口 必须在线迁移 例如：
+凌晨 2:00 ~ 4:00如果：
+空窗期 = 0意味着：
+必须不停机迁移难度会大很多。
+4.业务迁移风险点# 迁移可能影响：
+项目 说明 IP地址 内网IP会变化 公网IP 云平台不同 License 可能绑定IP MAC地址 部分软件绑定 需要客户确认：">
+  <meta itemprop="wordCount" content="434">
+
+<title>迁移流程总结 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E8%BF%81%E7%A7%BB%E6%B5%81%E7%A8%8B%E9%98%BF%E9%87%8C%E4%BA%91/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.34f08419adbbdfcec282384afb2e7509443732f312441b623222c3af14e06911.js" integrity="sha256-NPCEGa27387CgjhK&#43;y51CUQ3MvMSRBtiMiLDrxTgaRE=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-linux">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-204365caa941390a182aeb870c8b397d" class="toggle"  />
+    <label for="section-204365caa941390a182aeb870c8b397d" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f6929f8819239c236e3ff6d9318a645b" class="toggle"  />
+    <label for="section-f6929f8819239c236e3ff6d9318a645b" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-797baf87757652be835bcce5680ea0d4" class="toggle"  />
+    <label for="section-797baf87757652be835bcce5680ea0d4" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-938c3edbaa8e3dd01e8b93d6f9361182" class="toggle"  />
+    <label for="section-938c3edbaa8e3dd01e8b93d6f9361182" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-56b62cfe8bd1e3138f346455c7c08d01" class="toggle"  />
+    <label for="section-56b62cfe8bd1e3138f346455c7c08d01" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e12d76c83fadc5077063bd8a06e4974c" class="toggle" checked />
+    <label for="section-e12d76c83fadc5077063bd8a06e4974c" class="flex">
+      <a role="button" class="">
+        Linux</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c0518db0448b3d740eada08bd26ccfac" class="toggle" checked />
+    <label for="section-c0518db0448b3d740eada08bd26ccfac" class="flex">
+      <a role="button" class="">
+        阿里腾讯华为火山云产品对比</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AF%B9%E6%AF%94/" class="">
+      服务器对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E7%A1%AC%E7%9B%98%E5%AF%B9%E6%AF%94/" class="">
+      云硬盘对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%B9%E6%AF%94/" class="">
+      数据库产品对比表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AF%B9%E6%AF%94/" class="">
+      中间件产品对比表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AF%B9%E6%AF%94/" class="">
+      大数据对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E5%AE%89%E5%85%A8%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/" class="">
+      安全产品对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AF%B9%E6%A0%87/" class="">
+      云容器对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E6%9E%B6%E6%9E%84%E5%B8%88%E5%B7%A5%E4%BD%9C%E8%81%8C%E8%B4%A3/" class="">
+      云架构师工作职责</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E8%BF%81%E7%A7%BB%E6%B5%81%E7%A8%8B%E9%98%BF%E9%87%8C%E4%BA%91/" class="active">
+      迁移流程总结</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-docker/" class="">
+      安装 Docker 教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-mysql/" class="">
+      安装 mysql 教程</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-23e22f2cefc5200495b10b220f00dc9b" class="toggle"  />
+    <label for="section-23e22f2cefc5200495b10b220f00dc9b" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5f3519d07421b3022c482beb7e53757d" class="toggle"  />
+    <label for="section-5f3519d07421b3022c482beb7e53757d" class="flex">
+      <a role="button" class="">
+        Other</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强平台装机流程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-00896273d6e22b6628839c56863edc57" class="toggle"  />
+    <label for="section-00896273d6e22b6628839c56863edc57" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-212fbf26dee144498e07df6cb6c18024" class="toggle"  />
+    <label for="section-212fbf26dee144498e07df6cb6c18024" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c7e351909150a2b7e1cb200bf4cfa4d9" class="toggle"  />
+    <label for="section-c7e351909150a2b7e1cb200bf4cfa4d9" class="flex">
+      <a role="button" class="">
+        脚本开发实战</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/1.%E5%9B%BE%E8%89%B2%E8%84%9A%E6%9C%AC%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" class="">
+      1.图色脚本架构设计</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/2.%E5%B7%A5%E7%A8%8B%E6%9E%B6%E6%9E%84UI-%E5%B8%83%E5%B1%80%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%85%8D%E7%BD%AE%E9%9A%94%E7%A6%BB/" class="">
+      2.工程架构、UI 布局与多线程配置隔离</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/3.%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%89%BE%E5%9B%BE%E6%8C%87%E4%BB%A4%E8%AF%A6%E8%A7%A3/" class="">
+      3.大漠插件开发实战：环境部署与找图指令详解</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/4.%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98%E5%85%8D%E6%B3%A8%E5%86%8C%E8%B0%83%E7%94%A8%E5%9D%90%E6%A0%87%E7%B3%BB%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E5%90%8E%E5%8F%B0%E7%BB%91%E5%AE%9A/" class="">
+      4.大漠插件开发实战：免注册调用、坐标系原理以及后台绑定</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/5.%E6%98%93%E8%AF%AD%E8%A8%80%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6%E4%B8%8E%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB%E4%BC%98%E5%8C%96%E6%96%B9%E6%A1%88/" class="">
+      5.易语言多线程控制与大漠插件鼠标漂移优化方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/06-07-08-09.%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB%E8%BE%B9%E7%95%8C%E4%BB%A5%E5%8F%8A%E6%89%93%E5%9B%BE%E4%BB%BB%E5%8A%A1%E6%B5%81%E7%A8%8B%E6%A2%B3%E7%90%86-%E5%BA%97%E5%B0%8F%E4%BA%8C%E6%9F%A5%E6%89%BE%E6%94%BE%E5%9C%A8%E7%AC%AC27-28%E8%AF%BE/" class="">
+      06-07-08-09.鼠标漂移边界以及打图任务流程梳理 店小二查找放在第27 28课</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/10.%E5%BC%BA%E7%9B%97%E4%BB%BB%E5%8A%A1%E8%B4%BC%E7%8E%8B%E4%BB%BB%E5%8A%A1%E8%AF%BB%E5%8F%961/" class="">
+      10.强盗任务、贼王任务读取(1)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/10.%E5%BC%BA%E7%9B%97%E4%BB%BB%E5%8A%A1%E8%B4%BC%E7%8E%8B%E4%BB%BB%E5%8A%A1%E8%AF%BB%E5%8F%962/" class="">
+      10.强盗任务、贼王任务读取(2)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/11.%E8%B7%A8%E5%9C%B0%E5%9B%BE%E8%87%AA%E5%8A%A8%E5%AF%BB%E8%B7%AF/" class="">
+      11.自动寻路</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/12.%E9%A3%9E%E8%A1%8C%E6%97%97/" class="">
+      12.飞行旗</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/13.%E5%8A%A8%E6%80%81NPC%E8%BD%A6%E5%A4%AB%E9%A9%BF%E7%AB%99%E8%80%81%E6%9D%BF%E7%82%B9%E5%87%BB%E5%AF%B9%E8%AF%9D%E6%A1%86%E8%87%AA%E5%8A%A8%E5%8C%96%E4%BB%A5%E5%8F%8A%E6%96%B0%E5%8C%BA%E9%81%AE%E6%8C%A1%E5%88%A4%E5%AE%9A%E7%9A%84%E9%AB%98%E7%BA%A7%E5%AE%9E%E6%93%8D%E6%8A%80%E5%B7%A7/" class="">
+      13.动态NPC（车夫、驿站老板）点击、对话框自动化以及新区遮挡判定的高级实操技巧</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/14.%E5%9C%B0%E5%9B%BE%E5%9D%90%E6%A0%87%E6%8D%A2%E7%AE%97/" class="">
+      14.地图坐标换算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/15.%E5%BC%BA%E7%9B%97NPC%E8%A2%AB%E9%81%AE%E6%8C%A1%E6%88%96%E9%87%8D%E5%8F%A0%E6%97%B6%E7%9A%84%E8%BF%9B%E9%98%B6%E5%A4%84%E7%90%86%E9%80%BB%E8%BE%91/" class="">
+      15.强盗（NPC）被遮挡或重叠时的进阶处理逻辑</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/16.%E8%B4%BC%E7%8E%8B%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6/" class="">
+      16.贼王处理机制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/17-18-19-20-21.%E8%B4%BC%E7%8E%8B%E8%BF%9B%E9%98%B6%E5%A4%84%E7%90%86%E4%B8%8E-OCR-%E9%AA%8C%E8%AF%81%E5%AE%9E%E6%88%98/" class="">
+      17-18-19-20-21.贼王进阶处理与 OCR 验证实战</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%8F%92%E4%BB%B6%E8%AF%86%E5%88%AB/" class="">
+      程序集_插件识别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%8F%92%E4%BB%B6%E6%B3%A8%E5%86%8C/" class="">
+      程序集_插件注册</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/23-24-25.%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" class="">
+      23-24-25.自动登录与模拟器将军令获取</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E4%BB%BB%E5%8A%A1%E6%89%A7%E8%A1%8C%E5%88%86%E9%85%8D/" class="">
+      程序集_任务执行分配</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F/" class="">
+      程序集_全局变量</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%AA%97%E5%8F%A3%E7%A8%8B%E5%BA%8F%E9%9B%86_%E7%AA%97%E5%8F%A3_%E5%8A%9F%E8%83%BD%E8%AE%BE%E7%BD%AE/" class="">
+      程序集_功能设置</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%AA%97%E5%8F%A3%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%90%AF%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="">
+      程序集_启动窗口</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%9C%B0%E5%9B%BE/" class="">
+      程序集_地图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/" class="">
+      程序集_常用功能</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%89%93%E5%9B%BE/" class="">
+      程序集_打图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E8%87%AA%E5%AE%9A%E4%B9%89%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" class="">
+      程序集_数据类型</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E8%84%9A%E6%9C%AC%E4%B8%BB%E7%A8%8B%E5%BA%8F/" class="">
+      程序集_脚本主程序</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E9%A3%9E%E8%A1%8C/" class="">
+      程序集_飞行</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%8A%A8/" class="">
+      程序集_鼠标移动</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/26.%E4%BB%BB%E5%8A%A1%E8%B6%85%E6%97%B6%E7%9B%91%E6%8E%A7%E4%B8%8E%E6%B8%B8%E6%88%8F%E6%8E%89%E7%BA%BF%E8%87%AA%E5%8A%A8%E9%87%8D%E8%BF%9E/" class="">
+      26.任务超时监控与游戏掉线自动重连</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/27.%E8%87%AA%E5%8A%A8%E6%8D%A2%E5%8F%B7%E6%81%A2%E5%A4%8D%E7%94%A8%E6%88%B7%E8%AE%BE%E7%BD%AE%E6%96%B0%E7%9A%84%E4%BB%BB%E5%8A%A1%E9%93%BE/" class="">
+      27.自动换号,恢复用户设置新的任务链</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/28.%E6%95%B4%E4%BD%93%E6%89%93%E5%9B%BE%E6%B5%81%E7%A8%8B%E5%9B%9E%E9%A1%BE%E8%AE%B2%E8%A7%A3%E8%A7%A3%E5%86%B3%E6%96%B0%E5%8C%BA%E5%8D%A1%E9%A1%BF%E5%A4%84%E7%90%86%E5%90%8C%E6%97%B6%E4%B8%8D%E5%BD%B1%E5%93%8D%E8%80%81%E5%8C%BA%E7%9A%84%E6%B5%81%E7%95%85%E5%BA%A6/" class="">
+      28.整体打图流程回顾讲解,解决新区卡顿处理同时不影响老区的流畅度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/29-30-31.%E8%AF%BE-%E6%8A%BC%E9%95%96%E9%9A%BE%E7%82%B9%E8%A7%A3%E6%9E%90/" class="">
+      29-30-31押镖难点解析</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E6%80%BB%E6%B5%81%E7%A8%8B%E6%A2%B3%E7%90%86/" class="">
+      总体框架梳理</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/32-33-%E8%87%AA%E5%8A%A8%E4%BB%93%E5%BA%93%E8%BD%AC%E5%9B%BE%E5%AE%9D%E7%9F%B3%E5%95%86%E4%BA%BA%E5%8F%96%E5%9B%BE%E7%9B%B4%E6%8E%A5%E8%BD%AC%E5%9B%BE/" class="">
+      32-33 自动仓库转图，宝石商人取图直接转图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/34.%E5%8D%A1%E5%AF%86%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BA%E9%AA%8C%E8%AF%81/" class="">
+      34.卡密系统搭建验证</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c5a43b1f0709f0338f2ab4a52452792c" class="toggle"  />
+    <label for="section-c5a43b1f0709f0338f2ab4a52452792c" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E6%98%93%E9%94%AE%E9%BC%A0/" class="">
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+      幽灵键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-dd7a5a7db638114207cc7c06e8da5f9f" class="toggle"  />
+    <label for="section-dd7a5a7db638114207cc7c06e8da5f9f" class="flex">
+      <a role="button" class="">
+        AI</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-6a19eb32a4b18e50a44ba16962bb0f2a" class="toggle"  />
+    <label for="section-6a19eb32a4b18e50a44ba16962bb0f2a" class="flex">
+      <a role="button" class="">
+        编程工具</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/AI/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7/Trae/" class="">
+      Trae</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>迁移流程总结</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#一云迁移整体架构">一、云迁移整体架构</a></li>
+    <li><a href="#二迁移需确认通用的问题点">二、迁移需确认通用的问题点</a>
+      <ul>
+        <li><a href="#1-数据迁移时间">1. 数据迁移时间</a></li>
+        <li><a href="#2-切换时间">2. 切换时间</a></li>
+        <li><a href="#3-停机窗口空窗期">3. 停机窗口（空窗期）</a></li>
+        <li><a href="#4业务迁移风险点">4.业务迁移风险点</a></li>
+        <li><a href="#5人员协调">5.人员协调</a></li>
+        <li><a href="#6迁移职责边界">6.迁移职责边界</a></li>
+      </ul>
+    </li>
+    <li><a href="#三ecs服务器迁移">三、ECS服务器迁移</a>
+      <ul>
+        <li><a href="#1-迁移工具">1 迁移工具</a></li>
+        <li><a href="#2-迁移方式">2 迁移方式</a></li>
+        <li><a href="#3-使用限制">3 使用限制</a></li>
+        <li><a href="#4-cpu架构类型">4 CPU架构类型</a></li>
+        <li><a href="#5-网络迁移方式">5 网络迁移方式</a></li>
+      </ul>
+    </li>
+    <li><a href="#四数据库迁移">四、数据库迁移</a>
+      <ul>
+        <li><a href="#1-数据库类型">1 数据库类型</a></li>
+        <li><a href="#2-数据库架构调研">2 数据库架构调研</a></li>
+        <li><a href="#3-数据库迁移工具">3 数据库迁移工具</a></li>
+        <li><a href="#4-dts费用">4 DTS费用</a></li>
+        <li><a href="#5-dts风险">5 DTS风险</a></li>
+        <li><a href="#6-数据校验">6 数据校验</a></li>
+      </ul>
+    </li>
+    <li><a href="#五对象存储迁移">五、对象存储迁移</a>
+      <ul>
+        <li><a href="#1-oss-import">1 OSS Import</a></li>
+        <li><a href="#2-ossutil">2 ossutil</a></li>
+      </ul>
+    </li>
+    <li><a href="#六文件存储迁移">六、文件存储迁移</a></li>
+    <li><a href="#七消息队列迁移">七、消息队列迁移</a>
+      <ul>
+        <li><a href="#1kafka迁移">1.Kafka迁移</a></li>
+        <li><a href="#2rabbitmq迁移">2.RabbitMQ迁移</a></li>
+      </ul>
+    </li>
+    <li><a href="#八elasticsearch迁移">八、Elasticsearch迁移</a>
+      <ul>
+        <li><a href="#1快照迁移">1.快照迁移</a></li>
+        <li><a href="#2logstash同步">2.Logstash同步</a></li>
+      </ul>
+    </li>
+    <li><a href="#九kubernetes迁移">九、Kubernetes迁移</a>
+      <ul>
+        <li><a href="#1-镜像迁移">1 镜像迁移</a></li>
+        <li><a href="#2-kubernetes资源迁移">2 Kubernetes资源迁移</a></li>
+        <li><a href="#3-数据卷迁移">3 数据卷迁移</a></li>
+        <li><a href="#4-网络迁移">4 网络迁移</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h1 id="迁移流程总结阿里云">迁移流程总结(阿里云)<a class="anchor" href="#%e8%bf%81%e7%a7%bb%e6%b5%81%e7%a8%8b%e6%80%bb%e7%bb%93%e9%98%bf%e9%87%8c%e4%ba%91">#</a></h1>
+<h2 id="一云迁移整体架构">一、云迁移整体架构<a class="anchor" href="#%e4%b8%80%e4%ba%91%e8%bf%81%e7%a7%bb%e6%95%b4%e4%bd%93%e6%9e%b6%e6%9e%84">#</a></h2>
+<p>云迁移涉及 <strong>七大核心模块（云厂商常见分类）</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>类别</th>
+          <th>内容</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>计算</td>
+          <td>ECS、CVM</td>
+      </tr>
+      <tr>
+          <td>存储</td>
+          <td>OSS、NAS</td>
+      </tr>
+      <tr>
+          <td>网络</td>
+          <td>VPC、SLB</td>
+      </tr>
+      <tr>
+          <td>数据库</td>
+          <td>RDS、Redis</td>
+      </tr>
+      <tr>
+          <td>中间件</td>
+          <td>Kafka、RabbitMQ</td>
+      </tr>
+      <tr>
+          <td>安全</td>
+          <td>WAF、DDoS</td>
+      </tr>
+      <tr>
+          <td>大数据</td>
+          <td>Elasticsearch 等</td>
+      </tr>
+  </tbody>
+</table>
+<p>迁移时通常需要逐个模块进行迁移。</p>
+<hr>
+<h2 id="二迁移需确认通用的问题点">二、迁移需确认通用的问题点<a class="anchor" href="#%e4%ba%8c%e8%bf%81%e7%a7%bb%e9%9c%80%e7%a1%ae%e8%ae%a4%e9%80%9a%e7%94%a8%e7%9a%84%e9%97%ae%e9%a2%98%e7%82%b9">#</a></h2>
+<p>在实施迁移前，需要与客户确认以下关键问题：</p>
+<h3 id="1-数据迁移时间">1. 数据迁移时间<a class="anchor" href="#1-%e6%95%b0%e6%8d%ae%e8%bf%81%e7%a7%bb%e6%97%b6%e9%97%b4">#</a></h3>
+<p>指：</p>
+<pre tabindex="0"><code>腾讯云 → 阿里云
+数据复制时间</code></pre><p>例如：</p>
+<ul>
+<li>系统盘</li>
+<li>数据盘</li>
+<li>数据库</li>
+</ul>
+<p>需要给客户 <strong>大致时间预估</strong></p>
+<p>例如：</p>
+<pre tabindex="0"><code>数据量：500GB
+预计迁移时间：3~5小时</code></pre><hr>
+<h3 id="2-切换时间">2. 切换时间<a class="anchor" href="#2-%e5%88%87%e6%8d%a2%e6%97%b6%e9%97%b4">#</a></h3>
+<p>即：</p>
+<pre tabindex="0"><code>业务切换到新环境的时间</code></pre><p>例如：</p>
+<pre tabindex="0"><code>DNS切换
+负载均衡切换
+应用地址切换</code></pre><p>通常需要：</p>
+<ul>
+<li>运维护航</li>
+<li>技术人员待命</li>
+</ul>
+<hr>
+<h3 id="3-停机窗口空窗期">3. 停机窗口（空窗期）<a class="anchor" href="#3-%e5%81%9c%e6%9c%ba%e7%aa%97%e5%8f%a3%e7%a9%ba%e7%aa%97%e6%9c%9f">#</a></h3>
+<p>必须确认客户是否允许停机：</p>
+<table>
+  <thead>
+      <tr>
+          <th>类型</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>有停机窗口</td>
+          <td>可以停机迁移</td>
+      </tr>
+      <tr>
+          <td>无停机窗口</td>
+          <td>必须在线迁移</td>
+      </tr>
+  </tbody>
+</table>
+<p>例如：</p>
+<pre tabindex="0"><code>凌晨 2:00 ~ 4:00</code></pre><p>如果：</p>
+<pre tabindex="0"><code>空窗期 = 0</code></pre><p>意味着：</p>
+<pre tabindex="0"><code>必须不停机迁移</code></pre><p>难度会大很多。</p>
+<h3 id="4业务迁移风险点">4.业务迁移风险点<a class="anchor" href="#4%e4%b8%9a%e5%8a%a1%e8%bf%81%e7%a7%bb%e9%a3%8e%e9%99%a9%e7%82%b9">#</a></h3>
+<p>迁移可能影响：</p>
+<table>
+  <thead>
+      <tr>
+          <th>项目</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>IP地址</td>
+          <td>内网IP会变化</td>
+      </tr>
+      <tr>
+          <td>公网IP</td>
+          <td>云平台不同</td>
+      </tr>
+      <tr>
+          <td>License</td>
+          <td>可能绑定IP</td>
+      </tr>
+      <tr>
+          <td>MAC地址</td>
+          <td>部分软件绑定</td>
+      </tr>
+  </tbody>
+</table>
+<p>需要客户确认：</p>
+<pre tabindex="0"><code>是否有License绑定</code></pre><hr>
+<h3 id="5人员协调">5.人员协调<a class="anchor" href="#5%e4%ba%ba%e5%91%98%e5%8d%8f%e8%b0%83">#</a></h3>
+<p>迁移通常涉及：</p>
+<table>
+  <thead>
+      <tr>
+          <th>角色</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>客户运维</td>
+      </tr>
+      <tr>
+          <td>开发</td>
+      </tr>
+      <tr>
+          <td>DBA</td>
+      </tr>
+      <tr>
+          <td>云厂商架构师</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h3 id="6迁移职责边界">6.迁移职责边界<a class="anchor" href="#6%e8%bf%81%e7%a7%bb%e8%81%8c%e8%b4%a3%e8%be%b9%e7%95%8c">#</a></h3>
+<p>云厂商角色：</p>
+<pre tabindex="0"><code>数据迁移</code></pre><p>不负责：</p>
+<pre tabindex="0"><code>业务测试</code></pre><p>原因：</p>
+<p>客户业务逻辑只有客户自己清楚。</p>
+<p>客户需要：</p>
+<ul>
+<li>功能测试</li>
+<li>回归测试</li>
+<li>压力测试</li>
+</ul>
+<h2 id="三ecs服务器迁移">三、ECS服务器迁移<a class="anchor" href="#%e4%b8%89ecs%e6%9c%8d%e5%8a%a1%e5%99%a8%e8%bf%81%e7%a7%bb">#</a></h2>
+<p>参考：</p>
+<ul>
+<li>阿里云服务器迁移中心（SMC）</li>
+</ul>
+<h3 id="1-迁移工具">1 迁移工具<a class="anchor" href="#1-%e8%bf%81%e7%a7%bb%e5%b7%a5%e5%85%b7">#</a></h3>
+<p>服务器迁移中心</p>
+<p>SMC（Server Migration Center）</p>
+<p>支持迁移来源：</p>
+<ul>
+<li>腾讯云 CVM</li>
+<li>AWS EC2</li>
+<li>VMware</li>
+<li>物理服务器</li>
+</ul>
+<h3 id="2-迁移方式">2 迁移方式<a class="anchor" href="#2-%e8%bf%81%e7%a7%bb%e6%96%b9%e5%bc%8f">#</a></h3>
+<p><strong>方案一</strong>（推荐）</p>
+<p>SMC在线迁移</p>
+<p>流程：</p>
+<pre tabindex="0"><code>腾讯云CVM
+   ↓
+安装 SMC Agent
+   ↓
+生成阿里云镜像
+   ↓
+创建 ECS 实例</code></pre><p>特点：</p>
+<ul>
+<li>支持在线迁移</li>
+<li>短暂停机</li>
+<li>自动生成镜像</li>
+</ul>
+<p><strong>方案二</strong></p>
+<p>镜像迁移</p>
+<p>流程：</p>
+<pre tabindex="0"><code>腾讯云制作镜像
+   ↓
+下载镜像
+   ↓
+导入阿里云
+   ↓
+创建ECS</code></pre><hr>
+<h3 id="3-使用限制">3 使用限制<a class="anchor" href="#3-%e4%bd%bf%e7%94%a8%e9%99%90%e5%88%b6">#</a></h3>
+<ul>
+<li>只支持 <strong>VPC网络</strong></li>
+<li>不支持跨架构迁移</li>
+</ul>
+<p>例如：</p>
+<pre tabindex="0"><code>x86 → x86
+ARM → ARM</code></pre><p>不能：</p>
+<pre tabindex="0"><code>x86 → ARM</code></pre><h3 id="4-cpu架构类型">4 CPU架构类型<a class="anchor" href="#4-cpu%e6%9e%b6%e6%9e%84%e7%b1%bb%e5%9e%8b">#</a></h3>
+<p>需要注意CPU架构。</p>
+<p>阿里云常见CPU：</p>
+<table>
+  <thead>
+      <tr>
+          <th>类型</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Intel</td>
+          <td>主流</td>
+      </tr>
+      <tr>
+          <td>AMD</td>
+          <td>部分实例</td>
+      </tr>
+      <tr>
+          <td>倚天Yitian</td>
+          <td>阿里云自研CPU</td>
+      </tr>
+  </tbody>
+</table>
+<p>倚天CPU：</p>
+<ul>
+<li>阿里云自研</li>
+<li>ARM架构</li>
+<li>属于国产信创CPU</li>
+</ul>
+<h3 id="5-网络迁移方式">5 网络迁移方式<a class="anchor" href="#5-%e7%bd%91%e7%bb%9c%e8%bf%81%e7%a7%bb%e6%96%b9%e5%bc%8f">#</a></h3>
+<p>迁移网络通常有三种：</p>
+<p><strong>1 公网迁移</strong></p>
+<pre tabindex="0"><code>腾讯云
+ ↓
+公网
+ ↓
+阿里云</code></pre><p>特点：</p>
+<ul>
+<li>简单</li>
+<li>速度受公网带宽限制</li>
+</ul>
+<p><strong>2 VPN迁移</strong></p>
+<p>通过 <strong>IPSec VPN</strong></p>
+<pre tabindex="0"><code>腾讯云
+ ↓
+VPN
+ ↓
+阿里云</code></pre><p>特点：</p>
+<ul>
+<li>加密</li>
+<li>仍然走公网</li>
+<li>迁移速度受限于带宽</li>
+</ul>
+<p><strong>3 专线迁移</strong></p>
+<pre tabindex="0"><code>腾讯云机房
+   ↓
+专线
+   ↓
+阿里云机房</code></pre><p>特点：</p>
+<ul>
+<li>内网</li>
+<li>速度快</li>
+</ul>
+<p>但存在：</p>
+<ul>
+<li>施工周期</li>
+<li>端口费用</li>
+<li>流量费用</li>
+</ul>
+<h2 id="四数据库迁移">四、数据库迁移<a class="anchor" href="#%e5%9b%9b%e6%95%b0%e6%8d%ae%e5%ba%93%e8%bf%81%e7%a7%bb">#</a></h2>
+<p>数据库迁移是 <strong>最关键的部分</strong>。</p>
+<p>因为：</p>
+<blockquote class='book-hint '>
+<p>服务器可以重建
+数据库不能丢</p></blockquote><h3 id="1-数据库类型">1 数据库类型<a class="anchor" href="#1-%e6%95%b0%e6%8d%ae%e5%ba%93%e7%b1%bb%e5%9e%8b">#</a></h3>
+<p>迁移前必须先确认数据库类型。</p>
+<p>数据库分为两大类：</p>
+<p><strong>关系型数据库</strong></p>
+<p>常见：</p>
+<table>
+  <thead>
+      <tr>
+          <th>类型</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>MySQL</td>
+      </tr>
+      <tr>
+          <td>PostgreSQL</td>
+      </tr>
+      <tr>
+          <td>SQL Server</td>
+      </tr>
+      <tr>
+          <td>Oracle</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<p><strong>非关系型数据库</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>类型</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Redis</td>
+      </tr>
+      <tr>
+          <td>MongoDB</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h3 id="2-数据库架构调研">2 数据库架构调研<a class="anchor" href="#2-%e6%95%b0%e6%8d%ae%e5%ba%93%e6%9e%b6%e6%9e%84%e8%b0%83%e7%a0%94">#</a></h3>
+<p>需要调研：</p>
+<table>
+  <thead>
+      <tr>
+          <th>项目</th>
+          <th>内容</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>数据库类型</td>
+          <td>MySQL / Redis</td>
+      </tr>
+      <tr>
+          <td>是否PaaS</td>
+          <td>RDS 或 自建</td>
+      </tr>
+      <tr>
+          <td>架构</td>
+          <td>单机 / 主从</td>
+      </tr>
+      <tr>
+          <td>数据量</td>
+          <td>100GB / 1TB</td>
+      </tr>
+      <tr>
+          <td>版本</td>
+          <td>MySQL5.7 / 8.0</td>
+      </tr>
+      <tr>
+          <td>网络</td>
+          <td>是否公网</td>
+      </tr>
+      <tr>
+          <td>权限</td>
+          <td>是否允许迁移</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h3 id="3-数据库迁移工具">3 数据库迁移工具<a class="anchor" href="#3-%e6%95%b0%e6%8d%ae%e5%ba%93%e8%bf%81%e7%a7%bb%e5%b7%a5%e5%85%b7">#</a></h3>
+<p>阿里云：</p>
+<p>DTS（Data Transmission Service）</p>
+<p>功能：</p>
+<ul>
+<li>结构迁移</li>
+<li>全量迁移</li>
+<li>增量同步</li>
+<li>双向同步</li>
+</ul>
+<h3 id="4-dts费用">4 DTS费用<a class="anchor" href="#4-dts%e8%b4%b9%e7%94%a8">#</a></h3>
+<p>费用主要两部分：</p>
+<p><strong>DTS</strong>实例费用</p>
+<p>根据规格收费。</p>
+<p>例如：</p>
+<table>
+  <thead>
+      <tr>
+          <th>规格</th>
+          <th>读取能力</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>小</td>
+          <td>2000 rows/s</td>
+      </tr>
+      <tr>
+          <td>大</td>
+          <td>10000 rows/s</td>
+      </tr>
+  </tbody>
+</table>
+<p>规格越高：</p>
+<ul>
+<li>迁移越快</li>
+<li>费用越高</li>
+</ul>
+<hr>
+<p><strong>增量同步费用</strong></p>
+<p>规则：</p>
+<table>
+  <thead>
+      <tr>
+          <th>类型</th>
+          <th>是否收费</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>全量迁移</td>
+          <td>不收费</td>
+      </tr>
+      <tr>
+          <td>增量同步</td>
+          <td>收费</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h3 id="5-dts风险">5 DTS风险<a class="anchor" href="#5-dts%e9%a3%8e%e9%99%a9">#</a></h3>
+<p>读取速度越快：</p>
+<pre tabindex="0"><code>对源数据库压力越大</code></pre><p>可能导致：</p>
+<pre tabindex="0"><code>数据库性能下降</code></pre><p>需要和客户确认：</p>
+<ul>
+<li>当前数据库负载</li>
+<li>CPU利用率</li>
+</ul>
+<h3 id="6-数据校验">6 数据校验<a class="anchor" href="#6-%e6%95%b0%e6%8d%ae%e6%a0%a1%e9%aa%8c">#</a></h3>
+<p>迁移完成后需要校验：</p>
+<ul>
+<li>表数量</li>
+<li>行数</li>
+<li>数据一致性</li>
+</ul>
+<p>DTS提供自动校验功能。</p>
+<h2 id="五对象存储迁移">五、对象存储迁移<a class="anchor" href="#%e4%ba%94%e5%af%b9%e8%b1%a1%e5%ad%98%e5%82%a8%e8%bf%81%e7%a7%bb">#</a></h2>
+<p>对象存储主要存储非结构化数据/静态资源</p>
+<p>腾讯云：</p>
+<p>COS</p>
+<p>阿里云：</p>
+<p>OSS</p>
+<h3 id="1-oss-import">1 OSS Import<a class="anchor" href="#1-oss-import">#</a></h3>
+<p>支持：</p>
+<ul>
+<li>批量迁移</li>
+<li>自动校验</li>
+<li>HTTP源</li>
+</ul>
+<p>流程：</p>
+<pre tabindex="0"><code>COS
+ ↓
+HTTP URL
+ ↓
+OSS Import
+ ↓
+OSS</code></pre><hr>
+<h3 id="2-ossutil">2 ossutil<a class="anchor" href="#2-ossutil">#</a></h3>
+<p>适合大规模迁移</p>
+<p>示例：</p>
+<pre tabindex="0"><code>ossutil cp -r cos://bucket oss://bucket</code></pre><hr>
+<h2 id="六文件存储迁移">六、文件存储迁移<a class="anchor" href="#%e5%85%ad%e6%96%87%e4%bb%b6%e5%ad%98%e5%82%a8%e8%bf%81%e7%a7%bb">#</a></h2>
+<p>腾讯云：</p>
+<ul>
+<li>CFS</li>
+<li>GooseFS</li>
+</ul>
+<p>阿里云：</p>
+<ul>
+<li>NAS</li>
+<li>CPFS</li>
+</ul>
+<hr>
+<p>迁移方式：</p>
+<pre tabindex="0"><code>rsync</code></pre><p>示例：</p>
+<pre tabindex="0"><code>rsync -avz</code></pre><hr>
+<h2 id="七消息队列迁移">七、消息队列迁移<a class="anchor" href="#%e4%b8%83%e6%b6%88%e6%81%af%e9%98%9f%e5%88%97%e8%bf%81%e7%a7%bb">#</a></h2>
+<p>腾讯云：</p>
+<ul>
+<li>CKafka</li>
+<li>RabbitMQ</li>
+</ul>
+<p>阿里云：</p>
+<ul>
+<li>Kafka</li>
+<li>RabbitMQ</li>
+</ul>
+<h3 id="1kafka迁移">1.Kafka迁移<a class="anchor" href="#1kafka%e8%bf%81%e7%a7%bb">#</a></h3>
+<p>使用</p>
+<pre tabindex="0"><code>MirrorMaker</code></pre><p>流程</p>
+<pre tabindex="0"><code>腾讯云Kafka
+ ↓
+MirrorMaker
+ ↓
+阿里云Kafka</code></pre><h3 id="2rabbitmq迁移">2.RabbitMQ迁移<a class="anchor" href="#2rabbitmq%e8%bf%81%e7%a7%bb">#</a></h3>
+<p>推荐方案：</p>
+<pre tabindex="0"><code>双写 + 双读</code></pre><p>迁移步骤：</p>
+<p>1 元数据迁移
+2 双读验证
+3 双写双读
+4 单写新集群
+5 下线旧集群</p>
+<h2 id="八elasticsearch迁移">八、Elasticsearch迁移<a class="anchor" href="#%e5%85%abelasticsearch%e8%bf%81%e7%a7%bb">#</a></h2>
+<h3 id="1快照迁移">1.快照迁移<a class="anchor" href="#1%e5%bf%ab%e7%85%a7%e8%bf%81%e7%a7%bb">#</a></h3>
+<p>流程</p>
+<pre tabindex="0"><code>腾讯云 ES
+   ↓ snapshot
+OSS
+   ↓ restore
+阿里云 ES</code></pre><hr>
+<h3 id="2logstash同步">2.Logstash同步<a class="anchor" href="#2logstash%e5%90%8c%e6%ad%a5">#</a></h3>
+<p>支持：</p>
+<pre tabindex="0"><code>全量 + 增量</code></pre><p>适合实时迁移。</p>
+<hr>
+<h2 id="九kubernetes迁移">九、Kubernetes迁移<a class="anchor" href="#%e4%b9%9dkubernetes%e8%bf%81%e7%a7%bb">#</a></h2>
+<p>腾讯云：</p>
+<p>TKE</p>
+<p>阿里云：</p>
+<p>ACK</p>
+<p>迁移包含四部分：</p>
+<h3 id="1-镜像迁移">1 镜像迁移<a class="anchor" href="#1-%e9%95%9c%e5%83%8f%e8%bf%81%e7%a7%bb">#</a></h3>
+<pre tabindex="0"><code>TCR → ACR</code></pre><hr>
+<h3 id="2-kubernetes资源迁移">2 Kubernetes资源迁移<a class="anchor" href="#2-kubernetes%e8%b5%84%e6%ba%90%e8%bf%81%e7%a7%bb">#</a></h3>
+<p>包括：</p>
+<ul>
+<li>Deployment</li>
+<li>StatefulSet</li>
+<li>Service</li>
+<li>ConfigMap</li>
+<li>Secret</li>
+</ul>
+<p>可以使用：</p>
+<p>K8S开源备份工具Velero</p>
+<hr>
+<h3 id="3-数据卷迁移">3 数据卷迁移<a class="anchor" href="#3-%e6%95%b0%e6%8d%ae%e5%8d%b7%e8%bf%81%e7%a7%bb">#</a></h3>
+<p>包括：</p>
+<ul>
+<li>PV</li>
+<li>PVC</li>
+</ul>
+<p>方式：</p>
+<pre tabindex="0"><code>文件存储
+对象存储</code></pre><hr>
+<h3 id="4-网络迁移">4 网络迁移<a class="anchor" href="#4-%e7%bd%91%e7%bb%9c%e8%bf%81%e7%a7%bb">#</a></h3>
+<p>涉及：</p>
+<ul>
+<li>VPC</li>
+<li>LoadBalancer</li>
+<li>IP变化</li>
+</ul>
+<hr>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E6%9E%B6%E6%9E%84%E5%B8%88%E5%B7%A5%E4%BD%9C%E8%81%8C%E8%B4%A3/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>云架构师工作职责</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/Linux/git/Git%E5%9F%BA%E7%A1%80/" class="flex align-center">
+        <span>Git使用教程</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#一云迁移整体架构">一、云迁移整体架构</a></li>
+    <li><a href="#二迁移需确认通用的问题点">二、迁移需确认通用的问题点</a>
+      <ul>
+        <li><a href="#1-数据迁移时间">1. 数据迁移时间</a></li>
+        <li><a href="#2-切换时间">2. 切换时间</a></li>
+        <li><a href="#3-停机窗口空窗期">3. 停机窗口（空窗期）</a></li>
+        <li><a href="#4业务迁移风险点">4.业务迁移风险点</a></li>
+        <li><a href="#5人员协调">5.人员协调</a></li>
+        <li><a href="#6迁移职责边界">6.迁移职责边界</a></li>
+      </ul>
+    </li>
+    <li><a href="#三ecs服务器迁移">三、ECS服务器迁移</a>
+      <ul>
+        <li><a href="#1-迁移工具">1 迁移工具</a></li>
+        <li><a href="#2-迁移方式">2 迁移方式</a></li>
+        <li><a href="#3-使用限制">3 使用限制</a></li>
+        <li><a href="#4-cpu架构类型">4 CPU架构类型</a></li>
+        <li><a href="#5-网络迁移方式">5 网络迁移方式</a></li>
+      </ul>
+    </li>
+    <li><a href="#四数据库迁移">四、数据库迁移</a>
+      <ul>
+        <li><a href="#1-数据库类型">1 数据库类型</a></li>
+        <li><a href="#2-数据库架构调研">2 数据库架构调研</a></li>
+        <li><a href="#3-数据库迁移工具">3 数据库迁移工具</a></li>
+        <li><a href="#4-dts费用">4 DTS费用</a></li>
+        <li><a href="#5-dts风险">5 DTS风险</a></li>
+        <li><a href="#6-数据校验">6 数据校验</a></li>
+      </ul>
+    </li>
+    <li><a href="#五对象存储迁移">五、对象存储迁移</a>
+      <ul>
+        <li><a href="#1-oss-import">1 OSS Import</a></li>
+        <li><a href="#2-ossutil">2 ossutil</a></li>
+      </ul>
+    </li>
+    <li><a href="#六文件存储迁移">六、文件存储迁移</a></li>
+    <li><a href="#七消息队列迁移">七、消息队列迁移</a>
+      <ul>
+        <li><a href="#1kafka迁移">1.Kafka迁移</a></li>
+        <li><a href="#2rabbitmq迁移">2.RabbitMQ迁移</a></li>
+      </ul>
+    </li>
+    <li><a href="#八elasticsearch迁移">八、Elasticsearch迁移</a>
+      <ul>
+        <li><a href="#1快照迁移">1.快照迁移</a></li>
+        <li><a href="#2logstash同步">2.Logstash同步</a></li>
+      </ul>
+    </li>
+    <li><a href="#九kubernetes迁移">九、Kubernetes迁移</a>
+      <ul>
+        <li><a href="#1-镜像迁移">1 镜像迁移</a></li>
+        <li><a href="#2-kubernetes资源迁移">2 Kubernetes资源迁移</a></li>
+        <li><a href="#3-数据卷迁移">3 数据卷迁移</a></li>
+        <li><a href="#4-网络迁移">4 网络迁移</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
