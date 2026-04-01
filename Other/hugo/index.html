@@ -1,0 +1,2069 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="https://www.elegantcrazy.com/posts/blog/build-blog-with-github-pages-hugo-and-papermod/https://jimmysong.io/book/hugo-handbook/introduction/quick-start/ 安装 Git# Hugo 项目通常需要 Git 进行版本控制和主题管理
+https://git-scm.com/downloads/win创建仓库# 在Github创建仓库，仓库名填写**[用户名].github.io**，注意[用户名]部分必须是Github用户名，否则Github Pages不会正常工作。
+新建两个仓库wchuang099.github.io #博客仓库my-notes-source #备份博客源文件安装 Hugo# 下载安装包，hugo免安装，解压添加环境变量即可
+# 注意 hugo和主题都找最新版的下载即可，老版本会有兼容的问题 https://github.com/gohugoio/hugo/releases/download/v0.148.2/hugo_extended_0.148.2_windows-amd64.zip hugo version生成项目# hugo new site my-notescd my-notes 这将创建标准的项目目录结构，包括： •	archetypes/ - 内容模板 •	assets/ - 资源文件 •	content/ - 内容源文件 •	data/ - 数据文件 •	layouts/ - 布局模板 •	static/ - 静态文件 •	themes/ - 主题 •	hugo.toml – 配置文件，旧版本文件为config.toml
+下载主题# #可以去官网找自己喜欢的主题 https://themes.gohugo.io/git initgit submodule add https://github.com/alex-shpak/hugo-book themes/book配置文件hugo.yaml# baseURL: http://localhost:1313/ languageCode: zh-CN title: 我的技术笔记 theme: book # 关键行为 disablePathToLower: true enableGitInfo: false # Markdown 支持（按需保留） markup: goldmark: renderer: unsafe: true # 如果你要用 Mermaid/KaTeX/HTML，必须开 highlight: style: monokai # 可选，代码高亮主题 # Book 主题参数 params: BookToC: true # 右侧目录 BookSection: &#34;*&#34; # 左侧显示所有分类 BookSearch: true # 搜索功能（可选）文章组织结构# my-notes/content/└── python/├── _index.md├── Python基础知识/│ ├── _index.md│ ├── 01-数据类型.md│ └── images/ # 如在01-数据类型.md引用：![图](../images/test.png)│ └── test.png│└── Python应用代码/├── _index.md├── pandas.md└── images/ └── test.png文档元数据信息# 推荐配置模板（可直接套用）1. 父分类（如 python/_index.md）---title: &#34;Python&#34;bookCollapseSection: trueweight: 1---2. 子分类首页（如 基础语法/_index.md）---title: &#34;基础语法&#34;bookCollapseSection: trueweight: 1---3. 具体笔记页（01-数据类型.md）---title: &#34;变量&#34;weight: 1---开发与测试# 启动开发服务器 hugo server -D -D 标志表示构建草稿内容。服务器会： •	在本地构建网站并提供服务（通常在 http://localhost:1313） •	监控项目目录中的文件变化 •	检测到变化时自动重建并实时刷新浏览器（LiveReload）
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/Other/hugo/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="hugo使用">
+  <meta property="og:description" content="https://www.elegantcrazy.com/posts/blog/build-blog-with-github-pages-hugo-and-papermod/https://jimmysong.io/book/hugo-handbook/introduction/quick-start/ 安装 Git# Hugo 项目通常需要 Git 进行版本控制和主题管理
+https://git-scm.com/downloads/win创建仓库# 在Github创建仓库，仓库名填写**[用户名].github.io**，注意[用户名]部分必须是Github用户名，否则Github Pages不会正常工作。
+新建两个仓库wchuang099.github.io #博客仓库my-notes-source #备份博客源文件安装 Hugo# 下载安装包，hugo免安装，解压添加环境变量即可
+# 注意 hugo和主题都找最新版的下载即可，老版本会有兼容的问题 https://github.com/gohugoio/hugo/releases/download/v0.148.2/hugo_extended_0.148.2_windows-amd64.zip hugo version生成项目# hugo new site my-notescd my-notes 这将创建标准的项目目录结构，包括： •	archetypes/ - 内容模板 •	assets/ - 资源文件 •	content/ - 内容源文件 •	data/ - 数据文件 •	layouts/ - 布局模板 •	static/ - 静态文件 •	themes/ - 主题 •	hugo.toml – 配置文件，旧版本文件为config.toml
+下载主题# #可以去官网找自己喜欢的主题 https://themes.gohugo.io/git initgit submodule add https://github.com/alex-shpak/hugo-book themes/book配置文件hugo.yaml# baseURL: http://localhost:1313/ languageCode: zh-CN title: 我的技术笔记 theme: book # 关键行为 disablePathToLower: true enableGitInfo: false # Markdown 支持（按需保留） markup: goldmark: renderer: unsafe: true # 如果你要用 Mermaid/KaTeX/HTML，必须开 highlight: style: monokai # 可选，代码高亮主题 # Book 主题参数 params: BookToC: true # 右侧目录 BookSection: &#34;*&#34; # 左侧显示所有分类 BookSearch: true # 搜索功能（可选）文章组织结构# my-notes/content/└── python/├── _index.md├── Python基础知识/│ ├── _index.md│ ├── 01-数据类型.md│ └── images/ # 如在01-数据类型.md引用：![图](../images/test.png)│ └── test.png│└── Python应用代码/├── _index.md├── pandas.md└── images/ └── test.png文档元数据信息# 推荐配置模板（可直接套用）1. 父分类（如 python/_index.md）---title: &#34;Python&#34;bookCollapseSection: trueweight: 1---2. 子分类首页（如 基础语法/_index.md）---title: &#34;基础语法&#34;bookCollapseSection: trueweight: 1---3. 具体笔记页（01-数据类型.md）---title: &#34;变量&#34;weight: 1---开发与测试# 启动开发服务器 hugo server -D -D 标志表示构建草稿内容。服务器会： •	在本地构建网站并提供服务（通常在 http://localhost:1313） •	监控项目目录中的文件变化 •	检测到变化时自动重建并实时刷新浏览器（LiveReload）">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="other">
+
+
+  <meta itemprop="name" content="hugo使用">
+  <meta itemprop="description" content="https://www.elegantcrazy.com/posts/blog/build-blog-with-github-pages-hugo-and-papermod/https://jimmysong.io/book/hugo-handbook/introduction/quick-start/ 安装 Git# Hugo 项目通常需要 Git 进行版本控制和主题管理
+https://git-scm.com/downloads/win创建仓库# 在Github创建仓库，仓库名填写**[用户名].github.io**，注意[用户名]部分必须是Github用户名，否则Github Pages不会正常工作。
+新建两个仓库wchuang099.github.io #博客仓库my-notes-source #备份博客源文件安装 Hugo# 下载安装包，hugo免安装，解压添加环境变量即可
+# 注意 hugo和主题都找最新版的下载即可，老版本会有兼容的问题 https://github.com/gohugoio/hugo/releases/download/v0.148.2/hugo_extended_0.148.2_windows-amd64.zip hugo version生成项目# hugo new site my-notescd my-notes 这将创建标准的项目目录结构，包括： •	archetypes/ - 内容模板 •	assets/ - 资源文件 •	content/ - 内容源文件 •	data/ - 数据文件 •	layouts/ - 布局模板 •	static/ - 静态文件 •	themes/ - 主题 •	hugo.toml – 配置文件，旧版本文件为config.toml
+下载主题# #可以去官网找自己喜欢的主题 https://themes.gohugo.io/git initgit submodule add https://github.com/alex-shpak/hugo-book themes/book配置文件hugo.yaml# baseURL: http://localhost:1313/ languageCode: zh-CN title: 我的技术笔记 theme: book # 关键行为 disablePathToLower: true enableGitInfo: false # Markdown 支持（按需保留） markup: goldmark: renderer: unsafe: true # 如果你要用 Mermaid/KaTeX/HTML，必须开 highlight: style: monokai # 可选，代码高亮主题 # Book 主题参数 params: BookToC: true # 右侧目录 BookSection: &#34;*&#34; # 左侧显示所有分类 BookSearch: true # 搜索功能（可选）文章组织结构# my-notes/content/└── python/├── _index.md├── Python基础知识/│ ├── _index.md│ ├── 01-数据类型.md│ └── images/ # 如在01-数据类型.md引用：![图](../images/test.png)│ └── test.png│└── Python应用代码/├── _index.md├── pandas.md└── images/ └── test.png文档元数据信息# 推荐配置模板（可直接套用）1. 父分类（如 python/_index.md）---title: &#34;Python&#34;bookCollapseSection: trueweight: 1---2. 子分类首页（如 基础语法/_index.md）---title: &#34;基础语法&#34;bookCollapseSection: trueweight: 1---3. 具体笔记页（01-数据类型.md）---title: &#34;变量&#34;weight: 1---开发与测试# 启动开发服务器 hugo server -D -D 标志表示构建草稿内容。服务器会： •	在本地构建网站并提供服务（通常在 http://localhost:1313） •	监控项目目录中的文件变化 •	检测到变化时自动重建并实时刷新浏览器（LiveReload）">
+  <meta itemprop="wordCount" content="485">
+
+<title>hugo使用 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/Other/hugo/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.5cf2de48bc712bcdcda45419f388667e3eb9b40dbc5742d336fb75ca6b44ad34.js" integrity="sha256-XPLeSLxxK83NpFQZ84hmfj65tA28V0LTNvt1ymtErTQ=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-other">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-204365caa941390a182aeb870c8b397d" class="toggle"  />
+    <label for="section-204365caa941390a182aeb870c8b397d" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f6929f8819239c236e3ff6d9318a645b" class="toggle"  />
+    <label for="section-f6929f8819239c236e3ff6d9318a645b" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-797baf87757652be835bcce5680ea0d4" class="toggle"  />
+    <label for="section-797baf87757652be835bcce5680ea0d4" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-938c3edbaa8e3dd01e8b93d6f9361182" class="toggle"  />
+    <label for="section-938c3edbaa8e3dd01e8b93d6f9361182" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-56b62cfe8bd1e3138f346455c7c08d01" class="toggle"  />
+    <label for="section-56b62cfe8bd1e3138f346455c7c08d01" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e12d76c83fadc5077063bd8a06e4974c" class="toggle"  />
+    <label for="section-e12d76c83fadc5077063bd8a06e4974c" class="flex">
+      <a role="button" class="">
+        Linux</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c0518db0448b3d740eada08bd26ccfac" class="toggle"  />
+    <label for="section-c0518db0448b3d740eada08bd26ccfac" class="flex">
+      <a role="button" class="">
+        阿里腾讯华为火山云产品对比</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AF%B9%E6%AF%94/" class="">
+      服务器对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E7%A1%AC%E7%9B%98%E5%AF%B9%E6%AF%94/" class="">
+      云硬盘对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%B9%E6%AF%94/" class="">
+      数据库产品对比表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AF%B9%E6%AF%94/" class="">
+      中间件产品对比表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AF%B9%E6%AF%94/" class="">
+      大数据对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E5%AE%89%E5%85%A8%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/" class="">
+      安全产品对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AF%B9%E6%A0%87/" class="">
+      云容器对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E6%9E%B6%E6%9E%84%E5%B8%88%E5%B7%A5%E4%BD%9C%E8%81%8C%E8%B4%A3/" class="">
+      云架构师工作职责</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E8%BF%81%E7%A7%BB%E6%B5%81%E7%A8%8B%E9%98%BF%E9%87%8C%E4%BA%91/" class="">
+      迁移流程总结</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-docker/" class="">
+      安装 Docker 教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-mysql/" class="">
+      安装 mysql 教程</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-23e22f2cefc5200495b10b220f00dc9b" class="toggle"  />
+    <label for="section-23e22f2cefc5200495b10b220f00dc9b" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5f3519d07421b3022c482beb7e53757d" class="toggle" checked />
+    <label for="section-5f3519d07421b3022c482beb7e53757d" class="flex">
+      <a role="button" class="">
+        Other</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/hugo/" class="active">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强平台装机流程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-00896273d6e22b6628839c56863edc57" class="toggle"  />
+    <label for="section-00896273d6e22b6628839c56863edc57" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-212fbf26dee144498e07df6cb6c18024" class="toggle"  />
+    <label for="section-212fbf26dee144498e07df6cb6c18024" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c7e351909150a2b7e1cb200bf4cfa4d9" class="toggle"  />
+    <label for="section-c7e351909150a2b7e1cb200bf4cfa4d9" class="flex">
+      <a role="button" class="">
+        脚本开发实战</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/2.%E5%B7%A5%E7%A8%8B%E6%9E%B6%E6%9E%84UI-%E5%B8%83%E5%B1%80%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%85%8D%E7%BD%AE%E9%9A%94%E7%A6%BB/" class="">
+      2.工程架构、UI 布局与多线程配置隔离</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/3.%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%89%BE%E5%9B%BE%E6%8C%87%E4%BB%A4%E8%AF%A6%E8%A7%A3/" class="">
+      3.大漠插件：环境部署与找图指令详解</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/4.%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E5%85%8D%E6%B3%A8%E5%86%8C%E8%B0%83%E7%94%A8%E5%9D%90%E6%A0%87%E7%B3%BB%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E5%90%8E%E5%8F%B0%E7%BB%91%E5%AE%9A/" class="">
+      4.大漠插件：免注册调用、坐标系原理以及后台绑定</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/5.%E6%98%93%E8%AF%AD%E8%A8%80%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6/" class="">
+      5.易语言多线程控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/5.%E6%98%93%E8%AF%AD%E8%A8%80%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6%E4%B8%8E%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB%E4%BC%98%E5%8C%96%E6%96%B9%E6%A1%88/" class="">
+      5.易语言多线程控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/6.%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" class="">
+      6.鼠标漂移解决方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/10.%E5%BC%BA%E7%9B%97%E4%BB%BB%E5%8A%A1%E8%B4%BC%E7%8E%8B%E4%BB%BB%E5%8A%A1%E8%AF%BB%E5%8F%961/" class="">
+      10.打图任务(1)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/10.%E5%BC%BA%E7%9B%97%E4%BB%BB%E5%8A%A1%E8%B4%BC%E7%8E%8B%E4%BB%BB%E5%8A%A1%E8%AF%BB%E5%8F%962/" class="">
+      10.打图任务(2)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/11.%E8%B7%A8%E5%9C%B0%E5%9B%BE%E8%87%AA%E5%8A%A8%E5%AF%BB%E8%B7%AF/" class="">
+      11.跨地图寻路</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/12.%E9%A3%9E%E8%A1%8C%E6%97%97/" class="">
+      12.飞行旗</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/13.%E5%8A%A8%E6%80%81NPC%E8%BD%A6%E5%A4%AB%E9%A9%BF%E7%AB%99%E8%80%81%E6%9D%BF%E7%82%B9%E5%87%BB%E5%AF%B9%E8%AF%9D%E6%A1%86%E8%87%AA%E5%8A%A8%E5%8C%96%E4%BB%A5%E5%8F%8A%E6%96%B0%E5%8C%BA%E9%81%AE%E6%8C%A1%E5%88%A4%E5%AE%9A%E7%9A%84%E9%AB%98%E7%BA%A7%E5%AE%9E%E6%93%8D%E6%8A%80%E5%B7%A7/" class="">
+      13.动态NPC（车夫、驿站老板）点击、对话框自动化以及新区遮挡判定的高级实操技巧</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/14.%E5%9C%B0%E5%9B%BE%E5%9D%90%E6%A0%87%E6%8D%A2%E7%AE%97/" class="">
+      14.地图坐标换算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/15.%E5%BC%BA%E7%9B%97NPC%E8%A2%AB%E9%81%AE%E6%8C%A1%E6%88%96%E9%87%8D%E5%8F%A0%E6%97%B6%E7%9A%84%E8%BF%9B%E9%98%B6%E5%A4%84%E7%90%86%E9%80%BB%E8%BE%91/" class="">
+      15.强盗（NPC）被遮挡或重叠时的进阶处理逻辑</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/16.%E8%B4%BC%E7%8E%8B%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6/" class="">
+      16.贼王处理机制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/17-18-19-20-21.%E8%B4%BC%E7%8E%8B%E8%BF%9B%E9%98%B6%E5%A4%84%E7%90%86%E4%B8%8E-OCR-%E9%AA%8C%E8%AF%81%E5%AE%9E%E6%88%98/" class="">
+      17-18-19-20-21.贼王进阶处理与 OCR 验证实战</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%8F%92%E4%BB%B6%E8%AF%86%E5%88%AB/" class="">
+      程序集_插件识别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%8F%92%E4%BB%B6%E6%B3%A8%E5%86%8C/" class="">
+      程序集_插件注册</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/23-24-25.%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" class="">
+      23-24-25.自动登录与模拟器将军令获取</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E4%BB%BB%E5%8A%A1%E6%89%A7%E8%A1%8C%E5%88%86%E9%85%8D/" class="">
+      程序集_任务执行分配</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%AA%97%E5%8F%A3%E7%A8%8B%E5%BA%8F%E9%9B%86_%E7%AA%97%E5%8F%A3_%E5%8A%9F%E8%83%BD%E8%AE%BE%E7%BD%AE/" class="">
+      程序集_功能设置</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%AA%97%E5%8F%A3%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%90%AF%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="">
+      程序集_启动窗口</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%9C%B0%E5%9B%BE/" class="">
+      程序集_地图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/" class="">
+      程序集_常用功能</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%89%93%E5%9B%BE/" class="">
+      程序集_打图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E8%84%9A%E6%9C%AC%E4%B8%BB%E7%A8%8B%E5%BA%8F/" class="">
+      程序集_脚本主程序</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E9%A3%9E%E8%A1%8C/" class="">
+      程序集_飞行</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%8A%A8/" class="">
+      程序集_鼠标移动</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/26.%E4%BB%BB%E5%8A%A1%E8%B6%85%E6%97%B6%E7%9B%91%E6%8E%A7%E4%B8%8E%E6%B8%B8%E6%88%8F%E6%8E%89%E7%BA%BF%E8%87%AA%E5%8A%A8%E9%87%8D%E8%BF%9E/" class="">
+      26.任务超时监控与游戏掉线自动重连</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/27.%E8%87%AA%E5%8A%A8%E6%8D%A2%E5%8F%B7%E6%81%A2%E5%A4%8D%E7%94%A8%E6%88%B7%E8%AE%BE%E7%BD%AE%E6%96%B0%E7%9A%84%E4%BB%BB%E5%8A%A1%E9%93%BE/" class="">
+      27.自动换号,恢复用户设置新的任务链</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/28.%E6%95%B4%E4%BD%93%E6%89%93%E5%9B%BE%E6%B5%81%E7%A8%8B%E5%9B%9E%E9%A1%BE%E8%AE%B2%E8%A7%A3%E8%A7%A3%E5%86%B3%E6%96%B0%E5%8C%BA%E5%8D%A1%E9%A1%BF%E5%A4%84%E7%90%86%E5%90%8C%E6%97%B6%E4%B8%8D%E5%BD%B1%E5%93%8D%E8%80%81%E5%8C%BA%E7%9A%84%E6%B5%81%E7%95%85%E5%BA%A6/" class="">
+      28.整体打图流程回顾讲解,解决新区卡顿处理同时不影响老区的流畅度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/29-30-31.%E8%AF%BE-%E6%8A%BC%E9%95%96%E9%9A%BE%E7%82%B9%E8%A7%A3%E6%9E%90/" class="">
+      29-30-31押镖难点解析</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E6%B8%B8%E6%88%8F%E5%9B%BE%E8%89%B2%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/" class="">
+      游戏图色脚本开发实战</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/32-33-%E8%87%AA%E5%8A%A8%E4%BB%93%E5%BA%93%E8%BD%AC%E5%9B%BE%E5%AE%9D%E7%9F%B3%E5%95%86%E4%BA%BA%E5%8F%96%E5%9B%BE%E7%9B%B4%E6%8E%A5%E8%BD%AC%E5%9B%BE/" class="">
+      32-33 自动仓库转图，宝石商人取图直接转图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/34.%E5%8D%A1%E5%AF%86%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BA%E9%AA%8C%E8%AF%81/" class="">
+      34.卡密系统搭建验证</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="">
+      设计模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c5a43b1f0709f0338f2ab4a52452792c" class="toggle"  />
+    <label for="section-c5a43b1f0709f0338f2ab4a52452792c" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E6%98%93%E9%94%AE%E9%BC%A0/" class="">
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+      幽灵键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-dd7a5a7db638114207cc7c06e8da5f9f" class="toggle"  />
+    <label for="section-dd7a5a7db638114207cc7c06e8da5f9f" class="flex">
+      <a role="button" class="">
+        AI</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-6a19eb32a4b18e50a44ba16962bb0f2a" class="toggle"  />
+    <label for="section-6a19eb32a4b18e50a44ba16962bb0f2a" class="flex">
+      <a role="button" class="">
+        编程工具</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/AI/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7/Trae/" class="">
+      Trae</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>hugo使用</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#生成项目">生成项目</a></li>
+    <li><a href="#下载主题">下载主题</a></li>
+    <li><a href="#配置文件hugoyaml">配置文件hugo.yaml</a></li>
+    <li><a href="#文章组织结构">文章组织结构</a></li>
+    <li><a href="#文档元数据信息">文档元数据信息</a></li>
+    <li><a href="#开发与测试">开发与测试</a></li>
+    <li><a href="#发布站点">发布站点</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><pre tabindex="0"><code>https://www.elegantcrazy.com/posts/blog/build-blog-with-github-pages-hugo-and-papermod/
+https://jimmysong.io/book/hugo-handbook/introduction/quick-start/ </code></pre><h1 id="安装-git">安装 Git<a class="anchor" href="#%e5%ae%89%e8%a3%85-git">#</a></h1>
+<p>Hugo 项目通常需要 Git 进行版本控制和主题管理</p>
+<pre tabindex="0"><code>https://git-scm.com/downloads/win</code></pre><h1 id="创建仓库">创建仓库<a class="anchor" href="#%e5%88%9b%e5%bb%ba%e4%bb%93%e5%ba%93">#</a></h1>
+<p>在Github创建仓库，仓库名填写**[用户名].github.io**<code>，注意</code>[用户名]部分必须是Github用户名，否则Github Pages不会正常工作。</p>
+<pre tabindex="0"><code>新建两个仓库
+wchuang099.github.io   #博客仓库
+my-notes-source       #备份博客源文件</code></pre><h1 id="安装-hugo">安装 Hugo<a class="anchor" href="#%e5%ae%89%e8%a3%85-hugo">#</a></h1>
+<p>下载安装包，hugo免安装，解压添加环境变量即可</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e"># 注意 hugo和主题都找最新版的下载即可，老版本会有兼容的问题</span>
+</span></span><span style="display:flex;"><span>https://github.com/gohugoio/hugo/releases/download/v0.148.2/hugo_extended_0.148.2_windows-amd64.zip
+</span></span><span style="display:flex;"><span>hugo version</span></span></code></pre></div><h2 id="生成项目">生成项目<a class="anchor" href="#%e7%94%9f%e6%88%90%e9%a1%b9%e7%9b%ae">#</a></h2>
+<pre tabindex="0"><code>hugo new site my-notes
+cd my-notes</code></pre><blockquote class='book-hint '>
+<p>这将创建标准的项目目录结构，包括：
+•	archetypes/ - 内容模板
+•	assets/ - 资源文件
+•	content/ - 内容源文件
+•	data/ - 数据文件
+•	layouts/ - 布局模板
+•	static/ - 静态文件
+•	themes/ - 主题
+•	hugo.toml – 配置文件，旧版本文件为config.toml</p></blockquote><h2 id="下载主题">下载主题<a class="anchor" href="#%e4%b8%8b%e8%bd%bd%e4%b8%bb%e9%a2%98">#</a></h2>
+<pre tabindex="0"><code>#可以去官网找自己喜欢的主题 https://themes.gohugo.io/
+git init
+git submodule add https://github.com/alex-shpak/hugo-book themes/book</code></pre><h2 id="配置文件hugoyaml">配置文件hugo.yaml<a class="anchor" href="#%e9%85%8d%e7%bd%ae%e6%96%87%e4%bb%b6hugoyaml">#</a></h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">baseURL</span>: <span style="color:#ae81ff">http://localhost:1313/</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">languageCode</span>: <span style="color:#ae81ff">zh-CN</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">title</span>: <span style="color:#ae81ff">我的技术笔记</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">theme</span>: <span style="color:#ae81ff">book</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 关键行为</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">disablePathToLower</span>: <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">enableGitInfo</span>: <span style="color:#66d9ef">false</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Markdown 支持（按需保留）</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">markup</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">goldmark</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">renderer</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">unsafe</span>: <span style="color:#66d9ef">true</span>   <span style="color:#75715e"># 如果你要用 Mermaid/KaTeX/HTML，必须开</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">highlight</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">style</span>: <span style="color:#ae81ff">monokai  </span> <span style="color:#75715e"># 可选，代码高亮主题</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Book 主题参数</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">params</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">BookToC</span>: <span style="color:#66d9ef">true</span>        <span style="color:#75715e"># 右侧目录</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">BookSection</span>: <span style="color:#e6db74">&#34;*&#34;</span>     <span style="color:#75715e"># 左侧显示所有分类</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">BookSearch</span>: <span style="color:#66d9ef">true</span>     <span style="color:#75715e"># 搜索功能（可选）</span></span></span></code></pre></div><h2 id="文章组织结构">文章组织结构<a class="anchor" href="#%e6%96%87%e7%ab%a0%e7%bb%84%e7%bb%87%e7%bb%93%e6%9e%84">#</a></h2>
+<pre tabindex="0"><code>my-notes/content/
+└── python/
+    ├── _index.md
+    ├── Python基础知识/
+    │   ├── _index.md
+    │   ├── 01-数据类型.md
+    │   └── images/   # 如在01-数据类型.md引用：![图](../images/test.png)
+    │       └── test.png
+    │
+    └── Python应用代码/
+        ├── _index.md
+        ├── pandas.md
+        └── images/ 
+            └── test.png</code></pre><h2 id="文档元数据信息">文档元数据信息<a class="anchor" href="#%e6%96%87%e6%a1%a3%e5%85%83%e6%95%b0%e6%8d%ae%e4%bf%a1%e6%81%af">#</a></h2>
+<pre tabindex="0"><code>推荐配置模板（可直接套用）
+1. 父分类（如 python/_index.md）
+---
+title: &#34;Python&#34;
+bookCollapseSection: true
+weight: 1
+---
+ 
+2. 子分类首页（如 基础语法/_index.md）
+---
+title: &#34;基础语法&#34;
+bookCollapseSection: true
+weight: 1
+---
+
+3. 具体笔记页（01-数据类型.md）
+---
+title: &#34;变量&#34;
+weight: 1
+---</code></pre><h2 id="开发与测试">开发与测试<a class="anchor" href="#%e5%bc%80%e5%8f%91%e4%b8%8e%e6%b5%8b%e8%af%95">#</a></h2>
+<ol>
+<li>启动开发服务器</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>  hugo server -D</span></span></code></pre></div><blockquote class='book-hint '>
+<p>-D 标志表示构建草稿内容。服务器会：
+•	在本地构建网站并提供服务（通常在 http://localhost:1313）
+•	监控项目目录中的文件变化
+•	检测到变化时自动重建并实时刷新浏览器（LiveReload）</p></blockquote><h2 id="发布站点">发布站点<a class="anchor" href="#%e5%8f%91%e5%b8%83%e7%ab%99%e7%82%b9">#</a></h2>
+<ol>
+<li>准备发布
+将草稿状态设置为 false或者直接删掉，默认false
+将元数据调整如下，更符合自己的主题</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>---
+</span></span><span style="display:flex;"><span>title: <span style="color:#e6db74">&#34;hugo使用&#34;</span>
+</span></span><span style="display:flex;"><span>date: 2025-08-06
+</span></span><span style="display:flex;"><span>lastmod: 2025-08-07T10:30:00+08:00
+</span></span><span style="display:flex;"><span>tags: <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;hugo&#34;</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>categories: <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;博客&#34;</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>description: <span style="color:#e6db74">&#34;如何使用hugo&#34;</span>
+</span></span><span style="display:flex;"><span>---</span></span></code></pre></div><ol start="2">
+<li>生成静态文件,运行构建命令：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>hugo</span></span></code></pre></div><blockquote class='book-hint '>
+<p>这会在项目根目录下的 public 目录中生成完整的静态网站，包括：
+•	HTML 文件
+•	CSS 和 JavaScript 文件
+•	图像等静态资源</p>
+<ol start="3">
+<li>重要注意事项
+•	Hugo 不会自动清空 public 目录
+•	构建时会覆盖现有文件，但不会删除旧文件
+•	根据需要手动清理该目录以避免文件残留
+•	默认情况下不包含草稿、未来或过期内容
+调试工具
+•	使用 hugo server &ndash;debug 获取详细日志
+•	使用 hugo config 查看完整站点配置
+•	使用 hugo list drafts 查看所有草稿文件</li>
+</ol></blockquote><h1 id="4在github-pages上部署网站">4.在Github Pages上部署网站<a class="anchor" href="#4%e5%9c%a8github-pages%e4%b8%8a%e9%83%a8%e7%bd%b2%e7%bd%91%e7%ab%99">#</a></h1>
+<p>进入 public 目录（Hugo 生成的页面）</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git config --global https.proxy http://127.0.0.1:15715
+</span></span><span style="display:flex;"><span>git config --global http.proxy http://127.0.0.1:15715
+</span></span><span style="display:flex;"><span>cd public
+</span></span><span style="display:flex;"><span>git init
+</span></span><span style="display:flex;"><span>git remote add origin https://github.com/wchuang099/wchuang099.github.io.git
+</span></span><span style="display:flex;"><span>git add .
+</span></span><span style="display:flex;"><span>git commit -m <span style="color:#e6db74">&#34;deploy&#34;</span>
+</span></span><span style="display:flex;"><span>git branch -M main
+</span></span><span style="display:flex;"><span>git push -f origin main</span></span></code></pre></div><p>过几分钟访问即可：wchuang099.github.io</p>
+<p>更新流程
+每次你写完文章或改完配置，只需要将以下保存bat执行：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>@echo off
+</span></span><span style="display:flex;"><span>chcp <span style="color:#ae81ff">65001</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>REM 切换到博客源码目录
+</span></span><span style="display:flex;"><span>cd /d D:<span style="color:#ae81ff">\A</span>llFile<span style="color:#ae81ff">\m</span>y-notes
+</span></span><span style="display:flex;"><span>REM 删除旧 public
+</span></span><span style="display:flex;"><span>rmdir /s /q public
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>REM 生成静态文件
+</span></span><span style="display:flex;"><span>hugo
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>REM 进入 public
+</span></span><span style="display:flex;"><span>cd public
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>REM 确保 Git 仓库存在
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> not exist <span style="color:#e6db74">&#34;.git&#34;</span> <span style="color:#f92672">(</span>
+</span></span><span style="display:flex;"><span>    git init
+</span></span><span style="display:flex;"><span>    git checkout -b main
+</span></span><span style="display:flex;"><span>    git remote add origin https://github.com/wchuang099/wchuang099.github.io.git
+</span></span><span style="display:flex;"><span><span style="color:#f92672">)</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">(</span>
+</span></span><span style="display:flex;"><span>    git remote set-url origin https://github.com/wchuang099/wchuang099.github.io.git
+</span></span><span style="display:flex;"><span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>REM 提交并推送
+</span></span><span style="display:flex;"><span>git add .
+</span></span><span style="display:flex;"><span>git commit -m <span style="color:#e6db74">&#34;自动部署：%date% %time%&#34;</span>
+</span></span><span style="display:flex;"><span>git push -f origin main
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>echo ✅ 博客已成功部署！
+</span></span><span style="display:flex;"><span>pause</span></span></code></pre></div><h1 id="备份网站">备份网站<a class="anchor" href="#%e5%a4%87%e4%bb%bd%e7%bd%91%e7%ab%99">#</a></h1>
+<p>为了<strong>备份你的博客原始文件（包括 Markdown 笔记、配置文件、主题等）</strong>，建议再建一个 <strong>源码仓库</strong>。</p>
+<p>✅ 推荐的结构：两个 Git 仓库</p>
+<table>
+  <thead>
+      <tr>
+          <th>用途</th>
+          <th>内容</th>
+          <th>GitHub 仓库</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>部署用</td>
+          <td><code>public/</code> 静态页面</td>
+          <td><code>yourusername.github.io</code></td>
+      </tr>
+      <tr>
+          <td>源码备份</td>
+          <td>所有博客源文件</td>
+          <td><code>my-notes-source</code></td>
+      </tr>
+  </tbody>
+</table>
+<pre tabindex="0"><code>添加 .gitignore 文件，避免上传 public/ 内容
+在博客根目录下创建 .gitignore 文件，内容如下：
+public/
+resources/
+*.DS_Store
+*.log
+.hugo_build.lock
+desktop.ini
+.idea
+
+第一次提交
+cd my-notes   # 你博客项目的根目录
+git init
+git add .
+git commit -m &#34;first commit&#34;
+git branch -M main
+git remote add origin https://github.com/wchuang099/my-notes-source.git
+git push -u origin main</code></pre><p>自动发布备份脚本</p>
+<pre tabindex="0"><code>@echo off
+chcp 65001
+REM === Hugo 博客源码备份脚本 ===
+REM === 将源码（含文章、主题等）备份到 GitHub ===
+
+REM 提交并推送源码到 my-notes 仓库
+git add .
+git commit -m &#34;备份博客源码：%date% %time%&#34;
+git remote remove origin
+git remote add origin https://github.com/wchuang099/my-notes-source.git
+git branch -M main
+git push -u origin main
+
+echo ✅ 博客源码备份完成！
+pause</code></pre></article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>nssm进程管理工具</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="flex align-center">
+        <span>Markdown使用教程</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#生成项目">生成项目</a></li>
+    <li><a href="#下载主题">下载主题</a></li>
+    <li><a href="#配置文件hugoyaml">配置文件hugo.yaml</a></li>
+    <li><a href="#文章组织结构">文章组织结构</a></li>
+    <li><a href="#文档元数据信息">文档元数据信息</a></li>
+    <li><a href="#开发与测试">开发与测试</a></li>
+    <li><a href="#发布站点">发布站点</a></li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

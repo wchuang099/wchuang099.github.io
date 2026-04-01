@@ -1,0 +1,2278 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content=".版本 2 .支持库 spec
+.程序集 程序集_地图
+.子程序 地图_获取当前位置, 逻辑型 .参数 i, 整数型, , 线索索引 .参数 参数_地图数据, 地图数据, 参考 .局部变量 临时字库序号, 整数型 .局部变量 地图数据, 文本型 .局部变量 地图名与坐标分割, 文本型, , “0” .局部变量 坐标数据, 文本型, , “0” .局部变量 路径, 文本型
+临时字库序号 ＝ 全局_信息 [i].大漠.字库_取序号 () ’ 防止字库切换混乱了 记得返回或者子程序结束时 要切换回临时的字库 全局_信息 [i].大漠.字库_置序号 (#字库_左上角地图) 地图数据 ＝ 全局_信息 [i].大漠.识字 (31, 44, 142, 80, “ffffff-020202”, 1) .如果真 (地图数据 ≠ “”) ’ 长安城[464,168] 这是识字出来的格式 地图名与坐标分割 ＝ 分割文本 (地图数据, “[”, ) .如果真 (取数组成员数 (地图名与坐标分割) ≥ 2) 参数_地图数据.地图名 ＝ 地图名与坐标分割 [1] 坐标数据 ＝ 分割文本 (地图名与坐标分割 [2], “,”, ) .如果真 (取数组成员数 (坐标数据) ≥ 2) 参数_地图数据.地图坐标x ＝ 到整数 (坐标数据 [1]) ’ 文本区分_只取汉字() 千万别用 用了崩得你妈都不认识你 参数_地图数据.地图坐标y ＝ 到整数 (坐标数据 [2]) ’ ???到整数 后 ] 中括号还在不在? 路径 ＝ 取运行目录 () ＋ “\配置\地图设置.ini” 参数_地图数据.地图最大x轴 ＝ 到整数 (读配置项 (路径, 参数_地图数据.地图名, “地图最大X轴”, )) 参数_地图数据.地图最大y轴 ＝ 到整数 (读配置项 (路径, 参数_地图数据.地图名, “地图最大Y轴”, )) 参数_地图数据.地图最大宽度 ＝ 到整数 (读配置项 (路径, 参数_地图数据.地图名, “地图宽度”, )) 参数_地图数据.地图最大高度 ＝ 到整数 (读配置项 (路径, 参数_地图数据.地图名, “地图高度”, )) 全局_信息 [i].大漠.字库_置序号 (临时字库序号) ’ 切回原来调用该子程序的 字库 防止 字库混乱导致识别错误 返回 (真) .如果真结束
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%9C%B0%E5%9B%BE/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="程序集_地图">
+  <meta property="og:description" content=".版本 2 .支持库 spec
+.程序集 程序集_地图
+.子程序 地图_获取当前位置, 逻辑型 .参数 i, 整数型, , 线索索引 .参数 参数_地图数据, 地图数据, 参考 .局部变量 临时字库序号, 整数型 .局部变量 地图数据, 文本型 .局部变量 地图名与坐标分割, 文本型, , “0” .局部变量 坐标数据, 文本型, , “0” .局部变量 路径, 文本型
+临时字库序号 ＝ 全局_信息 [i].大漠.字库_取序号 () ’ 防止字库切换混乱了 记得返回或者子程序结束时 要切换回临时的字库 全局_信息 [i].大漠.字库_置序号 (#字库_左上角地图) 地图数据 ＝ 全局_信息 [i].大漠.识字 (31, 44, 142, 80, “ffffff-020202”, 1) .如果真 (地图数据 ≠ “”) ’ 长安城[464,168] 这是识字出来的格式 地图名与坐标分割 ＝ 分割文本 (地图数据, “[”, ) .如果真 (取数组成员数 (地图名与坐标分割) ≥ 2) 参数_地图数据.地图名 ＝ 地图名与坐标分割 [1] 坐标数据 ＝ 分割文本 (地图名与坐标分割 [2], “,”, ) .如果真 (取数组成员数 (坐标数据) ≥ 2) 参数_地图数据.地图坐标x ＝ 到整数 (坐标数据 [1]) ’ 文本区分_只取汉字() 千万别用 用了崩得你妈都不认识你 参数_地图数据.地图坐标y ＝ 到整数 (坐标数据 [2]) ’ ???到整数 后 ] 中括号还在不在? 路径 ＝ 取运行目录 () ＋ “\配置\地图设置.ini” 参数_地图数据.地图最大x轴 ＝ 到整数 (读配置项 (路径, 参数_地图数据.地图名, “地图最大X轴”, )) 参数_地图数据.地图最大y轴 ＝ 到整数 (读配置项 (路径, 参数_地图数据.地图名, “地图最大Y轴”, )) 参数_地图数据.地图最大宽度 ＝ 到整数 (读配置项 (路径, 参数_地图数据.地图名, “地图宽度”, )) 参数_地图数据.地图最大高度 ＝ 到整数 (读配置项 (路径, 参数_地图数据.地图名, “地图高度”, )) 全局_信息 [i].大漠.字库_置序号 (临时字库序号) ’ 切回原来调用该子程序的 字库 防止 字库混乱导致识别错误 返回 (真) .如果真结束">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="game">
+
+
+  <meta itemprop="name" content="程序集_地图">
+  <meta itemprop="description" content=".版本 2 .支持库 spec
+.程序集 程序集_地图
+.子程序 地图_获取当前位置, 逻辑型 .参数 i, 整数型, , 线索索引 .参数 参数_地图数据, 地图数据, 参考 .局部变量 临时字库序号, 整数型 .局部变量 地图数据, 文本型 .局部变量 地图名与坐标分割, 文本型, , “0” .局部变量 坐标数据, 文本型, , “0” .局部变量 路径, 文本型
+临时字库序号 ＝ 全局_信息 [i].大漠.字库_取序号 () ’ 防止字库切换混乱了 记得返回或者子程序结束时 要切换回临时的字库 全局_信息 [i].大漠.字库_置序号 (#字库_左上角地图) 地图数据 ＝ 全局_信息 [i].大漠.识字 (31, 44, 142, 80, “ffffff-020202”, 1) .如果真 (地图数据 ≠ “”) ’ 长安城[464,168] 这是识字出来的格式 地图名与坐标分割 ＝ 分割文本 (地图数据, “[”, ) .如果真 (取数组成员数 (地图名与坐标分割) ≥ 2) 参数_地图数据.地图名 ＝ 地图名与坐标分割 [1] 坐标数据 ＝ 分割文本 (地图名与坐标分割 [2], “,”, ) .如果真 (取数组成员数 (坐标数据) ≥ 2) 参数_地图数据.地图坐标x ＝ 到整数 (坐标数据 [1]) ’ 文本区分_只取汉字() 千万别用 用了崩得你妈都不认识你 参数_地图数据.地图坐标y ＝ 到整数 (坐标数据 [2]) ’ ???到整数 后 ] 中括号还在不在? 路径 ＝ 取运行目录 () ＋ “\配置\地图设置.ini” 参数_地图数据.地图最大x轴 ＝ 到整数 (读配置项 (路径, 参数_地图数据.地图名, “地图最大X轴”, )) 参数_地图数据.地图最大y轴 ＝ 到整数 (读配置项 (路径, 参数_地图数据.地图名, “地图最大Y轴”, )) 参数_地图数据.地图最大宽度 ＝ 到整数 (读配置项 (路径, 参数_地图数据.地图名, “地图宽度”, )) 参数_地图数据.地图最大高度 ＝ 到整数 (读配置项 (路径, 参数_地图数据.地图名, “地图高度”, )) 全局_信息 [i].大漠.字库_置序号 (临时字库序号) ’ 切回原来调用该子程序的 字库 防止 字库混乱导致识别错误 返回 (真) .如果真结束">
+  <meta itemprop="wordCount" content="1318">
+
+<title>程序集_地图 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%9C%B0%E5%9B%BE/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.5cf2de48bc712bcdcda45419f388667e3eb9b40dbc5742d336fb75ca6b44ad34.js" integrity="sha256-XPLeSLxxK83NpFQZ84hmfj65tA28V0LTNvt1ymtErTQ=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-game">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-204365caa941390a182aeb870c8b397d" class="toggle"  />
+    <label for="section-204365caa941390a182aeb870c8b397d" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f6929f8819239c236e3ff6d9318a645b" class="toggle"  />
+    <label for="section-f6929f8819239c236e3ff6d9318a645b" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-797baf87757652be835bcce5680ea0d4" class="toggle"  />
+    <label for="section-797baf87757652be835bcce5680ea0d4" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-938c3edbaa8e3dd01e8b93d6f9361182" class="toggle"  />
+    <label for="section-938c3edbaa8e3dd01e8b93d6f9361182" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-56b62cfe8bd1e3138f346455c7c08d01" class="toggle"  />
+    <label for="section-56b62cfe8bd1e3138f346455c7c08d01" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e12d76c83fadc5077063bd8a06e4974c" class="toggle"  />
+    <label for="section-e12d76c83fadc5077063bd8a06e4974c" class="flex">
+      <a role="button" class="">
+        Linux</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c0518db0448b3d740eada08bd26ccfac" class="toggle"  />
+    <label for="section-c0518db0448b3d740eada08bd26ccfac" class="flex">
+      <a role="button" class="">
+        阿里腾讯华为火山云产品对比</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AF%B9%E6%AF%94/" class="">
+      服务器对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E7%A1%AC%E7%9B%98%E5%AF%B9%E6%AF%94/" class="">
+      云硬盘对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%B9%E6%AF%94/" class="">
+      数据库产品对比表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AF%B9%E6%AF%94/" class="">
+      中间件产品对比表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AF%B9%E6%AF%94/" class="">
+      大数据对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E5%AE%89%E5%85%A8%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/" class="">
+      安全产品对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AF%B9%E6%A0%87/" class="">
+      云容器对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E6%9E%B6%E6%9E%84%E5%B8%88%E5%B7%A5%E4%BD%9C%E8%81%8C%E8%B4%A3/" class="">
+      云架构师工作职责</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E8%BF%81%E7%A7%BB%E6%B5%81%E7%A8%8B%E9%98%BF%E9%87%8C%E4%BA%91/" class="">
+      迁移流程总结</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-docker/" class="">
+      安装 Docker 教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-mysql/" class="">
+      安装 mysql 教程</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-23e22f2cefc5200495b10b220f00dc9b" class="toggle"  />
+    <label for="section-23e22f2cefc5200495b10b220f00dc9b" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5f3519d07421b3022c482beb7e53757d" class="toggle"  />
+    <label for="section-5f3519d07421b3022c482beb7e53757d" class="flex">
+      <a role="button" class="">
+        Other</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强平台装机流程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-00896273d6e22b6628839c56863edc57" class="toggle" checked />
+    <label for="section-00896273d6e22b6628839c56863edc57" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-212fbf26dee144498e07df6cb6c18024" class="toggle"  />
+    <label for="section-212fbf26dee144498e07df6cb6c18024" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c7e351909150a2b7e1cb200bf4cfa4d9" class="toggle" checked />
+    <label for="section-c7e351909150a2b7e1cb200bf4cfa4d9" class="flex">
+      <a role="button" class="">
+        脚本开发实战</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/2.%E5%B7%A5%E7%A8%8B%E6%9E%B6%E6%9E%84UI-%E5%B8%83%E5%B1%80%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%85%8D%E7%BD%AE%E9%9A%94%E7%A6%BB/" class="">
+      2.工程架构、UI 布局与多线程配置隔离</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/3.%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%89%BE%E5%9B%BE%E6%8C%87%E4%BB%A4%E8%AF%A6%E8%A7%A3/" class="">
+      3.大漠插件：环境部署与找图指令详解</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/4.%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E5%85%8D%E6%B3%A8%E5%86%8C%E8%B0%83%E7%94%A8%E5%9D%90%E6%A0%87%E7%B3%BB%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E5%90%8E%E5%8F%B0%E7%BB%91%E5%AE%9A/" class="">
+      4.大漠插件：免注册调用、坐标系原理以及后台绑定</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/5.%E6%98%93%E8%AF%AD%E8%A8%80%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6/" class="">
+      5.易语言多线程控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/5.%E6%98%93%E8%AF%AD%E8%A8%80%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6%E4%B8%8E%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB%E4%BC%98%E5%8C%96%E6%96%B9%E6%A1%88/" class="">
+      5.易语言多线程控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/6.%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" class="">
+      6.鼠标漂移解决方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/10.%E5%BC%BA%E7%9B%97%E4%BB%BB%E5%8A%A1%E8%B4%BC%E7%8E%8B%E4%BB%BB%E5%8A%A1%E8%AF%BB%E5%8F%961/" class="">
+      10.打图任务(1)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/10.%E5%BC%BA%E7%9B%97%E4%BB%BB%E5%8A%A1%E8%B4%BC%E7%8E%8B%E4%BB%BB%E5%8A%A1%E8%AF%BB%E5%8F%962/" class="">
+      10.打图任务(2)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/11.%E8%B7%A8%E5%9C%B0%E5%9B%BE%E8%87%AA%E5%8A%A8%E5%AF%BB%E8%B7%AF/" class="">
+      11.跨地图寻路</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/12.%E9%A3%9E%E8%A1%8C%E6%97%97/" class="">
+      12.飞行旗</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/13.%E5%8A%A8%E6%80%81NPC%E8%BD%A6%E5%A4%AB%E9%A9%BF%E7%AB%99%E8%80%81%E6%9D%BF%E7%82%B9%E5%87%BB%E5%AF%B9%E8%AF%9D%E6%A1%86%E8%87%AA%E5%8A%A8%E5%8C%96%E4%BB%A5%E5%8F%8A%E6%96%B0%E5%8C%BA%E9%81%AE%E6%8C%A1%E5%88%A4%E5%AE%9A%E7%9A%84%E9%AB%98%E7%BA%A7%E5%AE%9E%E6%93%8D%E6%8A%80%E5%B7%A7/" class="">
+      13.动态NPC（车夫、驿站老板）点击、对话框自动化以及新区遮挡判定的高级实操技巧</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/14.%E5%9C%B0%E5%9B%BE%E5%9D%90%E6%A0%87%E6%8D%A2%E7%AE%97/" class="">
+      14.地图坐标换算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/15.%E5%BC%BA%E7%9B%97NPC%E8%A2%AB%E9%81%AE%E6%8C%A1%E6%88%96%E9%87%8D%E5%8F%A0%E6%97%B6%E7%9A%84%E8%BF%9B%E9%98%B6%E5%A4%84%E7%90%86%E9%80%BB%E8%BE%91/" class="">
+      15.强盗（NPC）被遮挡或重叠时的进阶处理逻辑</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/16.%E8%B4%BC%E7%8E%8B%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6/" class="">
+      16.贼王处理机制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/17-18-19-20-21.%E8%B4%BC%E7%8E%8B%E8%BF%9B%E9%98%B6%E5%A4%84%E7%90%86%E4%B8%8E-OCR-%E9%AA%8C%E8%AF%81%E5%AE%9E%E6%88%98/" class="">
+      17-18-19-20-21.贼王进阶处理与 OCR 验证实战</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%8F%92%E4%BB%B6%E8%AF%86%E5%88%AB/" class="">
+      程序集_插件识别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%8F%92%E4%BB%B6%E6%B3%A8%E5%86%8C/" class="">
+      程序集_插件注册</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/23-24-25.%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" class="">
+      23-24-25.自动登录与模拟器将军令获取</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E4%BB%BB%E5%8A%A1%E6%89%A7%E8%A1%8C%E5%88%86%E9%85%8D/" class="">
+      程序集_任务执行分配</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%AA%97%E5%8F%A3%E7%A8%8B%E5%BA%8F%E9%9B%86_%E7%AA%97%E5%8F%A3_%E5%8A%9F%E8%83%BD%E8%AE%BE%E7%BD%AE/" class="">
+      程序集_功能设置</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%AA%97%E5%8F%A3%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%90%AF%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="">
+      程序集_启动窗口</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%9C%B0%E5%9B%BE/" class="active">
+      程序集_地图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/" class="">
+      程序集_常用功能</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%89%93%E5%9B%BE/" class="">
+      程序集_打图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E8%84%9A%E6%9C%AC%E4%B8%BB%E7%A8%8B%E5%BA%8F/" class="">
+      程序集_脚本主程序</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E9%A3%9E%E8%A1%8C/" class="">
+      程序集_飞行</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%8A%A8/" class="">
+      程序集_鼠标移动</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/26.%E4%BB%BB%E5%8A%A1%E8%B6%85%E6%97%B6%E7%9B%91%E6%8E%A7%E4%B8%8E%E6%B8%B8%E6%88%8F%E6%8E%89%E7%BA%BF%E8%87%AA%E5%8A%A8%E9%87%8D%E8%BF%9E/" class="">
+      26.任务超时监控与游戏掉线自动重连</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/27.%E8%87%AA%E5%8A%A8%E6%8D%A2%E5%8F%B7%E6%81%A2%E5%A4%8D%E7%94%A8%E6%88%B7%E8%AE%BE%E7%BD%AE%E6%96%B0%E7%9A%84%E4%BB%BB%E5%8A%A1%E9%93%BE/" class="">
+      27.自动换号,恢复用户设置新的任务链</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/28.%E6%95%B4%E4%BD%93%E6%89%93%E5%9B%BE%E6%B5%81%E7%A8%8B%E5%9B%9E%E9%A1%BE%E8%AE%B2%E8%A7%A3%E8%A7%A3%E5%86%B3%E6%96%B0%E5%8C%BA%E5%8D%A1%E9%A1%BF%E5%A4%84%E7%90%86%E5%90%8C%E6%97%B6%E4%B8%8D%E5%BD%B1%E5%93%8D%E8%80%81%E5%8C%BA%E7%9A%84%E6%B5%81%E7%95%85%E5%BA%A6/" class="">
+      28.整体打图流程回顾讲解,解决新区卡顿处理同时不影响老区的流畅度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/29-30-31.%E8%AF%BE-%E6%8A%BC%E9%95%96%E9%9A%BE%E7%82%B9%E8%A7%A3%E6%9E%90/" class="">
+      29-30-31押镖难点解析</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E6%B8%B8%E6%88%8F%E5%9B%BE%E8%89%B2%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/" class="">
+      游戏图色脚本开发实战</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/32-33-%E8%87%AA%E5%8A%A8%E4%BB%93%E5%BA%93%E8%BD%AC%E5%9B%BE%E5%AE%9D%E7%9F%B3%E5%95%86%E4%BA%BA%E5%8F%96%E5%9B%BE%E7%9B%B4%E6%8E%A5%E8%BD%AC%E5%9B%BE/" class="">
+      32-33 自动仓库转图，宝石商人取图直接转图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/34.%E5%8D%A1%E5%AF%86%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BA%E9%AA%8C%E8%AF%81/" class="">
+      34.卡密系统搭建验证</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="">
+      设计模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c5a43b1f0709f0338f2ab4a52452792c" class="toggle"  />
+    <label for="section-c5a43b1f0709f0338f2ab4a52452792c" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E6%98%93%E9%94%AE%E9%BC%A0/" class="">
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+      幽灵键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-dd7a5a7db638114207cc7c06e8da5f9f" class="toggle"  />
+    <label for="section-dd7a5a7db638114207cc7c06e8da5f9f" class="flex">
+      <a role="button" class="">
+        AI</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-6a19eb32a4b18e50a44ba16962bb0f2a" class="toggle"  />
+    <label for="section-6a19eb32a4b18e50a44ba16962bb0f2a" class="flex">
+      <a role="button" class="">
+        编程工具</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/AI/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7/Trae/" class="">
+      Trae</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>程序集_地图</h3>
+
+  <label for="toc-control">
+    
+  </label>
+</div>
+
+
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><p>.版本 2
+.支持库 spec</p>
+<p>.程序集 程序集_地图</p>
+<p>.子程序 地图_获取当前位置, 逻辑型
+.参数 i, 整数型, , 线索索引
+.参数 参数_地图数据, 地图数据, 参考
+.局部变量 临时字库序号, 整数型
+.局部变量 地图数据, 文本型
+.局部变量 地图名与坐标分割, 文本型, , &ldquo;0&rdquo;
+.局部变量 坐标数据, 文本型, , &ldquo;0&rdquo;
+.局部变量 路径, 文本型</p>
+<p>临时字库序号 ＝ 全局_信息 [i].大漠.字库_取序号 ()  &rsquo; 防止字库切换混乱了  记得返回或者子程序结束时 要切换回临时的字库
+全局_信息 [i].大漠.字库_置序号 (#字库_左上角地图)
+地图数据 ＝ 全局_信息 [i].大漠.识字 (31, 44, 142, 80, “ffffff-020202”, 1)
+.如果真 (地图数据 ≠ “”)
+&rsquo; 长安城[464,168]   这是识字出来的格式
+地图名与坐标分割 ＝ 分割文本 (地图数据, “[”, )
+.如果真 (取数组成员数 (地图名与坐标分割) ≥ 2)
+参数_地图数据.地图名 ＝ 地图名与坐标分割 [1]
+坐标数据 ＝ 分割文本 (地图名与坐标分割 [2], “,”, )
+.如果真 (取数组成员数 (坐标数据) ≥ 2)
+参数_地图数据.地图坐标x ＝ 到整数 (坐标数据 [1])
+&rsquo; 文本区分_只取汉字()   千万别用  用了崩得你妈都不认识你
+参数_地图数据.地图坐标y ＝ 到整数 (坐标数据 [2])  &rsquo; ???到整数 后  ]  中括号还在不在?
+路径 ＝ 取运行目录 () ＋ “\配置\地图设置.ini”
+参数_地图数据.地图最大x轴 ＝ 到整数 (读配置项 (路径, 参数_地图数据.地图名, “地图最大X轴”, ))
+参数_地图数据.地图最大y轴 ＝ 到整数 (读配置项 (路径, 参数_地图数据.地图名, “地图最大Y轴”, ))
+参数_地图数据.地图最大宽度 ＝ 到整数 (读配置项 (路径, 参数_地图数据.地图名, “地图宽度”, ))
+参数_地图数据.地图最大高度 ＝ 到整数 (读配置项 (路径, 参数_地图数据.地图名, “地图高度”, ))
+全局_信息 [i].大漠.字库_置序号 (临时字库序号)  &rsquo; 切回原来调用该子程序的  字库  防止  字库混乱导致识别错误
+返回 (真)
+.如果真结束</p>
+<pre><code>.如果真结束
+</code></pre>
+<p>.如果真结束</p>
+<p>全局_信息 [i].大漠.字库_置序号 (临时字库序号)  &rsquo; 切回原来调用该子程序的  字库  防止  字库混乱导致识别错误
+返回 (假)</p>
+<p>.子程序 地图_到大唐国境
+.参数 i, 整数型
+.参数 是否走驿站, 逻辑型, 可空, 是否走驿站
+.局部变量 执行流程, 文本型
+.局部变量 坐标, 坐标类
+.局部变量 现行位置, 地图数据
+.局部变量 临时字库, 整数型
+.局部变量 次数判定, 整数型</p>
+<p>&rsquo; 我们得先知道  我们再那?
+&rsquo; 根据位置来进行匹配
+临时字库 ＝ 全局_信息 [i].大漠.字库_取序号 ()
+全局_信息 [i].大漠.字库_置序号 (#字库_对话框字库)</p>
+<p>执行流程 ＝ “获取当前位置”
+.判断循环首 (真)
+.判断开始 (执行流程 ＝ “获取当前位置”)
+.如果 (地图_获取当前位置 (i, 现行位置))
+.判断开始 (现行位置.地图名 ＝ “长安城”)
+调试输出 (“地图_到大唐国境-&gt;当前位置在长安-&gt;寻路至驿站老板身边”)
+执行流程 ＝ “寻路至驿站老板身边”
+.判断 (现行位置.地图名 ＝ “大唐国境”)
+调试输出 (“已抵达大唐国境”)
+全局_信息 [i].大漠.字库_置序号 (临时字库)
+返回 ()
+.默认
+&rsquo; 未知路径  可以使用飞行旗飞到长安</p>
+<pre><code>        .判断结束
+
+
+    .否则
+        ' 留坑  预处理
+        调试输出 (“地图_到建邺城获取当前地图失败”)
+        延时 (500)
+    .如果结束
+
+.判断 (执行流程 ＝ “寻路至驿站老板身边”)
+    .如果 (地图_获取当前位置 (i, 现行位置))  ' 第一步
+        .如果 (取绝对值 (现行位置.地图坐标x － 280) ≤ 10 且 取绝对值 (现行位置.地图坐标y － 40) ≤ 10)
+            ' 已经在驿站老板周边
+            .如果 (全局_信息 [i].大漠.找图Ex (75, 106, 770, 539, “商铺.bmp”, “030303”, 0.9, 0) ＝ “”)
+                ' 商铺已屏蔽  或者  无遮挡
+                ' 开始找npc
+                .如果 (界面判定_是否有对话框 (i) ≠ 真)  ' 防卡  和  新区超时
+                    .如果 (opencv_找图 (i, 210, 128, 613, 384, “驿站老板_腰带.bmp|驿站老板_红领巾.bmp|驿站老板_背面.bmp|驿站老板_红领巾1.bmp”, 0.6, 坐标.x, 坐标.y) ≠ -1)
+                        调试输出 (“已找到驿站老板”, 坐标.x, 坐标.y)
+                        梦幻鼠标移动 (i, 坐标.x, 坐标.y, , )
+                        延时 (50)
+                        全局_信息 [i].大漠.鼠标_左键双击 ()
+                        .计次循环首 (50, )
+                            .如果真 (界面判定_是否有对话框 (i))
+                                执行流程 ＝ “驿站老板对话”
+                                跳出循环 ()
+                            .如果真结束
+
+                            延时 (100)
+                        .计次循环尾 ()
+                    .否则
+                        调试输出 (“未找到驿站老板”)
+                        延时 (500)
+                    .如果结束
+
+                .否则
+                    执行流程 ＝ “驿站老板对话”
+                .如果结束
+
+
+            .否则
+                调试输出 (“屏蔽商铺”)
+                全局_信息 [i].大漠.键盘_按住 (#Alt键)
+                延时 (50)
+                全局_信息 [i].大漠.键盘_按键 (#H键)
+                延时 (50)
+                全局_信息 [i].大漠.键盘_弹起 (#Alt键)
+                调试输出 (“屏蔽人物”)
+                全局_信息 [i].大漠.键盘_按键 (#F9键)
+                延时 (500)
+            .如果结束
+
+        .否则
+            ' 不在驿站老板身边
+            ' 移动到驿站老板身边
+            调试输出 (“移动至驿站老板身边”)
+            地图_移动到指定点 (i, 280, 40, 8)
+
+
+        .如果结束
+
+    .否则
+        调试输出 (“获取当前地图失败”)
+    .如果结束
+
+.判断 (执行流程 ＝ “驿站老板对话”)
+    .如果 (全局_信息 [i].大漠.找字Fast (125, 299, 483, 442, “我要去”, “ff0000-101010”, 0.9, 坐标.x, 坐标.y) ≠ -1)
+        调试输出 (“触发驿站老板对话传送”)
+        .计次循环首 (50, )
+            .如果 (全局_信息 [i].大漠.找字Fast (125, 299, 483, 442, “我要去”, “ff0000-101010”, 0.9, 坐标.x, 坐标.y) ≠ -1)
+                梦幻鼠标移动 (i, 坐标.x, 坐标.y ＋ 5, , )
+                延时 (50)
+                全局_信息 [i].大漠.鼠标_左键单击 ()
+                延时 (500)
+            .否则
+                .如果真 (地图_获取当前位置 (i, 现行位置))
+                    .如果真 (现行位置.地图名 ＝ “大唐国境”)
+                        调试输出 (“抵达大唐国境”)
+                        执行流程 ＝ “获取当前位置”
+                        跳出循环 ()
+                    .如果真结束
+
+                .如果真结束
+
+            .如果结束
+
+            延时 (100)
+        .计次循环尾 ()
+
+    .否则
+        .如果 (次数判定 ≥ 5)
+            次数判定 ＝ 0
+            调试输出 (“非驿站老板对话”)
+            界面判定_是否有对话框 (i, 真)
+            执行流程 ＝ “获取当前位置”
+
+        .否则
+            次数判定 ＝ 次数判定 ＋ 1
+            延时 (100)
+        .如果结束
+
+    .如果结束
+
+.默认
+
+.判断结束
+
+
+延时 (500)
+处理事件 ()
+</code></pre>
+<p>.判断循环尾 ()
+全局_信息 [i].大漠.字库_置序号 (临时字库)</p>
+<p>.子程序 地图_到建邺城
+.参数 i, 整数型
+.局部变量 执行流程, 文本型
+.局部变量 现行位置, 地图数据</p>
+<p>&rsquo; 我们得先知道  我们再那?
+&rsquo; 根据位置来进行匹配
+执行流程 ＝ “获取当前位置”
+.判断循环首 (真)
+.判断开始 (执行流程 ＝ “获取当前位置”)
+.如果 (地图_获取当前位置 (i, 现行位置))
+.判断开始 (现行位置.地图名 ＝ “长安城”)
+调试输出 (“地图_到建邺城-&gt;当前位置在长安-&gt;寻路至江南野外”)
+执行流程 ＝ “寻路至江南野外”
+.判断 (现行位置.地图名 ＝ “江南野外”)
+调试输出 (“地图_到建邺城-&gt;当前位置在江南野外-&gt;寻路至建邺城”)
+执行流程 ＝ “寻路至建邺城”
+.判断 (现行位置.地图名 ＝ “建邺城”)
+调试输出 (“已抵达建邺城”)
+返回 ()</p>
+<pre><code>        .默认
+            ' 未知路径  可以使用飞行旗飞到长安
+
+
+        .判断结束
+
+
+    .否则
+        ' 留坑  预处理
+        调试输出 (“地图_到建邺城获取当前地图失败”)
+        延时 (500)
+    .如果结束
+
+.判断 (执行流程 ＝ “寻路至江南野外”)
+    ' ???我们需要 小地图移动   能执行到这一步 已经确定地图是在长安了!
+    .如果 (地图_获取当前位置 (i, 现行位置))  ' 第一步 什么时候  才需要小地图移动?
+        .如果 (取绝对值 (现行位置.地图坐标x － 538) ≤ 10 且 取绝对值 (现行位置.地图坐标y － 10) ≤ 10)
+            ' 需要点击传送阵
+            梦幻鼠标移动 (i, 678, 582, 6, 真)
+            延时 (100)
+            全局_信息 [i].大漠.鼠标_左键单击 ()
+            .计次循环首 (20, )
+                .如果真 (地图_获取当前位置 (i, 现行位置))
+                    .如果真 (现行位置.地图名 ＝ “江南野外”)
+                        执行流程 ＝ “获取当前位置”
+                        跳出循环 ()
+                    .如果真结束
+
+                .如果真结束
+                延时 (100)
+            .计次循环尾 ()
+
+        .否则
+            地图_移动到指定点 (i, 538, 10, 8)
+        .如果结束
+
+    .否则
+        调试输出 (“获取当前地图失败”)
+    .如果结束
+
+.判断 (执行流程 ＝ “寻路至建邺城”)
+    .如果 (地图_获取当前位置 (i, 现行位置))  ' 第一步 什么时候  才需要小地图移动?
+        .如果 (取绝对值 (现行位置.地图坐标x － 148) ≤ 10 且 取绝对值 (现行位置.地图坐标y － 52) ≤ 10)
+            ' 需要点击传送阵
+            梦幻鼠标移动 (i, 757, 247, 6, 真)
+            延时 (100)
+            全局_信息 [i].大漠.鼠标_左键单击 ()
+            .计次循环首 (20, )
+                .如果真 (地图_获取当前位置 (i, 现行位置))
+                    .如果真 (现行位置.地图名 ＝ “建邺城”)
+                        执行流程 ＝ “获取当前位置”
+                        跳出循环 ()
+                    .如果真结束
+
+                .如果真结束
+                延时 (100)
+            .计次循环尾 ()
+
+        .否则
+            地图_移动到指定点 (i, 148, 52, 8)
+        .如果结束
+
+    .否则
+        调试输出 (“获取当前地图失败”)
+    .如果结束
+
+.默认
+
+.判断结束
+
+
+延时 (500)
+处理事件 ()
+</code></pre>
+<p>.判断循环尾 ()</p>
+<p>.子程序 地图_移动到指定点
+.参数 i, 整数型
+.参数 参数_目的地x, 整数型
+.参数 参数_目的地y, 整数型
+.参数 参数_误差值, 整数型, 可空
+.局部变量 执行流程, 文本型
+.局部变量 现行地图, 地图数据
+.局部变量 地图_地图宽度, 整数型
+.局部变量 地图_地图高度, 整数型
+.局部变量 地图_地图最大X轴, 整数型
+.局部变量 地图_地图最大Y轴, 整数型
+.局部变量 x轴坐标比例, 双精度小数型
+.局部变量 y轴坐标比例, 双精度小数型
+.局部变量 X轴距离, 双精度小数型
+.局部变量 Y轴距离, 双精度小数型
+.局部变量 确定最终移动距离, 坐标类
+.局部变量 小地图坐标, 坐标类</p>
+<p>.如果真 (是否为空 (参数_误差值))
+参数_误差值 ＝ 3  &rsquo; 代表用户未传入误差值坐标   默认三个坐标差
+.如果真结束</p>
+<p>执行流程 ＝ “判定当前地图位置”
+.判断循环首 (真)
+.判断开始 (执行流程 ＝ “判定当前地图位置”)
+.如果 (地图_获取当前位置 (i, 现行地图))
+.如果 (取绝对值 (现行地图.地图坐标x － 参数_目的地x) ≤ 参数_误差值 且 取绝对值 (现行地图.地图坐标y － 参数_目的地y) ≤ 参数_误差值)
+&rsquo; 执行到此处代表  已移动到指定的地点了
+调试输出 (“已移动到指定的点位”)
+返回 ()
+.否则
+&rsquo; 需要移动到指定的点
+调试输出 (“移动到指定点位”)
+执行流程 ＝ “移动到指定的点位”
+.如果结束</p>
+<pre><code>    .否则
+        调试输出 (“移动到指定点-&gt;获取当前地图位置失败”)
+
+    .如果结束
+
+.判断 (执行流程 ＝ “移动到指定的点位”)
+    地图_地图宽度 ＝ 到整数 (读配置项 (取运行目录 () ＋ “\配置\地图设置.ini”, 现行地图.地图名, “地图宽度”, ))
+    地图_地图高度 ＝ 到整数 (读配置项 (取运行目录 () ＋ “\配置\地图设置.ini”, 现行地图.地图名, “地图高度”, ))
+    地图_地图最大X轴 ＝ 到整数 (读配置项 (取运行目录 () ＋ “\配置\地图设置.ini”, 现行地图.地图名, “地图最大X轴”, ))
+    地图_地图最大Y轴 ＝ 到整数 (读配置项 (取运行目录 () ＋ “\配置\地图设置.ini”, 现行地图.地图名, “地图最大Y轴”, ))
+    .如果 (地图_地图宽度 ≥ 10 且 地图_地图高度 ≥ 10 且 地图_地图最大X轴 ≥ 10 且 地图_地图最大Y轴 ≥ 10)
+        .如果 (界面判定_小地图 (i, 小地图坐标))
+            调试输出 (“小地图已打开”)
+            x轴坐标比例 ＝ 地图_地图最大X轴 ÷ 地图_地图宽度
+            y轴坐标比例 ＝ 地图_地图最大Y轴 ÷ 地图_地图高度
+            X轴距离 ＝ 参数_目的地x ÷ x轴坐标比例
+            Y轴距离 ＝ 参数_目的地y ÷ y轴坐标比例
+            确定最终移动距离.x ＝ 小地图坐标.x ＋ X轴距离
+            确定最终移动距离.y ＝ 小地图坐标.y － Y轴距离 ＋ 4  ' Y轴正反  就是  -  和  +  来处理的
+
+
+            调试输出 (“点击位置”, 确定最终移动距离.x, 确定最终移动距离.y)
+            梦幻鼠标移动 (i, 确定最终移动距离.x, 确定最终移动距离.y, , )
+            延时 (100)
+            全局_信息 [i].大漠.鼠标_左键单击 ()
+            ' 还需要一个寻路等待
+            延时 (100)
+
+            关闭_小地图 (i)
+            地图_寻路等待 (i)
+            执行流程 ＝ “判定当前地图位置”
+
+
+        .否则
+            ' 小地图  没打开
+            调试输出 (“打开小地图”)
+            打开_小地图 (i)
+
+        .如果结束
+
+    .否则
+        调试输出 (“缺少” ＋ 现行地图.地图名 ＋ “地图的配置”)
+    .如果结束
+
+.默认
+
+.判断结束
+
+
+
+延时 (500)
+处理事件 ()
+</code></pre>
+<p>.判断循环尾 ()</p>
+<p>.子程序 地图_寻路等待
+.参数 i, 整数型
+.局部变量 首次坐标, 地图数据
+.局部变量 二次坐标, 地图数据</p>
+<p>调试输出 (“进入寻路等待”)
+.判断循环首 (真)
+.如果 (地图_获取当前位置 (i, 首次坐标))</p>
+<pre><code>    .计次循环首 (20, )
+        .如果真 (地图_获取当前位置 (i, 二次坐标))
+            .如果真 (首次坐标.地图名 ≠ 二次坐标.地图名 或 首次坐标.地图坐标x ≠ 二次坐标.地图坐标x 或 首次坐标.地图坐标y ≠ 二次坐标.地图坐标y)
+                跳出循环 ()
+            .如果真结束
+
+        .如果真结束
+
+        延时 (100)
+    .计次循环尾 ()
+    .如果真 (首次坐标.地图名 ＝ 二次坐标.地图名 且 首次坐标.地图坐标x ＝ 二次坐标.地图坐标x 且 首次坐标.地图坐标y ＝ 二次坐标.地图坐标y)
+        调试输出 (“寻路等待抵达”)
+        返回 ()
+    .如果真结束
+
+
+.否则
+    调试输出 (“获取地图失败”)
+.如果结束
+
+
+
+
+
+延时 (500)
+</code></pre>
+<p>.判断循环尾 ()</p>
+<p>.子程序 点击npc
+.参数 i, 整数型
+.参数 NPC坐标x, 整数型
+.参数 NPC坐标y, 整数型
+.参数 点击立即返回, 逻辑型, 可空
+.局部变量 现行小地图位置, 地图数据
+.局部变量 点击坐标, 坐标类
+.局部变量 x偏移值, 整数型
+.局部变量 y偏移值, 双精度小数型</p>
+<p>.判断循环首 (真)
+.如果 (界面判定_是否有对话框 (i, ) ≠ 真)
+.如果 (地图_获取当前位置 (i, 现行小地图位置))
+&rsquo; 第一步  判断人物是否在正中间</p>
+<pre><code>        ' -----------------------左边                                                右边
+        .如果 (现行小地图位置.地图坐标x ＞ 19 且 取绝对值 (现行小地图位置.地图最大x轴 － 现行小地图位置.地图坐标x) ＞ 19)
+            x偏移值 ＝ (NPC坐标x － 现行小地图位置.地图坐标x) × 20.5
+            点击坐标.x ＝ 400 ＋ x偏移值
+        .否则
+            ' 人物已经不在屏幕中间了
+            .如果真 (现行小地图位置.地图坐标x ＜ 19)
+                点击坐标.x ＝ NPC坐标x × 20.5
+            .如果真结束
+            .如果真 (取绝对值 (现行小地图位置.地图最大x轴 － 现行小地图位置.地图坐标x) ＜ 19)
+                点击坐标.x ＝ 800 － (现行小地图位置.地图最大x轴 － NPC坐标x) × 20.5
+
+            .如果真结束
+
+        .如果结束
+
+
+        ' -----------------------下边                                                上边
+        .如果 (现行小地图位置.地图坐标y ＞ 15 且 取绝对值 (现行小地图位置.地图最大y轴 － 现行小地图位置.地图坐标y) ＞ 15)
+            y偏移值 ＝ (现行小地图位置.地图坐标y － NPC坐标y) × 20.5
+            点击坐标.y ＝ 300 ＋ y偏移值
+        .否则
+            ' 人物已经不在屏幕中间了
+            .如果真 (现行小地图位置.地图坐标y ＜ 15)
+                点击坐标.y ＝ 580 － NPC坐标y × 20.5
+            .如果真结束
+
+            .如果真 (取绝对值 (现行小地图位置.地图最大y轴 － 现行小地图位置.地图坐标y) ＜ 15)
+                点击坐标.y ＝ 取绝对值 (现行小地图位置.地图最大y轴 － NPC坐标y) × 20.5
+                ' 最大y轴 119 -   NPC坐标y108  算出距离   由于Y轴是反过来   所以 直接距离×20.5即可
+            .如果真结束
+
+        .如果结束
+
+        .如果 (全局_信息 [i].大漠.找图Ex (75, 106, 770, 539, “商铺.bmp”, “030303”, 0.9, 0) ＝ “”)
+            梦幻鼠标移动 (i, 点击坐标.x, 点击坐标.y, , )
+            延时 (50)
+            全局_信息 [i].大漠.鼠标_左键单击 ()
+            地图_寻路等待 (i)
+            .如果真 (点击立即返回)
+                返回 ()
+            .如果真结束
+
+        .否则
+            调试输出 (“屏蔽商铺”)
+            全局_信息 [i].大漠.键盘_按住 (#Alt键)
+            延时 (50)
+            全局_信息 [i].大漠.键盘_按键 (#H键)
+            延时 (50)
+            全局_信息 [i].大漠.键盘_弹起 (#Alt键)
+            调试输出 (“屏蔽人物”)
+            全局_信息 [i].大漠.键盘_按键 (#F9键)
+        .如果结束
+
+
+
+    .否则
+        调试输出 (“获取当前地图数据失败”)
+    .如果结束
+
+.否则
+    调试输出 (“NPC对话触发成功”)
+    返回 ()
+.如果结束
+
+
+延时 (500)
+</code></pre>
+<p>.判断循环尾 ()</p>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%AA%97%E5%8F%A3%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%90%AF%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>程序集_启动窗口</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/" class="flex align-center">
+        <span>程序集_常用功能</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

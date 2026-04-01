@@ -1,0 +1,3502 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="好的，我来帮你深入梳理这个梦幻西游脚本的设计逻辑，重点关注你提到的三个方面。 完美！我已经通过子代理深入分析了整个梦幻西游参考脚本的设计逻辑。下面是针对你关心的三个核心问题的详细梳理：
+一、项目代码如何组织# 1.1 目录结构设计理念# 梦幻西游参考脚本/├── 代码/ # 所有核心逻辑实现（这是重点！）│ ├── 全局变量.md│ ├── 自定义数据类型.md│ ├── 程序集_*.md # 每个模块对应一个文件│ └── 窗口程序集_*.md├── 文档/ # 35个MD教程文件├── 资源/ # 外部资源│ ├── dm.dll│ ├── models/ # OCR模型│ ├── 字库文件/│ └── 图片资源/└── 配置/ # 用户配置文件组织原则：
+代码与文档分离：代码在代码/目录，教程在根目录MD文件 模块化设计：每个功能模块对应一个程序集_*.md文件 资源分类清晰：图片、字库、DLL分开存储 配置独立：配置文件单独目录，易于版本管理 1.2 模块职责划分（Python &#43; PySide2对应结构）# game_bot/├── main.py # 程序入口├── config/│ ├── config.ini # 全局配置│ ├── user_settings.ini # 多账号隔离（每个账号一个section）│ └── map_data.ini # 地图数据（每个地图一个section）├── core/│ ├── dm_wrapper.py # 大漠插件封装│ ├── dm_register.py # 大漠注册（主线程&#43;多线程初始化）│ └── thread_manager.py # 线程生命周期管理├── ui/│ ├── main_window.py # 主窗口（超级列表框&#43;右键菜单）│ ├── settings_window.py # 设置窗口（Modal模式）│ └── list_model.py # 列表模型（数据绑定）├── modules/│ ├── mouse_control.py # 鼠标控制（漂移修正&#43;边界处理）│ ├── map_navigation.py # 地图寻路（坐标转换&#43;跨图导航）│ ├── task_manager.py # 任务管理（状态机实现）│ ├── combat.py # 战斗逻辑│ └── ui_detection.py # 界面判定（任务栏/背包/对话框）├── resources/│ ├── images/ # 图片模板库│ │ ├── mouse/ # 鼠标图片│ │ ├── npc/ # NPC特征图│ │ └── ui/ # UI界面图│ ├── fonts/ # 字库文件（0号=鼠标,1号=对话框,2号=地图）│ └── dm.dll # 大漠插件├── data_types/│ ├── thread_info.py # 线程信息（包含独立的鼠标偏移值）│ ├── task_data.py # 任务数据│ └── map_data.py # 地图数据└── utils/├── config_helper.py # 配置文件读写├── text_parser.py # 文本解析工具└── logger.py # 日志系统关键设计点：
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="碎碎念念">
+  <meta property="og:description" content="好的，我来帮你深入梳理这个梦幻西游脚本的设计逻辑，重点关注你提到的三个方面。 完美！我已经通过子代理深入分析了整个梦幻西游参考脚本的设计逻辑。下面是针对你关心的三个核心问题的详细梳理：
+一、项目代码如何组织# 1.1 目录结构设计理念# 梦幻西游参考脚本/├── 代码/ # 所有核心逻辑实现（这是重点！）│ ├── 全局变量.md│ ├── 自定义数据类型.md│ ├── 程序集_*.md # 每个模块对应一个文件│ └── 窗口程序集_*.md├── 文档/ # 35个MD教程文件├── 资源/ # 外部资源│ ├── dm.dll│ ├── models/ # OCR模型│ ├── 字库文件/│ └── 图片资源/└── 配置/ # 用户配置文件组织原则：
+代码与文档分离：代码在代码/目录，教程在根目录MD文件 模块化设计：每个功能模块对应一个程序集_*.md文件 资源分类清晰：图片、字库、DLL分开存储 配置独立：配置文件单独目录，易于版本管理 1.2 模块职责划分（Python &#43; PySide2对应结构）# game_bot/├── main.py # 程序入口├── config/│ ├── config.ini # 全局配置│ ├── user_settings.ini # 多账号隔离（每个账号一个section）│ └── map_data.ini # 地图数据（每个地图一个section）├── core/│ ├── dm_wrapper.py # 大漠插件封装│ ├── dm_register.py # 大漠注册（主线程&#43;多线程初始化）│ └── thread_manager.py # 线程生命周期管理├── ui/│ ├── main_window.py # 主窗口（超级列表框&#43;右键菜单）│ ├── settings_window.py # 设置窗口（Modal模式）│ └── list_model.py # 列表模型（数据绑定）├── modules/│ ├── mouse_control.py # 鼠标控制（漂移修正&#43;边界处理）│ ├── map_navigation.py # 地图寻路（坐标转换&#43;跨图导航）│ ├── task_manager.py # 任务管理（状态机实现）│ ├── combat.py # 战斗逻辑│ └── ui_detection.py # 界面判定（任务栏/背包/对话框）├── resources/│ ├── images/ # 图片模板库│ │ ├── mouse/ # 鼠标图片│ │ ├── npc/ # NPC特征图│ │ └── ui/ # UI界面图│ ├── fonts/ # 字库文件（0号=鼠标,1号=对话框,2号=地图）│ └── dm.dll # 大漠插件├── data_types/│ ├── thread_info.py # 线程信息（包含独立的鼠标偏移值）│ ├── task_data.py # 任务数据│ └── map_data.py # 地图数据└── utils/├── config_helper.py # 配置文件读写├── text_parser.py # 文本解析工具└── logger.py # 日志系统关键设计点：">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="game">
+
+
+  <meta itemprop="name" content="碎碎念念">
+  <meta itemprop="description" content="好的，我来帮你深入梳理这个梦幻西游脚本的设计逻辑，重点关注你提到的三个方面。 完美！我已经通过子代理深入分析了整个梦幻西游参考脚本的设计逻辑。下面是针对你关心的三个核心问题的详细梳理：
+一、项目代码如何组织# 1.1 目录结构设计理念# 梦幻西游参考脚本/├── 代码/ # 所有核心逻辑实现（这是重点！）│ ├── 全局变量.md│ ├── 自定义数据类型.md│ ├── 程序集_*.md # 每个模块对应一个文件│ └── 窗口程序集_*.md├── 文档/ # 35个MD教程文件├── 资源/ # 外部资源│ ├── dm.dll│ ├── models/ # OCR模型│ ├── 字库文件/│ └── 图片资源/└── 配置/ # 用户配置文件组织原则：
+代码与文档分离：代码在代码/目录，教程在根目录MD文件 模块化设计：每个功能模块对应一个程序集_*.md文件 资源分类清晰：图片、字库、DLL分开存储 配置独立：配置文件单独目录，易于版本管理 1.2 模块职责划分（Python &#43; PySide2对应结构）# game_bot/├── main.py # 程序入口├── config/│ ├── config.ini # 全局配置│ ├── user_settings.ini # 多账号隔离（每个账号一个section）│ └── map_data.ini # 地图数据（每个地图一个section）├── core/│ ├── dm_wrapper.py # 大漠插件封装│ ├── dm_register.py # 大漠注册（主线程&#43;多线程初始化）│ └── thread_manager.py # 线程生命周期管理├── ui/│ ├── main_window.py # 主窗口（超级列表框&#43;右键菜单）│ ├── settings_window.py # 设置窗口（Modal模式）│ └── list_model.py # 列表模型（数据绑定）├── modules/│ ├── mouse_control.py # 鼠标控制（漂移修正&#43;边界处理）│ ├── map_navigation.py # 地图寻路（坐标转换&#43;跨图导航）│ ├── task_manager.py # 任务管理（状态机实现）│ ├── combat.py # 战斗逻辑│ └── ui_detection.py # 界面判定（任务栏/背包/对话框）├── resources/│ ├── images/ # 图片模板库│ │ ├── mouse/ # 鼠标图片│ │ ├── npc/ # NPC特征图│ │ └── ui/ # UI界面图│ ├── fonts/ # 字库文件（0号=鼠标,1号=对话框,2号=地图）│ └── dm.dll # 大漠插件├── data_types/│ ├── thread_info.py # 线程信息（包含独立的鼠标偏移值）│ ├── task_data.py # 任务数据│ └── map_data.py # 地图数据└── utils/├── config_helper.py # 配置文件读写├── text_parser.py # 文本解析工具└── logger.py # 日志系统关键设计点：">
+  <meta itemprop="wordCount" content="3130">
+
+<title>设计模式 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.5cf2de48bc712bcdcda45419f388667e3eb9b40dbc5742d336fb75ca6b44ad34.js" integrity="sha256-XPLeSLxxK83NpFQZ84hmfj65tA28V0LTNvt1ymtErTQ=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-game">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-204365caa941390a182aeb870c8b397d" class="toggle"  />
+    <label for="section-204365caa941390a182aeb870c8b397d" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f6929f8819239c236e3ff6d9318a645b" class="toggle"  />
+    <label for="section-f6929f8819239c236e3ff6d9318a645b" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-797baf87757652be835bcce5680ea0d4" class="toggle"  />
+    <label for="section-797baf87757652be835bcce5680ea0d4" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-938c3edbaa8e3dd01e8b93d6f9361182" class="toggle"  />
+    <label for="section-938c3edbaa8e3dd01e8b93d6f9361182" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-56b62cfe8bd1e3138f346455c7c08d01" class="toggle"  />
+    <label for="section-56b62cfe8bd1e3138f346455c7c08d01" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-e12d76c83fadc5077063bd8a06e4974c" class="toggle"  />
+    <label for="section-e12d76c83fadc5077063bd8a06e4974c" class="flex">
+      <a role="button" class="">
+        Linux</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c0518db0448b3d740eada08bd26ccfac" class="toggle"  />
+    <label for="section-c0518db0448b3d740eada08bd26ccfac" class="flex">
+      <a role="button" class="">
+        阿里腾讯华为火山云产品对比</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AF%B9%E6%AF%94/" class="">
+      服务器对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E7%A1%AC%E7%9B%98%E5%AF%B9%E6%AF%94/" class="">
+      云硬盘对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%B9%E6%AF%94/" class="">
+      数据库产品对比表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AF%B9%E6%AF%94/" class="">
+      中间件产品对比表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AF%B9%E6%AF%94/" class="">
+      大数据对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E5%AE%89%E5%85%A8%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/" class="">
+      安全产品对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AF%B9%E6%A0%87/" class="">
+      云容器对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E6%9E%B6%E6%9E%84%E5%B8%88%E5%B7%A5%E4%BD%9C%E8%81%8C%E8%B4%A3/" class="">
+      云架构师工作职责</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E8%BF%81%E7%A7%BB%E6%B5%81%E7%A8%8B%E9%98%BF%E9%87%8C%E4%BA%91/" class="">
+      迁移流程总结</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-docker/" class="">
+      安装 Docker 教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Linux/install-mysql/" class="">
+      安装 mysql 教程</a>
+  
+
+        </li>
+      
+    
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-23e22f2cefc5200495b10b220f00dc9b" class="toggle"  />
+    <label for="section-23e22f2cefc5200495b10b220f00dc9b" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5f3519d07421b3022c482beb7e53757d" class="toggle"  />
+    <label for="section-5f3519d07421b3022c482beb7e53757d" class="flex">
+      <a role="button" class="">
+        Other</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强平台装机流程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-00896273d6e22b6628839c56863edc57" class="toggle" checked />
+    <label for="section-00896273d6e22b6628839c56863edc57" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-212fbf26dee144498e07df6cb6c18024" class="toggle"  />
+    <label for="section-212fbf26dee144498e07df6cb6c18024" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c7e351909150a2b7e1cb200bf4cfa4d9" class="toggle" checked />
+    <label for="section-c7e351909150a2b7e1cb200bf4cfa4d9" class="flex">
+      <a role="button" class="">
+        脚本开发实战</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/2.%E5%B7%A5%E7%A8%8B%E6%9E%B6%E6%9E%84UI-%E5%B8%83%E5%B1%80%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%85%8D%E7%BD%AE%E9%9A%94%E7%A6%BB/" class="">
+      2.工程架构、UI 布局与多线程配置隔离</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/3.%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%89%BE%E5%9B%BE%E6%8C%87%E4%BB%A4%E8%AF%A6%E8%A7%A3/" class="">
+      3.大漠插件：环境部署与找图指令详解</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/4.%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E5%85%8D%E6%B3%A8%E5%86%8C%E8%B0%83%E7%94%A8%E5%9D%90%E6%A0%87%E7%B3%BB%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E5%90%8E%E5%8F%B0%E7%BB%91%E5%AE%9A/" class="">
+      4.大漠插件：免注册调用、坐标系原理以及后台绑定</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/5.%E6%98%93%E8%AF%AD%E8%A8%80%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6/" class="">
+      5.易语言多线程控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/5.%E6%98%93%E8%AF%AD%E8%A8%80%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6%E4%B8%8E%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB%E4%BC%98%E5%8C%96%E6%96%B9%E6%A1%88/" class="">
+      5.易语言多线程控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/6.%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" class="">
+      6.鼠标漂移解决方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/10.%E5%BC%BA%E7%9B%97%E4%BB%BB%E5%8A%A1%E8%B4%BC%E7%8E%8B%E4%BB%BB%E5%8A%A1%E8%AF%BB%E5%8F%961/" class="">
+      10.打图任务(1)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/10.%E5%BC%BA%E7%9B%97%E4%BB%BB%E5%8A%A1%E8%B4%BC%E7%8E%8B%E4%BB%BB%E5%8A%A1%E8%AF%BB%E5%8F%962/" class="">
+      10.打图任务(2)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/11.%E8%B7%A8%E5%9C%B0%E5%9B%BE%E8%87%AA%E5%8A%A8%E5%AF%BB%E8%B7%AF/" class="">
+      11.跨地图寻路</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/12.%E9%A3%9E%E8%A1%8C%E6%97%97/" class="">
+      12.飞行旗</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/13.%E5%8A%A8%E6%80%81NPC%E8%BD%A6%E5%A4%AB%E9%A9%BF%E7%AB%99%E8%80%81%E6%9D%BF%E7%82%B9%E5%87%BB%E5%AF%B9%E8%AF%9D%E6%A1%86%E8%87%AA%E5%8A%A8%E5%8C%96%E4%BB%A5%E5%8F%8A%E6%96%B0%E5%8C%BA%E9%81%AE%E6%8C%A1%E5%88%A4%E5%AE%9A%E7%9A%84%E9%AB%98%E7%BA%A7%E5%AE%9E%E6%93%8D%E6%8A%80%E5%B7%A7/" class="">
+      13.动态NPC（车夫、驿站老板）点击、对话框自动化以及新区遮挡判定的高级实操技巧</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/14.%E5%9C%B0%E5%9B%BE%E5%9D%90%E6%A0%87%E6%8D%A2%E7%AE%97/" class="">
+      14.地图坐标换算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/15.%E5%BC%BA%E7%9B%97NPC%E8%A2%AB%E9%81%AE%E6%8C%A1%E6%88%96%E9%87%8D%E5%8F%A0%E6%97%B6%E7%9A%84%E8%BF%9B%E9%98%B6%E5%A4%84%E7%90%86%E9%80%BB%E8%BE%91/" class="">
+      15.强盗（NPC）被遮挡或重叠时的进阶处理逻辑</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/16.%E8%B4%BC%E7%8E%8B%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6/" class="">
+      16.贼王处理机制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/17-18-19-20-21.%E8%B4%BC%E7%8E%8B%E8%BF%9B%E9%98%B6%E5%A4%84%E7%90%86%E4%B8%8E-OCR-%E9%AA%8C%E8%AF%81%E5%AE%9E%E6%88%98/" class="">
+      17-18-19-20-21.贼王进阶处理与 OCR 验证实战</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%8F%92%E4%BB%B6%E8%AF%86%E5%88%AB/" class="">
+      程序集_插件识别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%8F%92%E4%BB%B6%E6%B3%A8%E5%86%8C/" class="">
+      程序集_插件注册</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/23-24-25.%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" class="">
+      23-24-25.自动登录与模拟器将军令获取</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E4%BB%BB%E5%8A%A1%E6%89%A7%E8%A1%8C%E5%88%86%E9%85%8D/" class="">
+      程序集_任务执行分配</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%AA%97%E5%8F%A3%E7%A8%8B%E5%BA%8F%E9%9B%86_%E7%AA%97%E5%8F%A3_%E5%8A%9F%E8%83%BD%E8%AE%BE%E7%BD%AE/" class="">
+      程序集_功能设置</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%AA%97%E5%8F%A3%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%90%AF%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="">
+      程序集_启动窗口</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%9C%B0%E5%9B%BE/" class="">
+      程序集_地图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/" class="">
+      程序集_常用功能</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%89%93%E5%9B%BE/" class="">
+      程序集_打图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E8%84%9A%E6%9C%AC%E4%B8%BB%E7%A8%8B%E5%BA%8F/" class="">
+      程序集_脚本主程序</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E9%A3%9E%E8%A1%8C/" class="">
+      程序集_飞行</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%8A%A8/" class="">
+      程序集_鼠标移动</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/26.%E4%BB%BB%E5%8A%A1%E8%B6%85%E6%97%B6%E7%9B%91%E6%8E%A7%E4%B8%8E%E6%B8%B8%E6%88%8F%E6%8E%89%E7%BA%BF%E8%87%AA%E5%8A%A8%E9%87%8D%E8%BF%9E/" class="">
+      26.任务超时监控与游戏掉线自动重连</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/27.%E8%87%AA%E5%8A%A8%E6%8D%A2%E5%8F%B7%E6%81%A2%E5%A4%8D%E7%94%A8%E6%88%B7%E8%AE%BE%E7%BD%AE%E6%96%B0%E7%9A%84%E4%BB%BB%E5%8A%A1%E9%93%BE/" class="">
+      27.自动换号,恢复用户设置新的任务链</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/28.%E6%95%B4%E4%BD%93%E6%89%93%E5%9B%BE%E6%B5%81%E7%A8%8B%E5%9B%9E%E9%A1%BE%E8%AE%B2%E8%A7%A3%E8%A7%A3%E5%86%B3%E6%96%B0%E5%8C%BA%E5%8D%A1%E9%A1%BF%E5%A4%84%E7%90%86%E5%90%8C%E6%97%B6%E4%B8%8D%E5%BD%B1%E5%93%8D%E8%80%81%E5%8C%BA%E7%9A%84%E6%B5%81%E7%95%85%E5%BA%A6/" class="">
+      28.整体打图流程回顾讲解,解决新区卡顿处理同时不影响老区的流畅度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/29-30-31.%E8%AF%BE-%E6%8A%BC%E9%95%96%E9%9A%BE%E7%82%B9%E8%A7%A3%E6%9E%90/" class="">
+      29-30-31押镖难点解析</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E6%B8%B8%E6%88%8F%E5%9B%BE%E8%89%B2%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/" class="">
+      游戏图色脚本开发实战</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/32-33-%E8%87%AA%E5%8A%A8%E4%BB%93%E5%BA%93%E8%BD%AC%E5%9B%BE%E5%AE%9D%E7%9F%B3%E5%95%86%E4%BA%BA%E5%8F%96%E5%9B%BE%E7%9B%B4%E6%8E%A5%E8%BD%AC%E5%9B%BE/" class="">
+      32-33 自动仓库转图，宝石商人取图直接转图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/34.%E5%8D%A1%E5%AF%86%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BA%E9%AA%8C%E8%AF%81/" class="">
+      34.卡密系统搭建验证</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="active">
+      设计模式</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c5a43b1f0709f0338f2ab4a52452792c" class="toggle"  />
+    <label for="section-c5a43b1f0709f0338f2ab4a52452792c" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E6%98%93%E9%94%AE%E9%BC%A0/" class="">
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+      幽灵键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-dd7a5a7db638114207cc7c06e8da5f9f" class="toggle"  />
+    <label for="section-dd7a5a7db638114207cc7c06e8da5f9f" class="flex">
+      <a role="button" class="">
+        AI</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-6a19eb32a4b18e50a44ba16962bb0f2a" class="toggle"  />
+    <label for="section-6a19eb32a4b18e50a44ba16962bb0f2a" class="flex">
+      <a role="button" class="">
+        编程工具</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/AI/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7/Trae/" class="">
+      Trae</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>设计模式</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#一项目代码如何组织">一、项目代码如何组织</a>
+      <ul>
+        <li><a href="#11-目录结构设计理念">1.1 目录结构设计理念</a></li>
+        <li><a href="#12-模块职责划分python--pyside2对应结构">1.2 模块职责划分（Python + PySide2对应结构）</a></li>
+      </ul>
+    </li>
+    <li><a href="#二ui是如何设计的">二、UI是如何设计的</a>
+      <ul>
+        <li><a href="#21-主界面布局架构">2.1 主界面布局架构</a></li>
+        <li><a href="#22-关键设计模式">2.2 关键设计模式</a></li>
+        <li><a href="#23-状态更新机制">2.3 状态更新机制</a></li>
+      </ul>
+    </li>
+    <li><a href="#三任务是如何执行的">三、任务是如何执行的</a>
+      <ul>
+        <li><a href="#31-完整任务执行流程图">3.1 完整任务执行流程图</a></li>
+        <li><a href="#32-打图任务状态机详细流程">3.2 打图任务状态机详细流程</a></li>
+        <li><a href="#33-状态流转图">3.3 状态流转图</a></li>
+        <li><a href="#34-多线程协同工作机制">3.4 多线程协同工作机制</a></li>
+        <li><a href="#35-容错设计亮点">3.5 容错设计亮点</a></li>
+      </ul>
+    </li>
+    <li><a href="#四核心设计模式总结">四、核心设计模式总结</a></li>
+    <li><a href="#五关键技术要点">五、关键技术要点</a></li>
+    <li><a href="#任务执行分配详解">任务执行分配详解</a>
+      <ul>
+        <li><a href="#一当前代码的实际情况">一、当前代码的实际情况</a></li>
+        <li><a href="#二作者的设计意图路由中心">二、作者的设计意图（路由中心）</a></li>
+        <li><a href="#三作者的具体设计实现">三、作者的具体设计实现</a></li>
+        <li><a href="#四路由中心的正确设计python伪代码">四、路由中心的正确设计（Python伪代码）</a></li>
+        <li><a href="#五路由中心的实际应用场景">五、路由中心的实际应用场景</a></li>
+        <li><a href="#六为什么需要路由中心">六、为什么需要路由中心？</a></li>
+        <li><a href="#七完整的路由架构图">七、完整的路由架构图</a></li>
+        <li><a href="#八总结">八、总结</a></li>
+      </ul>
+    </li>
+    <li><a href="#架构分层说明">架构分层说明</a>
+      <ul>
+        <li><a href="#1-ui层---界面交互">1️⃣ <strong>UI层 - 界面交互</strong></a></li>
+        <li><a href="#2-控制层---主程序线程">2️⃣ <strong>控制层 - 主程序线程</strong></a></li>
+        <li><a href="#3-路由层---任务分配中心">3️⃣ <strong>路由层 - 任务分配中心</strong></a></li>
+        <li><a href="#4-业务层---任务状态机">4️⃣ <strong>业务层 - 任务状态机</strong></a></li>
+        <li><a href="#5-服务层---基础功能模块">5️⃣ <strong>服务层 - 基础功能模块</strong></a></li>
+        <li><a href="#6-核心层---大漠插件封装">6️⃣ <strong>核心层 - 大漠插件封装</strong></a></li>
+        <li><a href="#7-数据层---配置与资源">7️⃣ <strong>数据层 - 配置与资源</strong></a></li>
+        <li><a href="#8-多线程层---并发控制">8️⃣ <strong>多线程层 - 并发控制</strong></a></li>
+        <li><a href="#9-容错层---异常处理">9️⃣ <strong>容错层 - 异常处理</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#数据流向图">数据流向图</a></li>
+    <li><a href="#关键设计模式">关键设计模式</a></li>
+    <li><a href="#核心优势总结">核心优势总结</a></li>
+    <li><a href="#开发路线图从0到1">开发路线图（从0到1）</a>
+      <ul>
+        <li><a href="#阶段1基础框架搭建第1-2天"><strong>阶段1：基础框架搭建（第1-2天）</strong></a></li>
+        <li><a href="#阶段2ui框架搭建第2-3天"><strong>阶段2：UI框架搭建（第2-3天）</strong></a></li>
+        <li><a href="#阶段3大漠插件基础功能第3-5天"><strong>阶段3：大漠插件基础功能（第3-5天）</strong></a></li>
+        <li><a href="#阶段4多进程基础第5-7天"><strong>阶段4：多进程基础（第5-7天）</strong></a></li>
+        <li><a href="#阶段5完整集成第7-10天"><strong>阶段5：完整集成（第7-10天）</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#-开发检查清单">📋 开发检查清单</a>
+      <ul>
+        <li><a href="#-第1-2天基础框架">✅ 第1-2天：基础框架</a></li>
+        <li><a href="#-第3-5天大漠插件">✅ 第3-5天：大漠插件</a></li>
+        <li><a href="#-第5-7天多进程">✅ 第5-7天：多进程</a></li>
+        <li><a href="#-第7-10天完整集成">✅ 第7-10天：完整集成</a></li>
+      </ul>
+    </li>
+    <li><a href="#-我的建议从这里开始">🚀 我的建议：从这里开始！</a></li>
+    <li><a href="#-关键原则">💡 关键原则</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><p>好的，我来帮你深入梳理这个梦幻西游脚本的设计逻辑，重点关注你提到的三个方面。
+完美！我已经通过子代理深入分析了整个梦幻西游参考脚本的设计逻辑。下面是针对你关心的三个核心问题的详细梳理：</p>
+<hr>
+<h2 id="一项目代码如何组织">一、项目代码如何组织<a class="anchor" href="#%e4%b8%80%e9%a1%b9%e7%9b%ae%e4%bb%a3%e7%a0%81%e5%a6%82%e4%bd%95%e7%bb%84%e7%bb%87">#</a></h2>
+<h3 id="11-目录结构设计理念">1.1 目录结构设计理念<a class="anchor" href="#11-%e7%9b%ae%e5%bd%95%e7%bb%93%e6%9e%84%e8%ae%be%e8%ae%a1%e7%90%86%e5%bf%b5">#</a></h3>
+<pre tabindex="0"><code>梦幻西游参考脚本/
+├── 代码/              # 所有核心逻辑实现（这是重点！）
+│   ├── 全局变量.md
+│   ├── 自定义数据类型.md
+│   ├── 程序集_*.md    # 每个模块对应一个文件
+│   └── 窗口程序集_*.md
+├── 文档/              # 35个MD教程文件
+├── 资源/              # 外部资源
+│   ├── dm.dll
+│   ├── models/        # OCR模型
+│   ├── 字库文件/
+│   └── 图片资源/
+└── 配置/              # 用户配置文件</code></pre><p><strong>组织原则</strong>：</p>
+<ul>
+<li><strong>代码与文档分离</strong>：代码在<code>代码/</code>目录，教程在根目录MD文件</li>
+<li><strong>模块化设计</strong>：每个功能模块对应一个<code>程序集_*.md</code>文件</li>
+<li><strong>资源分类清晰</strong>：图片、字库、DLL分开存储</li>
+<li><strong>配置独立</strong>：配置文件单独目录，易于版本管理</li>
+</ul>
+<h3 id="12-模块职责划分python--pyside2对应结构">1.2 模块职责划分（Python + PySide2对应结构）<a class="anchor" href="#12-%e6%a8%a1%e5%9d%97%e8%81%8c%e8%b4%a3%e5%88%92%e5%88%86python--pyside2%e5%af%b9%e5%ba%94%e7%bb%93%e6%9e%84">#</a></h3>
+<pre tabindex="0"><code>game_bot/
+├── main.py                 # 程序入口
+├── config/
+│   ├── config.ini          # 全局配置
+│   ├── user_settings.ini   # 多账号隔离（每个账号一个section）
+│   └── map_data.ini        # 地图数据（每个地图一个section）
+├── core/
+│   ├── dm_wrapper.py       # 大漠插件封装
+│   ├── dm_register.py      # 大漠注册（主线程+多线程初始化）
+│   └── thread_manager.py   # 线程生命周期管理
+├── ui/
+│   ├── main_window.py      # 主窗口（超级列表框+右键菜单）
+│   ├── settings_window.py  # 设置窗口（Modal模式）
+│   └── list_model.py       # 列表模型（数据绑定）
+├── modules/
+│   ├── mouse_control.py    # 鼠标控制（漂移修正+边界处理）
+│   ├── map_navigation.py   # 地图寻路（坐标转换+跨图导航）
+│   ├── task_manager.py     # 任务管理（状态机实现）
+│   ├── combat.py           # 战斗逻辑
+│   └── ui_detection.py    # 界面判定（任务栏/背包/对话框）
+├── resources/
+│   ├── images/             # 图片模板库
+│   │   ├── mouse/          # 鼠标图片
+│   │   ├── npc/            # NPC特征图
+│   │   └── ui/             # UI界面图
+│   ├── fonts/              # 字库文件（0号=鼠标,1号=对话框,2号=地图）
+│   └── dm.dll             # 大漠插件
+├── data_types/
+│   ├── thread_info.py      # 线程信息（包含独立的鼠标偏移值）
+│   ├── task_data.py        # 任务数据
+│   └── map_data.py         # 地图数据
+└── utils/
+    ├── config_helper.py    # 配置文件读写
+    ├── text_parser.py      # 文本解析工具
+    └── logger.py           # 日志系统</code></pre><p><strong>关键设计点</strong>：</p>
+<ol>
+<li><strong>配置隔离</strong>：每个账号使用INI的section隔离，如<code>[窗口_1]</code>、<code>[窗口_2]</code></li>
+<li><strong>模块独立</strong>：每个功能模块单独文件，职责单一</li>
+<li><strong>资源分类</strong>：图片按用途分文件夹，字库按索引编号（0、1、2）</li>
+<li><strong>数据类型化</strong>：线程信息、任务数据等用类封装，避免全局变量污染</li>
+</ol>
+<hr>
+<h2 id="二ui是如何设计的">二、UI是如何设计的<a class="anchor" href="#%e4%ba%8cui%e6%98%af%e5%a6%82%e4%bd%95%e8%ae%be%e8%ae%a1%e7%9a%84">#</a></h2>
+<h3 id="21-主界面布局架构">2.1 主界面布局架构<a class="anchor" href="#21-%e4%b8%bb%e7%95%8c%e9%9d%a2%e5%b8%83%e5%b1%80%e6%9e%b6%e6%9e%84">#</a></h3>
+<pre tabindex="0"><code>┌─────────────────────────────────────────────────────────────┐
+│  梦幻西游自动化脚本控制台                                      │
+├─────────────────────────────────────────────────────────────┤
+│  [索引] [窗口名] [账号] [等级] [当前任务] [运行状态] [到期时间]  │
+│  ┌─────┬────────┬──────┬──────┬──────────┬────────┬────────┐  │
+│  │  1  │ VNC-01 │ test │  80  │ 打图中   │  运行  │ 30天  │  │
+│  │  2  │ VNC-02 │ test │  85  │ 等待中   │  停止  │ 15天  │  │
+│  │  3  │ VNC-03 │ test │  90  │ 暂停中   │  暂停  │ 7天   │  │
+│  └─────┴────────┴──────┴──────┴──────────┴────────┴────────┘  │
+├─────────────────────────────────────────────────────────────┤
+│  [全部启动] [全部停止] [全部暂停] [全部恢复]                   │
+└─────────────────────────────────────────────────────────────┘</code></pre><h3 id="22-关键设计模式">2.2 关键设计模式<a class="anchor" href="#22-%e5%85%b3%e9%94%ae%e8%ae%be%e8%ae%a1%e6%a8%a1%e5%bc%8f">#</a></h3>
+<h4 id="1-超级列表框易语言-qtablewidgetpyside2">1. <strong>超级列表框</strong>（易语言）→ QTableWidget（PySide2）<a class="anchor" href="#1-%e8%b6%85%e7%ba%a7%e5%88%97%e8%a1%a8%e6%a1%86%e6%98%93%e8%af%ad%e8%a8%80-qtablewidgetpyside2">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># Python+PySide2实现</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide2.QtWidgets <span style="color:#f92672">import</span> QTableWidget, QTableWidgetItem
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MainWindow</span>(QMainWindow):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#f92672">.</span><span style="color:#a6e22e">__init__</span>()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>table <span style="color:#f92672">=</span> QTableWidget()
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 设置列数和表头</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>table<span style="color:#f92672">.</span>setColumnCount(<span style="color:#ae81ff">7</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>table<span style="color:#f92672">.</span>setHorizontalHeaderLabels(
+</span></span><span style="display:flex;"><span>            [<span style="color:#e6db74">&#34;索引&#34;</span>, <span style="color:#e6db74">&#34;窗口名&#34;</span>, <span style="color:#e6db74">&#34;账号&#34;</span>, <span style="color:#e6db74">&#34;等级&#34;</span>, <span style="color:#e6db74">&#34;当前任务&#34;</span>, <span style="color:#e6db74">&#34;运行状态&#34;</span>, <span style="color:#e6db74">&#34;到期时间&#34;</span>]
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 整行选择、单选模式</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>table<span style="color:#f92672">.</span>setSelectionBehavior(QTableWidget<span style="color:#f92672">.</span>SelectRows)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>table<span style="color:#f92672">.</span>setSelectionMode(QTableWidget<span style="color:#f92672">.</span>SingleSelection)</span></span></code></pre></div><h4 id="2-右键菜单">2. <strong>右键菜单</strong><a class="anchor" href="#2-%e5%8f%b3%e9%94%ae%e8%8f%9c%e5%8d%95">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 核心逻辑</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">show_context_menu</span>(self, pos):
+</span></span><span style="display:flex;"><span>    row <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>table<span style="color:#f92672">.</span>currentRow()
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> row <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>  <span style="color:#75715e"># 防止点击空白处弹出</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    menu <span style="color:#f92672">=</span> QMenu(self)
+</span></span><span style="display:flex;"><span>    action_settings <span style="color:#f92672">=</span> menu<span style="color:#f92672">.</span>addAction(<span style="color:#e6db74">&#34;功能设置&#34;</span>)
+</span></span><span style="display:flex;"><span>    action_start <span style="color:#f92672">=</span> menu<span style="color:#f92672">.</span>addAction(<span style="color:#e6db74">&#34;单独启动&#34;</span>)
+</span></span><span style="display:flex;"><span>    action_stop <span style="color:#f92672">=</span> menu<span style="color:#f92672">.</span>addAction(<span style="color:#e6db74">&#34;单独停止&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    action <span style="color:#f92672">=</span> menu<span style="color:#f92672">.</span>exec_(self<span style="color:#f92672">.</span>table<span style="color:#f92672">.</span>mapToGlobal(pos))
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> action <span style="color:#f92672">==</span> action_settings:
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>open_settings_window(row)  <span style="color:#75715e"># Modal弹窗</span></span></span></code></pre></div><h4 id="3-modal设置窗口关键设计">3. <strong>Modal设置窗口</strong>（关键设计！）<a class="anchor" href="#3-modal%e8%ae%be%e7%bd%ae%e7%aa%97%e5%8f%a3%e5%85%b3%e9%94%ae%e8%ae%be%e8%ae%a1">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SettingsWindow</span>(QDialog):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self, row, parent<span style="color:#f92672">=</span><span style="color:#66d9ef">None</span>):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#f92672">.</span><span style="color:#a6e22e">__init__</span>(parent)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setModal(<span style="color:#66d9ef">True</span>)  <span style="color:#75715e"># 阻塞模式，强制用户处理完才能操作主界面</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>row <span style="color:#f92672">=</span> row <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>  <span style="color:#75715e"># 转换为1-based索引</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>init_ui()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>load_settings()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">save_settings</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 保存到user_settings.ini</span>
+</span></span><span style="display:flex;"><span>        section <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;窗口_</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>row<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>        config<span style="color:#f92672">.</span>set(section, <span style="color:#e6db74">&#34;VNC名称&#34;</span>, self<span style="color:#f92672">.</span>vnc_edit<span style="color:#f92672">.</span>text())
+</span></span><span style="display:flex;"><span>        config<span style="color:#f92672">.</span>set(section, <span style="color:#e6db74">&#34;账号&#34;</span>, self<span style="color:#f92672">.</span>account_edit<span style="color:#f92672">.</span>text())
+</span></span><span style="display:flex;"><span>        config<span style="color:#f92672">.</span>save()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>accept()  <span style="color:#75715e"># 关闭窗口并返回Accepted状态</span></span></span></code></pre></div><p><strong>为什么用Modal？</strong></p>
+<ul>
+<li>防止用户在配置过程中操作主界面导致数据混乱</li>
+<li>确保配置完整性（要么全部保存，要么全部取消）</li>
+<li>避免多线程同时修改同一配置</li>
+</ul>
+<h3 id="23-状态更新机制">2.3 状态更新机制<a class="anchor" href="#23-%e7%8a%b6%e6%80%81%e6%9b%b4%e6%96%b0%e6%9c%ba%e5%88%b6">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 定时更新线程状态（观察者模式简化版）</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">update_thread_status</span>(self):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> row <span style="color:#f92672">in</span> range(self<span style="color:#f92672">.</span>table<span style="color:#f92672">.</span>rowCount()):
+</span></span><span style="display:flex;"><span>        thread_info <span style="color:#f92672">=</span> get_thread_info(row <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)  <span style="color:#75715e"># 获取线程信息</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> thread_info:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>table<span style="color:#f92672">.</span>setItem(row, <span style="color:#ae81ff">5</span>, QTableWidgetItem(thread_info<span style="color:#f92672">.</span>status))
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>table<span style="color:#f92672">.</span>setItem(row, <span style="color:#ae81ff">4</span>, QTableWidgetItem(thread_info<span style="color:#f92672">.</span>current_task))
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 每秒更新一次</span>
+</span></span><span style="display:flex;"><span>    QTimer<span style="color:#f92672">.</span>singleShot(<span style="color:#ae81ff">1000</span>, self<span style="color:#f92672">.</span>update_thread_status)</span></span></code></pre></div><hr>
+<h2 id="三任务是如何执行的">三、任务是如何执行的<a class="anchor" href="#%e4%b8%89%e4%bb%bb%e5%8a%a1%e6%98%af%e5%a6%82%e4%bd%95%e6%89%a7%e8%a1%8c%e7%9a%84">#</a></h2>
+<h3 id="31-完整任务执行流程图">3.1 完整任务执行流程图<a class="anchor" href="#31-%e5%ae%8c%e6%95%b4%e4%bb%bb%e5%8a%a1%e6%89%a7%e8%a1%8c%e6%b5%81%e7%a8%8b%e5%9b%be">#</a></h3>
+<pre tabindex="0"><code>┌─────────────────────────────────────────────────────────────┐
+│                      主程序启动                               │
+└────────────────────┬────────────────────────────────────────┘
+                     ↓
+┌─────────────────────────────────────────────────────────────┐
+│                 创建大漠对象（每个线程独立）                  │
+└────────────────────┬────────────────────────────────────────┘
+                     ↓
+┌─────────────────────────────────────────────────────────────┐
+│              绑定VNC窗口（通过窗口句柄）                       │
+└────────────────────┬────────────────────────────────────────┘
+                     ↓
+┌─────────────────────────────────────────────────────────────┐
+│                   任务执行分配（路由中心）                     │
+└────────────────────┬────────────────────────────────────────┘
+                     ↓
+        ┌────────────┴────────────┐
+        ↓                         ↓
+┌──────────────┐         ┌──────────────┐
+│  打图任务     │         │  其他任务     │
+│  (状态机)     │         │  (预留接口)   │
+└──────┬───────┘         └──────────────┘
+       ↓
+┌─────────────────────────────────────────────────────────────┐
+│              打图任务状态机（核心！请看下一节）                │
+└─────────────────────────────────────────────────────────────┘</code></pre><h3 id="32-打图任务状态机详细流程">3.2 打图任务状态机详细流程<a class="anchor" href="#32-%e6%89%93%e5%9b%be%e4%bb%bb%e5%8a%a1%e7%8a%b6%e6%80%81%e6%9c%ba%e8%af%a6%e7%bb%86%e6%b5%81%e7%a8%8b">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 状态机实现（Python伪代码）</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">task_drawing</span>(thread_id):
+</span></span><span style="display:flex;"><span>    flow_state <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;读取当前任务&#34;</span>
+</span></span><span style="display:flex;"><span>    task_data <span style="color:#f92672">=</span> TaskData()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> flow_state <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;读取当前任务&#34;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># 优先尝试快捷栏读取</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> read_task_from_quickbar(thread_id, task_data):
+</span></span><span style="display:flex;"><span>                logger<span style="color:#f92672">.</span>info(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;任务: </span><span style="color:#e6db74">{</span>task_data<span style="color:#f92672">.</span>monster_name<span style="color:#e6db74">}</span><span style="color:#e6db74">, </span><span style="color:#e6db74">{</span>task_data<span style="color:#f92672">.</span>map_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>                flow_state <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;飞行&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># 快捷栏无任务，打开任务面板</span>
+</span></span><span style="display:flex;"><span>                flow_state <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;查找赏金任务&#34;</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> flow_state <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;查找赏金任务&#34;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> check_task_panel_open(thread_id):
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># 锁定识别范围（关键优化！）</span>
+</span></span><span style="display:flex;"><span>                category_rect <span style="color:#f92672">=</span> get_task_category_rect(thread_id)
+</span></span><span style="display:flex;"><span>                
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># 查找&#34;赏金任务&#34;图标</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> dm_find_pic(thread_id, category_rect, <span style="color:#e6db74">&#34;task_reward*.bmp&#34;</span>, <span style="color:#ae81ff">0.9</span>):
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e"># 检查是否在打图任务详情页</span>
+</span></span><span style="display:flex;"><span>                    detail_rect <span style="color:#f92672">=</span> get_task_detail_rect(thread_id)
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span> dm_find_pic(thread_id, detail_rect, <span style="color:#e6db74">&#34;task_dig*.bmp&#34;</span>, <span style="color:#ae81ff">0.9</span>):
+</span></span><span style="display:flex;"><span>                        flow_state <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;读取任务详情&#34;</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                        <span style="color:#75715e"># 点击赏金任务</span>
+</span></span><span style="display:flex;"><span>                        click_position(thread_id, reward_pos<span style="color:#f92672">.</span>x <span style="color:#f92672">+</span> <span style="color:#ae81ff">20</span>, reward_pos<span style="color:#f92672">.</span>y <span style="color:#f92672">+</span> <span style="color:#ae81ff">5</span>)
+</span></span><span style="display:flex;"><span>                        dm_double_click(thread_id)
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e"># 当前未接任务</span>
+</span></span><span style="display:flex;"><span>                    close_task_panel(thread_id)
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                open_task_panel(thread_id)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> flow_state <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;读取任务详情&#34;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># OCR识别任务详情</span>
+</span></span><span style="display:flex;"><span>            task_content <span style="color:#f92672">=</span> dm_ocr_read(thread_id, task_detail_rect)
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># 解析多种任务文本格式（容错设计）</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#e6db74">&#34;埋他的&#34;</span> <span style="color:#f92672">in</span> task_content:
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># 格式: &#34;挖宝XX正在地图名的X.Y埋他的宝贝&#34;</span>
+</span></span><span style="display:flex;"><span>                task_data<span style="color:#f92672">.</span>monster_name <span style="color:#f92672">=</span> extract_text(task_content, <span style="color:#e6db74">&#34;挖宝&#34;</span>, <span style="color:#e6db74">&#34;正在&#34;</span>)
+</span></span><span style="display:flex;"><span>                task_data<span style="color:#f92672">.</span>map_name <span style="color:#f92672">=</span> extract_text(task_content, <span style="color:#e6db74">&#34;正在&#34;</span>, <span style="color:#e6db74">&#34;的&#34;</span>)
+</span></span><span style="display:flex;"><span>                task_data<span style="color:#f92672">.</span>monster_x <span style="color:#f92672">=</span> extract_coord(task_content, task_data<span style="color:#f92672">.</span>map_name <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;的&#34;</span>, <span style="color:#e6db74">&#34;.&#34;</span>)
+</span></span><span style="display:flex;"><span>                task_data<span style="color:#f92672">.</span>monster_y <span style="color:#f92672">=</span> extract_coord(task_content, <span style="color:#e6db74">&#34;.&#34;</span>, <span style="color:#e6db74">&#34;埋他&#34;</span>)
+</span></span><span style="display:flex;"><span>                task_data<span style="color:#f92672">.</span>is_boss <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">elif</span> <span style="color:#e6db74">&#34;前往制服&#34;</span> <span style="color:#f92672">in</span> task_content:
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># 贼王格式</span>
+</span></span><span style="display:flex;"><span>                task_data<span style="color:#f92672">.</span>monster_name <span style="color:#f92672">=</span> extract_text(task_content, <span style="color:#e6db74">&#34;一&#34;</span>, <span style="color:#e6db74">&#34;最近&#34;</span>)
+</span></span><span style="display:flex;"><span>                task_data<span style="color:#f92672">.</span>map_name <span style="color:#f92672">=</span> extract_text(task_content, <span style="color:#e6db74">&#34;最近在&#34;</span>, <span style="color:#e6db74">&#34;出现&#34;</span>)
+</span></span><span style="display:flex;"><span>                task_data<span style="color:#f92672">.</span>is_boss <span style="color:#f92672">=</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># 验证数据完整性</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> task_data<span style="color:#f92672">.</span>monster_name <span style="color:#f92672">and</span> task_data<span style="color:#f92672">.</span>map_name:
+</span></span><span style="display:flex;"><span>                close_task_panel(thread_id)
+</span></span><span style="display:flex;"><span>                flow_state <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;飞行&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># 数据不完整，重新读取</span>
+</span></span><span style="display:flex;"><span>                close_task_panel(thread_id)
+</span></span><span style="display:flex;"><span>                flow_state <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;查找赏金任务&#34;</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> flow_state <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;飞行&#34;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># 使用飞行旗快速传送</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> use_fly_flag(thread_id, task_data<span style="color:#f92672">.</span>map_name):
+</span></span><span style="display:flex;"><span>                flow_state <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;寻路到指定地图&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e"># 飞行旗失败，使用常规寻路</span>
+</span></span><span style="display:flex;"><span>                flow_state <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;寻路到指定地图&#34;</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> flow_state <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;寻路到指定地图&#34;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> task_data<span style="color:#f92672">.</span>map_name <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;建邺城&#34;</span>:
+</span></span><span style="display:flex;"><span>                map_goto_datang_guojing(thread_id)
+</span></span><span style="display:flex;"><span>                flow_state <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;移动到指定点&#34;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># ... 其他地图处理</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> flow_state <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;移动到指定点&#34;</span>:
+</span></span><span style="display:flex;"><span>            map_move_to_point(thread_id, task_data<span style="color:#f92672">.</span>monster_x, 
+</span></span><span style="display:flex;"><span>                            task_data<span style="color:#f92672">.</span>monster_y, accuracy<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span>)
+</span></span><span style="display:flex;"><span>            flow_state <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;点击强盗&#34;</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> flow_state <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;点击强盗&#34;</span>:
+</span></span><span style="display:flex;"><span>            click_npc(thread_id, task_data<span style="color:#f92672">.</span>monster_x, task_data<span style="color:#f92672">.</span>monster_y)
+</span></span><span style="display:flex;"><span>            flow_state <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;对话并战斗&#34;</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> flow_state <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;对话并战斗&#34;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> dialog_and_combat(thread_id, task_data):
+</span></span><span style="display:flex;"><span>                logger<span style="color:#f92672">.</span>info(<span style="color:#e6db74">&#34;任务完成&#34;</span>)
+</span></span><span style="display:flex;"><span>                flow_state <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;读取当前任务&#34;</span>  <span style="color:#75715e"># 循环执行下一个任务</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                logger<span style="color:#f92672">.</span>error(<span style="color:#e6db74">&#34;任务执行失败&#34;</span>)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        time<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">0.5</span>)</span></span></code></pre></div><h3 id="33-状态流转图">3.3 状态流转图<a class="anchor" href="#33-%e7%8a%b6%e6%80%81%e6%b5%81%e8%bd%ac%e5%9b%be">#</a></h3>
+<pre tabindex="0"><code>读取当前任务
+    │
+    ├─→ [有任务] → 飞行 → 寻路 → 移动 → 点击 → 战斗 → 完成 → 循环
+    │
+    └─→ [无任务] → 查找赏金 → 读取详情 → 验证数据 → 飞行 → ...</code></pre><h3 id="34-多线程协同工作机制">3.4 多线程协同工作机制<a class="anchor" href="#34-%e5%a4%9a%e7%ba%bf%e7%a8%8b%e5%8d%8f%e5%90%8c%e5%b7%a5%e4%bd%9c%e6%9c%ba%e5%88%b6">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 每个线程的独立信息结构</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@dataclass</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ThreadInfo</span>:
+</span></span><span style="display:flex;"><span>    thread_id: int
+</span></span><span style="display:flex;"><span>    thread_handle: int
+</span></span><span style="display:flex;"><span>    dm: DmSoft              <span style="color:#75715e"># 独立的大漠对象（避免COM冲突）</span>
+</span></span><span style="display:flex;"><span>    window_handle: int
+</span></span><span style="display:flex;"><span>    status: str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;停止&#34;</span>
+</span></span><span style="display:flex;"><span>    current_task: str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 鼠标漂移修正值（每个线程独立学习！）</span>
+</span></span><span style="display:flex;"><span>    mouse_offset_x_zero: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    mouse_offset_x_mid: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    mouse_offset_x_high: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    mouse_offset_y_zero: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    mouse_offset_y_mid: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    mouse_offset_y_high: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span></span></span></code></pre></div><p><strong>线程隔离机制</strong>：</p>
+<ol>
+<li><strong>独立大漠对象</strong>：每个线程创建自己的<code>DmSoft</code>实例</li>
+<li><strong>独立偏移值</strong>：每个线程独立学习鼠标漂移，互不干扰</li>
+<li><strong>独立配置读取</strong>：通过线程ID读取对应的INI section</li>
+<li><strong>独立状态管理</strong>：每个线程有自己的状态机状态</li>
+</ol>
+<h3 id="35-容错设计亮点">3.5 容错设计亮点<a class="anchor" href="#35-%e5%ae%b9%e9%94%99%e8%ae%be%e8%ae%a1%e4%ba%ae%e7%82%b9">#</a></h3>
+<h4 id="1-降级识别机制">1. <strong>降级识别机制</strong><a class="anchor" href="#1-%e9%99%8d%e7%ba%a7%e8%af%86%e5%88%ab%e6%9c%ba%e5%88%b6">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 大漠失败 → OpenCV</span>
+</span></span><span style="display:flex;"><span>mouse_x, mouse_y <span style="color:#f92672">=</span> dm_find_word(thread_id, <span style="color:#e6db74">&#34;鼠标&#34;</span>)  <span style="color:#75715e"># 快速但可能失败</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> mouse_x <span style="color:#f92672">==</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>    mouse_x, mouse_y <span style="color:#f92672">=</span> opencv_find_image(thread_id, <span style="color:#e6db74">&#34;mouse_pointer.bmp&#34;</span>)  <span style="color:#75715e"># 慢但准</span></span></span></code></pre></div><h4 id="2-画面卡顿处理">2. <strong>画面卡顿处理</strong><a class="anchor" href="#2-%e7%94%bb%e9%9d%a2%e5%8d%a1%e9%a1%bf%e5%a4%84%e7%90%86">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 检测画面卡顿</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> mouse_x <span style="color:#f92672">==</span> last_x <span style="color:#f92672">and</span> mouse_y <span style="color:#f92672">==</span> last_y:
+</span></span><span style="display:flex;"><span>    freeze_count <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> freeze_count <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">30</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 强制移动激活</span>
+</span></span><span style="display:flex;"><span>        dm<span style="color:#f92672">.</span>mouse_relative_move(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        freeze_count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span></span></span></code></pre></div><h4 id="3-数据验证">3. <strong>数据验证</strong><a class="anchor" href="#3-%e6%95%b0%e6%8d%ae%e9%aa%8c%e8%af%81">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 任务数据完整性验证</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> task_data<span style="color:#f92672">.</span>monster_name <span style="color:#f92672">and</span> task_data<span style="color:#f92672">.</span>map_name <span style="color:#f92672">and</span> \
+</span></span><span style="display:flex;"><span>   task_data<span style="color:#f92672">.</span>monster_x <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">and</span> task_data<span style="color:#f92672">.</span>monster_y <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>    flow_state <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;飞行&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>    flow_state <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;查找赏金任务&#34;</span>  <span style="color:#75715e"># 重新读取</span></span></span></code></pre></div><hr>
+<h2 id="四核心设计模式总结">四、核心设计模式总结<a class="anchor" href="#%e5%9b%9b%e6%a0%b8%e5%bf%83%e8%ae%be%e8%ae%a1%e6%a8%a1%e5%bc%8f%e6%80%bb%e7%bb%93">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th>设计模式</th>
+          <th>应用场景</th>
+          <th>优势</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>状态机模式</strong></td>
+          <td>任务执行流程</td>
+          <td>流程清晰、易调试、易扩展</td>
+      </tr>
+      <tr>
+          <td><strong>策略模式</strong></td>
+          <td>鼠标漂移修正</td>
+          <td>不同区域不同策略</td>
+      </tr>
+      <tr>
+          <td><strong>工厂模式</strong></td>
+          <td>大漠对象创建</td>
+          <td>每线程独立对象</td>
+      </tr>
+      <tr>
+          <td><strong>单例模式</strong></td>
+          <td>OCR模型指针</td>
+          <td>资源复用</td>
+      </tr>
+      <tr>
+          <td><strong>观察者模式</strong></td>
+          <td>UI状态更新</td>
+          <td>解耦UI和业务逻辑</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="五关键技术要点">五、关键技术要点<a class="anchor" href="#%e4%ba%94%e5%85%b3%e9%94%ae%e6%8a%80%e6%9c%af%e8%a6%81%e7%82%b9">#</a></h2>
+<ol>
+<li><strong>大漠插件多线程</strong>：每线程独立对象，避免COM冲突</li>
+<li><strong>鼠标漂移修正</strong>：动态学习+分区策略+降级处理</li>
+<li><strong>OCR识别容错</strong>：多格式解析+数据验证+重试机制</li>
+<li><strong>配置隔离设计</strong>：INI节机制+动态节点+默认值处理</li>
+<li><strong>Modal窗口</strong>：强制用户完成配置，防止数据混乱</li>
+</ol>
+<p>这套设计可以直接应用到Python+PySide2开发其他游戏脚本，核心是<strong>状态机控制任务流程</strong>和<strong>多线程隔离机制</strong>。</p>
+<p>明白了！让我详细解释**任务执行分配（路由中心）**的设计逻辑。</p>
+<hr>
+<h2 id="任务执行分配详解">任务执行分配详解<a class="anchor" href="#%e4%bb%bb%e5%8a%a1%e6%89%a7%e8%a1%8c%e5%88%86%e9%85%8d%e8%af%a6%e8%a7%a3">#</a></h2>
+<h3 id="一当前代码的实际情况">一、当前代码的实际情况<a class="anchor" href="#%e4%b8%80%e5%bd%93%e5%89%8d%e4%bb%a3%e7%a0%81%e7%9a%84%e5%ae%9e%e9%99%85%e6%83%85%e5%86%b5">#</a></h3>
+<p>让我先直接看看代码在做什么：</p>
+<pre tabindex="0"><code class="language-易语言" data-lang="易语言">.子程序 任务执行分配
+.参数 i, 整数型
+
+&#39; 目前代码里所有功能都被注释掉了，只保留了一个测试：
+任务.是否贼王 ＝ 真
+任务.贼王房间名 ＝ &#34;长安酒店二楼&#34;
+任务.怪物名 ＝ &#34;贼王轩辕关&#34;
+贼王查找 (i, 任务)
+
+&#39; 以下是注释掉的其他任务（预留功能）：
+&#39; 打图 (i)                      ← 打图任务
+&#39; 地图_到大唐国境 (i)           ← 地图移动
+&#39; 强盗对话 (i, 任务)            ← 强盗对话</code></pre><p><strong>关键发现</strong>：这个函数目前只是一个<strong>占位符/测试入口</strong>，真正的路由设计还没有完全实现！</p>
+<hr>
+<h3 id="二作者的设计意图路由中心">二、作者的设计意图（路由中心）<a class="anchor" href="#%e4%ba%8c%e4%bd%9c%e8%80%85%e7%9a%84%e8%ae%be%e8%ae%a1%e6%84%8f%e5%9b%be%e8%b7%af%e7%94%b1%e4%b8%ad%e5%bf%83">#</a></h3>
+<p>根据代码结构和注释，作者的设计意图是：</p>
+<h4 id="21-路由中心的作用">2.1 路由中心的作用<a class="anchor" href="#21-%e8%b7%af%e7%94%b1%e4%b8%ad%e5%bf%83%e7%9a%84%e4%bd%9c%e7%94%a8">#</a></h4>
+<pre tabindex="0"><code>主程序状态机
+    ↓
+[分配任务] 状态
+    ↓
+任务执行分配(i)  ← 这里是路由中心！
+    ↓
+    ├─→ 根据任务类型路由到不同模块
+    │   ├─→ 打图任务 → 打图(i)
+    │   ├─→ 强盗任务 → 强盗对话(i, 任务)
+    │   ├─→ 贼王任务 → 贼王查找(i, 任务)
+    │   ├─→ 押镖任务 → 押镖(i)        ← 预留
+    │   └─→ 抓鬼任务 → 抓鬼(i)        ← 预留
+    └─→ 执行完毕后返回主程序</code></pre><h4 id="22-为什么叫路由中心">2.2 为什么叫&quot;路由中心&quot;？<a class="anchor" href="#22-%e4%b8%ba%e4%bb%80%e4%b9%88%e5%8f%ab%e8%b7%af%e7%94%b1%e4%b8%ad%e5%bf%83">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># Python伪代码对比理解</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 没有路由中心的设计（混乱）：</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main_program</span>(thread_id):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> state <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;创建大漠对象&#34;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> state <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;绑定窗口&#34;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> state <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;打图&#34;</span>:
+</span></span><span style="display:flex;"><span>            drawing_task(thread_id)  <span style="color:#75715e"># 打图逻辑混在主程序里</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> state <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;强盗&#34;</span>:
+</span></span><span style="display:flex;"><span>            bandit_task(thread_id)    <span style="color:#75715e"># 强盗逻辑混在主程序里</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> state <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;贼王&#34;</span>:
+</span></span><span style="display:flex;"><span>            boss_task(thread_id)      <span style="color:#75715e"># 贼王逻辑混在主程序里</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># ... 越来越多任务，主程序变得臃肿</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 有路由中心的设计（清晰）：</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main_program</span>(thread_id):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> state <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;创建大漠对象&#34;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> state <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;绑定窗口&#34;</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> state <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;分配任务&#34;</span>:
+</span></span><span style="display:flex;"><span>            task_router(thread_id)  <span style="color:#75715e"># 只调用这一个函数</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># 主程序保持简洁！</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">task_router</span>(thread_id):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;路由中心：根据任务类型分发到对应模块&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    task_type <span style="color:#f92672">=</span> get_task_type(thread_id)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> task_type <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;打图&#34;</span>:
+</span></span><span style="display:flex;"><span>        drawing_task(thread_id)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> task_type <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;强盗&#34;</span>:
+</span></span><span style="display:flex;"><span>        bandit_task(thread_id)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> task_type <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;贼王&#34;</span>:
+</span></span><span style="display:flex;"><span>        boss_task(thread_id)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">elif</span> task_type <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;押镖&#34;</span>:
+</span></span><span style="display:flex;"><span>        escort_task(thread_id)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># ... 扩展新任务不影响主程序</span></span></span></code></pre></div><hr>
+<h3 id="三作者的具体设计实现">三、作者的具体设计实现<a class="anchor" href="#%e4%b8%89%e4%bd%9c%e8%80%85%e7%9a%84%e5%85%b7%e4%bd%93%e8%ae%be%e8%ae%a1%e5%ae%9e%e7%8e%b0">#</a></h3>
+<h4 id="31-当前代码实际流程">3.1 当前代码实际流程<a class="anchor" href="#31-%e5%bd%93%e5%89%8d%e4%bb%a3%e7%a0%81%e5%ae%9e%e9%99%85%e6%b5%81%e7%a8%8b">#</a></h4>
+<pre tabindex="0"><code class="language-易语言" data-lang="易语言">&#39; 主程序（程序集_脚本主程序）
+.子程序 主程序
+.参数 i, 整数型
+
+执行流程 = &#34;创建大漠线程对象&#34;
+.判断循环首 (真)
+    .判断开始 (执行流程 = &#34;创建大漠线程对象&#34;)
+        .如果 (大漠_多线程创建对象(i))
+            执行流程 = &#34;绑定窗口&#34;
+    
+    .判断 (执行流程 = &#34;绑定窗口&#34;)
+        .如果 (绑定窗口(i))
+            执行流程 = &#34;分配任务&#34;
+    
+    .判断 (执行流程 = &#34;分配任务&#34;)
+        任务执行分配(i)  ← 调用路由中心
+    
+    .判断结束
+    延时 (500)
+.判断循环尾 ()
+
+
+&#39; 任务执行分配（程序集_任务执行分配）
+.子程序 任务执行分配
+.参数 i, 整数型
+
+&#39; 目前只执行贼王任务（测试用）
+任务.是否贼王 = 真
+任务.贼王房间名 = &#34;长安酒店二楼&#34;
+任务.怪物名 = &#34;贼王轩辕关&#34;
+贼王查找(i, 任务)
+
+&#39; 其他任务都被注释掉了：
+&#39; 打图(i)           ← 正常应该执行这个
+&#39; 强盗对话(i, 任务) ← 或者这个</code></pre><h4 id="32-作者预留的扩展设计">3.2 作者预留的扩展设计<a class="anchor" href="#32-%e4%bd%9c%e8%80%85%e9%a2%84%e7%95%99%e7%9a%84%e6%89%a9%e5%b1%95%e8%ae%be%e8%ae%a1">#</a></h4>
+<p>虽然代码被注释了，但从注释可以看出作者的设计思路：</p>
+<pre tabindex="0"><code class="language-易语言" data-lang="易语言">.子程序 任务执行分配
+.参数 i, 整数型
+
+&#39; 第一种设计：直接指定任务类型（硬编码）
+&#39; 打图(i)                      ← 当前应该执行的打图任务
+&#39; 强盗对话(i, 任务)           ← 强盗对话处理
+&#39; 贼王查找(i, 任务)           ← 贼王查找（目前这个在运行）
+
+&#39; 第二种设计：根据任务类型动态路由（推荐）
+.局部变量 任务类型, 文本型
+
+任务类型 = 获取当前任务类型(i)  ← 应该有这个函数
+
+.如果 (任务类型 = &#34;打图&#34;)
+    打图(i)
+.否则如果 (任务类型 = &#34;强盗&#34;)
+    强盗对话(i, 任务)
+.否则如果 (任务类型 = &#34;贼王&#34;)
+    贼王查找(i, 任务)
+.如果结束</code></pre><hr>
+<h3 id="四路由中心的正确设计python伪代码">四、路由中心的正确设计（Python伪代码）<a class="anchor" href="#%e5%9b%9b%e8%b7%af%e7%94%b1%e4%b8%ad%e5%bf%83%e7%9a%84%e6%ad%a3%e7%a1%ae%e8%ae%be%e8%ae%a1python%e4%bc%aa%e4%bb%a3%e7%a0%81">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># modules/task_manager.py - 任务管理模块</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TaskRouter</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;任务路由中心&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self, thread_id: int):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>thread_id <span style="color:#f92672">=</span> thread_id
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>current_task_type <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">route_task</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        根据当前任务类型，路由到对应的任务模块
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        这是路由中心的核心功能！
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 1. 读取当前任务类型（从UI配置、快捷键或游戏内判断）</span>
+</span></span><span style="display:flex;"><span>        task_type <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>get_task_type()
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        logger<span style="color:#f92672">.</span>info(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;路由中心: 任务类型=</span><span style="color:#e6db74">{</span>task_type<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 2. 根据任务类型分发到不同模块</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> task_type <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;打图&#34;</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>handle_drawing_task()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> task_type <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;强盗&#34;</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>handle_bandit_task()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> task_type <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;贼王&#34;</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>handle_boss_task()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> task_type <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;押镖&#34;</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>handle_escort_task()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> task_type <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;抓鬼&#34;</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>handle_ghost_task()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>            logger<span style="color:#f92672">.</span>warning(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;未知任务类型: </span><span style="color:#e6db74">{</span>task_type<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_task_type</span>(self) <span style="color:#f92672">-&gt;</span> str:
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        获取当前应该执行的任务类型
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        来源：UI配置、快捷键或游戏内任务判定
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        config <span style="color:#f92672">=</span> ConfigHelper()
+</span></span><span style="display:flex;"><span>        section <span style="color:#f92672">=</span> <span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;窗口_</span><span style="color:#e6db74">{</span>self<span style="color:#f92672">.</span>thread_id<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 从配置文件读取任务类型</span>
+</span></span><span style="display:flex;"><span>        task_type <span style="color:#f92672">=</span> config<span style="color:#f92672">.</span>get(section, <span style="color:#e6db74">&#34;任务类型&#34;</span>, <span style="color:#e6db74">&#34;打图&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> task_type
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">handle_drawing_task</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;处理打图任务&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">from</span> modules.drawing_task <span style="color:#f92672">import</span> DrawingTask
+</span></span><span style="display:flex;"><span>        drawing <span style="color:#f92672">=</span> DrawingTask(self<span style="color:#f92672">.</span>thread_id)
+</span></span><span style="display:flex;"><span>        drawing<span style="color:#f92672">.</span>execute()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">handle_bandit_task</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;处理强盗任务&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">from</span> modules.bandit_task <span style="color:#f92672">import</span> BanditTask
+</span></span><span style="display:flex;"><span>        bandit <span style="color:#f92672">=</span> BanditTask(self<span style="color:#f92672">.</span>thread_id)
+</span></span><span style="display:flex;"><span>        bandit<span style="color:#f92672">.</span>execute()
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">handle_boss_task</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;处理贼王任务&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">from</span> modules.boss_task <span style="color:#f92672">import</span> BossTask
+</span></span><span style="display:flex;"><span>        boss <span style="color:#f92672">=</span> BossTask(self<span style="color:#f92672">.</span>thread_id)
+</span></span><span style="display:flex;"><span>        boss<span style="color:#f92672">.</span>execute()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 使用方式</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">task_execution_router</span>(thread_id: int):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    任务执行分配（路由中心）
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    这是主程序调用的唯一入口
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    router <span style="color:#f92672">=</span> TaskRouter(thread_id)
+</span></span><span style="display:flex;"><span>    router<span style="color:#f92672">.</span>route_task()</span></span></code></pre></div><hr>
+<h3 id="五路由中心的实际应用场景">五、路由中心的实际应用场景<a class="anchor" href="#%e4%ba%94%e8%b7%af%e7%94%b1%e4%b8%ad%e5%bf%83%e7%9a%84%e5%ae%9e%e9%99%85%e5%ba%94%e7%94%a8%e5%9c%ba%e6%99%af">#</a></h3>
+<h4 id="场景1多账号不同任务">场景1：多账号不同任务<a class="anchor" href="#%e5%9c%ba%e6%99%af1%e5%a4%9a%e8%b4%a6%e5%8f%b7%e4%b8%8d%e5%90%8c%e4%bb%bb%e5%8a%a1">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-ini" data-lang="ini"><span style="display:flex;"><span><span style="color:#75715e"># config/user_settings.ini</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[窗口_1]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">VNC名称</span><span style="color:#f92672">=</span><span style="color:#e6db74">127.0.0.1:5901</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">账号</span><span style="color:#f92672">=</span><span style="color:#e6db74">test001</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">任务类型</span><span style="color:#f92672">=</span><span style="color:#e6db74">打图         ← 账号1执行打图</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[窗口_2]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">VNC名称</span><span style="color:#f92672">=</span><span style="color:#e6db74">127.0.0.1:5902</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">账号</span><span style="color:#f92672">=</span><span style="color:#e6db74">test002</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">任务类型</span><span style="color:#f92672">=</span><span style="color:#e6db74">押镖         ← 账号2执行押镖</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">[窗口_3]</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">VNC名称</span><span style="color:#f92672">=</span><span style="color:#e6db74">127.0.0.1:5903</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">账号</span><span style="color:#f92672">=</span><span style="color:#e6db74">test003</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">任务类型</span><span style="color:#f92672">=</span><span style="color:#e6db74">抓鬼         ← 账号3执行抓鬼</span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 路由中心自动分配</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> thread_id <span style="color:#f92672">in</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>]:
+</span></span><span style="display:flex;"><span>    router <span style="color:#f92672">=</span> TaskRouter(thread_id)
+</span></span><span style="display:flex;"><span>    router<span style="color:#f92672">.</span>route_task()  <span style="color:#75715e"># 自动根据配置执行不同任务</span></span></span></code></pre></div><h4 id="场景2任务切换">场景2：任务切换<a class="anchor" href="#%e5%9c%ba%e6%99%af2%e4%bb%bb%e5%8a%a1%e5%88%87%e6%8d%a2">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 账号1先打图，后改为抓鬼</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># config/user_settings.ini</span>
+</span></span><span style="display:flex;"><span>[窗口_1]
+</span></span><span style="display:flex;"><span>任务类型<span style="color:#f92672">=</span>打图  <span style="color:#75715e"># 先执行打图</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 用户改为：</span>
+</span></span><span style="display:flex;"><span>任务类型<span style="color:#f92672">=</span>抓鬼  <span style="color:#75715e"># 自动切换到抓鬼任务</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 路由中心无需修改，自动识别</span></span></span></code></pre></div><hr>
+<h3 id="六为什么需要路由中心">六、为什么需要路由中心？<a class="anchor" href="#%e5%85%ad%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81%e8%b7%af%e7%94%b1%e4%b8%ad%e5%bf%83">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>不使用路由中心</th>
+          <th>使用路由中心</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>主程序代码臃肿，包含所有任务逻辑</td>
+          <td>主程序简洁，只负责生命周期</td>
+      </tr>
+      <tr>
+          <td>新增任务需要修改主程序</td>
+          <td>新增任务只需添加新模块</td>
+      </tr>
+      <tr>
+          <td>不同账号不能执行不同任务</td>
+          <td>多账号可同时执行不同任务</td>
+      </tr>
+      <tr>
+          <td>任务切换困难</td>
+          <td>配置文件驱动，一键切换</td>
+      </tr>
+      <tr>
+          <td>代码耦合严重</td>
+          <td>模块解耦，职责单一</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h3 id="七完整的路由架构图">七、完整的路由架构图<a class="anchor" href="#%e4%b8%83%e5%ae%8c%e6%95%b4%e7%9a%84%e8%b7%af%e7%94%b1%e6%9e%b6%e6%9e%84%e5%9b%be">#</a></h3>
+<pre tabindex="0"><code>┌─────────────────────────────────────────────────────────┐
+│                      主程序（生命周期）                    │
+│  创建大漠对象 → 绑定窗口 → [分配任务] → 循环               │
+└────────────────────┬────────────────────────────────────┘
+                     ↓
+        ┌────────────────────────────┐
+        │  任务执行分配（路由中心）    │
+        │  - 读取任务类型配置          │
+        │  - 根据类型路由到对应模块    │
+        │  - 返回执行结果              │
+        └────┬───────────┬───────────┬┘
+             ↓           ↓           ↓
+     ┌──────────┐ ┌──────────┐ ┌──────────┐
+     │打图模块   │ │强盗模块   │ │贼王模块   │
+     │状态机实现  │ │状态机实现  │ │状态机实现  │
+     └──────────┘ └──────────┘ └──────────┘
+             ↓           ↓           ↓
+     ┌──────────┐ ┌──────────┐ ┌──────────┐
+     │押镖模块   │ │抓鬼模块   │ │押镖模块   │
+     │（预留）    │ │（预留）    │ │（预留）    │
+     └──────────┘ └──────────┘ └──────────┘</code></pre><hr>
+<h3 id="八总结">八、总结<a class="anchor" href="#%e5%85%ab%e6%80%bb%e7%bb%93">#</a></h3>
+<p><strong>&ldquo;任务执行分配（路由中心）&ldquo;的设计本质</strong>：</p>
+<ol>
+<li><strong>解耦</strong>：将任务调度逻辑从主程序中分离出来</li>
+<li><strong>扩展</strong>：新增任务类型不影响主程序结构</li>
+<li><strong>灵活</strong>：通过配置文件驱动，支持多账号多任务</li>
+<li><strong>单一职责</strong>：路由中心只负责路由，不负责具体业务逻辑</li>
+</ol>
+<p><strong>作者的当前状态</strong>：</p>
+<ul>
+<li>代码只是占位符，目前只有测试用的贼王任务</li>
+<li>真正的路由逻辑（根据任务类型动态分发）还未实现</li>
+<li>但从设计思路看，预留了扩展接口</li>
+</ul>
+<p><strong>你在Python实现时</strong>：</p>
+<ul>
+<li>可以直接实现完整的路由中心</li>
+<li>使用配置文件驱动任务类型</li>
+<li>支持多账号同时执行不同任务</li>
+<li>预留任务切换接口</li>
+</ul>
+<p>这样理解了吗？</p>
+<p>好的，我来画一个完整的架构图，基于梦幻西游脚本的设计思路。</p>
+<pre class="mermaid">graph TB
+    subgraph &#34;UI层 - 界面交互&#34;
+        A[启动窗口] --&gt; A1[超级列表框&lt;br/&gt;多账号显示]
+        A --&gt; A2[右键菜单&lt;br/&gt;功能设置/启动/停止/暂停/恢复]
+        A --&gt; A3[控制按钮&lt;br/&gt;全部启动/停止/暂停/恢复]
+        A2 --&gt; A4[设置窗口&lt;br/&gt;Modal模式]
+    end
+    
+    subgraph &#34;控制层 - 主程序线程&#34;
+        B[主程序状态机] --&gt; B1[创建大漠对象]
+        B1 --&gt; B2[绑定VNC窗口]
+        B2 --&gt; B3[分配任务]
+    end
+    
+    subgraph &#34;路由层 - 任务分配中心&#34;
+        C[任务执行分配&lt;br/&gt;路由中心] --&gt; C1[读取任务类型配置]
+        C1 --&gt; C2{任务类型判断}
+        C2 --&gt;|打图| C3[打图任务模块]
+        C2 --&gt;|强盗| C4[强盗任务模块]
+        C2 --&gt;|贼王| C5[贼王任务模块]
+        C2 --&gt;|押镖| C6[押镖任务模块]
+        C2 --&gt;|抓鬼| C7[抓鬼任务模块]
+    end
+    
+    subgraph &#34;业务层 - 任务状态机&#34;
+        C3 --&gt; D1[打图状态机]
+        D1 --&gt; D1_1[读取当前任务]
+        D1_1 --&gt; D1_2{有任务?}
+        D1_2 --&gt;|有| D1_3[飞行传送]
+        D1_2 --&gt;|无| D1_4[找店小二接任务]
+        D1_3 --&gt; D1_5[跨地图寻路]
+        D1_5 --&gt; D1_6[移动到指定点]
+        D1_6 --&gt; D1_7[点击强盗]
+        D1_7 --&gt; D1_8[对话战斗]
+        D1_8 --&gt; D1_9[任务完成]
+        D1_9 --&gt; D1_1
+        D1_4 --&gt; D1_1
+        
+        C4 --&gt; D2[强盗状态机]
+        D2 --&gt; D2_1[点击强盗NPC]
+        D2_1 --&gt; D2_2[强盗对话]
+        D2_2 --&gt; D2_3[战斗处理]
+        D2_3 --&gt; D2_4[任务完成]
+        
+        C5 --&gt; D3[贼王状态机]
+        D3 --&gt; D3_1[查找贼王位置]
+        D3_1 --&gt; D3_2[Ctrl验证目标]
+        D3_2 --&gt; D3_3[拉近距离]
+        D3_3 --&gt; D3_4[贼王战斗]
+        D3_4 --&gt; D3_5[任务完成]
+    end
+    
+    subgraph &#34;服务层 - 基础功能模块&#34;
+        E[地图导航系统] --&gt; E1[获取当前位置]
+        E1 --&gt; E2[坐标转换]
+        E2 --&gt; E3[跨地图寻路]
+        E3 --&gt; E4[小地图移动]
+        E4 --&gt; E5[等待寻路完成]
+        
+        F[鼠标控制系统] --&gt; F1[带漂移修正的移动]
+        F1 --&gt; F2[分区偏移计算]
+        F2 --&gt; F3[画面卡顿处理]
+        F3 --&gt; F4[动态学习偏移值]
+        
+        G[界面判定系统] --&gt; G1[任务栏判定]
+        G --&gt; G2[背包判定]
+        G --&gt; G3[对话框判定]
+        G --&gt; G4[小地图判定]
+        
+        H[飞行传送系统] --&gt; H1[飞行旗使用]
+        H1 --&gt; H2[最短路径计算]
+        H2 --&gt; H3[传送点查找]
+        
+        I[战斗处理系统] --&gt; I1[自动战斗]
+        I --&gt; I2[技能释放]
+        I --&gt; I3[物品拾取]
+    end
+    
+    subgraph &#34;核心层 - 大漠插件封装&#34;
+        J[大漠注册] --&gt; J1[主线程注册VIP]
+        J1 --&gt; J2[多线程创建对象]
+        J2 --&gt; J3[窗口绑定]
+        
+        K[图像识别] --&gt; K1[找图]
+        K1 --&gt; K2[多图查找]
+        K2 --&gt; K3[OCR文字识别]
+        K3 --&gt; K4[字库识别]
+        
+        L[鼠标键盘] --&gt; L1[鼠标移动]
+        L1 --&gt; L2[鼠标点击]
+        L2 --&gt; L3[键盘按键]
+        L3 --&gt; L4[相对移动]
+    end
+    
+    subgraph &#34;数据层 - 配置与资源&#34;
+        M[配置文件] --&gt; M1[config.ini&lt;br/&gt;全局配置]
+        M1 --&gt; M2[user_settings.ini&lt;br/&gt;多账号隔离]
+        M2 --&gt; M3[map_data.ini&lt;br/&gt;地图数据]
+        
+        N[资源文件] --&gt; N1[图片资源库]
+        N1 --&gt; N2[字库文件&lt;br/&gt;0号=鼠标/1号=对话框/2号=地图]
+        N2 --&gt; N3[OCR模型]
+        N3 --&gt; N4[大漠DLL]
+    end
+    
+    subgraph &#34;多线程层 - 并发控制&#34;
+        O[线程1] --&gt; O1[独立大漠对象]
+        O1 --&gt; O2[独立鼠标偏移值]
+        O2 --&gt; O3[独立任务状态]
+        O3 --&gt; O4[VNC-5901]
+        
+        P[线程2] --&gt; P1[独立大漠对象]
+        P1 --&gt; P2[独立鼠标偏移值]
+        P2 --&gt; P3[独立任务状态]
+        P3 --&gt; P4[VNC-5902]
+        
+        Q[线程N] --&gt; Q1[独立大漠对象]
+        Q1 --&gt; Q2[独立鼠标偏移值]
+        Q2 --&gt; Q3[独立任务状态]
+        Q3 --&gt; Q4[VNC-590N]
+    end
+    
+    subgraph &#34;容错层 - 异常处理&#34;
+        R[降级识别] --&gt; R1[大漠失败→OpenCV]
+        R1 --&gt; R2[OCR失败→图片匹配]
+        
+        S[画面卡顿处理] --&gt; S1[检测画面冻结]
+        S1 --&gt; S2[强制移动激活]
+        
+        T[数据验证] --&gt; T1[任务数据完整性]
+        T1 --&gt; T2[重试机制]
+    end
+    
+    A --&gt; B
+    B3 --&gt; C
+    D1_5 --&gt; E
+    D1_6 --&gt; F
+    D1_1 --&gt; G
+    D1_3 --&gt; H
+    D1_8 --&gt; I
+    F1 --&gt; K
+    F1 --&gt; L
+    D1_1 --&gt; K
+    E1 --&gt; K
+    G --&gt; K
+    C1 --&gt; M
+    K3 --&gt; N
+    B1 --&gt; J
+    J2 --&gt; O
+    J2 --&gt; P
+    J2 --&gt; Q
+    F4 --&gt; R
+    F3 --&gt; S
+    D1_2 --&gt; T</pre><script src="/mermaid.min.js"></script><script>mermaid.initialize({"flowchart":{"useMaxWidth":true},"theme":"default"})</script><hr>
+<h2 id="架构分层说明">架构分层说明<a class="anchor" href="#%e6%9e%b6%e6%9e%84%e5%88%86%e5%b1%82%e8%af%b4%e6%98%8e">#</a></h2>
+<h3 id="1-ui层---界面交互">1️⃣ <strong>UI层 - 界面交互</strong><a class="anchor" href="#1-ui%e5%b1%82---%e7%95%8c%e9%9d%a2%e4%ba%a4%e4%ba%92">#</a></h3>
+<ul>
+<li><strong>启动窗口</strong>：主界面，包含超级列表框、右键菜单、控制按钮</li>
+<li><strong>设置窗口</strong>：Modal模式，强制用户完成配置</li>
+</ul>
+<h3 id="2-控制层---主程序线程">2️⃣ <strong>控制层 - 主程序线程</strong><a class="anchor" href="#2-%e6%8e%a7%e5%88%b6%e5%b1%82---%e4%b8%bb%e7%a8%8b%e5%ba%8f%e7%ba%bf%e7%a8%8b">#</a></h3>
+<ul>
+<li><strong>主程序状态机</strong>：管理线程生命周期（创建大漠对象→绑定窗口→分配任务）</li>
+</ul>
+<h3 id="3-路由层---任务分配中心">3️⃣ <strong>路由层 - 任务分配中心</strong><a class="anchor" href="#3-%e8%b7%af%e7%94%b1%e5%b1%82---%e4%bb%bb%e5%8a%a1%e5%88%86%e9%85%8d%e4%b8%ad%e5%bf%83">#</a></h3>
+<ul>
+<li><strong>任务执行分配</strong>：根据配置文件路由到不同任务模块</li>
+<li>支持多账号同时执行不同任务</li>
+</ul>
+<h3 id="4-业务层---任务状态机">4️⃣ <strong>业务层 - 任务状态机</strong><a class="anchor" href="#4-%e4%b8%9a%e5%8a%a1%e5%b1%82---%e4%bb%bb%e5%8a%a1%e7%8a%b6%e6%80%81%e6%9c%ba">#</a></h3>
+<ul>
+<li>每个任务都有独立的状态机实现</li>
+<li>状态流转清晰，易于调试和扩展</li>
+</ul>
+<h3 id="5-服务层---基础功能模块">5️⃣ <strong>服务层 - 基础功能模块</strong><a class="anchor" href="#5-%e6%9c%8d%e5%8a%a1%e5%b1%82---%e5%9f%ba%e7%a1%80%e5%8a%9f%e8%83%bd%e6%a8%a1%e5%9d%97">#</a></h3>
+<ul>
+<li>地图导航、鼠标控制、界面判定、飞行传送、战斗处理</li>
+<li>可被多个任务模块复用</li>
+</ul>
+<h3 id="6-核心层---大漠插件封装">6️⃣ <strong>核心层 - 大漠插件封装</strong><a class="anchor" href="#6-%e6%a0%b8%e5%bf%83%e5%b1%82---%e5%a4%a7%e6%bc%a0%e6%8f%92%e4%bb%b6%e5%b0%81%e8%a3%85">#</a></h3>
+<ul>
+<li>图像识别、鼠标键盘操作</li>
+<li>提供统一的API接口</li>
+</ul>
+<h3 id="7-数据层---配置与资源">7️⃣ <strong>数据层 - 配置与资源</strong><a class="anchor" href="#7-%e6%95%b0%e6%8d%ae%e5%b1%82---%e9%85%8d%e7%bd%ae%e4%b8%8e%e8%b5%84%e6%ba%90">#</a></h3>
+<ul>
+<li>配置文件（INI格式，多账号隔离）</li>
+<li>资源文件（图片、字库、OCR模型）</li>
+</ul>
+<h3 id="8-多线程层---并发控制">8️⃣ <strong>多线程层 - 并发控制</strong><a class="anchor" href="#8-%e5%a4%9a%e7%ba%bf%e7%a8%8b%e5%b1%82---%e5%b9%b6%e5%8f%91%e6%8e%a7%e5%88%b6">#</a></h3>
+<ul>
+<li>每个线程独立的大漠对象、鼠标偏移值、任务状态</li>
+<li>避免线程间冲突</li>
+</ul>
+<h3 id="9-容错层---异常处理">9️⃣ <strong>容错层 - 异常处理</strong><a class="anchor" href="#9-%e5%ae%b9%e9%94%99%e5%b1%82---%e5%bc%82%e5%b8%b8%e5%a4%84%e7%90%86">#</a></h3>
+<ul>
+<li>降级识别、画面卡顿处理、数据验证</li>
+<li>保证脚本稳定运行</li>
+</ul>
+<hr>
+<h2 id="数据流向图">数据流向图<a class="anchor" href="#%e6%95%b0%e6%8d%ae%e6%b5%81%e5%90%91%e5%9b%be">#</a></h2>
+<pre tabindex="0"><code>用户操作
+    ↓
+UI层（配置VNC、选择任务类型）
+    ↓
+配置文件（user_settings.ini）
+    ↓
+主程序线程（创建线程并分配任务）
+    ↓
+多线程层（每个线程独立执行）
+    ↓
+路由中心（读取任务类型配置）
+    ↓
+业务层（对应任务状态机）
+    ↓
+服务层（调用基础功能模块）
+    ↓
+核心层（大漠插件操作）
+    ↓
+VNC协议 → 游戏端（虚拟机）</code></pre><hr>
+<h2 id="关键设计模式">关键设计模式<a class="anchor" href="#%e5%85%b3%e9%94%ae%e8%ae%be%e8%ae%a1%e6%a8%a1%e5%bc%8f">#</a></h2>
+<pre tabindex="0"><code>┌─────────────────────────────────────────┐
+│  观察者模式：UI定时更新线程状态          │
+└─────────────────────────────────────────┘
+
+┌─────────────────────────────────────────┐
+│  状态机模式：每个任务用状态机控制流程     │
+└─────────────────────────────────────────┘
+
+┌─────────────────────────────────────────┐
+│  策略模式：鼠标漂移根据区域选择修正策略   │
+└─────────────────────────────────────────┘
+
+┌─────────────────────────────────────────┐
+│  工厂模式：每个线程创建独立的大漠对象     │
+└─────────────────────────────────────────┘
+
+┌─────────────────────────────────────────┐
+│  单例模式：OCR模型指针全局唯一           │
+└─────────────────────────────────────────┘
+
+┌─────────────────────────────────────────┐
+│  代理模式：路由中心代理任务分发          │
+└─────────────────────────────────────────┘</code></pre><hr>
+<h2 id="核心优势总结">核心优势总结<a class="anchor" href="#%e6%a0%b8%e5%bf%83%e4%bc%98%e5%8a%bf%e6%80%bb%e7%bb%93">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th>特性</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>高并发</strong></td>
+          <td>多线程独立执行，支持多账号同时运行</td>
+      </tr>
+      <tr>
+          <td><strong>高可靠</strong></td>
+          <td>多层容错机制，自动降级处理</td>
+      </tr>
+      <tr>
+          <td><strong>易扩展</strong></td>
+          <td>模块化设计，新增任务不影响主程序</td>
+      </tr>
+      <tr>
+          <td><strong>易维护</strong></td>
+          <td>职责清晰，状态机流程透明</td>
+      </tr>
+      <tr>
+          <td><strong>灵活配置</strong></td>
+          <td>配置文件驱动，支持任务切换</td>
+      </tr>
+  </tbody>
+</table>
+<p>这个架构图完整展示了梦幻西游脚本的设计思路，可以直接应用到Python+PySide2开发其他游戏脚本！</p>
+<p>好的！让我帮你规划一个清晰的开发路线图，从最基础到最复杂，逐步推进。
+好的！我理解你的困惑了。让我给你一个清晰的<strong>开发路线图</strong>，按优先级从基础到高级逐步实现。</p>
+<h2 id="开发路线图从0到1">开发路线图（从0到1）<a class="anchor" href="#%e5%bc%80%e5%8f%91%e8%b7%af%e7%ba%bf%e5%9b%be%e4%bb%8e0%e5%88%b01">#</a></h2>
+<h3 id="阶段1基础框架搭建第1-2天"><strong>阶段1：基础框架搭建（第1-2天）</strong><a class="anchor" href="#%e9%98%b6%e6%ae%b51%e5%9f%ba%e7%a1%80%e6%a1%86%e6%9e%b6%e6%90%ad%e5%bb%ba%e7%ac%ac1-2%e5%a4%a9">#</a></h3>
+<h4 id="-步骤11创建项目结构30分钟">✅ 步骤1.1：创建项目结构（30分钟）<a class="anchor" href="#-%e6%ad%a5%e9%aa%a411%e5%88%9b%e5%bb%ba%e9%a1%b9%e7%9b%ae%e7%bb%93%e6%9e%8430%e5%88%86%e9%92%9f">#</a></h4>
+<pre tabindex="0"><code>game_bot/
+├── main.py                 # 主程序入口
+├── requirements.txt         # 依赖包
+├── config/
+│   ├── config.ini          # 全局配置
+│   └── user_settings.ini   # 用户配置
+├── core/
+│   └── dm_wrapper.py       # 大漠插件封装（先写这个！）
+├── ui/
+│   └── main_window.py      # 主窗口
+├── resources/
+│   └── dm.dll             # 大漠插件
+└── utils/
+    └── logger.py           # 日志系统</code></pre><p><strong>开始写这里：</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 1️⃣ 先创建最简单的大漠封装</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># core/dm_wrapper.py</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> ctypes
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DmSoft</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;大漠插件封装&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>dm <span style="color:#f92672">=</span> ctypes<span style="color:#f92672">.</span>windll<span style="color:#f92672">.</span>LoadLibrary(<span style="color:#e6db74">r</span><span style="color:#e6db74">&#34;C:\path\to\dm.dll&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> self<span style="color:#f92672">.</span>dm:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">Exception</span>(<span style="color:#e6db74">&#34;大漠插件加载失败&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">bind_window</span>(self, handle: int, mode: str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;gdi&#34;</span>) <span style="color:#f92672">-&gt;</span> bool:
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;绑定窗口&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 这里先写死，测试大漠是否可用</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">find_pic</span>(self, x1, y1, x2, y2, pic_name, sim<span style="color:#f92672">=</span><span style="color:#ae81ff">0.9</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;找图&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 先返回-1，表示未找到</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mouse_move</span>(self, x, y):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;鼠标移动&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2️⃣ 创建最简单的日志系统</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># utils/logger.py</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> logging
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> datetime <span style="color:#f92672">import</span> datetime
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">setup_logger</span>(name: str, log_file: str <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;设置日志&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    logger <span style="color:#f92672">=</span> logging<span style="color:#f92672">.</span>getLogger(name)
+</span></span><span style="display:flex;"><span>    logger<span style="color:#f92672">.</span>setLevel(logging<span style="color:#f92672">.</span>INFO)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    formatter <span style="color:#f92672">=</span> logging<span style="color:#f92672">.</span>Formatter(
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%(asctime)s</span><span style="color:#e6db74"> - </span><span style="color:#e6db74">%(name)s</span><span style="color:#e6db74"> - </span><span style="color:#e6db74">%(levelname)s</span><span style="color:#e6db74"> - </span><span style="color:#e6db74">%(message)s</span><span style="color:#e6db74">&#39;</span>
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 控制台输出</span>
+</span></span><span style="display:flex;"><span>    console_handler <span style="color:#f92672">=</span> logging<span style="color:#f92672">.</span>StreamHandler()
+</span></span><span style="display:flex;"><span>    console_handler<span style="color:#f92672">.</span>setFormatter(formatter)
+</span></span><span style="display:flex;"><span>    logger<span style="color:#f92672">.</span>addHandler(console_handler)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 文件输出</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> log_file:
+</span></span><span style="display:flex;"><span>        os<span style="color:#f92672">.</span>makedirs(os<span style="color:#f92672">.</span>path<span style="color:#f92672">.</span>dirname(log_file), exist_ok<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>        file_handler <span style="color:#f92672">=</span> logging<span style="color:#f92672">.</span>FileHandler(log_file, encoding<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;utf-8&#39;</span>)
+</span></span><span style="display:flex;"><span>        file_handler<span style="color:#f92672">.</span>setFormatter(formatter)
+</span></span><span style="display:flex;"><span>        logger<span style="color:#f92672">.</span>addHandler(file_handler)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> logger
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 使用示例</span>
+</span></span><span style="display:flex;"><span>logger <span style="color:#f92672">=</span> setup_logger(<span style="color:#e6db74">&#34;GameBot&#34;</span>, <span style="color:#e6db74">&#34;logs/game_bot.log&#34;</span>)
+</span></span><span style="display:flex;"><span>logger<span style="color:#f92672">.</span>info(<span style="color:#e6db74">&#34;程序启动&#34;</span>)</span></span></code></pre></div><h3 id="阶段2ui框架搭建第2-3天"><strong>阶段2：UI框架搭建（第2-3天）</strong><a class="anchor" href="#%e9%98%b6%e6%ae%b52ui%e6%a1%86%e6%9e%b6%e6%90%ad%e5%bb%ba%e7%ac%ac2-3%e5%a4%a9">#</a></h3>
+<h4 id="-步骤21创建主窗口1小时">✅ 步骤2.1：创建主窗口（1小时）<a class="anchor" href="#-%e6%ad%a5%e9%aa%a421%e5%88%9b%e5%bb%ba%e4%b8%bb%e7%aa%97%e5%8f%a31%e5%b0%8f%e6%97%b6">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># ui/main_window.py</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide2.QtWidgets <span style="color:#f92672">import</span> QMainWindow, QTableWidget, QVBoxLayout, QWidget
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide2.QtCore <span style="color:#f92672">import</span> Qt
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> utils.logger <span style="color:#f92672">import</span> setup_logger
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>logger <span style="color:#f92672">=</span> setup_logger(<span style="color:#e6db74">&#34;MainWindow&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MainWindow</span>(QMainWindow):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#f92672">.</span><span style="color:#a6e22e">__init__</span>()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>init_ui()
+</span></span><span style="display:flex;"><span>        logger<span style="color:#f92672">.</span>info(<span style="color:#e6db74">&#34;主窗口初始化完成&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">init_ui</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;初始化UI&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setWindowTitle(<span style="color:#e6db74">&#34;游戏辅助脚本 - 多进程版本&#34;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setGeometry(<span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">1200</span>, <span style="color:#ae81ff">600</span>)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 创建主窗口部件</span>
+</span></span><span style="display:flex;"><span>        central_widget <span style="color:#f92672">=</span> QWidget()
+</span></span><span style="display:flex;"><span>        layout <span style="color:#f92672">=</span> QVBoxLayout()
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 创建表格</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>table <span style="color:#f92672">=</span> QTableWidget()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>table<span style="color:#f92672">.</span>setColumnCount(<span style="color:#ae81ff">7</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>table<span style="color:#f92672">.</span>setHorizontalHeaderLabels(
+</span></span><span style="display:flex;"><span>            [<span style="color:#e6db74">&#34;索引&#34;</span>, <span style="color:#e6db74">&#34;窗口名&#34;</span>, <span style="color:#e6db74">&#34;账号&#34;</span>, <span style="color:#e6db74">&#34;等级&#34;</span>, <span style="color:#e6db74">&#34;当前任务&#34;</span>, <span style="color:#e6db74">&#34;运行状态&#34;</span>, <span style="color:#e6db74">&#34;到期时间&#34;</span>]
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 设置表格属性</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>table<span style="color:#f92672">.</span>setSelectionBehavior(QTableWidget<span style="color:#f92672">.</span>SelectRows)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>table<span style="color:#f92672">.</span>setSelectionMode(QTableWidget<span style="color:#f92672">.</span>SingleSelection)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 添加示例数据</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>add_sample_data()
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        layout<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>table)
+</span></span><span style="display:flex;"><span>        central_widget<span style="color:#f92672">.</span>setLayout(layout)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setCentralWidget(central_widget)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add_sample_data</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;添加示例数据&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">from</span> PySide2.QtWidgets <span style="color:#f92672">import</span> QTableWidgetItem
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        data <span style="color:#f92672">=</span> [
+</span></span><span style="display:flex;"><span>            (<span style="color:#e6db74">&#34;1&#34;</span>, <span style="color:#e6db74">&#34;VNC-5901&#34;</span>, <span style="color:#e6db74">&#34;test001&#34;</span>, <span style="color:#e6db74">&#34;80&#34;</span>, <span style="color:#e6db74">&#34;等待中&#34;</span>, <span style="color:#e6db74">&#34;停止&#34;</span>, <span style="color:#e6db74">&#34;30天&#34;</span>),
+</span></span><span style="display:flex;"><span>            (<span style="color:#e6db74">&#34;2&#34;</span>, <span style="color:#e6db74">&#34;VNC-5902&#34;</span>, <span style="color:#e6db74">&#34;test002&#34;</span>, <span style="color:#e6db74">&#34;85&#34;</span>, <span style="color:#e6db74">&#34;等待中&#34;</span>, <span style="color:#e6db74">&#34;停止&#34;</span>, <span style="color:#e6db74">&#34;30天&#34;</span>),
+</span></span><span style="display:flex;"><span>        ]
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> row, item <span style="color:#f92672">in</span> enumerate(data):
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> col, text <span style="color:#f92672">in</span> enumerate(item):
+</span></span><span style="display:flex;"><span>                self<span style="color:#f92672">.</span>table<span style="color:#f92672">.</span>setItem(row, col, QTableWidgetItem(text))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># main.py</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> sys
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide2.QtWidgets <span style="color:#f92672">import</span> QApplication
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> ui.main_window <span style="color:#f92672">import</span> MainWindow
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    app <span style="color:#f92672">=</span> QApplication(sys<span style="color:#f92672">.</span>argv)
+</span></span><span style="display:flex;"><span>    window <span style="color:#f92672">=</span> MainWindow()
+</span></span><span style="display:flex;"><span>    window<span style="color:#f92672">.</span>show()
+</span></span><span style="display:flex;"><span>    sys<span style="color:#f92672">.</span>exit(app<span style="color:#f92672">.</span>exec_())</span></span></code></pre></div><p><strong>运行测试：</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>python main.py</span></span></code></pre></div><p>✅ 如果看到窗口正常显示，进入下一步！</p>
+<hr>
+<h3 id="阶段3大漠插件基础功能第3-5天"><strong>阶段3：大漠插件基础功能（第3-5天）</strong><a class="anchor" href="#%e9%98%b6%e6%ae%b53%e5%a4%a7%e6%bc%a0%e6%8f%92%e4%bb%b6%e5%9f%ba%e7%a1%80%e5%8a%9f%e8%83%bd%e7%ac%ac3-5%e5%a4%a9">#</a></h3>
+<h4 id="-步骤31大漠插件注册核心">✅ 步骤3.1：大漠插件注册（核心！）<a class="anchor" href="#-%e6%ad%a5%e9%aa%a431%e5%a4%a7%e6%bc%a0%e6%8f%92%e4%bb%b6%e6%b3%a8%e5%86%8c%e6%a0%b8%e5%bf%83">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># core/dm_register.py</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> core.dm_wrapper <span style="color:#f92672">import</span> DmSoft
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> utils.logger <span style="color:#f92672">import</span> setup_logger
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>logger <span style="color:#f92672">=</span> setup_logger(<span style="color:#e6db74">&#34;DmRegister&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DmRegister</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;大漠插件注册管理&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 全局大漠对象（主进程用）</span>
+</span></span><span style="display:flex;"><span>    main_dm <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@staticmethod</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">register_main</span>():
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        主线程注册大漠插件
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        只需调用一次
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>            dm <span style="color:#f92672">=</span> DmSoft()
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># 注册VIP（如果需要）</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># ret = dm.dm.Reg(&#34;你的注册码&#34;, &#34;附加码&#34;)</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># if ret != 1:</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">#     logger.error(&#34;大漠注册失败&#34;)</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">#     return False</span>
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            DmRegister<span style="color:#f92672">.</span>main_dm <span style="color:#f92672">=</span> dm
+</span></span><span style="display:flex;"><span>            logger<span style="color:#f92672">.</span>info(<span style="color:#e6db74">&#34;大漠插件注册成功&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>            logger<span style="color:#f92672">.</span>error(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;大漠注册失败: </span><span style="color:#e6db74">{</span>e<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@staticmethod</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">create_dm_object</span>():
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        创建独立的大漠对象（工作进程用）
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        每个工作进程调用一次
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>            dm <span style="color:#f92672">=</span> DmSoft()
+</span></span><span style="display:flex;"><span>            logger<span style="color:#f92672">.</span>info(<span style="color:#e6db74">&#34;大漠对象创建成功&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> dm
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>            logger<span style="color:#f92672">.</span>error(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;大漠对象创建失败: </span><span style="color:#e6db74">{</span>e<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@staticmethod</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">find_window_by_title</span>(title: str):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        根据窗口标题查找窗口句柄
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">        &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># 使用win32api查找窗口</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">import</span> win32gui
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">callback</span>(hwnd, extra):
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> title <span style="color:#f92672">in</span> win32gui<span style="color:#f92672">.</span>GetWindowText(hwnd):
+</span></span><span style="display:flex;"><span>                    extra<span style="color:#f92672">.</span>append(hwnd)
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            handles <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>            win32gui<span style="color:#f92672">.</span>EnumWindows(callback, handles)
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> handles:
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> handles[<span style="color:#ae81ff">0</span>]
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>            
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>            logger<span style="color:#f92672">.</span>error(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;窗口查找失败: </span><span style="color:#e6db74">{</span>e<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">None</span></span></span></code></pre></div><h4 id="-步骤32完善大漠封装">✅ 步骤3.2：完善大漠封装<a class="anchor" href="#-%e6%ad%a5%e9%aa%a432%e5%ae%8c%e5%96%84%e5%a4%a7%e6%bc%a0%e5%b0%81%e8%a3%85">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># core/dm_wrapper.py（完善版）</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> ctypes
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> utils.logger <span style="color:#f92672">import</span> setup_logger
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>logger <span style="color:#f92672">=</span> setup_logger(<span style="color:#e6db74">&#34;DmWrapper&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DmSoft</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;大漠插件封装&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self, dll_path: str <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> dll_path <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>            dll_path <span style="color:#f92672">=</span> <span style="color:#e6db74">r</span><span style="color:#e6db74">&#34;C:\path\to\dm.dll&#34;</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>dm <span style="color:#f92672">=</span> ctypes<span style="color:#f92672">.</span>windll<span style="color:#f92672">.</span>LoadLibrary(dll_path)
+</span></span><span style="display:flex;"><span>            logger<span style="color:#f92672">.</span>info(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;大漠插件加载成功: </span><span style="color:#e6db74">{</span>dll_path<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>            logger<span style="color:#f92672">.</span>error(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;大漠插件加载失败: </span><span style="color:#e6db74">{</span>e<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">raise</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">bind_window</span>(self, handle: int, mode: str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;gdi&#34;</span>, 
+</span></span><span style="display:flex;"><span>                   input_mode: str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;dx&#34;</span>) <span style="color:#f92672">-&gt;</span> bool:
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;绑定窗口&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>            ret <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>dm<span style="color:#f92672">.</span>BindEx(handle, mode, input_mode, <span style="color:#e6db74">&#34;windows&#34;</span>, <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> ret <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>                logger<span style="color:#f92672">.</span>info(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;窗口绑定成功: handle=</span><span style="color:#e6db74">{</span>handle<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">True</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>                logger<span style="color:#f92672">.</span>error(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;窗口绑定失败: handle=</span><span style="color:#e6db74">{</span>handle<span style="color:#e6db74">}</span><span style="color:#e6db74">, ret=</span><span style="color:#e6db74">{</span>ret<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>            logger<span style="color:#f92672">.</span>error(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;窗口绑定异常: </span><span style="color:#e6db74">{</span>e<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">find_pic</span>(self, x1, y1, x2, y2, pic_name: str, 
+</span></span><span style="display:flex;"><span>                 sim: float <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.9</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;找图&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e"># 先返回-1，后续完善</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>            logger<span style="color:#f92672">.</span>error(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;找图失败: </span><span style="color:#e6db74">{</span>e<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">capture</span>(self, x1, y1, x2, y2, filename: str) <span style="color:#f92672">-&gt;</span> bool:
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;截图&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>            ret <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>dm<span style="color:#f92672">.</span>Capture(int(x1), int(y1), int(x2), int(y2), filename)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> ret <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>            logger<span style="color:#f92672">.</span>error(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;截图失败: </span><span style="color:#e6db74">{</span>e<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">False</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mouse_move</span>(self, x, y):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;鼠标移动&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>dm<span style="color:#f92672">.</span>MoveTo(int(x), int(y))
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>            logger<span style="color:#f92672">.</span>error(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;鼠标移动失败: </span><span style="color:#e6db74">{</span>e<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mouse_click</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;鼠标左键单击&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>dm<span style="color:#f92672">.</span>LeftClick()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>            logger<span style="color:#f92672">.</span>error(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;鼠标点击失败: </span><span style="color:#e6db74">{</span>e<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mouse_double_click</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;鼠标左键双击&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>dm<span style="color:#f92672">.</span>LeftDoubleClick()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">except</span> <span style="color:#a6e22e">Exception</span> <span style="color:#66d9ef">as</span> e:
+</span></span><span style="display:flex;"><span>            logger<span style="color:#f92672">.</span>error(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;鼠标双击失败: </span><span style="color:#e6db74">{</span>e<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)</span></span></code></pre></div><hr>
+<h3 id="阶段4多进程基础第5-7天"><strong>阶段4：多进程基础（第5-7天）</strong><a class="anchor" href="#%e9%98%b6%e6%ae%b54%e5%a4%9a%e8%bf%9b%e7%a8%8b%e5%9f%ba%e7%a1%80%e7%ac%ac5-7%e5%a4%a9">#</a></h3>
+<h4 id="-步骤41创建进程管理器">✅ 步骤4.1：创建进程管理器<a class="anchor" href="#-%e6%ad%a5%e9%aa%a441%e5%88%9b%e5%bb%ba%e8%bf%9b%e7%a8%8b%e7%ae%a1%e7%90%86%e5%99%a8">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># process_manager.py</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> multiprocessing <span style="color:#f92672">import</span> Process, Queue, Manager
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> utils.logger <span style="color:#f92672">import</span> setup_logger
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>logger <span style="color:#f92672">=</span> setup_logger(<span style="color:#e6db74">&#34;ProcessManager&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ProcessManager</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;进程管理器&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>processes <span style="color:#f92672">=</span> {}  <span style="color:#75715e"># {thread_id: Process}</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>command_queues <span style="color:#f92672">=</span> {}
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>status_queues <span style="color:#f92672">=</span> {}
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>log_queues <span style="color:#f92672">=</span> {}
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 共享配置</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>manager <span style="color:#f92672">=</span> Manager()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>shared_config <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>manager<span style="color:#f92672">.</span>dict()
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        logger<span style="color:#f92672">.</span>info(<span style="color:#e6db74">&#34;进程管理器初始化完成&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">start_process</span>(self, thread_id: int):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;启动工作进程&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> thread_id <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>processes:
+</span></span><span style="display:flex;"><span>            logger<span style="color:#f92672">.</span>warning(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;进程 </span><span style="color:#e6db74">{</span>thread_id<span style="color:#e6db74">}</span><span style="color:#e6db74"> 已存在&#34;</span>)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 创建队列</span>
+</span></span><span style="display:flex;"><span>        command_queue <span style="color:#f92672">=</span> Queue()
+</span></span><span style="display:flex;"><span>        status_queue <span style="color:#f92672">=</span> Queue()
+</span></span><span style="display:flex;"><span>        log_queue <span style="color:#f92672">=</span> Queue()
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>command_queues[thread_id] <span style="color:#f92672">=</span> command_queue
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>status_queues[thread_id] <span style="color:#f92672">=</span> status_queue
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>log_queues[thread_id] <span style="color:#f92672">=</span> log_queue
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 启动进程</span>
+</span></span><span style="display:flex;"><span>        process <span style="color:#f92672">=</span> Process(
+</span></span><span style="display:flex;"><span>            target<span style="color:#f92672">=</span>worker_process_main,
+</span></span><span style="display:flex;"><span>            args<span style="color:#f92672">=</span>(thread_id, command_queue, status_queue, log_queue)
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        process<span style="color:#f92672">.</span>start()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>processes[thread_id] <span style="color:#f92672">=</span> process
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        logger<span style="color:#f92672">.</span>info(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;进程 </span><span style="color:#e6db74">{</span>thread_id<span style="color:#e6db74">}</span><span style="color:#e6db74"> 启动成功，PID: </span><span style="color:#e6db74">{</span>process<span style="color:#f92672">.</span>pid<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">stop_process</span>(self, thread_id: int):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;停止工作进程&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> thread_id <span style="color:#f92672">not</span> <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>processes:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 发送停止命令</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>command_queues[thread_id]<span style="color:#f92672">.</span>put({<span style="color:#e6db74">&#39;command&#39;</span>: <span style="color:#e6db74">&#39;stop&#39;</span>})
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 等待进程结束</span>
+</span></span><span style="display:flex;"><span>        process <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>processes[thread_id]
+</span></span><span style="display:flex;"><span>        process<span style="color:#f92672">.</span>join(timeout<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span>)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> process<span style="color:#f92672">.</span>is_alive():
+</span></span><span style="display:flex;"><span>            process<span style="color:#f92672">.</span>terminate()
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">del</span> self<span style="color:#f92672">.</span>processes[thread_id]
+</span></span><span style="display:flex;"><span>        logger<span style="color:#f92672">.</span>info(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;进程 </span><span style="color:#e6db74">{</span>thread_id<span style="color:#e6db74">}</span><span style="color:#e6db74"> 已停止&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># worker_process.py（先写个最简单的测试版本）</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> utils.logger <span style="color:#f92672">import</span> setup_logger
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>logger <span style="color:#f92672">=</span> setup_logger(<span style="color:#e6db74">&#34;Worker&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">worker_process_main</span>(thread_id: int, command_queue, status_queue, log_queue):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;工作进程主函数（测试版）&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    logger<span style="color:#f92672">.</span>info(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;工作进程启动，ID: </span><span style="color:#e6db74">{</span>thread_id<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 发送心跳状态</span>
+</span></span><span style="display:flex;"><span>        status_queue<span style="color:#f92672">.</span>put({
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#39;thread_id&#39;</span>: thread_id,
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#39;status&#39;</span>: <span style="color:#e6db74">&#39;运行中&#39;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#39;current_task&#39;</span>: <span style="color:#e6db74">&#39;测试中&#39;</span>
+</span></span><span style="display:flex;"><span>        })
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 检查命令</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>            command <span style="color:#f92672">=</span> command_queue<span style="color:#f92672">.</span>get_nowait()
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> command<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;command&#39;</span>) <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;stop&#39;</span>:
+</span></span><span style="display:flex;"><span>                logger<span style="color:#f92672">.</span>info(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;收到停止命令，进程 </span><span style="color:#e6db74">{</span>thread_id<span style="color:#e6db74">}</span><span style="color:#e6db74"> 退出&#34;</span>)
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">except</span>:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">import</span> time
+</span></span><span style="display:flex;"><span>        time<span style="color:#f92672">.</span>sleep(<span style="color:#ae81ff">1</span>)</span></span></code></pre></div><hr>
+<h3 id="阶段5完整集成第7-10天"><strong>阶段5：完整集成（第7-10天）</strong><a class="anchor" href="#%e9%98%b6%e6%ae%b55%e5%ae%8c%e6%95%b4%e9%9b%86%e6%88%90%e7%ac%ac7-10%e5%a4%a9">#</a></h3>
+<h4 id="-步骤51ui集成进程管理">✅ 步骤5.1：UI集成进程管理<a class="anchor" href="#-%e6%ad%a5%e9%aa%a451ui%e9%9b%86%e6%88%90%e8%bf%9b%e7%a8%8b%e7%ae%a1%e7%90%86">#</a></h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># ui/main_window.py（集成版）</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide2.QtWidgets <span style="color:#f92672">import</span> QMainWindow, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget, QPushButton
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide2.QtCore <span style="color:#f92672">import</span> QTimer, Qt
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> process_manager <span style="color:#f92672">import</span> ProcessManager
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> utils.logger <span style="color:#f92672">import</span> setup_logger
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>logger <span style="color:#f92672">=</span> setup_logger(<span style="color:#e6db74">&#34;MainWindow&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MainWindow</span>(QMainWindow):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#f92672">.</span><span style="color:#a6e22e">__init__</span>()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>process_manager <span style="color:#f92672">=</span> ProcessManager()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>init_ui()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setup_timer()
+</span></span><span style="display:flex;"><span>        logger<span style="color:#f92672">.</span>info(<span style="color:#e6db74">&#34;主窗口初始化完成&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">init_ui</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;初始化UI&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setWindowTitle(<span style="color:#e6db74">&#34;游戏辅助脚本 - 多进程版本&#34;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setGeometry(<span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">1200</span>, <span style="color:#ae81ff">600</span>)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        central_widget <span style="color:#f92672">=</span> QWidget()
+</span></span><span style="display:flex;"><span>        layout <span style="color:#f92672">=</span> QVBoxLayout()
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 创建表格</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>table <span style="color:#f92672">=</span> QTableWidget()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>table<span style="color:#f92672">.</span>setColumnCount(<span style="color:#ae81ff">7</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>table<span style="color:#f92672">.</span>setHorizontalHeaderLabels(
+</span></span><span style="display:flex;"><span>            [<span style="color:#e6db74">&#34;索引&#34;</span>, <span style="color:#e6db74">&#34;窗口名&#34;</span>, <span style="color:#e6db74">&#34;账号&#34;</span>, <span style="color:#e6db74">&#34;等级&#34;</span>, <span style="color:#e6db74">&#34;当前任务&#34;</span>, <span style="color:#e6db74">&#34;运行状态&#34;</span>, <span style="color:#e6db74">&#34;到期时间&#34;</span>]
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 添加示例数据</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>add_sample_data()
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 添加控制按钮</span>
+</span></span><span style="display:flex;"><span>        btn_layout <span style="color:#f92672">=</span> QWidget()
+</span></span><span style="display:flex;"><span>        btn_row_layout <span style="color:#f92672">=</span> QVBoxLayout()
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        btn_start <span style="color:#f92672">=</span> QPushButton(<span style="color:#e6db74">&#34;全部启动&#34;</span>)
+</span></span><span style="display:flex;"><span>        btn_start<span style="color:#f92672">.</span>clicked<span style="color:#f92672">.</span>connect(self<span style="color:#f92672">.</span>start_all)
+</span></span><span style="display:flex;"><span>        btn_stop <span style="color:#f92672">=</span> QPushButton(<span style="color:#e6db74">&#34;全部停止&#34;</span>)
+</span></span><span style="display:flex;"><span>        btn_stop<span style="color:#f92672">.</span>clicked<span style="color:#f92672">.</span>connect(self<span style="color:#f92672">.</span>stop_all)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        btn_row_layout<span style="color:#f92672">.</span>addWidget(btn_start)
+</span></span><span style="display:flex;"><span>        btn_row_layout<span style="color:#f92672">.</span>addWidget(btn_stop)
+</span></span><span style="display:flex;"><span>        btn_layout<span style="color:#f92672">.</span>setLayout(btn_row_layout)
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        layout<span style="color:#f92672">.</span>addWidget(self<span style="color:#f92672">.</span>table)
+</span></span><span style="display:flex;"><span>        layout<span style="color:#f92672">.</span>addWidget(btn_layout)
+</span></span><span style="display:flex;"><span>        central_widget<span style="color:#f92672">.</span>setLayout(layout)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setCentralWidget(central_widget)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">add_sample_data</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;添加示例数据&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        data <span style="color:#f92672">=</span> [
+</span></span><span style="display:flex;"><span>            (<span style="color:#e6db74">&#34;1&#34;</span>, <span style="color:#e6db74">&#34;VNC-5901&#34;</span>, <span style="color:#e6db74">&#34;test001&#34;</span>, <span style="color:#e6db74">&#34;80&#34;</span>, <span style="color:#e6db74">&#34;等待中&#34;</span>, <span style="color:#e6db74">&#34;停止&#34;</span>, <span style="color:#e6db74">&#34;30天&#34;</span>),
+</span></span><span style="display:flex;"><span>            (<span style="color:#e6db74">&#34;2&#34;</span>, <span style="color:#e6db74">&#34;VNC-5902&#34;</span>, <span style="color:#e6db74">&#34;test002&#34;</span>, <span style="color:#e6db74">&#34;85&#34;</span>, <span style="color:#e6db74">&#34;等待中&#34;</span>, <span style="color:#e6db74">&#34;停止&#34;</span>, <span style="color:#e6db74">&#34;30天&#34;</span>),
+</span></span><span style="display:flex;"><span>        ]
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> row, item <span style="color:#f92672">in</span> enumerate(data):
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> col, text <span style="color:#f92672">in</span> enumerate(item):
+</span></span><span style="display:flex;"><span>                self<span style="color:#f92672">.</span>table<span style="color:#f92672">.</span>setItem(row, col, QTableWidgetItem(text))
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">setup_timer</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;设置定时器更新UI&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>timer <span style="color:#f92672">=</span> QTimer()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>timer<span style="color:#f92672">.</span>timeout<span style="color:#f92672">.</span>connect(self<span style="color:#f92672">.</span>update_ui)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>timer<span style="color:#f92672">.</span>start(<span style="color:#ae81ff">1000</span>)  <span style="color:#75715e"># 每秒更新</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">update_ui</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;更新UI状态&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 从进程管理器获取状态</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> thread_id <span style="color:#f92672">in</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>]:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> thread_id <span style="color:#f92672">in</span> self<span style="color:#f92672">.</span>process_manager<span style="color:#f92672">.</span>status_queues:
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">try</span>:
+</span></span><span style="display:flex;"><span>                    status <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>process_manager<span style="color:#f92672">.</span>status_queues[thread_id]<span style="color:#f92672">.</span>get_nowait()
+</span></span><span style="display:flex;"><span>                    row <span style="color:#f92672">=</span> thread_id <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>                    self<span style="color:#f92672">.</span>table<span style="color:#f92672">.</span>setItem(row, <span style="color:#ae81ff">5</span>, QTableWidgetItem(status<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;status&#39;</span>, <span style="color:#e6db74">&#39;&#39;</span>)))
+</span></span><span style="display:flex;"><span>                    self<span style="color:#f92672">.</span>table<span style="color:#f92672">.</span>setItem(row, <span style="color:#ae81ff">4</span>, QTableWidgetItem(status<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;current_task&#39;</span>, <span style="color:#e6db74">&#39;&#39;</span>)))
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">except</span>:
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">start_all</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;全部启动&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> thread_id <span style="color:#f92672">in</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>]:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>process_manager<span style="color:#f92672">.</span>start_process(thread_id)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">stop_all</span>(self):
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;&#34;&#34;全部停止&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> thread_id <span style="color:#f92672">in</span> [<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>]:
+</span></span><span style="display:flex;"><span>            self<span style="color:#f92672">.</span>process_manager<span style="color:#f92672">.</span>stop_process(thread_id)</span></span></code></pre></div><hr>
+<h2 id="-开发检查清单">📋 开发检查清单<a class="anchor" href="#-%e5%bc%80%e5%8f%91%e6%a3%80%e6%9f%a5%e6%b8%85%e5%8d%95">#</a></h2>
+<h3 id="-第1-2天基础框架">✅ 第1-2天：基础框架<a class="anchor" href="#-%e7%ac%ac1-2%e5%a4%a9%e5%9f%ba%e7%a1%80%e6%a1%86%e6%9e%b6">#</a></h3>
+<ul>
+<li><input disabled="" type="checkbox"> 创建项目目录结构</li>
+<li><input disabled="" type="checkbox"> 创建 requirements.txt</li>
+<li><input disabled="" type="checkbox"> 实现大漠基础封装（dm_wrapper.py）</li>
+<li><input disabled="" type="checkbox"> 实现日志系统（logger.py）</li>
+<li><input disabled="" type="checkbox"> 创建主窗口（main_window.py）</li>
+<li><input disabled="" type="checkbox"> 测试：运行main.py，窗口正常显示</li>
+</ul>
+<h3 id="-第3-5天大漠插件">✅ 第3-5天：大漠插件<a class="anchor" href="#-%e7%ac%ac3-5%e5%a4%a9%e5%a4%a7%e6%bc%a0%e6%8f%92%e4%bb%b6">#</a></h3>
+<ul>
+<li><input disabled="" type="checkbox"> 实现大漠注册（dm_register.py）</li>
+<li><input disabled="" type="checkbox"> 完善大漠封装（bind_window、find_pic、capture）</li>
+<li><input disabled="" type="checkbox"> 测试：大漠注册成功</li>
+<li><input disabled="" type="checkbox"> 测试：窗口绑定成功</li>
+</ul>
+<h3 id="-第5-7天多进程">✅ 第5-7天：多进程<a class="anchor" href="#-%e7%ac%ac5-7%e5%a4%a9%e5%a4%9a%e8%bf%9b%e7%a8%8b">#</a></h3>
+<ul>
+<li><input disabled="" type="checkbox"> 实现进程管理器（process_manager.py）</li>
+<li><input disabled="" type="checkbox"> 实现工作进程入口（worker_process.py）</li>
+<li><input disabled="" type="checkbox"> 测试：进程启动成功</li>
+<li><input disabled="" type="checkbox"> 测试：进程状态正常返回</li>
+</ul>
+<h3 id="-第7-10天完整集成">✅ 第7-10天：完整集成<a class="anchor" href="#-%e7%ac%ac7-10%e5%a4%a9%e5%ae%8c%e6%95%b4%e9%9b%86%e6%88%90">#</a></h3>
+<ul>
+<li><input disabled="" type="checkbox"> UI集成进程管理</li>
+<li><input disabled="" type="checkbox"> 实现配置文件读取</li>
+<li><input disabled="" type="checkbox"> 实现任务路由中心</li>
+<li><input disabled="" type="checkbox"> 测试：多进程并行运行</li>
+<li><input disabled="" type="checkbox"> 测试：进程间通信正常</li>
+</ul>
+<hr>
+<h2 id="-我的建议从这里开始">🚀 我的建议：从这里开始！<a class="anchor" href="#-%e6%88%91%e7%9a%84%e5%bb%ba%e8%ae%ae%e4%bb%8e%e8%bf%99%e9%87%8c%e5%bc%80%e5%a7%8b">#</a></h2>
+<p><strong>立即行动（今天1小时）：</strong></p>
+<ol>
+<li><strong>创建目录结构</strong></li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mkdir -p game_bot/<span style="color:#f92672">{</span>config,core,ui,modules,resources,utils<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>cd game_bot</span></span></code></pre></div><ol start="2">
+<li><strong>创建requirements.txt</strong></li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-txt" data-lang="txt"><span style="display:flex;"><span>PySide2==5.15.2
+</span></span><span style="display:flex;"><span>pywin32==305</span></span></code></pre></div><ol start="3">
+<li><strong>写第一个文件：logger.py</strong></li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># utils/logger.py（最简单的版本）</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> logging
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">setup_logger</span>(name: str):
+</span></span><span style="display:flex;"><span>    logger <span style="color:#f92672">=</span> logging<span style="color:#f92672">.</span>getLogger(name)
+</span></span><span style="display:flex;"><span>    logger<span style="color:#f92672">.</span>setLevel(logging<span style="color:#f92672">.</span>INFO)
+</span></span><span style="display:flex;"><span>    handler <span style="color:#f92672">=</span> logging<span style="color:#f92672">.</span>StreamHandler()
+</span></span><span style="display:flex;"><span>    handler<span style="color:#f92672">.</span>setFormatter(logging<span style="color:#f92672">.</span>Formatter(<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">%(asctime)s</span><span style="color:#e6db74"> - </span><span style="color:#e6db74">%(levelname)s</span><span style="color:#e6db74"> - </span><span style="color:#e6db74">%(message)s</span><span style="color:#e6db74">&#39;</span>))
+</span></span><span style="display:flex;"><span>    logger<span style="color:#f92672">.</span>addHandler(handler)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> logger</span></span></code></pre></div><ol start="4">
+<li><strong>写第二个文件：main_window.py</strong></li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># ui/main_window.py（最简单的版本）</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> PySide2.QtWidgets <span style="color:#f92672">import</span> QApplication, QMainWindow, QTableWidget
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> sys
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> utils.logger <span style="color:#f92672">import</span> setup_logger
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>logger <span style="color:#f92672">=</span> setup_logger(<span style="color:#e6db74">&#34;MainWindow&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MainWindow</span>(QMainWindow):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#f92672">.</span><span style="color:#a6e22e">__init__</span>()
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setWindowTitle(<span style="color:#e6db74">&#34;测试窗口&#34;</span>)
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>setGeometry(<span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">100</span>, <span style="color:#ae81ff">800</span>, <span style="color:#ae81ff">600</span>)
+</span></span><span style="display:flex;"><span>        logger<span style="color:#f92672">.</span>info(<span style="color:#e6db74">&#34;窗口创建成功&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;__main__&#34;</span>:
+</span></span><span style="display:flex;"><span>    app <span style="color:#f92672">=</span> QApplication(sys<span style="color:#f92672">.</span>argv)
+</span></span><span style="display:flex;"><span>    window <span style="color:#f92672">=</span> MainWindow()
+</span></span><span style="display:flex;"><span>    window<span style="color:#f92672">.</span>show()
+</span></span><span style="display:flex;"><span>    sys<span style="color:#f92672">.</span>exit(app<span style="color:#f92672">.</span>exec_())</span></span></code></pre></div><ol start="5">
+<li><strong>运行测试</strong></li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>pip install PySide2
+</span></span><span style="display:flex;"><span>python ui/main_window.py</span></span></code></pre></div><p>✅ <strong>如果窗口正常显示，恭喜你迈出了第一步！</strong></p>
+<hr>
+<h2 id="-关键原则">💡 关键原则<a class="anchor" href="#-%e5%85%b3%e9%94%ae%e5%8e%9f%e5%88%99">#</a></h2>
+<ol>
+<li><strong>先跑通再优化</strong>：不要一开始就追求完美，先让最简单的代码跑起来</li>
+<li><strong>分阶段测试</strong>：每完成一个功能就测试，不要等写完再测</li>
+<li><strong>日志为王</strong>：每一步都要有日志输出，方便调试</li>
+<li><strong>参考原代码</strong>：遇到不会的就看易语言代码，理解逻辑再翻译</li>
+</ol>
+<p>需要我详细讲解某个步骤吗？</p>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/34.%E5%8D%A1%E5%AF%86%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BA%E9%AA%8C%E8%AF%81/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>34.卡密系统搭建验证</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="flex align-center">
+        <span>01.进制基础</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#一项目代码如何组织">一、项目代码如何组织</a>
+      <ul>
+        <li><a href="#11-目录结构设计理念">1.1 目录结构设计理念</a></li>
+        <li><a href="#12-模块职责划分python--pyside2对应结构">1.2 模块职责划分（Python + PySide2对应结构）</a></li>
+      </ul>
+    </li>
+    <li><a href="#二ui是如何设计的">二、UI是如何设计的</a>
+      <ul>
+        <li><a href="#21-主界面布局架构">2.1 主界面布局架构</a></li>
+        <li><a href="#22-关键设计模式">2.2 关键设计模式</a></li>
+        <li><a href="#23-状态更新机制">2.3 状态更新机制</a></li>
+      </ul>
+    </li>
+    <li><a href="#三任务是如何执行的">三、任务是如何执行的</a>
+      <ul>
+        <li><a href="#31-完整任务执行流程图">3.1 完整任务执行流程图</a></li>
+        <li><a href="#32-打图任务状态机详细流程">3.2 打图任务状态机详细流程</a></li>
+        <li><a href="#33-状态流转图">3.3 状态流转图</a></li>
+        <li><a href="#34-多线程协同工作机制">3.4 多线程协同工作机制</a></li>
+        <li><a href="#35-容错设计亮点">3.5 容错设计亮点</a></li>
+      </ul>
+    </li>
+    <li><a href="#四核心设计模式总结">四、核心设计模式总结</a></li>
+    <li><a href="#五关键技术要点">五、关键技术要点</a></li>
+    <li><a href="#任务执行分配详解">任务执行分配详解</a>
+      <ul>
+        <li><a href="#一当前代码的实际情况">一、当前代码的实际情况</a></li>
+        <li><a href="#二作者的设计意图路由中心">二、作者的设计意图（路由中心）</a></li>
+        <li><a href="#三作者的具体设计实现">三、作者的具体设计实现</a></li>
+        <li><a href="#四路由中心的正确设计python伪代码">四、路由中心的正确设计（Python伪代码）</a></li>
+        <li><a href="#五路由中心的实际应用场景">五、路由中心的实际应用场景</a></li>
+        <li><a href="#六为什么需要路由中心">六、为什么需要路由中心？</a></li>
+        <li><a href="#七完整的路由架构图">七、完整的路由架构图</a></li>
+        <li><a href="#八总结">八、总结</a></li>
+      </ul>
+    </li>
+    <li><a href="#架构分层说明">架构分层说明</a>
+      <ul>
+        <li><a href="#1-ui层---界面交互">1️⃣ <strong>UI层 - 界面交互</strong></a></li>
+        <li><a href="#2-控制层---主程序线程">2️⃣ <strong>控制层 - 主程序线程</strong></a></li>
+        <li><a href="#3-路由层---任务分配中心">3️⃣ <strong>路由层 - 任务分配中心</strong></a></li>
+        <li><a href="#4-业务层---任务状态机">4️⃣ <strong>业务层 - 任务状态机</strong></a></li>
+        <li><a href="#5-服务层---基础功能模块">5️⃣ <strong>服务层 - 基础功能模块</strong></a></li>
+        <li><a href="#6-核心层---大漠插件封装">6️⃣ <strong>核心层 - 大漠插件封装</strong></a></li>
+        <li><a href="#7-数据层---配置与资源">7️⃣ <strong>数据层 - 配置与资源</strong></a></li>
+        <li><a href="#8-多线程层---并发控制">8️⃣ <strong>多线程层 - 并发控制</strong></a></li>
+        <li><a href="#9-容错层---异常处理">9️⃣ <strong>容错层 - 异常处理</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#数据流向图">数据流向图</a></li>
+    <li><a href="#关键设计模式">关键设计模式</a></li>
+    <li><a href="#核心优势总结">核心优势总结</a></li>
+    <li><a href="#开发路线图从0到1">开发路线图（从0到1）</a>
+      <ul>
+        <li><a href="#阶段1基础框架搭建第1-2天"><strong>阶段1：基础框架搭建（第1-2天）</strong></a></li>
+        <li><a href="#阶段2ui框架搭建第2-3天"><strong>阶段2：UI框架搭建（第2-3天）</strong></a></li>
+        <li><a href="#阶段3大漠插件基础功能第3-5天"><strong>阶段3：大漠插件基础功能（第3-5天）</strong></a></li>
+        <li><a href="#阶段4多进程基础第5-7天"><strong>阶段4：多进程基础（第5-7天）</strong></a></li>
+        <li><a href="#阶段5完整集成第7-10天"><strong>阶段5：完整集成（第7-10天）</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#-开发检查清单">📋 开发检查清单</a>
+      <ul>
+        <li><a href="#-第1-2天基础框架">✅ 第1-2天：基础框架</a></li>
+        <li><a href="#-第3-5天大漠插件">✅ 第3-5天：大漠插件</a></li>
+        <li><a href="#-第5-7天多进程">✅ 第5-7天：多进程</a></li>
+        <li><a href="#-第7-10天完整集成">✅ 第7-10天：完整集成</a></li>
+      </ul>
+    </li>
+    <li><a href="#-我的建议从这里开始">🚀 我的建议：从这里开始！</a></li>
+    <li><a href="#-关键原则">💡 关键原则</a></li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
