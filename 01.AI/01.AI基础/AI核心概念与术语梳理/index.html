@@ -1,0 +1,3791 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="
+AI 核心概念与术语梳理# 人工智能（AI）是继互联网之后最伟大的技术变革。然而许多想拥抱 AI 的人，却常常陷入各种专业术语和流行词汇的泥沼中。本文旨在用通俗的语言，从底层到顶层系统梳理 AI 领域的核心概念，帮你建立清晰的知识框架。
+AI 的本质：四个核心问题# 感知世界（看、听）→ 认知理解（读、写、说）→ 做出决策（推理、规划）→ 付诸行动（操控物理世界）AI 的所有技术方向，都在回答这四个问题中的一个或多个。理解这条主线，就能把纷繁的术语串成一条清晰的脉络。
+总览：四层结构# 整个 AI 技术体系可以分为四层，从底到顶层层支撑：
+┌──────────────────────────────────────────────────────────────────┐│ 第四层 · 应用层 ││ AI 产品 · API 聚合平台 · 开发框架 · 核心概念(Prompt/Agent/RAG) │├──────────────────────────────────────────────────────────────────┤│ 第三层 · 模型层 ││ 基础模型 · LLM · 多模态模型 · 训练 · 微调 · 推理优化 │├──────────────────────────────────────────────────────────────────┤│ 第二层 · 技术层 ││ NLP · 计算机视觉 · 语音技术 · Transformer · 推理技术 │├──────────────────────────────────────────────────────────────────┤│ 第一层 · 基础层 ││ 算力 · 算法(ML/DL) · 数据 · 基础学科 │└──────────────────────────────────────────────────────────────────┘应用层 你用的产品（ChatGPT、Cursor...）、平台（Bedrock、OpenRouter...）、框架（LangChain...）↑ 调用模型层 大模型（GPT-4、Claude...）&#43; 训练方法 &#43; 推理优化↑ 基于技术层 NLP、CV、语音、Transformer 架构、推理技术↑ 依赖基础层 算力（GPU）&#43; 算法（ML/DL）&#43; 数据 &#43; 基础学科（数学、统计...） 理解这四层关系，就能建立起对整个 AI 领域的全局认知。每一层都在为上一层提供支撑，最终呈现为我们日常使用的 AI 产品和服务。
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/01.AI/01.AI%E5%9F%BA%E7%A1%80/AI%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E4%B8%8E%E6%9C%AF%E8%AF%AD%E6%A2%B3%E7%90%86/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="碎碎念念">
+  <meta property="og:description" content="AI 核心概念与术语梳理# 人工智能（AI）是继互联网之后最伟大的技术变革。然而许多想拥抱 AI 的人，却常常陷入各种专业术语和流行词汇的泥沼中。本文旨在用通俗的语言，从底层到顶层系统梳理 AI 领域的核心概念，帮你建立清晰的知识框架。
+AI 的本质：四个核心问题# 感知世界（看、听）→ 认知理解（读、写、说）→ 做出决策（推理、规划）→ 付诸行动（操控物理世界）AI 的所有技术方向，都在回答这四个问题中的一个或多个。理解这条主线，就能把纷繁的术语串成一条清晰的脉络。
+总览：四层结构# 整个 AI 技术体系可以分为四层，从底到顶层层支撑：
+┌──────────────────────────────────────────────────────────────────┐│ 第四层 · 应用层 ││ AI 产品 · API 聚合平台 · 开发框架 · 核心概念(Prompt/Agent/RAG) │├──────────────────────────────────────────────────────────────────┤│ 第三层 · 模型层 ││ 基础模型 · LLM · 多模态模型 · 训练 · 微调 · 推理优化 │├──────────────────────────────────────────────────────────────────┤│ 第二层 · 技术层 ││ NLP · 计算机视觉 · 语音技术 · Transformer · 推理技术 │├──────────────────────────────────────────────────────────────────┤│ 第一层 · 基础层 ││ 算力 · 算法(ML/DL) · 数据 · 基础学科 │└──────────────────────────────────────────────────────────────────┘应用层 你用的产品（ChatGPT、Cursor...）、平台（Bedrock、OpenRouter...）、框架（LangChain...）↑ 调用模型层 大模型（GPT-4、Claude...）&#43; 训练方法 &#43; 推理优化↑ 基于技术层 NLP、CV、语音、Transformer 架构、推理技术↑ 依赖基础层 算力（GPU）&#43; 算法（ML/DL）&#43; 数据 &#43; 基础学科（数学、统计...） 理解这四层关系，就能建立起对整个 AI 领域的全局认知。每一层都在为上一层提供支撑，最终呈现为我们日常使用的 AI 产品和服务。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="01.ai">
+
+
+  <meta itemprop="name" content="碎碎念念">
+  <meta itemprop="description" content="AI 核心概念与术语梳理# 人工智能（AI）是继互联网之后最伟大的技术变革。然而许多想拥抱 AI 的人，却常常陷入各种专业术语和流行词汇的泥沼中。本文旨在用通俗的语言，从底层到顶层系统梳理 AI 领域的核心概念，帮你建立清晰的知识框架。
+AI 的本质：四个核心问题# 感知世界（看、听）→ 认知理解（读、写、说）→ 做出决策（推理、规划）→ 付诸行动（操控物理世界）AI 的所有技术方向，都在回答这四个问题中的一个或多个。理解这条主线，就能把纷繁的术语串成一条清晰的脉络。
+总览：四层结构# 整个 AI 技术体系可以分为四层，从底到顶层层支撑：
+┌──────────────────────────────────────────────────────────────────┐│ 第四层 · 应用层 ││ AI 产品 · API 聚合平台 · 开发框架 · 核心概念(Prompt/Agent/RAG) │├──────────────────────────────────────────────────────────────────┤│ 第三层 · 模型层 ││ 基础模型 · LLM · 多模态模型 · 训练 · 微调 · 推理优化 │├──────────────────────────────────────────────────────────────────┤│ 第二层 · 技术层 ││ NLP · 计算机视觉 · 语音技术 · Transformer · 推理技术 │├──────────────────────────────────────────────────────────────────┤│ 第一层 · 基础层 ││ 算力 · 算法(ML/DL) · 数据 · 基础学科 │└──────────────────────────────────────────────────────────────────┘应用层 你用的产品（ChatGPT、Cursor...）、平台（Bedrock、OpenRouter...）、框架（LangChain...）↑ 调用模型层 大模型（GPT-4、Claude...）&#43; 训练方法 &#43; 推理优化↑ 基于技术层 NLP、CV、语音、Transformer 架构、推理技术↑ 依赖基础层 算力（GPU）&#43; 算法（ML/DL）&#43; 数据 &#43; 基础学科（数学、统计...） 理解这四层关系，就能建立起对整个 AI 领域的全局认知。每一层都在为上一层提供支撑，最终呈现为我们日常使用的 AI 产品和服务。">
+  <meta itemprop="wordCount" content="1403">
+
+<title>Ai核心概念与术语梳理 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/01.AI/01.AI%E5%9F%BA%E7%A1%80/AI%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E4%B8%8E%E6%9C%AF%E8%AF%AD%E6%A2%B3%E7%90%86/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.7d58ae02adbb48cddb44e14ebd18d032450f84203c407b8742616c4d8963d04e.js" integrity="sha256-fViuAq27SM3bROFOvRjQMkUPhCA8QHuHQmFsTYlj0E4=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-01.ai">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-9fe7a2339ad0dc4a73778e68cef649fe" class="toggle" checked />
+    <label for="section-9fe7a2339ad0dc4a73778e68cef649fe" class="flex">
+      <a role="button" class="">
+        AI</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-15c23871017acbed09b7424bdcf80a4a" class="toggle" checked />
+    <label for="section-15c23871017acbed09b7424bdcf80a4a" class="flex">
+      <a href="/01.AI/01.AI%E5%9F%BA%E7%A1%80/" class="">
+        AI基础</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/01.AI%E5%9F%BA%E7%A1%80/AI%E5%8F%91%E5%B1%95%E7%BC%96%E5%B9%B4%E5%8F%B2/" class="">
+      Ai发展编年史</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/01.AI%E5%9F%BA%E7%A1%80/AI%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E4%B8%8E%E6%9C%AF%E8%AF%AD%E6%A2%B3%E7%90%86/" class="active">
+      Ai核心概念与术语梳理</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-3c59d4207daf22454abfe1884802d176" class="toggle"  />
+    <label for="section-3c59d4207daf22454abfe1884802d176" class="flex">
+      <a href="/01.AI/02.%E6%A8%A1%E5%9E%8B%E4%B8%8E%E6%8A%80%E6%9C%AF/" class="">
+        模型与技术</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-49d4b9c6159f641db7abe3ae967f518a" class="toggle"  />
+    <label for="section-49d4b9c6159f641db7abe3ae967f518a" class="flex">
+      <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/" class="">
+        AI应用</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-a4f890ca069a25208a03d08b2bb2af9b" class="toggle"  />
+    <label for="section-a4f890ca069a25208a03d08b2bb2af9b" class="flex">
+      <a role="button" class="">
+        大模型聚合平台</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%81%9A%E5%90%88%E5%B9%B3%E5%8F%B0/LiteLLM/" class="">
+      LiteLLM</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-d6e743b94614084bb7b1efb03702d051" class="toggle"  />
+    <label for="section-d6e743b94614084bb7b1efb03702d051" class="flex">
+      <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7/" class="">
+        编程工具</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7/Trae/" class="">
+      Trae</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-3f03d304f7515b074c3e895c04f5985a" class="toggle"  />
+    <label for="section-3f03d304f7515b074c3e895c04f5985a" class="flex">
+      <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/Agent/" class="">
+        Agent</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-540714977fc446f2999968aa0312d1d1" class="toggle"  />
+    <label for="section-540714977fc446f2999968aa0312d1d1" class="flex">
+      <a role="button" class="">
+        OpenClaw</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/API%E8%B0%83%E7%94%A8%E8%A7%84%E8%8C%83/" class="">
+      API调用规范</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/Prompt%E5%B7%A5%E7%A8%8B/" class="">
+      Prompt工程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-81e5d1f0dc654ba1710e62c7855b9f41" class="toggle"  />
+    <label for="section-81e5d1f0dc654ba1710e62c7855b9f41" class="flex">
+      <a role="button" class="">
+        运维</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-07353f6b74ee2fa2408751490aab51d1" class="toggle"  />
+    <label for="section-07353f6b74ee2fa2408751490aab51d1" class="flex">
+      <a role="button" class="">
+        Oracle</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/02.%E8%BF%90%E7%BB%B4/oracle/oracle%E7%AC%94%E8%AE%B0/" class="">
+      Oracle笔记</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-588052d0ddc9d35446ed3fcf1c068d7e" class="toggle"  />
+    <label for="section-588052d0ddc9d35446ed3fcf1c068d7e" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/02.%E8%BF%90%E7%BB%B4/08.Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/02.%E8%BF%90%E7%BB%B4/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-a1da811a60ec5f919d028b5a8ad22512" class="toggle"  />
+    <label for="section-a1da811a60ec5f919d028b5a8ad22512" class="flex">
+      <a role="button" class="">
+        云计算</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-835dbb699264e6d42cdd17507140ac88" class="toggle"  />
+    <label for="section-835dbb699264e6d42cdd17507140ac88" class="flex">
+      <a role="button" class="">
+        AWS</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c558e862208eb14727f1a08067f09bdd" class="toggle"  />
+    <label for="section-c558e862208eb14727f1a08067f09bdd" class="flex">
+      <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/Bedrock/Bedrock%E4%BB%8B%E7%BB%8D/" class="">
+        Bedrock</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c3e7e52ac9a64d92fde731aee4156588" class="toggle"  />
+    <label for="section-c3e7e52ac9a64d92fde731aee4156588" class="flex">
+      <a role="button" class="">
+        IAM</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/IAM/aws-security-iam-1-notes/" class="">
+      AWS IAM 身份、策略与 Role 实战学习笔记</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/aws%E5%9F%BA%E7%A1%80/" class="">
+      Aws基础</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-134481839eb9c2f960db1fbd97c06e82" class="toggle"  />
+    <label for="section-134481839eb9c2f960db1fbd97c06e82" class="flex">
+      <a role="button" class="">
+        阿里云</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-601ec63ad4b894fb5775994f34301885" class="toggle"  />
+    <label for="section-601ec63ad4b894fb5775994f34301885" class="flex">
+      <a role="button" class="">
+        腾讯云</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-575fefbd29f71371957ab2f14f9cbee0" class="toggle"  />
+    <label for="section-575fefbd29f71371957ab2f14f9cbee0" class="flex">
+      <a role="button" class="">
+        阿里腾讯华为火山云产品对比</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AF%B9%E6%AF%94/" class="">
+      服务器对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E7%A1%AC%E7%9B%98%E5%AF%B9%E6%AF%94/" class="">
+      云硬盘对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%B9%E6%AF%94/" class="">
+      数据库产品对比表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AF%B9%E6%AF%94/" class="">
+      中间件产品对比表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AF%B9%E6%AF%94/" class="">
+      大数据对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E5%AE%89%E5%85%A8%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/" class="">
+      安全产品对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AF%B9%E6%A0%87/" class="">
+      云容器对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E6%9E%B6%E6%9E%84%E5%B8%88%E5%B7%A5%E4%BD%9C%E8%81%8C%E8%B4%A3/" class="">
+      云架构师工作职责</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E8%BF%81%E7%A7%BB%E6%B5%81%E7%A8%8B%E9%98%BF%E9%87%8C%E4%BA%91/" class="">
+      迁移流程总结</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f63ca89517e3b888fc3c4dc8b04609ea" class="toggle"  />
+    <label for="section-f63ca89517e3b888fc3c4dc8b04609ea" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f508e989cd5e3427044a0620121ddbda" class="toggle"  />
+    <label for="section-f508e989cd5e3427044a0620121ddbda" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-344a042a46b58aed858fd7aa7abd362d" class="toggle"  />
+    <label for="section-344a042a46b58aed858fd7aa7abd362d" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-ed2965e47d3be272fd865c1df0bb75bc" class="toggle"  />
+    <label for="section-ed2965e47d3be272fd865c1df0bb75bc" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-60bdc869135151ee6f66cb65499bf2d9" class="toggle"  />
+    <label for="section-60bdc869135151ee6f66cb65499bf2d9" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-8a098eb60ed3a3c8aa631838098de5f6" class="toggle"  />
+    <label for="section-8a098eb60ed3a3c8aa631838098de5f6" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-d3553f07e3dd22f14040931f6def7247" class="toggle"  />
+    <label for="section-d3553f07e3dd22f14040931f6def7247" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-755341e3f50c66a57e172eec45daad0b" class="toggle"  />
+    <label for="section-755341e3f50c66a57e172eec45daad0b" class="flex">
+      <a role="button" class="">
+        脚本开发实战</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/1.%E5%9B%BE%E8%89%B2%E8%84%9A%E6%9C%AC%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" class="">
+      1.图色脚本架构设计</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E6%A2%A6%E5%B9%BB%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/" class="">
+      游戏图色脚本开发实战</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E9%97%AE%E9%81%93%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/" class="">
+      游戏图色脚本开发实战</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/2.%E5%B7%A5%E7%A8%8B%E6%9E%B6%E6%9E%84UI-%E5%B8%83%E5%B1%80%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%85%8D%E7%BD%AE%E9%9A%94%E7%A6%BB/" class="">
+      2.工程架构、UI 布局与多线程配置隔离</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/3.%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%89%BE%E5%9B%BE%E6%8C%87%E4%BB%A4%E8%AF%A6%E8%A7%A3/" class="">
+      3.大漠插件：环境部署与找图指令详解</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/4.%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E5%85%8D%E6%B3%A8%E5%86%8C%E8%B0%83%E7%94%A8%E5%9D%90%E6%A0%87%E7%B3%BB%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E5%90%8E%E5%8F%B0%E7%BB%91%E5%AE%9A/" class="">
+      4.大漠插件：免注册调用、坐标系原理以及后台绑定</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/5.%E6%98%93%E8%AF%AD%E8%A8%80%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6/" class="">
+      5.易语言多线程控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/5.%E6%98%93%E8%AF%AD%E8%A8%80%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6%E4%B8%8E%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB%E4%BC%98%E5%8C%96%E6%96%B9%E6%A1%88/" class="">
+      5.易语言多线程控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/6.%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" class="">
+      6.鼠标漂移解决方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/10.%E5%BC%BA%E7%9B%97%E4%BB%BB%E5%8A%A1%E8%B4%BC%E7%8E%8B%E4%BB%BB%E5%8A%A1%E8%AF%BB%E5%8F%961/" class="">
+      10.打图任务(1)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/10.%E5%BC%BA%E7%9B%97%E4%BB%BB%E5%8A%A1%E8%B4%BC%E7%8E%8B%E4%BB%BB%E5%8A%A1%E8%AF%BB%E5%8F%962/" class="">
+      10.打图任务(2)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/11.%E8%B7%A8%E5%9C%B0%E5%9B%BE%E8%87%AA%E5%8A%A8%E5%AF%BB%E8%B7%AF/" class="">
+      11.跨地图寻路</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/12.%E9%A3%9E%E8%A1%8C%E6%97%97/" class="">
+      12.飞行旗</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/13.%E5%8A%A8%E6%80%81NPC%E8%BD%A6%E5%A4%AB%E9%A9%BF%E7%AB%99%E8%80%81%E6%9D%BF%E7%82%B9%E5%87%BB%E5%AF%B9%E8%AF%9D%E6%A1%86%E8%87%AA%E5%8A%A8%E5%8C%96%E4%BB%A5%E5%8F%8A%E6%96%B0%E5%8C%BA%E9%81%AE%E6%8C%A1%E5%88%A4%E5%AE%9A%E7%9A%84%E9%AB%98%E7%BA%A7%E5%AE%9E%E6%93%8D%E6%8A%80%E5%B7%A7/" class="">
+      13.动态NPC（车夫、驿站老板）点击、对话框自动化以及新区遮挡判定的高级实操技巧</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/14.%E5%9C%B0%E5%9B%BE%E5%9D%90%E6%A0%87%E6%8D%A2%E7%AE%97/" class="">
+      14.地图坐标换算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/15.%E5%BC%BA%E7%9B%97NPC%E8%A2%AB%E9%81%AE%E6%8C%A1%E6%88%96%E9%87%8D%E5%8F%A0%E6%97%B6%E7%9A%84%E8%BF%9B%E9%98%B6%E5%A4%84%E7%90%86%E9%80%BB%E8%BE%91/" class="">
+      15.强盗（NPC）被遮挡或重叠时的进阶处理逻辑</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/16.%E8%B4%BC%E7%8E%8B%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6/" class="">
+      16.贼王处理机制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/17-18-19-20-21.%E8%B4%BC%E7%8E%8B%E8%BF%9B%E9%98%B6%E5%A4%84%E7%90%86%E4%B8%8E-OCR-%E9%AA%8C%E8%AF%81%E5%AE%9E%E6%88%98/" class="">
+      17-18-19-20-21.贼王进阶处理与 OCR 验证实战</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%8F%92%E4%BB%B6%E8%AF%86%E5%88%AB/" class="">
+      程序集_插件识别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%8F%92%E4%BB%B6%E6%B3%A8%E5%86%8C/" class="">
+      程序集_插件注册</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/23-24-25.%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" class="">
+      23-24-25.自动登录与模拟器将军令获取</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E4%BB%BB%E5%8A%A1%E6%89%A7%E8%A1%8C%E5%88%86%E9%85%8D/" class="">
+      程序集_任务执行分配</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%AA%97%E5%8F%A3%E7%A8%8B%E5%BA%8F%E9%9B%86_%E7%AA%97%E5%8F%A3_%E5%8A%9F%E8%83%BD%E8%AE%BE%E7%BD%AE/" class="">
+      程序集_功能设置</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%AA%97%E5%8F%A3%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%90%AF%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="">
+      程序集_启动窗口</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%9C%B0%E5%9B%BE/" class="">
+      程序集_地图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/" class="">
+      程序集_常用功能</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%89%93%E5%9B%BE/" class="">
+      程序集_打图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E8%84%9A%E6%9C%AC%E4%B8%BB%E7%A8%8B%E5%BA%8F/" class="">
+      程序集_脚本主程序</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E9%A3%9E%E8%A1%8C/" class="">
+      程序集_飞行</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%8A%A8/" class="">
+      程序集_鼠标移动</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/26.%E4%BB%BB%E5%8A%A1%E8%B6%85%E6%97%B6%E7%9B%91%E6%8E%A7%E4%B8%8E%E6%B8%B8%E6%88%8F%E6%8E%89%E7%BA%BF%E8%87%AA%E5%8A%A8%E9%87%8D%E8%BF%9E/" class="">
+      26.任务超时监控与游戏掉线自动重连</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/27.%E8%87%AA%E5%8A%A8%E6%8D%A2%E5%8F%B7%E6%81%A2%E5%A4%8D%E7%94%A8%E6%88%B7%E8%AE%BE%E7%BD%AE%E6%96%B0%E7%9A%84%E4%BB%BB%E5%8A%A1%E9%93%BE/" class="">
+      27.自动换号,恢复用户设置新的任务链</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/28.%E6%95%B4%E4%BD%93%E6%89%93%E5%9B%BE%E6%B5%81%E7%A8%8B%E5%9B%9E%E9%A1%BE%E8%AE%B2%E8%A7%A3%E8%A7%A3%E5%86%B3%E6%96%B0%E5%8C%BA%E5%8D%A1%E9%A1%BF%E5%A4%84%E7%90%86%E5%90%8C%E6%97%B6%E4%B8%8D%E5%BD%B1%E5%93%8D%E8%80%81%E5%8C%BA%E7%9A%84%E6%B5%81%E7%95%85%E5%BA%A6/" class="">
+      28.整体打图流程回顾讲解,解决新区卡顿处理同时不影响老区的流畅度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/29-30-31.%E8%AF%BE-%E6%8A%BC%E9%95%96%E9%9A%BE%E7%82%B9%E8%A7%A3%E6%9E%90/" class="">
+      29-30-31押镖难点解析</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/32-33-%E8%87%AA%E5%8A%A8%E4%BB%93%E5%BA%93%E8%BD%AC%E5%9B%BE%E5%AE%9D%E7%9F%B3%E5%95%86%E4%BA%BA%E5%8F%96%E5%9B%BE%E7%9B%B4%E6%8E%A5%E8%BD%AC%E5%9B%BE/" class="">
+      32-33 自动仓库转图，宝石商人取图直接转图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/34.%E5%8D%A1%E5%AF%86%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BA%E9%AA%8C%E8%AF%81/" class="">
+      34.卡密系统搭建验证</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5126b54f0ae1ceecc1303140e82740c8" class="toggle"  />
+    <label for="section-5126b54f0ae1ceecc1303140e82740c8" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E6%98%93%E9%94%AE%E9%BC%A0/" class="">
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+      幽灵键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-d4a0c57ccfa86bfc9cc9b680995d5df5" class="toggle"  />
+    <label for="section-d4a0c57ccfa86bfc9cc9b680995d5df5" class="flex">
+      <a role="button" class="">
+        Tools</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/06.Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/06.Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/06.Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强cpu装机事项</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-9053fccdbd7199bd47302238aacb0e2d" class="toggle"  />
+    <label for="section-9053fccdbd7199bd47302238aacb0e2d" class="flex">
+      <a role="button" class="">
+        Java</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-6e540f017616ab12e7390ffcfc707be8" class="toggle"  />
+    <label for="section-6e540f017616ab12e7390ffcfc707be8" class="flex">
+      <a role="button" class="">
+        生活碎碎</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-78b2b94ef620d452afa50ea603ec65c9" class="toggle"  />
+    <label for="section-78b2b94ef620d452afa50ea603ec65c9" class="flex">
+      <a role="button" class="">
+        英语</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-80f5fffe9bee676d4a2bf6c7a43cd7ed" class="toggle"  />
+    <label for="section-80f5fffe9bee676d4a2bf6c7a43cd7ed" class="flex">
+      <a role="button" class="">
+        外汇</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0335bddd19a23a8f94f5dcac9a412967" class="toggle"  />
+    <label for="section-0335bddd19a23a8f94f5dcac9a412967" class="flex">
+      <a role="button" class="">
+        Adobe</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-6a1db553da3d9bad9cd7eb830f28f894" class="toggle"  />
+    <label for="section-6a1db553da3d9bad9cd7eb830f28f894" class="flex">
+      <a role="button" class="">
+        Office</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>Ai核心概念与术语梳理</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#ai-核心概念与术语梳理">AI 核心概念与术语梳理</a>
+      <ul>
+        <li><a href="#ai-的本质四个核心问题">AI 的本质：四个核心问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#总览四层结构">总览：四层结构</a></li>
+    <li><a href="#第一层--基础层">第一层 · 基础层</a>
+      <ul>
+        <li><a href="#11-人工智能ai-artificial-intelligence">1.1 人工智能（AI, Artificial Intelligence）</a></li>
+        <li><a href="#12-算力">1.2 算力</a></li>
+        <li><a href="#13-算法框架">1.3 算法框架</a></li>
+        <li><a href="#14-数据">1.4 数据</a></li>
+        <li><a href="#15-基础学科">1.5 基础学科</a></li>
+      </ul>
+    </li>
+    <li><a href="#第二层--技术层">第二层 · 技术层</a>
+      <ul>
+        <li><a href="#ai-的五大方向感知认知决策行动">AI 的五大方向（感知→认知→决策→行动）</a></li>
+        <li><a href="#21-机器学习ml-machine-learning">2.1 机器学习（ML, Machine Learning）</a></li>
+        <li><a href="#22-深度学习dl-deep-learning">2.2 深度学习（DL, Deep Learning）</a></li>
+        <li><a href="#23-自然语言处理nlp">2.3 自然语言处理（NLP）</a></li>
+        <li><a href="#24-计算机视觉cv">2.4 计算机视觉（CV）</a></li>
+        <li><a href="#25-语音技术">2.5 语音技术</a></li>
+        <li><a href="#26-transformer-架构">2.6 Transformer 架构</a></li>
+        <li><a href="#27-推理技术">2.7 推理技术</a></li>
+      </ul>
+    </li>
+    <li><a href="#第三层--模型层">第三层 · 模型层</a>
+      <ul>
+        <li><a href="#31-基础模型foundation-model又称根基模型">3.1 基础模型（Foundation Model，又称&quot;根基模型&rdquo;）</a></li>
+        <li><a href="#32-大语言模型llm-large-language-model">3.2 大语言模型（LLM, Large Language Model）</a></li>
+        <li><a href="#33-生成式-aigenai-generative-ai">3.3 生成式 AI（GenAI, Generative AI）</a></li>
+        <li><a href="#34-主流大模型一览">3.4 主流大模型一览</a></li>
+        <li><a href="#35-开源模型-vs-闭源模型">3.5 开源模型 vs 闭源模型</a></li>
+        <li><a href="#36-模型的生命周期">3.6 模型的生命周期</a></li>
+        <li><a href="#37-微调相关">3.7 微调相关</a></li>
+        <li><a href="#38-推理优化">3.8 推理优化</a></li>
+        <li><a href="#39-其他关键能力">3.9 其他关键能力</a></li>
+      </ul>
+    </li>
+    <li><a href="#第四层--应用层">第四层 · 应用层</a>
+      <ul>
+        <li><a href="#41-核心应用概念">4.1 核心应用概念</a></li>
+        <li><a href="#42-api-聚合平台">4.2 API 聚合平台</a></li>
+        <li><a href="#43-ai-产品">4.3 AI 产品</a></li>
+        <li><a href="#44-开发框架">4.4 开发框架</a></li>
+        <li><a href="#45-边缘部署edge-deployment">4.5 边缘部署（Edge Deployment）</a></li>
+      </ul>
+    </li>
+    <li><a href="#ai-安全与伦理贯穿所有层">AI 安全与伦理（贯穿所有层）</a></li>
+    <li><a href="#当前热门趋势">当前热门趋势</a></li>
+    <li><a href="#一句话速查表">一句话速查表</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><p><img src="images/AI%e6%a0%b8%e5%bf%83%e6%a6%82%e5%bf%b5%e4%b8%8e%e6%9c%af%e8%af%ad%e6%a2%b3%e7%90%86.png" alt="" /></p>
+<h2 id="ai-核心概念与术语梳理">AI 核心概念与术语梳理<a class="anchor" href="#ai-%e6%a0%b8%e5%bf%83%e6%a6%82%e5%bf%b5%e4%b8%8e%e6%9c%af%e8%af%ad%e6%a2%b3%e7%90%86">#</a></h2>
+<blockquote class='book-hint '>
+<p>人工智能（AI）是继互联网之后最伟大的技术变革。然而许多想拥抱 AI 的人，却常常陷入各种专业术语和流行词汇的泥沼中。本文旨在用通俗的语言，从底层到顶层系统梳理 AI 领域的核心概念，帮你建立清晰的知识框架。</p></blockquote><h3 id="ai-的本质四个核心问题">AI 的本质：四个核心问题<a class="anchor" href="#ai-%e7%9a%84%e6%9c%ac%e8%b4%a8%e5%9b%9b%e4%b8%aa%e6%a0%b8%e5%bf%83%e9%97%ae%e9%a2%98">#</a></h3>
+<pre tabindex="0"><code>感知世界（看、听）→ 认知理解（读、写、说）→ 做出决策（推理、规划）→ 付诸行动（操控物理世界）</code></pre><p>AI 的所有技术方向，都在回答这四个问题中的一个或多个。理解这条主线，就能把纷繁的术语串成一条清晰的脉络。</p>
+<hr>
+<h2 id="总览四层结构">总览：四层结构<a class="anchor" href="#%e6%80%bb%e8%a7%88%e5%9b%9b%e5%b1%82%e7%bb%93%e6%9e%84">#</a></h2>
+<p>整个 AI 技术体系可以分为四层，从底到顶层层支撑：</p>
+<pre tabindex="0"><code>┌──────────────────────────────────────────────────────────────────┐
+│  第四层 · 应用层                                                  │
+│  AI 产品 · API 聚合平台 · 开发框架 · 核心概念(Prompt/Agent/RAG)    │
+├──────────────────────────────────────────────────────────────────┤
+│  第三层 · 模型层                                                  │
+│  基础模型 · LLM · 多模态模型 · 训练 · 微调 · 推理优化              │
+├──────────────────────────────────────────────────────────────────┤
+│  第二层 · 技术层                                                  │
+│  NLP · 计算机视觉 · 语音技术 · Transformer · 推理技术              │
+├──────────────────────────────────────────────────────────────────┤
+│  第一层 · 基础层                                                  │
+│  算力 · 算法(ML/DL) · 数据 · 基础学科                             │
+└──────────────────────────────────────────────────────────────────┘</code></pre><pre tabindex="0"><code>应用层    你用的产品（ChatGPT、Cursor...）、平台（Bedrock、OpenRouter...）、框架（LangChain...）
+  ↑ 调用
+模型层    大模型（GPT-4、Claude...）+ 训练方法 + 推理优化
+  ↑ 基于
+技术层    NLP、CV、语音、Transformer 架构、推理技术
+  ↑ 依赖
+基础层    算力（GPU）+ 算法（ML/DL）+ 数据 + 基础学科（数学、统计...）</code></pre><blockquote class='book-hint '>
+<p>理解这四层关系，就能建立起对整个 AI 领域的全局认知。每一层都在为上一层提供支撑，最终呈现为我们日常使用的 AI 产品和服务。</p></blockquote><hr>
+<h2 id="第一层--基础层">第一层 · 基础层<a class="anchor" href="#%e7%ac%ac%e4%b8%80%e5%b1%82--%e5%9f%ba%e7%a1%80%e5%b1%82">#</a></h2>
+<blockquote class='book-hint '>
+<p>AI 大厦的地基，提供算力、算法、数据和理论支撑。</p></blockquote><h3 id="11-人工智能ai-artificial-intelligence">1.1 人工智能（AI, Artificial Intelligence）<a class="anchor" href="#11-%e4%ba%ba%e5%b7%a5%e6%99%ba%e8%83%bdai-artificial-intelligence">#</a></h3>
+<p>让机器模拟人类智能的总称。只要机器能做出&quot;看起来聪明&quot;的事情，都算 AI。</p>
+<ul>
+<li><strong>强 AI</strong>：具备人类级别的通用智能（目前还不存在）</li>
+<li><strong>弱 AI / 窄 AI</strong>：只擅长特定任务，比如下棋、识别图片（目前所有 AI 都是这类）</li>
+</ul>
+<h3 id="12-算力">1.2 算力<a class="anchor" href="#12-%e7%ae%97%e5%8a%9b">#</a></h3>
+<p>为 AI 模型的训练和推理提供计算能力。训练大模型通常需要数千块 GPU 运行数周，成本极高。</p>
+<table>
+  <thead>
+      <tr>
+          <th>类别</th>
+          <th>内容</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>核心硬件</td>
+          <td>GPU / TPU / NPU</td>
+      </tr>
+      <tr>
+          <td>专用芯片</td>
+          <td>ASIC / FPGA / 神经网络芯片</td>
+      </tr>
+      <tr>
+          <td>计算方式</td>
+          <td>并行计算、集群/云计算、边缘计算</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="13-算法框架">1.3 算法框架<a class="anchor" href="#13-%e7%ae%97%e6%b3%95%e6%a1%86%e6%9e%b6">#</a></h3>
+<p>用于构建和训练 AI 模型的软件工具。</p>
+<table>
+  <thead>
+      <tr>
+          <th>框架</th>
+          <th>背景</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>PyTorch</td>
+          <td>Meta 开源，学术界和工业界最流行</td>
+      </tr>
+      <tr>
+          <td>TensorFlow</td>
+          <td>Google 开源</td>
+      </tr>
+      <tr>
+          <td>JAX</td>
+          <td>Google 高性能计算框架</td>
+      </tr>
+      <tr>
+          <td>MindSpore</td>
+          <td>华为开源</td>
+      </tr>
+      <tr>
+          <td>PaddlePaddle</td>
+          <td>百度开源</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="14-数据">1.4 数据<a class="anchor" href="#14-%e6%95%b0%e6%8d%ae">#</a></h3>
+<p>AI 的&quot;燃料&quot;，模型的能力上限很大程度取决于数据质量。</p>
+<table>
+  <thead>
+      <tr>
+          <th>类别</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>结构化数据</td>
+          <td>数据库表格、CSV 等有固定格式的数据</td>
+      </tr>
+      <tr>
+          <td>非结构化数据</td>
+          <td>文本、图片、音频、视频等</td>
+      </tr>
+      <tr>
+          <td>多模态数据</td>
+          <td>同时包含多种类型的数据</td>
+      </tr>
+      <tr>
+          <td>数据合成</td>
+          <td>用 AI 生成训练数据</td>
+      </tr>
+      <tr>
+          <td>特征工程</td>
+          <td>从原始数据中提取有用特征</td>
+      </tr>
+      <tr>
+          <td>数据清洗</td>
+          <td>去除噪声和错误数据</td>
+      </tr>
+      <tr>
+          <td>数据标注</td>
+          <td>为数据添加标签，用于监督学习</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="15-基础学科">1.5 基础学科<a class="anchor" href="#15-%e5%9f%ba%e7%a1%80%e5%ad%a6%e7%a7%91">#</a></h3>
+<p>AI 是一门高度交叉的学科，融合了多个领域的知识。</p>
+<table>
+  <thead>
+      <tr>
+          <th>学科</th>
+          <th>与 AI 的关系</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>数学</td>
+          <td>线性代数、概率论、优化理论是 AI 的数学基础</td>
+      </tr>
+      <tr>
+          <td>计算机科学</td>
+          <td>算法、数据结构、系统架构</td>
+      </tr>
+      <tr>
+          <td>统计学</td>
+          <td>数据分析、模型评估</td>
+      </tr>
+      <tr>
+          <td>语言学</td>
+          <td>NLP 的理论基础</td>
+      </tr>
+      <tr>
+          <td>心理学 / 认知科学</td>
+          <td>理解人类智能，启发 AI 设计</td>
+      </tr>
+      <tr>
+          <td>神经科学 / 生物学</td>
+          <td>神经网络的灵感来源</td>
+      </tr>
+      <tr>
+          <td>哲学 / 逻辑学</td>
+          <td>AI 伦理、推理基础</td>
+      </tr>
+      <tr>
+          <td>控制论 / 机器人学</td>
+          <td>自动控制、具身智能</td>
+      </tr>
+      <tr>
+          <td>信息论</td>
+          <td>信息编码、数据压缩</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="第二层--技术层">第二层 · 技术层<a class="anchor" href="#%e7%ac%ac%e4%ba%8c%e5%b1%82--%e6%8a%80%e6%9c%af%e5%b1%82">#</a></h2>
+<blockquote class='book-hint '>
+<p>AI 的核心方法论和技术方向：机器怎么&quot;学会&quot;做事。</p></blockquote><h3 id="ai-的五大方向感知认知决策行动">AI 的五大方向（感知→认知→决策→行动）<a class="anchor" href="#ai-%e7%9a%84%e4%ba%94%e5%a4%a7%e6%96%b9%e5%90%91%e6%84%9f%e7%9f%a5%e8%ae%a4%e7%9f%a5%e5%86%b3%e7%ad%96%e8%a1%8c%e5%8a%a8">#</a></h3>
+<pre tabindex="0"><code>感知世界（看、听）→ 认知理解（读写说）→ 做出决策（推理规划）→ 付诸行动（操控物理世界）</code></pre><table>
+  <thead>
+      <tr>
+          <th>方向</th>
+          <th>核心能力</th>
+          <th>成熟度</th>
+          <th>代表</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>计算机视觉</td>
+          <td>感知（看）</td>
+          <td>⭐⭐⭐⭐</td>
+          <td>ViT、YOLO、Stable Diffusion</td>
+      </tr>
+      <tr>
+          <td>语音技术</td>
+          <td>感知（听说）</td>
+          <td>⭐⭐⭐⭐</td>
+          <td>Whisper、VALL-E</td>
+      </tr>
+      <tr>
+          <td>NLP / LLM</td>
+          <td>认知（读写说）</td>
+          <td>⭐⭐⭐⭐⭐</td>
+          <td>GPT-4、Claude</td>
+      </tr>
+      <tr>
+          <td>强化学习 / Agent</td>
+          <td>决策（推理规划）</td>
+          <td>⭐⭐⭐</td>
+          <td>AlphaGo、AutoGPT</td>
+      </tr>
+      <tr>
+          <td>具身智能</td>
+          <td>行动（动手做）</td>
+          <td>⭐⭐</td>
+          <td>特斯拉 Optimus、自动驾驶</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>融合趋势：多模态</strong>（⭐⭐⭐，快速发展中）：GPT-4o、Gemini 等模型正在把感知、认知、决策能力融合到一个模型里。AI 正在从&quot;各方向各自发展&quot;走向&quot;统一的多模态基础模型&quot;。</p>
+<blockquote class='book-hint '>
+<p>语言、视觉、语音是 AI 的三大感知/认知方向，强化学习提供决策能力，具身智能让 AI 走进物理世界，多模态是融合趋势。</p></blockquote><h3 id="21-机器学习ml-machine-learning">2.1 机器学习（ML, Machine Learning）<a class="anchor" href="#21-%e6%9c%ba%e5%99%a8%e5%ad%a6%e4%b9%a0ml-machine-learning">#</a></h3>
+<p>AI 的一个子领域。核心思想：<strong>不直接编写规则，而是让机器从数据中自己学习规则</strong>。</p>
+<p>打个比方：</p>
+<ul>
+<li>传统编程 = 你告诉电脑&quot;如果温度 &gt; 30°就开空调&quot;</li>
+<li>机器学习 = 你给电脑大量&quot;温度 + 是否开空调&quot;的数据，让它自己总结出规律</li>
+</ul>
+<p><strong>学习方式：</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>类型</th>
+          <th>说明</th>
+          <th>例子</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>监督学习</td>
+          <td>给带标签的数据，让模型学习输入→输出的映射</td>
+          <td>垃圾邮件分类</td>
+      </tr>
+      <tr>
+          <td>无监督学习</td>
+          <td>给不带标签的数据，让模型自己发现规律</td>
+          <td>用户分群</td>
+      </tr>
+      <tr>
+          <td>强化学习</td>
+          <td>通过奖惩机制让模型学习最优策略</td>
+          <td>AlphaGo 下棋</td>
+      </tr>
+      <tr>
+          <td>自监督学习</td>
+          <td>从数据本身构造标签来学习</td>
+          <td>GPT 预训练</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>核心算法：</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>算法</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>CNN</td>
+          <td>卷积神经网络，擅长图像处理</td>
+      </tr>
+      <tr>
+          <td>RNN</td>
+          <td>循环神经网络，擅长序列数据</td>
+      </tr>
+      <tr>
+          <td>LSTM</td>
+          <td>长短期记忆网络，RNN 的改进版</td>
+      </tr>
+      <tr>
+          <td>GAN</td>
+          <td>生成对抗网络，用于生成内容</td>
+      </tr>
+      <tr>
+          <td>VAE</td>
+          <td>变分自编码器，用于生成和压缩</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="22-深度学习dl-deep-learning">2.2 深度学习（DL, Deep Learning）<a class="anchor" href="#22-%e6%b7%b1%e5%ba%a6%e5%ad%a6%e4%b9%a0dl-deep-learning">#</a></h3>
+<p>机器学习的一个子集，使用<strong>神经网络</strong>（模仿人脑神经元结构）来学习。&ldquo;深度&quot;指的是神经网络有很多层。</p>
+<ul>
+<li>层数越多，能学到的特征越复杂</li>
+<li>需要大量数据和算力</li>
+<li>是当前 AI 爆发的核心驱动力</li>
+</ul>
+<p><strong>包含关系：</strong></p>
+<pre tabindex="0"><code>人工智能 (AI)           ← 最大的概念
+  └── 机器学习 (ML)      ← AI 的子领域
+        └── 深度学习 (DL)  ← ML 的子集，用神经网络</code></pre><h3 id="23-自然语言处理nlp">2.3 自然语言处理（NLP）<a class="anchor" href="#23-%e8%87%aa%e7%84%b6%e8%af%ad%e8%a8%80%e5%a4%84%e7%90%86nlp">#</a></h3>
+<p>让机器理解和生成人类语言。</p>
+<table>
+  <thead>
+      <tr>
+          <th>方向</th>
+          <th>具体技术</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>语言理解（NLU）</td>
+          <td>分词、词性标注、命名实体识别（NER）、情感分析</td>
+      </tr>
+      <tr>
+          <td>语言生成（NLG）</td>
+          <td>文本生成、机器翻译、文本摘要</td>
+      </tr>
+      <tr>
+          <td>文本表示</td>
+          <td>词嵌入（Word Embedding）、向量化、Seq2Seq</td>
+      </tr>
+      <tr>
+          <td>文本挖掘</td>
+          <td>信息抽取、关系抽取、知识图谱</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="24-计算机视觉cv">2.4 计算机视觉（CV）<a class="anchor" href="#24-%e8%ae%a1%e7%ae%97%e6%9c%ba%e8%a7%86%e8%a7%89cv">#</a></h3>
+<p>AI 的分支，使计算机能&quot;看懂&quot;并理解图像和视频内容。CNN 和 Transformer 架构推动其性能大幅提升，广泛应用于安防、自动驾驶、医疗影像等领域。</p>
+<p><strong>CV 下的核心任务：</strong></p>
+<pre tabindex="0"><code>计算机视觉 (CV)
+  ├── 识别类任务
+  │     ├── 图像分类 —— 整张图属于什么类别
+  │     ├── 目标检测 —— 图中有什么、在哪里
+  │     ├── 人脸识别 —— 识别人脸身份
+  │     └── OCR —— 从图片中提取文字
+  ├── 分割类任务
+  │     ├── 语义分割 —— 每个像素属于什么类别
+  │     ├── 实例分割 —— 区分同类的不同个体
+  │     └── 全景分割 —— 语义 + 实例的结合
+  ├── 视频类任务
+  │     ├── 目标跟踪 —— 在视频中持续追踪目标
+  │     └── 视频分析 —— 行为识别、异常检测等
+  ├── 生成类任务
+  │     ├── 图像生成 —— 创建全新图像
+  │     └── 图像超分辨率 —— 低分辨率→高分辨率
+  └── 架构
+        └── ViT —— 将 Transformer 应用于视觉</code></pre><p><strong>详细说明：</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>任务</th>
+          <th>说明</th>
+          <th>代表方法/模型</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>图像分类</strong></td>
+          <td>识别整张图像所属的类别（如&quot;猫&quot;&ldquo;狗&quot;&ldquo;汽车&rdquo;）。准确率已在 ImageNet 等数据集上超越人类</td>
+          <td>ResNet、ViT</td>
+      </tr>
+      <tr>
+          <td><strong>目标检测</strong></td>
+          <td>在图像中定位（画出边界框）并识别多个目标。两阶段方法精度高，单阶段方法速度快</td>
+          <td>Faster R-CNN（两阶段）、YOLO（单阶段）</td>
+      </tr>
+      <tr>
+          <td><strong>语义分割</strong></td>
+          <td>为每个像素分配语义类别（如&quot;道路&quot;&ldquo;天空&quot;&ldquo;行人&rdquo;），不区分同类个体</td>
+          <td>U-Net、DeepLab</td>
+      </tr>
+      <tr>
+          <td><strong>实例分割</strong></td>
+          <td>在检测目标的同时，为每个实例分割出精确的像素级掩膜，能区分同类的不同个体</td>
+          <td>Mask R-CNN</td>
+      </tr>
+      <tr>
+          <td><strong>全景分割</strong></td>
+          <td>语义分割 + 实例分割的结合，既标注类别又区分个体</td>
+          <td>—</td>
+      </tr>
+      <tr>
+          <td><strong>人脸识别</strong></td>
+          <td>基于人脸特征进行身份验证（1:1）或识别（1:N）。流程：检测→关键点定位→特征提取→比对</td>
+          <td>ArcFace</td>
+      </tr>
+      <tr>
+          <td><strong>OCR</strong></td>
+          <td>将图像中的文字（印刷体、手写体）转换为可编辑文本。深度学习 OCR 能处理复杂背景和多语言</td>
+          <td>PaddleOCR、Tesseract</td>
+      </tr>
+      <tr>
+          <td><strong>目标跟踪</strong></td>
+          <td>在视频序列中持续定位特定目标的运动轨迹，需克服遮挡、形变、光照变化等挑战</td>
+          <td>DeepSORT（多目标）</td>
+      </tr>
+      <tr>
+          <td><strong>视频分析</strong></td>
+          <td>从视频流中提取时空信息，包括行为识别、异常事件检测、动作识别、视频摘要等</td>
+          <td>SlowFast</td>
+      </tr>
+      <tr>
+          <td><strong>图像生成</strong></td>
+          <td>创建全新的逼真图像。GAN 通过对抗训练生成，扩散模型通过逐步去噪生成</td>
+          <td>StyleGAN（GAN）、Stable Diffusion / DALL·E（扩散模型）</td>
+      </tr>
+      <tr>
+          <td><strong>图像超分辨率</strong></td>
+          <td>从低分辨率图像恢复高分辨率图像，补充细节信息</td>
+          <td>ESRGAN</td>
+      </tr>
+      <tr>
+          <td><strong>ViT（视觉 Transformer）</strong></td>
+          <td>将图像分割成固定大小的图像块（Patch），用 Transformer 处理，在多项任务上超越传统 CNN</td>
+          <td>ViT、DeiT</td>
+      </tr>
+  </tbody>
+</table>
+<blockquote class='book-hint '>
+<p><strong>图像识别</strong>是一个广义术语，涵盖分类、检测、分割等任务，指计算机对图像内容的整体理解能力。从早期的手工特征（SIFT、SURF）到深度学习自动特征学习，能力已大幅提升。</p></blockquote><h3 id="25-语音技术">2.5 语音技术<a class="anchor" href="#25-%e8%af%ad%e9%9f%b3%e6%8a%80%e6%9c%af">#</a></h3>
+<p>让机器听懂和生成语音。</p>
+<table>
+  <thead>
+      <tr>
+          <th>方向</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>语音识别（ASR）</td>
+          <td>语音转文字</td>
+      </tr>
+      <tr>
+          <td>语音合成（TTS）</td>
+          <td>文字转语音</td>
+      </tr>
+      <tr>
+          <td>语音克隆</td>
+          <td>复制特定人的声音</td>
+      </tr>
+      <tr>
+          <td>声纹识别</td>
+          <td>通过声音识别身份</td>
+      </tr>
+      <tr>
+          <td>情感识别</td>
+          <td>从语音中识别情绪</td>
+      </tr>
+      <tr>
+          <td>语音翻译</td>
+          <td>实时语音翻译</td>
+      </tr>
+      <tr>
+          <td>降噪 / 音频分离</td>
+          <td>去除噪音、分离声源</td>
+      </tr>
+      <tr>
+          <td>音乐生成</td>
+          <td>AI 作曲</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="26-transformer-架构">2.6 Transformer 架构<a class="anchor" href="#26-transformer-%e6%9e%b6%e6%9e%84">#</a></h3>
+<p>当前 AI 革命的核心架构，几乎所有大模型都基于此。</p>
+<p><strong>核心组件：</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>组件</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>编码器（Encoder）</td>
+          <td>理解输入信息</td>
+      </tr>
+      <tr>
+          <td>解码器（Decoder）</td>
+          <td>生成输出内容</td>
+      </tr>
+      <tr>
+          <td>自注意力（Self-Attention）</td>
+          <td>让模型关注输入中最相关的部分</td>
+      </tr>
+      <tr>
+          <td>位置编码（Positional Encoding）</td>
+          <td>让模型理解词语的顺序</td>
+      </tr>
+      <tr>
+          <td>Tokenization</td>
+          <td>将文本切分为 Token</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>架构演进：</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>技术</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>MoE（混合专家）</td>
+          <td>多个&quot;专家&quot;网络分工协作，提升效率</td>
+      </tr>
+      <tr>
+          <td>Flash Attention</td>
+          <td>优化注意力计算，降低显存占用</td>
+      </tr>
+      <tr>
+          <td>Multi-Query Attention</td>
+          <td>减少注意力计算量</td>
+      </tr>
+      <tr>
+          <td>Speculative Decoding</td>
+          <td>推测性解码，加速生成</td>
+      </tr>
+      <tr>
+          <td>ViT（Vision Transformer）</td>
+          <td>将 Transformer 应用于图像</td>
+      </tr>
+      <tr>
+          <td>DiT（Diffusion Transformer）</td>
+          <td>将 Transformer 用于扩散模型（图像/视频生成）</td>
+      </tr>
+      <tr>
+          <td>Mamba / SSM</td>
+          <td>状态空间模型，Transformer 的潜在替代方案</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="27-推理技术">2.7 推理技术<a class="anchor" href="#27-%e6%8e%a8%e7%90%86%e6%8a%80%e6%9c%af">#</a></h3>
+<p>提升模型推理能力的方法。</p>
+<table>
+  <thead>
+      <tr>
+          <th>技术</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Chain of Thought（CoT）</td>
+          <td>思维链，让模型一步步推理</td>
+      </tr>
+      <tr>
+          <td>Tree of Thoughts</td>
+          <td>思维树，探索多条推理路径</td>
+      </tr>
+      <tr>
+          <td>Self-Consistency</td>
+          <td>多次推理取一致结果</td>
+      </tr>
+      <tr>
+          <td>ReAct</td>
+          <td>推理 + 行动结合</td>
+      </tr>
+      <tr>
+          <td>Reflection</td>
+          <td>让模型反思和修正自己的输出</td>
+      </tr>
+      <tr>
+          <td>Few-Shot Learning</td>
+          <td>给几个示例让模型学习</td>
+      </tr>
+      <tr>
+          <td>Zero-Shot Learning</td>
+          <td>不给示例直接推理</td>
+      </tr>
+      <tr>
+          <td>In-Context Learning</td>
+          <td>利用上下文中的信息学习</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="第三层--模型层">第三层 · 模型层<a class="anchor" href="#%e7%ac%ac%e4%b8%89%e5%b1%82--%e6%a8%a1%e5%9e%8b%e5%b1%82">#</a></h2>
+<blockquote class='book-hint '>
+<p>基于技术层构建出来的具体模型，以及围绕模型的训练、优化、部署。</p>
+<p>技术层回答&quot;怎么做&rdquo;（方法论），模型层回答&quot;做出了什么&rdquo;（具体产物）。例如：NLP 是技术方向，LLM 是这个方向上做出来的模型。</p></blockquote><h3 id="31-基础模型foundation-model又称根基模型">3.1 基础模型（Foundation Model，又称&quot;根基模型&rdquo;）<a class="anchor" href="#31-%e5%9f%ba%e7%a1%80%e6%a8%a1%e5%9e%8bfoundation-model%e5%8f%88%e7%a7%b0%e6%a0%b9%e5%9f%ba%e6%a8%a1%e5%9e%8b">#</a></h3>
+<p>用海量通用数据预训练出来的大规模模型，它本身不针对任何特定任务，但可以通过微调或 Prompt 适配到各种下游任务。</p>
+<p>可以把它理解为一个&quot;毛坯房&quot;——基本结构已经建好，你可以根据需要装修成卧室、办公室或商铺。</p>
+<p><strong>核心特点：</strong></p>
+<ul>
+<li><strong>大规模预训练</strong>：用互联网级别的海量数据训练</li>
+<li><strong>通用性强</strong>：一个模型能适配多种任务（翻译、摘要、问答、编程&hellip;）</li>
+<li><strong>可迁移</strong>：通过微调就能适应特定领域，不需要从零训练</li>
+</ul>
+<p><strong>基础模型的分类：</strong></p>
+<pre tabindex="0"><code>基础模型 (Foundation Model)
+  ├── 大语言模型 (LLM) —— 专注文本（GPT-4、Claude、Llama）
+  ├── 视觉基础模型 —— 专注图像/视频（ViT、SAM、Stable Diffusion）
+  ├── 语音基础模型 —— 专注语音/音频（Whisper、VALL-E、Suno）
+  ├── 多模态基础模型 —— 同时处理多种数据（GPT-4o、Gemini）
+  └── ...</code></pre><blockquote class='book-hint '>
+<p>每个领域都遵循同样的模式：先有<strong>理解</strong>能力（听懂/看懂），再有<strong>生成</strong>能力（会说/会画）。而多模态模型的趋势是把这些能力融合到一个模型里。</p></blockquote><h3 id="32-大语言模型llm-large-language-model">3.2 大语言模型（LLM, Large Language Model）<a class="anchor" href="#32-%e5%a4%a7%e8%af%ad%e8%a8%80%e6%a8%a1%e5%9e%8bllm-large-language-model">#</a></h3>
+<p>基础模型中<strong>专注于语言处理</strong>的那一类。&ldquo;大&quot;体现在参数量巨大（数十亿到数万亿）。</p>
+<p><strong>参数（Parameters）</strong>：模型在训练过程中学到的数值，可以理解为模型的&quot;知识量&rdquo;。</p>
+<ul>
+<li>GPT-3：1750 亿参数</li>
+<li>Llama 3：80 亿 ~ 4050 亿参数</li>
+</ul>
+<p><strong>Token</strong>：LLM 处理文本的基本单位。不完全等于&quot;字&quot;或&quot;词&quot;：</p>
+<ul>
+<li>英文中，1 个 token ≈ 0.75 个单词</li>
+<li>中文中，1 个汉字通常 = 1~2 个 token</li>
+<li>Token 数量决定了模型能处理的文本长度和计费方式</li>
+</ul>
+<p><strong>上下文窗口（Context Window）</strong>：模型一次能&quot;看到&quot;的最大 token 数量。</p>
+<ul>
+<li>GPT-4 Turbo：128K tokens（约 10 万字）</li>
+<li>Claude：200K tokens（约 15 万字）</li>
+<li>上下文窗口越大，模型能处理的信息越多</li>
+</ul>
+<blockquote class='book-hint '>
+<p>Token 和上下文窗口是 LLM / 大模型特有的概念。传统机器学习模型（如决策树、SVM）并不使用 Token 机制。</p></blockquote><blockquote class='book-hint '>
+<p><strong>常见误区：LLM 能生成图片吗？</strong></p>
+<p>严格来说不能。LLM 的核心能力是处理文本。但现在很多产品（如 ChatGPT）背后已经升级为<strong>多模态模型</strong>，集成了图像生成能力，所以给人&quot;LLM 也能画图&quot;的错觉。准确地说：</p>
+<ul>
+<li><strong>纯 LLM</strong>（如早期 GPT-3）→ 只能处理文本</li>
+<li><strong>多模态模型</strong>（如 GPT-4o、Gemini）→ 能同时处理文本、图像、音频等</li>
+</ul>
+<p>日常交流中人们常把多模态模型也叫&quot;大模型&quot;或&quot;LLM&quot;，但技术上它们已经超越了 LLM 的范畴。</p></blockquote><h3 id="33-生成式-aigenai-generative-ai">3.3 生成式 AI（GenAI, Generative AI）<a class="anchor" href="#33-%e7%94%9f%e6%88%90%e5%bc%8f-aigenai-generative-ai">#</a></h3>
+<p>生成式 AI 不是一个独立的模型类别，而是一种<strong>能力特征</strong>——只要模型能够<strong>生成新内容</strong>，就属于生成式 AI。</p>
+<pre tabindex="0"><code>基础模型
+  ├── LLM（文本）           ✅ 能生成文本 → 属于生成式 AI
+  ├── 图像生成模型           ✅ 能生成图片 → 属于生成式 AI
+  ├── 图像分类模型           ❌ 只做判断，不生成新内容 → 不属于
+  ├── 多模态模型             ✅ 通常能生成多种内容 → 属于生成式 AI
+  └── ...</code></pre><p><strong>生成式 AI 的应用领域：</strong></p>
+<ul>
+<li>文本生成：ChatGPT、Claude</li>
+<li>图片生成：Midjourney、DALL·E、Stable Diffusion</li>
+<li>音频生成：Suno</li>
+<li>视频生成：Sora、可灵</li>
+<li>代码生成：GitHub Copilot、Kiro</li>
+</ul>
+<blockquote class='book-hint '>
+<p>简单来说：LLM、视觉模型、多模态模型是按&quot;处理什么数据&quot;分类的；生成式 AI 是按&quot;能不能生成新内容&quot;来描述的能力。两者是不同维度的划分。</p></blockquote><h3 id="34-主流大模型一览">3.4 主流大模型一览<a class="anchor" href="#34-%e4%b8%bb%e6%b5%81%e5%a4%a7%e6%a8%a1%e5%9e%8b%e4%b8%80%e8%a7%88">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>厂商</th>
+          <th>模型</th>
+          <th>特点</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>OpenAI</td>
+          <td>GPT-4 / 4o / o1 / o3</td>
+          <td>综合能力最强之一，多模态</td>
+      </tr>
+      <tr>
+          <td>Anthropic</td>
+          <td>Claude 3.5 / 4.5</td>
+          <td>长上下文、安全对齐</td>
+      </tr>
+      <tr>
+          <td>Google</td>
+          <td>Gemini 2.0</td>
+          <td>原生多模态</td>
+      </tr>
+      <tr>
+          <td>Meta</td>
+          <td>Llama 3 / 3.1 / 3.3</td>
+          <td>最强开源模型之一</td>
+      </tr>
+      <tr>
+          <td>阿里</td>
+          <td>Qwen3 / QwQ</td>
+          <td>国产开源领先</td>
+      </tr>
+      <tr>
+          <td>DeepSeek</td>
+          <td>DeepSeek-V3 / R1</td>
+          <td>高性价比，推理能力强</td>
+      </tr>
+      <tr>
+          <td>智谱</td>
+          <td>GLM-4 / GLM-Z1</td>
+          <td>国产双语模型</td>
+      </tr>
+      <tr>
+          <td>零一万物</td>
+          <td>Yi-Lightning</td>
+          <td>高效推理</td>
+      </tr>
+      <tr>
+          <td>字节跳动</td>
+          <td>豆包（Doubao）</td>
+          <td>字节生态集成</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>专用模型：</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>模型</th>
+          <th>领域</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>DALL·E 3</td>
+          <td>图像生成</td>
+      </tr>
+      <tr>
+          <td>SD 3 / FLUX</td>
+          <td>开源图像生成</td>
+      </tr>
+      <tr>
+          <td>Sora</td>
+          <td>视频生成</td>
+      </tr>
+      <tr>
+          <td>Whisper</td>
+          <td>语音识别</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="35-开源模型-vs-闭源模型">3.5 开源模型 vs 闭源模型<a class="anchor" href="#35-%e5%bc%80%e6%ba%90%e6%a8%a1%e5%9e%8b-vs-%e9%97%ad%e6%ba%90%e6%a8%a1%e5%9e%8b">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>类型</th>
+          <th>说明</th>
+          <th>代表</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>开源</td>
+          <td>模型权重公开，可自行部署和修改</td>
+          <td>Llama、Mistral、Qwen</td>
+      </tr>
+      <tr>
+          <td>闭源</td>
+          <td>只能通过 API 使用，不公开模型细节</td>
+          <td>GPT-4、Claude</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="36-模型的生命周期">3.6 模型的生命周期<a class="anchor" href="#36-%e6%a8%a1%e5%9e%8b%e7%9a%84%e7%94%9f%e5%91%bd%e5%91%a8%e6%9c%9f">#</a></h3>
+<p>一个模型从&quot;白纸&quot;到&quot;上线&quot;的完整过程：</p>
+<pre tabindex="0"><code>预训练 → 监督微调(SFT) → 对齐训练(RLHF/DPO) → 部署 → 推理</code></pre><table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>预训练（Pre-training）</strong></td>
+          <td>用海量通用数据学习基本规律，成本最高</td>
+      </tr>
+      <tr>
+          <td><strong>监督微调（SFT）</strong></td>
+          <td>用高质量问答数据训练模型遵循指令</td>
+      </tr>
+      <tr>
+          <td><strong>RLHF</strong></td>
+          <td>基于人类反馈的强化学习，让输出更符合人类偏好</td>
+      </tr>
+      <tr>
+          <td><strong>DPO</strong></td>
+          <td>直接偏好优化，RLHF 的简化替代方案</td>
+      </tr>
+      <tr>
+          <td><strong>PPO</strong></td>
+          <td>近端策略优化，RLHF 中常用的强化学习算法</td>
+      </tr>
+      <tr>
+          <td><strong>RLAIF</strong></td>
+          <td>用 AI 反馈替代人类反馈，降低标注成本</td>
+      </tr>
+      <tr>
+          <td><strong>推理（Inference）</strong></td>
+          <td>模型训练好后，用它来回答问题、生成内容。你每次和 ChatGPT 对话，就是在做推理</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="37-微调相关">3.7 微调相关<a class="anchor" href="#37-%e5%be%ae%e8%b0%83%e7%9b%b8%e5%85%b3">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>概念</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Fine-tuning</td>
+          <td>用特定领域数据进一步训练模型。如：通用模型 → 医学论文微调 → 医学专用模型</td>
+      </tr>
+      <tr>
+          <td>LoRA</td>
+          <td>低秩适配，只训练少量参数就能微调，大幅降低成本</td>
+      </tr>
+      <tr>
+          <td>QLoRA</td>
+          <td>LoRA + 量化，进一步降低显存需求</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="38-推理优化">3.8 推理优化<a class="anchor" href="#38-%e6%8e%a8%e7%90%86%e4%bc%98%e5%8c%96">#</a></h3>
+<p>让模型跑得更快、更省资源。</p>
+<table>
+  <thead>
+      <tr>
+          <th>技术</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>vLLM</td>
+          <td>高效 LLM 推理引擎</td>
+      </tr>
+      <tr>
+          <td>TensorRT-LLM</td>
+          <td>NVIDIA 推理加速框架</td>
+      </tr>
+      <tr>
+          <td>量化（GPTQ / AWQ）</td>
+          <td>降低模型精度以减少显存占用和加速推理</td>
+      </tr>
+      <tr>
+          <td>KV Cache</td>
+          <td>缓存已计算的键值对，避免重复计算</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="39-其他关键能力">3.9 其他关键能力<a class="anchor" href="#39-%e5%85%b6%e4%bb%96%e5%85%b3%e9%94%ae%e8%83%bd%e5%8a%9b">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>能力</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>安全对齐</td>
+          <td>确保模型输出安全、无害、符合价值观</td>
+      </tr>
+      <tr>
+          <td>多模态融合</td>
+          <td>让模型同时处理文本、图像、音频等</td>
+      </tr>
+      <tr>
+          <td>向量检索</td>
+          <td>将数据转为向量，实现语义级别的搜索（RAG 的基础）</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="第四层--应用层">第四层 · 应用层<a class="anchor" href="#%e7%ac%ac%e5%9b%9b%e5%b1%82--%e5%ba%94%e7%94%a8%e5%b1%82">#</a></h2>
+<blockquote class='book-hint '>
+<p>面向用户的产品、平台、开发工具和核心应用概念。</p></blockquote><h3 id="41-核心应用概念">4.1 核心应用概念<a class="anchor" href="#41-%e6%a0%b8%e5%bf%83%e5%ba%94%e7%94%a8%e6%a6%82%e5%bf%b5">#</a></h3>
+<h4 id="prompt提示词">Prompt（提示词）<a class="anchor" href="#prompt%e6%8f%90%e7%a4%ba%e8%af%8d">#</a></h4>
+<p>你给 AI 的输入指令。Prompt 的质量直接影响 AI 输出的质量。</p>
+<h4 id="prompt-engineering提示词工程">Prompt Engineering（提示词工程）<a class="anchor" href="#prompt-engineering%e6%8f%90%e7%a4%ba%e8%af%8d%e5%b7%a5%e7%a8%8b">#</a></h4>
+<p>设计和优化 Prompt 的技巧，让 AI 给出更好的回答。常见技巧：</p>
+<ul>
+<li><strong>零样本（Zero-shot）</strong>：直接提问，不给示例</li>
+<li><strong>少样本（Few-shot）</strong>：给几个示例，让 AI 模仿</li>
+<li><strong>思维链（Chain of Thought, CoT）</strong>：让 AI 一步步推理</li>
+</ul>
+<h4 id="temperature温度">Temperature（温度）<a class="anchor" href="#temperature%e6%b8%a9%e5%ba%a6">#</a></h4>
+<p>控制 AI 输出随机性的参数：</p>
+<ul>
+<li><strong>温度低（如 0.1）</strong>：输出更确定、更保守</li>
+<li><strong>温度高（如 0.9）</strong>：输出更随机、更有创意</li>
+</ul>
+<h4 id="幻觉hallucination">幻觉（Hallucination）<a class="anchor" href="#%e5%b9%bb%e8%a7%89hallucination">#</a></h4>
+<p>AI 一本正经地胡说八道。模型生成的内容看起来很合理，但实际上是错误的或编造的。这是当前 LLM 的主要问题之一。</p>
+<h4 id="rag检索增强生成-retrieval-augmented-generation">RAG（检索增强生成, Retrieval-Augmented Generation）<a class="anchor" href="#rag%e6%a3%80%e7%b4%a2%e5%a2%9e%e5%bc%ba%e7%94%9f%e6%88%90-retrieval-augmented-generation">#</a></h4>
+<p>让 AI 先从外部知识库中检索相关信息，再基于检索结果生成回答。这样可以：</p>
+<ul>
+<li>减少幻觉</li>
+<li>让 AI 使用最新的或私有的数据</li>
+<li>不需要重新训练模型</li>
+</ul>
+<h4 id="agent智能体">Agent（智能体）<a class="anchor" href="#agent%e6%99%ba%e8%83%bd%e4%bd%93">#</a></h4>
+<p>能够自主规划、使用工具、完成复杂任务的 AI 系统。不只是&quot;问答&quot;，而是能&quot;做事&quot;。</p>
+<p>比如：你说&quot;帮我订一张明天去上海的机票&quot;，Agent 会自己搜索航班、比较价格、完成预订。</p>
+<p><strong>代表项目：</strong></p>
+<ul>
+<li><strong>OpenClaw</strong>：2025 年底推出的开源 AI Agent 框架，GitHub 上最火的 AI 项目之一。运行在你自己的硬件上（本地电脑、服务器甚至树莓派），可以连接 WhatsApp、Telegram 等消息应用，自主执行文件管理、网页浏览、邮件处理等任务。核心特点是<strong>自托管、开源、本地运行</strong>，数据不经过第三方。</li>
+<li><strong>AutoGPT</strong>、<strong>MetaGPT</strong>：其他知名的 Agent 框架</li>
+</ul>
+<h4 id="mcpmodel-context-protocol模型上下文协议">MCP（Model Context Protocol，模型上下文协议）<a class="anchor" href="#mcpmodel-context-protocol%e6%a8%a1%e5%9e%8b%e4%b8%8a%e4%b8%8b%e6%96%87%e5%8d%8f%e8%ae%ae">#</a></h4>
+<p>一种标准化协议，让 AI 模型能够连接和使用外部工具、数据源。可以理解为 AI 的&quot;USB 接口&quot;——统一的标准让不同工具都能即插即用。</p>
+<h4 id="function-call函数调用">Function Call（函数调用）<a class="anchor" href="#function-call%e5%87%bd%e6%95%b0%e8%b0%83%e7%94%a8">#</a></h4>
+<p>让模型在对话中调用外部函数或 API 的能力。比如模型判断需要查天气，就自动调用天气 API 获取结果。MCP 是 Function Call 思想的标准化演进。</p>
+<h4 id="embedding向量嵌入">Embedding（向量嵌入）<a class="anchor" href="#embedding%e5%90%91%e9%87%8f%e5%b5%8c%e5%85%a5">#</a></h4>
+<p>将文本转为数字向量（一串数字）的技术。转换后可以用数学方法计算文本之间的相似度，是 RAG 和语义搜索的基础。</p>
+<h4 id="aigcai-生成内容">AIGC（AI 生成内容）<a class="anchor" href="#aigcai-%e7%94%9f%e6%88%90%e5%86%85%e5%ae%b9">#</a></h4>
+<p>AI Generated Content 的缩写，泛指 AI 生成的所有内容，包括文本、图片、视频、音乐、代码等。</p>
+<h3 id="42-api-聚合平台">4.2 API 聚合平台<a class="anchor" href="#42-api-%e8%81%9a%e5%90%88%e5%b9%b3%e5%8f%b0">#</a></h3>
+<blockquote class='book-hint '>
+<p>你不需要分别对接每家模型厂商的 API，聚合平台帮你&quot;一站式&quot;调用多个模型。</p></blockquote><p><strong>什么是 API 聚合平台？</strong></p>
+<p>想象一下：你想用 GPT-4、Claude、Llama 三个模型，正常情况下需要分别注册三家的账号、学习三套不同的 API 接口、管理三份密钥。API 聚合平台就像一个&quot;万能转接头&quot;，提供<strong>统一的 API 接口</strong>，背后帮你对接各家模型。</p>
+<p><strong>核心价值：</strong></p>
+<ul>
+<li><strong>统一接口</strong>：一套 API 调用多个模型，降低开发成本</li>
+<li><strong>灵活切换</strong>：随时切换不同模型，不用改代码</li>
+<li><strong>统一计费</strong>：一个账单管理所有模型的费用</li>
+<li><strong>额外能力</strong>：负载均衡、访问控制、用量监控等</li>
+</ul>
+<p><strong>主流平台：</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>平台</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>AWS Bedrock</strong></td>
+          <td>亚马逊云的 AI 模型服务平台。提供 Claude、Llama、Mistral、Stable Diffusion 等多家模型的统一调用。特点是深度集成 AWS 生态（IAM 权限、CloudWatch 监控、VPC 网络隔离等），适合企业级使用。名字来源于&quot;基岩&quot;（bedrock），寓意为 AI 应用提供坚实的基础。<strong>不需要管理服务器，按 Token 用量付费</strong></td>
+      </tr>
+      <tr>
+          <td><strong>Azure OpenAI</strong></td>
+          <td>微软云上的 OpenAI 模型服务，提供 GPT-4、DALL·E 等，集成 Azure 企业级安全和合规能力</td>
+      </tr>
+      <tr>
+          <td><strong>Google Vertex AI</strong></td>
+          <td>Google 云的 AI 平台，提供 Gemini 等模型，集成 Google 云生态</td>
+      </tr>
+      <tr>
+          <td><strong>OpenRouter</strong></td>
+          <td>第三方聚合平台，支持数百个模型，统一 API 格式，按量付费，适合个人开发者</td>
+      </tr>
+      <tr>
+          <td>litellm</td>
+          <td>开源聚合平台，适合自建</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>它们在技术栈中的位置：</strong></p>
+<pre tabindex="0"><code>你的应用 / 产品
+  ↓ 调用
+API 聚合平台（Bedrock / OpenRouter / Azure OpenAI...）  ← 在这里
+  ↓ 转发
+各家模型（GPT-4 / Claude / Llama...）</code></pre><blockquote class='book-hint '>
+<p>简单来说：API 聚合平台是<strong>模型层和应用层之间的桥梁</strong>，让开发者不用直接对接每个模型厂商。</p></blockquote><h3 id="43-ai-产品">4.3 AI 产品<a class="anchor" href="#43-ai-%e4%ba%a7%e5%93%81">#</a></h3>
+<p><strong>对话 / 通用助手：</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>产品</th>
+          <th>背后模型</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>ChatGPT</td>
+          <td>GPT-4o / o1</td>
+      </tr>
+      <tr>
+          <td>Claude</td>
+          <td>Claude 3.5 / 4.5</td>
+      </tr>
+      <tr>
+          <td>Gemini</td>
+          <td>Gemini 2.0</td>
+      </tr>
+      <tr>
+          <td>DeepSeek</td>
+          <td>DeepSeek-V3 / R1</td>
+      </tr>
+      <tr>
+          <td>Kimi</td>
+          <td>Moonshot</td>
+      </tr>
+      <tr>
+          <td>通义千问</td>
+          <td>Qwen</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>AI 编程：</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>产品</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Cursor</td>
+          <td>AI 代码编辑器</td>
+      </tr>
+      <tr>
+          <td>Kiro</td>
+          <td>AI 开发环境</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>图像 / 视频生成：</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>产品</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Midjourney</td>
+          <td>高质量图像生成</td>
+      </tr>
+      <tr>
+          <td>Stable Diffusion</td>
+          <td>开源图像生成</td>
+      </tr>
+      <tr>
+          <td>ComfyUI</td>
+          <td>图像生成工作流工具</td>
+      </tr>
+      <tr>
+          <td>Sora</td>
+          <td>视频生成</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>AI 应用平台：</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>产品</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Dify</td>
+          <td>开源 LLM 应用开发平台</td>
+      </tr>
+      <tr>
+          <td>OpenClaw</td>
+          <td>开源自托管 AI Agent，本地部署，连接消息应用自主执行任务</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="44-开发框架">4.4 开发框架<a class="anchor" href="#44-%e5%bc%80%e5%8f%91%e6%a1%86%e6%9e%b6">#</a></h3>
+<p>帮助开发者构建 AI 应用的工具。</p>
+<table>
+  <thead>
+      <tr>
+          <th>框架</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>LangChain</td>
+          <td>最流行的 LLM 应用开发框架</td>
+      </tr>
+      <tr>
+          <td>LangGraph</td>
+          <td>LangChain 团队出品，专注 Agent 工作流</td>
+      </tr>
+      <tr>
+          <td>Semantic Kernel</td>
+          <td>微软出品的 AI 编排框架</td>
+      </tr>
+      <tr>
+          <td>LlamaIndex</td>
+          <td>专注数据连接和 RAG</td>
+      </tr>
+      <tr>
+          <td>AutoGPT</td>
+          <td>自主 AI Agent 框架</td>
+      </tr>
+      <tr>
+          <td>MetaGPT</td>
+          <td>多 Agent 协作框架</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="45-边缘部署edge-deployment">4.5 边缘部署（Edge Deployment）<a class="anchor" href="#45-%e8%be%b9%e7%bc%98%e9%83%a8%e7%bd%b2edge-deployment">#</a></h3>
+<p>把模型部署在本地设备（手机、电脑）上运行，而不是云端。优点是隐私好、延迟低，缺点是设备算力有限。</p>
+<hr>
+<h2 id="ai-安全与伦理贯穿所有层">AI 安全与伦理（贯穿所有层）<a class="anchor" href="#ai-%e5%ae%89%e5%85%a8%e4%b8%8e%e4%bc%a6%e7%90%86%e8%b4%af%e7%a9%bf%e6%89%80%e6%9c%89%e5%b1%82">#</a></h2>
+<blockquote class='book-hint '>
+<p>安全不属于某一层，而是贯穿整个 AI 体系的横切关注点。</p></blockquote><table>
+  <thead>
+      <tr>
+          <th>概念</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>对齐（Alignment）</strong></td>
+          <td>让 AI 的行为符合人类的意图和价值观。核心问题：如何确保 AI 做我们想让它做的事？</td>
+      </tr>
+      <tr>
+          <td><strong>RLHF</strong></td>
+          <td>用人类反馈训练 AI，让输出更安全、更有用（详见 3.6）</td>
+      </tr>
+      <tr>
+          <td><strong>护栏（Guardrails）</strong></td>
+          <td>对 AI 输出的限制和过滤机制，防止生成有害、不当或不准确的内容</td>
+      </tr>
+      <tr>
+          <td><strong>可解释性（Explainability）</strong></td>
+          <td>理解 AI 为什么做出某个决策的能力。目前深度学习模型大多是&quot;黑箱&quot;</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="当前热门趋势">当前热门趋势<a class="anchor" href="#%e5%bd%93%e5%89%8d%e7%83%ad%e9%97%a8%e8%b6%8b%e5%8a%bf">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th>趋势</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>多模态（Multimodal）</td>
+          <td>模型能同时处理文本、图片、音频、视频等多种类型的数据</td>
+      </tr>
+      <tr>
+          <td>小模型（SLM）</td>
+          <td>参数量较小但在特定任务上表现优秀的模型，适合资源有限的场景</td>
+      </tr>
+      <tr>
+          <td>AI Agent</td>
+          <td>从&quot;对话&quot;走向&quot;行动&quot;，AI 能自主完成复杂任务</td>
+      </tr>
+      <tr>
+          <td>AI 编程</td>
+          <td>AI 辅助甚至自主编写代码，改变软件开发方式</td>
+      </tr>
+      <tr>
+          <td>本地化部署</td>
+          <td>出于隐私和成本考虑，越来越多企业选择本地部署模型</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="一句话速查表">一句话速查表<a class="anchor" href="#%e4%b8%80%e5%8f%a5%e8%af%9d%e9%80%9f%e6%9f%a5%e8%a1%a8">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th>术语</th>
+          <th>所属层</th>
+          <th>一句话解释</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>AI</td>
+          <td>基础层</td>
+          <td>让机器模拟人类智能</td>
+      </tr>
+      <tr>
+          <td>ML</td>
+          <td>技术层</td>
+          <td>让机器从数据中学习</td>
+      </tr>
+      <tr>
+          <td>DL</td>
+          <td>技术层</td>
+          <td>用多层神经网络学习</td>
+      </tr>
+      <tr>
+          <td>Transformer</td>
+          <td>技术层</td>
+          <td>当前大模型的核心架构</td>
+      </tr>
+      <tr>
+          <td>NLP</td>
+          <td>技术层</td>
+          <td>让机器理解和生成语言</td>
+      </tr>
+      <tr>
+          <td>基础模型</td>
+          <td>模型层</td>
+          <td>用海量数据预训练的通用大模型</td>
+      </tr>
+      <tr>
+          <td>LLM</td>
+          <td>模型层</td>
+          <td>专注语言的基础模型</td>
+      </tr>
+      <tr>
+          <td>Token</td>
+          <td>模型层</td>
+          <td>LLM 处理文本的最小单位</td>
+      </tr>
+      <tr>
+          <td>上下文窗口</td>
+          <td>模型层</td>
+          <td>模型一次能看到的最大文本量</td>
+      </tr>
+      <tr>
+          <td>GenAI</td>
+          <td>模型层</td>
+          <td>能生成新内容的能力特征，不是独立模型类别</td>
+      </tr>
+      <tr>
+          <td>参数</td>
+          <td>模型层</td>
+          <td>模型学到的知识量</td>
+      </tr>
+      <tr>
+          <td>预训练</td>
+          <td>模型层</td>
+          <td>用海量数据学习基础规律</td>
+      </tr>
+      <tr>
+          <td>微调</td>
+          <td>模型层</td>
+          <td>用专业数据定制模型</td>
+      </tr>
+      <tr>
+          <td>LoRA</td>
+          <td>模型层</td>
+          <td>低成本微调方法</td>
+      </tr>
+      <tr>
+          <td>RLHF</td>
+          <td>模型层</td>
+          <td>用人类反馈训练 AI</td>
+      </tr>
+      <tr>
+          <td>推理</td>
+          <td>模型层</td>
+          <td>模型生成回答的过程</td>
+      </tr>
+      <tr>
+          <td>Prompt</td>
+          <td>应用层</td>
+          <td>你给 AI 的指令</td>
+      </tr>
+      <tr>
+          <td>Temperature</td>
+          <td>应用层</td>
+          <td>控制输出的随机程度</td>
+      </tr>
+      <tr>
+          <td>幻觉</td>
+          <td>应用层</td>
+          <td>AI 编造的错误信息</td>
+      </tr>
+      <tr>
+          <td>RAG</td>
+          <td>应用层</td>
+          <td>先检索再生成，减少胡说</td>
+      </tr>
+      <tr>
+          <td>Agent</td>
+          <td>应用层</td>
+          <td>能自主行动的 AI 系统</td>
+      </tr>
+      <tr>
+          <td>MCP</td>
+          <td>应用层</td>
+          <td>AI 连接外部工具的标准协议</td>
+      </tr>
+      <tr>
+          <td>Function Call</td>
+          <td>应用层</td>
+          <td>让模型调用外部 API</td>
+      </tr>
+      <tr>
+          <td>Embedding</td>
+          <td>应用层</td>
+          <td>将文本转为数字向量</td>
+      </tr>
+      <tr>
+          <td>AIGC</td>
+          <td>应用层</td>
+          <td>AI 生成的内容</td>
+      </tr>
+      <tr>
+          <td>Bedrock</td>
+          <td>应用层</td>
+          <td>AWS 的 AI 模型聚合服务平台</td>
+      </tr>
+      <tr>
+          <td>OpenRouter</td>
+          <td>应用层</td>
+          <td>第三方模型 API 聚合平台</td>
+      </tr>
+      <tr>
+          <td>对齐</td>
+          <td>安全</td>
+          <td>让 AI 符合人类价值观</td>
+      </tr>
+      <tr>
+          <td>护栏</td>
+          <td>安全</td>
+          <td>限制 AI 输出有害内容</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<p><em>最后更新：2026 年 4 月</em></p>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/01.AI/01.AI%E5%9F%BA%E7%A1%80/AI%E5%8F%91%E5%B1%95%E7%BC%96%E5%B9%B4%E5%8F%B2/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>Ai发展编年史</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/01.AI/02.%E6%A8%A1%E5%9E%8B%E4%B8%8E%E6%8A%80%E6%9C%AF/" class="flex align-center">
+        <span>模型与技术</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#ai-核心概念与术语梳理">AI 核心概念与术语梳理</a>
+      <ul>
+        <li><a href="#ai-的本质四个核心问题">AI 的本质：四个核心问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#总览四层结构">总览：四层结构</a></li>
+    <li><a href="#第一层--基础层">第一层 · 基础层</a>
+      <ul>
+        <li><a href="#11-人工智能ai-artificial-intelligence">1.1 人工智能（AI, Artificial Intelligence）</a></li>
+        <li><a href="#12-算力">1.2 算力</a></li>
+        <li><a href="#13-算法框架">1.3 算法框架</a></li>
+        <li><a href="#14-数据">1.4 数据</a></li>
+        <li><a href="#15-基础学科">1.5 基础学科</a></li>
+      </ul>
+    </li>
+    <li><a href="#第二层--技术层">第二层 · 技术层</a>
+      <ul>
+        <li><a href="#ai-的五大方向感知认知决策行动">AI 的五大方向（感知→认知→决策→行动）</a></li>
+        <li><a href="#21-机器学习ml-machine-learning">2.1 机器学习（ML, Machine Learning）</a></li>
+        <li><a href="#22-深度学习dl-deep-learning">2.2 深度学习（DL, Deep Learning）</a></li>
+        <li><a href="#23-自然语言处理nlp">2.3 自然语言处理（NLP）</a></li>
+        <li><a href="#24-计算机视觉cv">2.4 计算机视觉（CV）</a></li>
+        <li><a href="#25-语音技术">2.5 语音技术</a></li>
+        <li><a href="#26-transformer-架构">2.6 Transformer 架构</a></li>
+        <li><a href="#27-推理技术">2.7 推理技术</a></li>
+      </ul>
+    </li>
+    <li><a href="#第三层--模型层">第三层 · 模型层</a>
+      <ul>
+        <li><a href="#31-基础模型foundation-model又称根基模型">3.1 基础模型（Foundation Model，又称&quot;根基模型&rdquo;）</a></li>
+        <li><a href="#32-大语言模型llm-large-language-model">3.2 大语言模型（LLM, Large Language Model）</a></li>
+        <li><a href="#33-生成式-aigenai-generative-ai">3.3 生成式 AI（GenAI, Generative AI）</a></li>
+        <li><a href="#34-主流大模型一览">3.4 主流大模型一览</a></li>
+        <li><a href="#35-开源模型-vs-闭源模型">3.5 开源模型 vs 闭源模型</a></li>
+        <li><a href="#36-模型的生命周期">3.6 模型的生命周期</a></li>
+        <li><a href="#37-微调相关">3.7 微调相关</a></li>
+        <li><a href="#38-推理优化">3.8 推理优化</a></li>
+        <li><a href="#39-其他关键能力">3.9 其他关键能力</a></li>
+      </ul>
+    </li>
+    <li><a href="#第四层--应用层">第四层 · 应用层</a>
+      <ul>
+        <li><a href="#41-核心应用概念">4.1 核心应用概念</a></li>
+        <li><a href="#42-api-聚合平台">4.2 API 聚合平台</a></li>
+        <li><a href="#43-ai-产品">4.3 AI 产品</a></li>
+        <li><a href="#44-开发框架">4.4 开发框架</a></li>
+        <li><a href="#45-边缘部署edge-deployment">4.5 边缘部署（Edge Deployment）</a></li>
+      </ul>
+    </li>
+    <li><a href="#ai-安全与伦理贯穿所有层">AI 安全与伦理（贯穿所有层）</a></li>
+    <li><a href="#当前热门趋势">当前热门趋势</a></li>
+    <li><a href="#一句话速查表">一句话速查表</a></li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

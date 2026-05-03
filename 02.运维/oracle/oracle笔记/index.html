@@ -1,0 +1,2959 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="https://docs.oracle.com/en/database/oracle/oracle-database/index.html #各版本安装文档
+https://blog.csdn.net/qq_38478995/article/details/131334560
+Oracle介绍# Oracle数据库发展史# 应用场景# Oracle体系结构# Oracle数据库实际上是一个数据的物理储存系统，这其中包括数据文件(ora/dbf)、参数文件、控制文件、联机日志等。
+实例: Orace实例是Oracle数据库系统的一种运行环境，它由一系列的后台进程(Background Processes)和内存结构(Memory Structures)组成。Oracle实例在运行时会占用一定的系统资源(如CPU,内存,和一些后台进程)，而Oracle数据库是存储在实例中的一系列逻辑结构(如表，视图，索引等)
+数据文件: Oracle数据文件是数据存储的物理单位，数据库的数据是存储在表空间中的。而一个表空间可以由一个或多个数据文件组成，一个数据文件只能属于一个表空间，一旦数据文件被加入到某个表空间后，就不能删除这个文件，如果要删除某个数据文件，只能删除其所属于的表空间才行。
+表空间: 表空间是Oracle对物理数据库数据文件(ora/dbf)的逻辑映射。一个数据库在逻辑上被划分成一到若干个表空间，每个表空间由同一磁盘上的一个或多个数据文件(datafile)组成，一个数据文件只能属于一个表空间。
+Oracle用户: 表当中的数据是由Oracle用户放入到表空间当中的，而这些表空间会随机的把数据放入到一个或者多个数据文件当中。Oracle对表数据的管理是通过用户对表的管理去查询，而不是直接对数据文件或表空间进行查询，因为不同用户可以在同一个表空间上面建立相同的表名。但是通过不同的用户管理自己的表数据。
+Oracle 逻辑存储结构（逻辑层）# 逻辑存储结构是指 用户如何组织和管理数据 的层次结构。它主要关注的是数据的组织方式，供用户和开发人员操作。
+主要组成：
+表空间（Tablespace） 表空间是逻辑存储结构的最顶层单位。
+用来组织和管理数据库中的逻辑对象，比如表（Tables）、索引（Indexes）、视图（Views）等。
+每个表空间包含一个或多个数据文件（Datafile）。
+Oracle默认创建的表空间有：
+SYSTEM（存放数据字典等核心信息）
+SYSAUX（辅助系统表空间）
+USERS（普通用户对象）
+TEMP（临时表空间）
+UNDO（事务回滚用）
+select tablespace_name from dba_tablespaces; #查看表空间
+段（Segment） 段是同一类对象的一组存储区域。
+每种数据库对象（如表、索引）都有自己的段。
+段的种类包括：
+数据段（Data Segment）：用于存储表或视图的数据。
+索引段（Index Segment）：用于存储索引的数据。
+回滚段（Rollback Segment）：用于事务恢复。
+每个段由多个区（Extent）组成。
+区（Extent）
+区是段里面的一块一块连续的小空间，段是由一个一个的区组合起来的。
+区是 Oracle 分配给段的基本单位。
+每次需要增加空间时，Oracle 会给段分配一个新的区（而不是一个一个块分配）。
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/02.%E8%BF%90%E7%BB%B4/oracle/oracle%E7%AC%94%E8%AE%B0/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="Oracle笔记">
+  <meta property="og:description" content="https://docs.oracle.com/en/database/oracle/oracle-database/index.html #各版本安装文档
+https://blog.csdn.net/qq_38478995/article/details/131334560
+Oracle介绍# Oracle数据库发展史# 应用场景# Oracle体系结构# Oracle数据库实际上是一个数据的物理储存系统，这其中包括数据文件(ora/dbf)、参数文件、控制文件、联机日志等。
+实例: Orace实例是Oracle数据库系统的一种运行环境，它由一系列的后台进程(Background Processes)和内存结构(Memory Structures)组成。Oracle实例在运行时会占用一定的系统资源(如CPU,内存,和一些后台进程)，而Oracle数据库是存储在实例中的一系列逻辑结构(如表，视图，索引等)
+数据文件: Oracle数据文件是数据存储的物理单位，数据库的数据是存储在表空间中的。而一个表空间可以由一个或多个数据文件组成，一个数据文件只能属于一个表空间，一旦数据文件被加入到某个表空间后，就不能删除这个文件，如果要删除某个数据文件，只能删除其所属于的表空间才行。
+表空间: 表空间是Oracle对物理数据库数据文件(ora/dbf)的逻辑映射。一个数据库在逻辑上被划分成一到若干个表空间，每个表空间由同一磁盘上的一个或多个数据文件(datafile)组成，一个数据文件只能属于一个表空间。
+Oracle用户: 表当中的数据是由Oracle用户放入到表空间当中的，而这些表空间会随机的把数据放入到一个或者多个数据文件当中。Oracle对表数据的管理是通过用户对表的管理去查询，而不是直接对数据文件或表空间进行查询，因为不同用户可以在同一个表空间上面建立相同的表名。但是通过不同的用户管理自己的表数据。
+Oracle 逻辑存储结构（逻辑层）# 逻辑存储结构是指 用户如何组织和管理数据 的层次结构。它主要关注的是数据的组织方式，供用户和开发人员操作。
+主要组成：
+表空间（Tablespace） 表空间是逻辑存储结构的最顶层单位。
+用来组织和管理数据库中的逻辑对象，比如表（Tables）、索引（Indexes）、视图（Views）等。
+每个表空间包含一个或多个数据文件（Datafile）。
+Oracle默认创建的表空间有：
+SYSTEM（存放数据字典等核心信息）
+SYSAUX（辅助系统表空间）
+USERS（普通用户对象）
+TEMP（临时表空间）
+UNDO（事务回滚用）
+select tablespace_name from dba_tablespaces; #查看表空间
+段（Segment） 段是同一类对象的一组存储区域。
+每种数据库对象（如表、索引）都有自己的段。
+段的种类包括：
+数据段（Data Segment）：用于存储表或视图的数据。
+索引段（Index Segment）：用于存储索引的数据。
+回滚段（Rollback Segment）：用于事务恢复。
+每个段由多个区（Extent）组成。
+区（Extent）
+区是段里面的一块一块连续的小空间，段是由一个一个的区组合起来的。
+区是 Oracle 分配给段的基本单位。
+每次需要增加空间时，Oracle 会给段分配一个新的区（而不是一个一个块分配）。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="02.运维">
+
+
+  <meta itemprop="name" content="Oracle笔记">
+  <meta itemprop="description" content="https://docs.oracle.com/en/database/oracle/oracle-database/index.html #各版本安装文档
+https://blog.csdn.net/qq_38478995/article/details/131334560
+Oracle介绍# Oracle数据库发展史# 应用场景# Oracle体系结构# Oracle数据库实际上是一个数据的物理储存系统，这其中包括数据文件(ora/dbf)、参数文件、控制文件、联机日志等。
+实例: Orace实例是Oracle数据库系统的一种运行环境，它由一系列的后台进程(Background Processes)和内存结构(Memory Structures)组成。Oracle实例在运行时会占用一定的系统资源(如CPU,内存,和一些后台进程)，而Oracle数据库是存储在实例中的一系列逻辑结构(如表，视图，索引等)
+数据文件: Oracle数据文件是数据存储的物理单位，数据库的数据是存储在表空间中的。而一个表空间可以由一个或多个数据文件组成，一个数据文件只能属于一个表空间，一旦数据文件被加入到某个表空间后，就不能删除这个文件，如果要删除某个数据文件，只能删除其所属于的表空间才行。
+表空间: 表空间是Oracle对物理数据库数据文件(ora/dbf)的逻辑映射。一个数据库在逻辑上被划分成一到若干个表空间，每个表空间由同一磁盘上的一个或多个数据文件(datafile)组成，一个数据文件只能属于一个表空间。
+Oracle用户: 表当中的数据是由Oracle用户放入到表空间当中的，而这些表空间会随机的把数据放入到一个或者多个数据文件当中。Oracle对表数据的管理是通过用户对表的管理去查询，而不是直接对数据文件或表空间进行查询，因为不同用户可以在同一个表空间上面建立相同的表名。但是通过不同的用户管理自己的表数据。
+Oracle 逻辑存储结构（逻辑层）# 逻辑存储结构是指 用户如何组织和管理数据 的层次结构。它主要关注的是数据的组织方式，供用户和开发人员操作。
+主要组成：
+表空间（Tablespace） 表空间是逻辑存储结构的最顶层单位。
+用来组织和管理数据库中的逻辑对象，比如表（Tables）、索引（Indexes）、视图（Views）等。
+每个表空间包含一个或多个数据文件（Datafile）。
+Oracle默认创建的表空间有：
+SYSTEM（存放数据字典等核心信息）
+SYSAUX（辅助系统表空间）
+USERS（普通用户对象）
+TEMP（临时表空间）
+UNDO（事务回滚用）
+select tablespace_name from dba_tablespaces; #查看表空间
+段（Segment） 段是同一类对象的一组存储区域。
+每种数据库对象（如表、索引）都有自己的段。
+段的种类包括：
+数据段（Data Segment）：用于存储表或视图的数据。
+索引段（Index Segment）：用于存储索引的数据。
+回滚段（Rollback Segment）：用于事务恢复。
+每个段由多个区（Extent）组成。
+区（Extent）
+区是段里面的一块一块连续的小空间，段是由一个一个的区组合起来的。
+区是 Oracle 分配给段的基本单位。
+每次需要增加空间时，Oracle 会给段分配一个新的区（而不是一个一个块分配）。">
+  <meta itemprop="wordCount" content="847">
+
+<title>Oracle笔记 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/02.%E8%BF%90%E7%BB%B4/oracle/oracle%E7%AC%94%E8%AE%B0/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.7d58ae02adbb48cddb44e14ebd18d032450f84203c407b8742616c4d8963d04e.js" integrity="sha256-fViuAq27SM3bROFOvRjQMkUPhCA8QHuHQmFsTYlj0E4=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-02.运维">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-9fe7a2339ad0dc4a73778e68cef649fe" class="toggle"  />
+    <label for="section-9fe7a2339ad0dc4a73778e68cef649fe" class="flex">
+      <a role="button" class="">
+        AI</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-15c23871017acbed09b7424bdcf80a4a" class="toggle"  />
+    <label for="section-15c23871017acbed09b7424bdcf80a4a" class="flex">
+      <a href="/01.AI/01.AI%E5%9F%BA%E7%A1%80/" class="">
+        AI基础</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/01.AI%E5%9F%BA%E7%A1%80/AI%E5%8F%91%E5%B1%95%E7%BC%96%E5%B9%B4%E5%8F%B2/" class="">
+      Ai发展编年史</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/01.AI%E5%9F%BA%E7%A1%80/AI%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E4%B8%8E%E6%9C%AF%E8%AF%AD%E6%A2%B3%E7%90%86/" class="">
+      Ai核心概念与术语梳理</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-3c59d4207daf22454abfe1884802d176" class="toggle"  />
+    <label for="section-3c59d4207daf22454abfe1884802d176" class="flex">
+      <a href="/01.AI/02.%E6%A8%A1%E5%9E%8B%E4%B8%8E%E6%8A%80%E6%9C%AF/" class="">
+        模型与技术</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-49d4b9c6159f641db7abe3ae967f518a" class="toggle"  />
+    <label for="section-49d4b9c6159f641db7abe3ae967f518a" class="flex">
+      <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/" class="">
+        AI应用</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-a4f890ca069a25208a03d08b2bb2af9b" class="toggle"  />
+    <label for="section-a4f890ca069a25208a03d08b2bb2af9b" class="flex">
+      <a role="button" class="">
+        大模型聚合平台</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%81%9A%E5%90%88%E5%B9%B3%E5%8F%B0/LiteLLM/" class="">
+      LiteLLM</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-d6e743b94614084bb7b1efb03702d051" class="toggle"  />
+    <label for="section-d6e743b94614084bb7b1efb03702d051" class="flex">
+      <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7/" class="">
+        编程工具</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7/Trae/" class="">
+      Trae</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-3f03d304f7515b074c3e895c04f5985a" class="toggle"  />
+    <label for="section-3f03d304f7515b074c3e895c04f5985a" class="flex">
+      <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/Agent/" class="">
+        Agent</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-540714977fc446f2999968aa0312d1d1" class="toggle"  />
+    <label for="section-540714977fc446f2999968aa0312d1d1" class="flex">
+      <a role="button" class="">
+        OpenClaw</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/API%E8%B0%83%E7%94%A8%E8%A7%84%E8%8C%83/" class="">
+      API调用规范</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/Prompt%E5%B7%A5%E7%A8%8B/" class="">
+      Prompt工程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-81e5d1f0dc654ba1710e62c7855b9f41" class="toggle" checked />
+    <label for="section-81e5d1f0dc654ba1710e62c7855b9f41" class="flex">
+      <a role="button" class="">
+        运维</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-07353f6b74ee2fa2408751490aab51d1" class="toggle" checked />
+    <label for="section-07353f6b74ee2fa2408751490aab51d1" class="flex">
+      <a role="button" class="">
+        Oracle</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/02.%E8%BF%90%E7%BB%B4/oracle/oracle%E7%AC%94%E8%AE%B0/" class="active">
+      Oracle笔记</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-588052d0ddc9d35446ed3fcf1c068d7e" class="toggle"  />
+    <label for="section-588052d0ddc9d35446ed3fcf1c068d7e" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/02.%E8%BF%90%E7%BB%B4/08.Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/02.%E8%BF%90%E7%BB%B4/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-a1da811a60ec5f919d028b5a8ad22512" class="toggle"  />
+    <label for="section-a1da811a60ec5f919d028b5a8ad22512" class="flex">
+      <a role="button" class="">
+        云计算</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-835dbb699264e6d42cdd17507140ac88" class="toggle"  />
+    <label for="section-835dbb699264e6d42cdd17507140ac88" class="flex">
+      <a role="button" class="">
+        AWS</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c558e862208eb14727f1a08067f09bdd" class="toggle"  />
+    <label for="section-c558e862208eb14727f1a08067f09bdd" class="flex">
+      <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/Bedrock/Bedrock%E4%BB%8B%E7%BB%8D/" class="">
+        Bedrock</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c3e7e52ac9a64d92fde731aee4156588" class="toggle"  />
+    <label for="section-c3e7e52ac9a64d92fde731aee4156588" class="flex">
+      <a role="button" class="">
+        IAM</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/IAM/aws-security-iam-1-notes/" class="">
+      AWS IAM 身份、策略与 Role 实战学习笔记</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/aws%E5%9F%BA%E7%A1%80/" class="">
+      Aws基础</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-134481839eb9c2f960db1fbd97c06e82" class="toggle"  />
+    <label for="section-134481839eb9c2f960db1fbd97c06e82" class="flex">
+      <a role="button" class="">
+        阿里云</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-601ec63ad4b894fb5775994f34301885" class="toggle"  />
+    <label for="section-601ec63ad4b894fb5775994f34301885" class="flex">
+      <a role="button" class="">
+        腾讯云</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-575fefbd29f71371957ab2f14f9cbee0" class="toggle"  />
+    <label for="section-575fefbd29f71371957ab2f14f9cbee0" class="flex">
+      <a role="button" class="">
+        阿里腾讯华为火山云产品对比</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AF%B9%E6%AF%94/" class="">
+      服务器对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E7%A1%AC%E7%9B%98%E5%AF%B9%E6%AF%94/" class="">
+      云硬盘对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%B9%E6%AF%94/" class="">
+      数据库产品对比表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AF%B9%E6%AF%94/" class="">
+      中间件产品对比表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AF%B9%E6%AF%94/" class="">
+      大数据对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E5%AE%89%E5%85%A8%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/" class="">
+      安全产品对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AF%B9%E6%A0%87/" class="">
+      云容器对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E6%9E%B6%E6%9E%84%E5%B8%88%E5%B7%A5%E4%BD%9C%E8%81%8C%E8%B4%A3/" class="">
+      云架构师工作职责</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E8%BF%81%E7%A7%BB%E6%B5%81%E7%A8%8B%E9%98%BF%E9%87%8C%E4%BA%91/" class="">
+      迁移流程总结</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f63ca89517e3b888fc3c4dc8b04609ea" class="toggle"  />
+    <label for="section-f63ca89517e3b888fc3c4dc8b04609ea" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f508e989cd5e3427044a0620121ddbda" class="toggle"  />
+    <label for="section-f508e989cd5e3427044a0620121ddbda" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-344a042a46b58aed858fd7aa7abd362d" class="toggle"  />
+    <label for="section-344a042a46b58aed858fd7aa7abd362d" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-ed2965e47d3be272fd865c1df0bb75bc" class="toggle"  />
+    <label for="section-ed2965e47d3be272fd865c1df0bb75bc" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-60bdc869135151ee6f66cb65499bf2d9" class="toggle"  />
+    <label for="section-60bdc869135151ee6f66cb65499bf2d9" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-8a098eb60ed3a3c8aa631838098de5f6" class="toggle"  />
+    <label for="section-8a098eb60ed3a3c8aa631838098de5f6" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-d3553f07e3dd22f14040931f6def7247" class="toggle"  />
+    <label for="section-d3553f07e3dd22f14040931f6def7247" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-755341e3f50c66a57e172eec45daad0b" class="toggle"  />
+    <label for="section-755341e3f50c66a57e172eec45daad0b" class="flex">
+      <a role="button" class="">
+        脚本开发实战</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/1.%E5%9B%BE%E8%89%B2%E8%84%9A%E6%9C%AC%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" class="">
+      1.图色脚本架构设计</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E6%A2%A6%E5%B9%BB%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/" class="">
+      游戏图色脚本开发实战</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E9%97%AE%E9%81%93%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/" class="">
+      游戏图色脚本开发实战</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/2.%E5%B7%A5%E7%A8%8B%E6%9E%B6%E6%9E%84UI-%E5%B8%83%E5%B1%80%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%85%8D%E7%BD%AE%E9%9A%94%E7%A6%BB/" class="">
+      2.工程架构、UI 布局与多线程配置隔离</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/3.%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%89%BE%E5%9B%BE%E6%8C%87%E4%BB%A4%E8%AF%A6%E8%A7%A3/" class="">
+      3.大漠插件：环境部署与找图指令详解</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/4.%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E5%85%8D%E6%B3%A8%E5%86%8C%E8%B0%83%E7%94%A8%E5%9D%90%E6%A0%87%E7%B3%BB%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E5%90%8E%E5%8F%B0%E7%BB%91%E5%AE%9A/" class="">
+      4.大漠插件：免注册调用、坐标系原理以及后台绑定</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/5.%E6%98%93%E8%AF%AD%E8%A8%80%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6/" class="">
+      5.易语言多线程控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/5.%E6%98%93%E8%AF%AD%E8%A8%80%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6%E4%B8%8E%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB%E4%BC%98%E5%8C%96%E6%96%B9%E6%A1%88/" class="">
+      5.易语言多线程控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/6.%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" class="">
+      6.鼠标漂移解决方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/10.%E5%BC%BA%E7%9B%97%E4%BB%BB%E5%8A%A1%E8%B4%BC%E7%8E%8B%E4%BB%BB%E5%8A%A1%E8%AF%BB%E5%8F%961/" class="">
+      10.打图任务(1)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/10.%E5%BC%BA%E7%9B%97%E4%BB%BB%E5%8A%A1%E8%B4%BC%E7%8E%8B%E4%BB%BB%E5%8A%A1%E8%AF%BB%E5%8F%962/" class="">
+      10.打图任务(2)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/11.%E8%B7%A8%E5%9C%B0%E5%9B%BE%E8%87%AA%E5%8A%A8%E5%AF%BB%E8%B7%AF/" class="">
+      11.跨地图寻路</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/12.%E9%A3%9E%E8%A1%8C%E6%97%97/" class="">
+      12.飞行旗</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/13.%E5%8A%A8%E6%80%81NPC%E8%BD%A6%E5%A4%AB%E9%A9%BF%E7%AB%99%E8%80%81%E6%9D%BF%E7%82%B9%E5%87%BB%E5%AF%B9%E8%AF%9D%E6%A1%86%E8%87%AA%E5%8A%A8%E5%8C%96%E4%BB%A5%E5%8F%8A%E6%96%B0%E5%8C%BA%E9%81%AE%E6%8C%A1%E5%88%A4%E5%AE%9A%E7%9A%84%E9%AB%98%E7%BA%A7%E5%AE%9E%E6%93%8D%E6%8A%80%E5%B7%A7/" class="">
+      13.动态NPC（车夫、驿站老板）点击、对话框自动化以及新区遮挡判定的高级实操技巧</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/14.%E5%9C%B0%E5%9B%BE%E5%9D%90%E6%A0%87%E6%8D%A2%E7%AE%97/" class="">
+      14.地图坐标换算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/15.%E5%BC%BA%E7%9B%97NPC%E8%A2%AB%E9%81%AE%E6%8C%A1%E6%88%96%E9%87%8D%E5%8F%A0%E6%97%B6%E7%9A%84%E8%BF%9B%E9%98%B6%E5%A4%84%E7%90%86%E9%80%BB%E8%BE%91/" class="">
+      15.强盗（NPC）被遮挡或重叠时的进阶处理逻辑</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/16.%E8%B4%BC%E7%8E%8B%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6/" class="">
+      16.贼王处理机制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/17-18-19-20-21.%E8%B4%BC%E7%8E%8B%E8%BF%9B%E9%98%B6%E5%A4%84%E7%90%86%E4%B8%8E-OCR-%E9%AA%8C%E8%AF%81%E5%AE%9E%E6%88%98/" class="">
+      17-18-19-20-21.贼王进阶处理与 OCR 验证实战</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%8F%92%E4%BB%B6%E8%AF%86%E5%88%AB/" class="">
+      程序集_插件识别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%8F%92%E4%BB%B6%E6%B3%A8%E5%86%8C/" class="">
+      程序集_插件注册</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/23-24-25.%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" class="">
+      23-24-25.自动登录与模拟器将军令获取</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E4%BB%BB%E5%8A%A1%E6%89%A7%E8%A1%8C%E5%88%86%E9%85%8D/" class="">
+      程序集_任务执行分配</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%AA%97%E5%8F%A3%E7%A8%8B%E5%BA%8F%E9%9B%86_%E7%AA%97%E5%8F%A3_%E5%8A%9F%E8%83%BD%E8%AE%BE%E7%BD%AE/" class="">
+      程序集_功能设置</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%AA%97%E5%8F%A3%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%90%AF%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="">
+      程序集_启动窗口</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%9C%B0%E5%9B%BE/" class="">
+      程序集_地图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/" class="">
+      程序集_常用功能</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%89%93%E5%9B%BE/" class="">
+      程序集_打图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E8%84%9A%E6%9C%AC%E4%B8%BB%E7%A8%8B%E5%BA%8F/" class="">
+      程序集_脚本主程序</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E9%A3%9E%E8%A1%8C/" class="">
+      程序集_飞行</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%8A%A8/" class="">
+      程序集_鼠标移动</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/26.%E4%BB%BB%E5%8A%A1%E8%B6%85%E6%97%B6%E7%9B%91%E6%8E%A7%E4%B8%8E%E6%B8%B8%E6%88%8F%E6%8E%89%E7%BA%BF%E8%87%AA%E5%8A%A8%E9%87%8D%E8%BF%9E/" class="">
+      26.任务超时监控与游戏掉线自动重连</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/27.%E8%87%AA%E5%8A%A8%E6%8D%A2%E5%8F%B7%E6%81%A2%E5%A4%8D%E7%94%A8%E6%88%B7%E8%AE%BE%E7%BD%AE%E6%96%B0%E7%9A%84%E4%BB%BB%E5%8A%A1%E9%93%BE/" class="">
+      27.自动换号,恢复用户设置新的任务链</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/28.%E6%95%B4%E4%BD%93%E6%89%93%E5%9B%BE%E6%B5%81%E7%A8%8B%E5%9B%9E%E9%A1%BE%E8%AE%B2%E8%A7%A3%E8%A7%A3%E5%86%B3%E6%96%B0%E5%8C%BA%E5%8D%A1%E9%A1%BF%E5%A4%84%E7%90%86%E5%90%8C%E6%97%B6%E4%B8%8D%E5%BD%B1%E5%93%8D%E8%80%81%E5%8C%BA%E7%9A%84%E6%B5%81%E7%95%85%E5%BA%A6/" class="">
+      28.整体打图流程回顾讲解,解决新区卡顿处理同时不影响老区的流畅度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/29-30-31.%E8%AF%BE-%E6%8A%BC%E9%95%96%E9%9A%BE%E7%82%B9%E8%A7%A3%E6%9E%90/" class="">
+      29-30-31押镖难点解析</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/32-33-%E8%87%AA%E5%8A%A8%E4%BB%93%E5%BA%93%E8%BD%AC%E5%9B%BE%E5%AE%9D%E7%9F%B3%E5%95%86%E4%BA%BA%E5%8F%96%E5%9B%BE%E7%9B%B4%E6%8E%A5%E8%BD%AC%E5%9B%BE/" class="">
+      32-33 自动仓库转图，宝石商人取图直接转图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/34.%E5%8D%A1%E5%AF%86%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BA%E9%AA%8C%E8%AF%81/" class="">
+      34.卡密系统搭建验证</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5126b54f0ae1ceecc1303140e82740c8" class="toggle"  />
+    <label for="section-5126b54f0ae1ceecc1303140e82740c8" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E6%98%93%E9%94%AE%E9%BC%A0/" class="">
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+      幽灵键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-d4a0c57ccfa86bfc9cc9b680995d5df5" class="toggle"  />
+    <label for="section-d4a0c57ccfa86bfc9cc9b680995d5df5" class="flex">
+      <a role="button" class="">
+        Tools</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/06.Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/06.Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/06.Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强cpu装机事项</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-9053fccdbd7199bd47302238aacb0e2d" class="toggle"  />
+    <label for="section-9053fccdbd7199bd47302238aacb0e2d" class="flex">
+      <a role="button" class="">
+        Java</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-6e540f017616ab12e7390ffcfc707be8" class="toggle"  />
+    <label for="section-6e540f017616ab12e7390ffcfc707be8" class="flex">
+      <a role="button" class="">
+        生活碎碎</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-78b2b94ef620d452afa50ea603ec65c9" class="toggle"  />
+    <label for="section-78b2b94ef620d452afa50ea603ec65c9" class="flex">
+      <a role="button" class="">
+        英语</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-80f5fffe9bee676d4a2bf6c7a43cd7ed" class="toggle"  />
+    <label for="section-80f5fffe9bee676d4a2bf6c7a43cd7ed" class="flex">
+      <a role="button" class="">
+        外汇</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0335bddd19a23a8f94f5dcac9a412967" class="toggle"  />
+    <label for="section-0335bddd19a23a8f94f5dcac9a412967" class="flex">
+      <a role="button" class="">
+        Adobe</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-6a1db553da3d9bad9cd7eb830f28f894" class="toggle"  />
+    <label for="section-6a1db553da3d9bad9cd7eb830f28f894" class="flex">
+      <a role="button" class="">
+        Office</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>Oracle笔记</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#oracle介绍">Oracle介绍</a>
+      <ul>
+        <li><a href="#oracle数据库发展史">Oracle数据库发展史</a></li>
+        <li><a href="#应用场景">应用场景</a></li>
+        <li><a href="#oracle体系结构">Oracle体系结构</a></li>
+      </ul>
+    </li>
+    <li><a href="#oracle安装">Oracle安装</a>
+      <ul>
+        <li><a href="#rpm安装">rpm安装</a></li>
+        <li><a href="#docker方式安装">Docker方式安装</a></li>
+        <li><a href="#virtualbox-oracle安装">VirtualBox oracle安装</a></li>
+        <li><a href="#管理oracle">管理oracle</a></li>
+        <li><a href="#安装oracle-sql-developer">安装Oracle SQL Developer</a></li>
+      </ul>
+    </li>
+    <li><a href="#oracle使用">Oracle使用</a>
+      <ul>
+        <li><a href="#用户概念">用户概念</a></li>
+        <li><a href="#用户模式">用户模式</a></li>
+        <li><a href="#用户登录数据库">用户登录数据库</a></li>
+        <li><a href="#创建用户">创建用户</a></li>
+        <li><a href="#数据库角色">数据库角色</a></li>
+        <li><a href="#用户权限">用户权限</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><p><a href="https://docs.oracle.com/en/database/oracle/oracle-database/index.html">https://docs.oracle.com/en/database/oracle/oracle-database/index.html</a> #各版本安装文档</p>
+<p><a href="https://blog.csdn.net/qq_38478995/article/details/131334560">https://blog.csdn.net/qq_38478995/article/details/131334560</a></p>
+<h2 id="oracle介绍">Oracle介绍<a class="anchor" href="#oracle%e4%bb%8b%e7%bb%8d">#</a></h2>
+<h3 id="oracle数据库发展史">Oracle数据库发展史<a class="anchor" href="#oracle%e6%95%b0%e6%8d%ae%e5%ba%93%e5%8f%91%e5%b1%95%e5%8f%b2">#</a></h3>
+<p><img src="../images/image41.png" alt="image41.png" /></p>
+<p><img src="../images/image34.png" alt="image34.png" /></p>
+<p><img src="../images/image29.png" alt="image29.png" /></p>
+<p><img src="../images/image16.png" alt="image16.png" /></p>
+<p><img src="../images/image43.png" alt="image43.png" /></p>
+<h3 id="应用场景">应用场景<a class="anchor" href="#%e5%ba%94%e7%94%a8%e5%9c%ba%e6%99%af">#</a></h3>
+<p><img src="../images/image1.png" alt="image1.png" /></p>
+<h3 id="oracle体系结构">Oracle体系结构<a class="anchor" href="#oracle%e4%bd%93%e7%b3%bb%e7%bb%93%e6%9e%84">#</a></h3>
+<p>Oracle数据库实际上是一个数据的物理储存系统，这其中包括数据文件(ora/dbf)、参数文件、控制文件、联机日志等。</p>
+<ul>
+<li>
+<p>实例: Orace实例是Oracle数据库系统的一种运行环境，它由一系列的后台进程(Background Processes)和内存结构(Memory Structures)组成。Oracle实例在运行时会占用一定的系统资源(如CPU,内存,和一些后台进程)，而Oracle数据库是存储在实例中的一系列逻辑结构(如表，视图，索引等)</p>
+</li>
+<li>
+<p>数据文件: Oracle数据文件是数据存储的物理单位，数据库的数据是存储在表空间中的。而一个表空间可以由一个或多个数据文件组成，一个数据文件只能属于一个表空间，一旦数据文件被加入到某个表空间后，就不能删除这个文件，如果要删除某个数据文件，只能删除其所属于的表空间才行。</p>
+</li>
+<li>
+<p>表空间: 表空间是Oracle对物理数据库数据文件(ora/dbf)的逻辑映射。一个数据库在逻辑上被划分成一到若干个表空间，每个表空间由同一磁盘上的一个或多个数据文件(datafile)组成，一个数据文件只能属于一个表空间。</p>
+</li>
+<li>
+<p>Oracle用户: 表当中的数据是由Oracle用户放入到表空间当中的，而这些表空间会随机的把数据放入到一个或者多个数据文件当中。Oracle对表数据的管理是通过用户对表的管理去查询，而不是直接对数据文件或表空间进行查询，因为不同用户可以在同一个表空间上面建立相同的表名。但是通过不同的用户管理自己的表数据。</p>
+</li>
+</ul>
+<p><img src="../images/image35.png" alt="image35.png" /></p>
+<h4 id="oracle-逻辑存储结构逻辑层">Oracle 逻辑存储结构（逻辑层）<a class="anchor" href="#oracle-%e9%80%bb%e8%be%91%e5%ad%98%e5%82%a8%e7%bb%93%e6%9e%84%e9%80%bb%e8%be%91%e5%b1%82">#</a></h4>
+<p>逻辑存储结构是指 用户如何组织和管理数据 的层次结构。它主要关注的是数据的组织方式，供用户和开发人员操作。</p>
+<p>主要组成：</p>
+<ol>
+<li>表空间（Tablespace）</li>
+</ol>
+<p>表空间是逻辑存储结构的最顶层单位。</p>
+<p>用来组织和管理数据库中的逻辑对象，比如表（Tables）、索引（Indexes）、视图（Views）等。</p>
+<p>每个表空间包含一个或多个数据文件（Datafile）。</p>
+<p>Oracle默认创建的表空间有：</p>
+<p>SYSTEM（存放数据字典等核心信息）</p>
+<p>SYSAUX（辅助系统表空间）</p>
+<p>USERS（普通用户对象）</p>
+<p>TEMP（临时表空间）</p>
+<p>UNDO（事务回滚用）</p>
+<p>select tablespace_name from dba_tablespaces; #查看表空间</p>
+<ul>
+<li>段（Segment）</li>
+</ul>
+<p>段是同一类对象的一组存储区域。</p>
+<p>每种数据库对象（如表、索引）都有自己的段。</p>
+<p>段的种类包括：</p>
+<ul>
+<li>
+<p>数据段（Data Segment）：用于存储表或视图的数据。</p>
+</li>
+<li>
+<p>索引段（Index Segment）：用于存储索引的数据。</p>
+</li>
+<li>
+<p>回滚段（Rollback Segment）：用于事务恢复。</p>
+</li>
+</ul>
+<p>每个段由多个区（Extent）组成。</p>
+<ul>
+<li>
+<p>区（Extent）</p>
+</li>
+<li>
+<p>区是段里面的一块一块连续的小空间，段是由一个一个的区组合起来的。</p>
+</li>
+<li>
+<p>区是 Oracle 分配给段的基本单位。</p>
+</li>
+<li>
+<p>每次需要增加空间时，Oracle 会给段分配一个新的区（而不是一个一个块分配）。</p>
+</li>
+</ul>
+<ol start="4">
+<li>数据块（Data Block）</li>
+</ol>
+<p>数据块是 Oracle 逻辑存储结构中最小的单位。</p>
+<p>一个数据块通常对应磁盘上的一个物理块。</p>
+<p>数据块大小通常是 2KB、4KB、8KB、16KB、32KB（创建数据库时设置的DB_BLOCK_SIZE参数决定）。</p>
+<p>一个数据块中可以存储多行表数据，也可能存储一部分索引数据。</p>
+<p>show parameter db_block_size #查看当前数据块设置的大小</p>
+<ol start="5">
+<li>表（Table）</li>
+</ol>
+<p>表是数据库中存储结构化数据的基本对象。</p>
+<p>一个表在物理存储上对应一个数据段（Data Segment）。</p>
+<p>每张表的数据，最终存储在数据块里。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">简单的描述</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">当你创建一张表，</span>Oracle <span style="color:#960050;background-color:#1e0010">给这张表分配一个数据段（</span><span style="color:#66d9ef">Data</span> Segment<span style="color:#960050;background-color:#1e0010">）。</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">这个段一开始会被分配一个或多个区（</span>Extent<span style="color:#960050;background-color:#1e0010">）。</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">随着表中数据越来越多，</span>Oracle <span style="color:#960050;background-color:#1e0010">会不断地给这个段追加新的区（一次追加一块或多块）。</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">每个区内部，是由很多数据块（</span><span style="color:#66d9ef">Data</span> Block<span style="color:#960050;background-color:#1e0010">）组成的。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">可以这么理解</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">概念</span> <span style="color:#f92672">|</span> <span style="color:#960050;background-color:#1e0010">比喻</span> <span style="color:#f92672">|</span> <span style="color:#960050;background-color:#1e0010">说明</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">段</span> <span style="color:#f92672">|</span> <span style="color:#960050;background-color:#1e0010">一个仓库</span> <span style="color:#f92672">|</span> <span style="color:#960050;background-color:#1e0010">整个仓库存放所有货物（比如某张表的所有数据）</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">区</span> <span style="color:#f92672">|</span> <span style="color:#960050;background-color:#1e0010">仓库里一块一块的货架</span> <span style="color:#f92672">|</span> <span style="color:#960050;background-color:#1e0010">仓库是由很多货架组成的，每块货架（</span>Extent<span style="color:#960050;background-color:#1e0010">）有一定大小，装一部分数据</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">数据块</span> <span style="color:#f92672">|</span> <span style="color:#960050;background-color:#1e0010">每块货架上的小盒子</span> <span style="color:#f92672">|</span> <span style="color:#960050;background-color:#1e0010">货架上放的每一个盒子就是数据块，盒子里存的是表里的数据行</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">表空间（</span>Tablespace<span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">└──</span> <span style="color:#960050;background-color:#1e0010">段（</span>Segment<span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">└──</span> <span style="color:#960050;background-color:#1e0010">区（</span>Extent<span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">└──</span> <span style="color:#960050;background-color:#1e0010">数据块（</span><span style="color:#66d9ef">Data</span> Block<span style="color:#960050;background-color:#1e0010">）</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">└──</span> <span style="color:#960050;background-color:#1e0010">实际存储表的数据行</span></span></span></code></pre></div><p><img src="../images/image23.jpeg" alt="image23.jpeg" /></p>
+<h4 id="物理存储结构">物理存储结构<a class="anchor" href="#%e7%89%a9%e7%90%86%e5%ad%98%e5%82%a8%e7%bb%93%e6%9e%84">#</a></h4>
+<p>物理结构包含的三种数据文件： 控制文件</p>
+<p><img src="../images/image11.png" alt="image11.png" /></p>
+<p>数据文件</p>
+<p><img src="../images/image11.png" alt="image11.png" /></p>
+<p>重做日志文件</p>
+<p><img src="../images/image11.png" alt="image11.png" /></p>
+<p><img src="../images/image44.png" alt="image44.png" /></p>
+<h5 id="控制文件ctl">控制文件（.CTL）<a class="anchor" href="#%e6%8e%a7%e5%88%b6%e6%96%87%e4%bb%b6ctl">#</a></h5>
+<p>控制文件是oracle的物理文件之一，每个oracle数据库都必须至少有一个控制文件，它记录了数据库的名字、数据文件的位置等信息。在启动数据实例时，oracle会根据初始化参数定位控制文件，然后 oracle会根据控制文件在实例和数据库之间建立关联。控制文件的重要性在于，一旦控制文件损坏，数据库将会无法启动。</p>
+<p>控制文件是数据库中最小的文件</p>
+<p><img src="../images/image2.png" alt="image2.png" /></p>
+<p>控制文件是数据库中最重要的文件</p>
+<p><img src="../images/image30.png" alt="image30.png" /></p>
+<p>控制文件在数据库创建时被自动创建，并在数据库发生物理变化时会同时更新。</p>
+<p><img src="../images/image12.png" alt="image12.png" /></p>
+<h5 id="数据文件包括数据字典dbf">数据文件（包括数据字典）（.DBF）<a class="anchor" href="#%e6%95%b0%e6%8d%ae%e6%96%87%e4%bb%b6%e5%8c%85%e6%8b%ac%e6%95%b0%e6%8d%ae%e5%ad%97%e5%85%b8dbf">#</a></h5>
+<p>数据文件是用来存储实际数据的。一个数据库可以由多个数据文件组成的，数据文件是真正存放数据库数据的。一个数据文件就是一个操作系统文件。数据库的对象(表和索引)物理上是被存放在数据文件中的。当我们要查询一个表的数据的时候，如果该表的数据没有在内存中，那么oracle就要读取该表所在的数据文件，然后把数据存放到内存中。</p>
+<p>数据文件和表空间的关系：</p>
+<p>一个表空间可以包含几个数据文件</p>
+<p>一个数据文件只能对应一个表空间</p>
+<p>\</p>
+<p><img src="../images/image5.png" alt="image5.png" /></p>
+<p>数据文件的种类：</p>
+<p>系统数据文件（sysaux01.dbf和system01.dbf）</p>
+<ul>
+<li>回滚数据文件（undotbs01.dbf）</li>
+</ul>
+<p>用户数据文件（users01.dbf）</p>
+<p>临时数据文件 （temp01.dbf）</p>
+<p>通过下面的语句可以查看当前存在的数据文件和对应的表空间：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> file_name,tablespace_name <span style="color:#66d9ef">from</span> dba_data_files;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> file_name,tablespace_name <span style="color:#66d9ef">from</span> dba_temp_files;</span></span></code></pre></div><h5 id="日志文件log">日志文件（.LOG）<a class="anchor" href="#%e6%97%a5%e5%bf%97%e6%96%87%e4%bb%b6log">#</a></h5>
+<p>在oracle数据库中，重做日志文件用于记录用户对数据库所做的各种变更操作所引起的数据变化，此时，所产生的操作会先写入重做日志缓冲区，当用户提交一个事务的时候，LGWR进程将与该事务相关的所有重做记录写入重做日志文件，同时生成一个“系统变更数”,scn会和重做记录一起保存到重做日志文件组，以标识与该事务提交成功。如果某个事务提交出现错误，可以通过重做记录找到数据库修改之前的内容，进行数据恢复。</p>
+<p>重做日志文件特点：</p>
+<p><img src="../images/image36.png" alt="image36.png" /></p>
+<p>记录所有的数据变化</p>
+<p>提供恢复机制</p>
+<p>归档日志文件：是重做日志文件的历史备份</p>
+<p><img src="../images/image24.png" alt="image24.png" /></p>
+<p>默认情况下，oracle数据库处于非归档日志模式，即当重做日志文件写满的时候，直接覆盖里面的内 容，原先的日志记录不会被写入到归档日志文件中。根据oracle数据库对应的应用系统不同，数据库管理员可以把数据库的日志模式在归档模式和非归档模式之间进行切换。</p>
+<p><img src="../images/image17.jpeg" alt="image17.jpeg" /></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">select</span> dbid,name,log_mode <span style="color:#66d9ef">from</span> v$database;</span></span></code></pre></div><p>可以通过alter database archivelog或noarchivelog语句实现数据库在归档模式与非归档模式之间进行切换。</p>
+<p>切换步骤如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#ae81ff">1</span>.<span style="color:#960050;background-color:#1e0010">关闭数据库</span>
+</span></span><span style="display:flex;"><span>shutdown <span style="color:#66d9ef">immediate</span>;
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2</span>.<span style="color:#960050;background-color:#1e0010">将数据库启动到加载状态</span>
+</span></span><span style="display:flex;"><span>startup mount;
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">3</span>.<span style="color:#960050;background-color:#1e0010">改为归档模式</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">alter</span> <span style="color:#66d9ef">database</span> archivelog;
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">4</span>.<span style="color:#960050;background-color:#1e0010">重新打开数据库</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">alter</span> <span style="color:#66d9ef">database</span> <span style="color:#66d9ef">open</span>;</span></span></code></pre></div><h4 id="服务器结构">服务器结构<a class="anchor" href="#%e6%9c%8d%e5%8a%a1%e5%99%a8%e7%bb%93%e6%9e%84">#</a></h4>
+<p>Oracle服务器主要有以下几部分组成：</p>
+<ul>
+<li>前台进程</li>
+</ul>
+<p>用户进程: 使用SQL Plus连接成功后生成。包含两个重要概念:连接和会话</p>
+<p>服务器进程: 处理用户会话过程中的SQL语句和SQL Plus命令</p>
+<ul>
+<li>
+<p>程序全局区（PGA)</p>
+</li>
+<li>
+<p>实例</p>
+</li>
+</ul>
+<p>系统全局区（SGA)</p>
+<p>后台进程</p>
+<ul>
+<li>数据库</li>
+</ul>
+<p><img src="../images/image45.png" alt="image45.png" /></p>
+<h5 id="系统全局区sga">系统全局区SGA<a class="anchor" href="#%e7%b3%bb%e7%bb%9f%e5%85%a8%e5%b1%80%e5%8c%basga">#</a></h5>
+<p>系统全局区（System Global Area，SGA）是Oracle为系统分配的一组共享的内存结构，可以包含一个数据库实例的数据或控制信息。 在一个数据库实例中，可以有多个用户进程，这些用户进程可以共享系统全局区的数据。SGA是Oracle Instance的基本组成部分，在实例启动时分配。</p>
+<p><img src="../images/image3.jpeg" alt="image3.jpeg" /></p>
+<h6 id="高速数据缓冲区">高速数据缓冲区<a class="anchor" href="#%e9%ab%98%e9%80%9f%e6%95%b0%e6%8d%ae%e7%bc%93%e5%86%b2%e5%8c%ba">#</a></h6>
+<p>作用: 用来存放Oracle系统最近访问过的数据块。</p>
+<p>当用户请求数据时，oracle会从高速缓存区中检索，如果检索到了对应的数据块即缓存命中，oracle便会直接从缓存区中读取数据。如果没有命中，oracle的读进程会从数据文件中读取对应的数据块，将对应的数据块加入到缓存区中。</p>
+<p>经常或最近被访问的数据块会被放置到高速数据缓冲区的前端，不经常被访问的数据块会被放置到高速数据缓冲区的后端</p>
+<h6 id="共享池">共享池<a class="anchor" href="#%e5%85%b1%e4%ba%ab%e6%b1%a0">#</a></h6>
+<p>SGA中的共享池（shared pool）是由库高速缓存（library cache）和数据字典高速缓存（data dictionary cache）两部分所组成。服务器进程将SQL或者PL/SQL语句的正文和编译后的代码以及执行计划都放在共享池的库高速缓存中，在进行编译时，服务器进程首先会在共享池中搜索是否有相同的 SQL或者PL/SQL语句，如果有就不进行任何后续的编译处理，而是直接使用已存在的编译后的代码和执行计划。</p>
+<p>作用: 存储最近执行过的SQL 语句和最近使用过的数据定义共享池包含:</p>
+<p>库高速缓冲区</p>
+<p>库高速缓存包含了共享SQL区和共享PL/SQL区两部分，它们分别存放SQL和PL/SQL语句以及相关的信息。</p>
+<p>SQL或PL/SQL语句要是能共享的通用代码</p>
+<p>因为Oracle是通过比较SQL或PL/SQL语句的正文来决定两个语句是否相同的，只有当两个语句的正文完全相同时，Oracle才能重用已存的编译后的代码和执行计划。如果只是字母大小写不一样，那么字母大小写Oracle会自动转换，而且多余的空格或者制表键Oracle也会自动地压缩。</p>
+<p>例如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> emp <span style="color:#66d9ef">WHERE</span> sal <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">10000</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> emp <span style="color:#66d9ef">WHERE</span> sal <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">12000</span>;</span></span></code></pre></div><p>上面代码因为SQL语句的不同的，所以不是能共享的，那么我们可以使用通用代码来达到共享；我们可以通过绑定变量的方式：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> emp <span style="color:#66d9ef">WHERE</span> sal <span style="color:#f92672">&gt;=</span> :g_sal;</span></span></code></pre></div><p>因为变量不是在编译阶段而是在运行阶段赋值的。</p>
+<p>字典高速缓冲区</p>
+<p>当Oracle在执行SQL语句时，服务器进程将把数据文件、表、索引、列、用户和其他的数据对象的定义和权限的信息放入数据字典高速缓存。如果在这之后，有用户进程需要同样的信息，如表和列的定义，那么所有的这些信息都将从数据字典高速缓存中获得。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#f92672">#</span><span style="color:#960050;background-color:#1e0010">设置共享池的大小，受限于</span>SGA_MAX_SIZE
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ALTER</span> <span style="color:#66d9ef">SYSTEM</span> <span style="color:#66d9ef">SET</span> SHARED_POOL_SIZE <span style="color:#f92672">=</span> <span style="color:#ae81ff">250</span>M</span></span></code></pre></div><h5 id="程序全局区pga">程序全局区PGA<a class="anchor" href="#%e7%a8%8b%e5%ba%8f%e5%85%a8%e5%b1%80%e5%8c%bapga">#</a></h5>
+<p>程序全局区（Program Global Area, PGA），是服务器进程(server process)使用的一块包含数据和控制信息的内存区域。PGA是非共享的内存,在服务器进程启动或创建时分配(在系统运行时,排序,连接等操作也可能需要进行更进一步的PGA分配),并为server process排他访问。PGA中包含了会话的特定信息，如游标状态、排序和哈希操作的内存，以及用于管理游标共享和会话内内存分配的数据结构。</p>
+<p>每个Oracle服务器进程只拥有自己的那部分PGA资源。</p>
+<h2 id="oracle安装">Oracle安装<a class="anchor" href="#oracle%e5%ae%89%e8%a3%85">#</a></h2>
+<p>官方建议生产环境使用Oracle Linux 或 RHEL 系统，以获得最佳支持。</p>
+<p>其他linux系统官方不推荐，存在兼容性问题，需要额外配置。</p>
+<p>帮助文档</p>
+<p><a href="https://docs.oracle.com/en/database/oracle/oracle-database/23/xeinl/index.html">https://docs.oracle.com/en/database/oracle/oracle-database/23/xeinl/index.html</a> #安装文档</p>
+<p><a href="https://www.oracle.com/database/free/get-started/">https://www.oracle.com/database/free/get-started/</a> #下载地址</p>
+<p><a href="https://yum.oracle.com/oracle-linux-isos.html">https://yum.oracle.com/oracle-linux-isos.html</a> #oracle linux操作系统下载</p>
+<p>安装方式有如下图三种：</p>
+<p><img src="../images/image37.png" alt="image37.png" /></p>
+<h3 id="rpm安装">rpm安装<a class="anchor" href="#rpm%e5%ae%89%e8%a3%85">#</a></h3>
+<ul>
+<li>安装oracle linux9虚拟机</li>
+</ul>
+<p><a href="https://blog.csdn.net/m0_58805648/article/details/130906027">https://blog.csdn.net/m0_58805648/article/details/130906027</a></p>
+<ul>
+<li>
+<p>使用root用户安装。</p>
+</li>
+<li>
+<p>安装预安装环境</p>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>dnf <span style="color:#f92672">-</span>y install oracle<span style="color:#f92672">-</span><span style="color:#66d9ef">database</span><span style="color:#f92672">-</span>preinstall<span style="color:#f92672">-</span><span style="color:#ae81ff">23</span>ai</span></span></code></pre></div><ul>
+<li>下载安装oracle安装包</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>wget https:<span style="color:#f92672">//</span>download.oracle.com<span style="color:#f92672">/</span>otn<span style="color:#f92672">-</span>pub<span style="color:#f92672">/</span>otn_software<span style="color:#f92672">/</span>db<span style="color:#f92672">-</span><span style="color:#66d9ef">free</span><span style="color:#f92672">/</span>oracle<span style="color:#f92672">-</span><span style="color:#66d9ef">database</span><span style="color:#f92672">-</span><span style="color:#66d9ef">free</span><span style="color:#f92672">-</span><span style="color:#ae81ff">23</span>ai<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>.<span style="color:#ae81ff">0</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>.el9.x86_64.rpm
+</span></span><span style="display:flex;"><span>dnf <span style="color:#f92672">-</span>y install oracle<span style="color:#f92672">-</span><span style="color:#66d9ef">database</span><span style="color:#f92672">-</span><span style="color:#66d9ef">free</span><span style="color:#f92672">-</span><span style="color:#ae81ff">23</span>ai<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>.<span style="color:#ae81ff">0</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>.el9.x86_64.rpm</span></span></code></pre></div><ul>
+<li>
+<p>创建和配置数据库</p>
+</li>
+<li>
+<p>oracle配置文件（不做修改）</p>
+</li>
+</ul>
+<p><img src="../images/image46.png" alt="image46.png" /></p>
+<ul>
+<li>初始化数据库</li>
+</ul>
+<p><img src="../images/image6.png" alt="image6.png" /></p>
+<ul>
+<li>登录oracle</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#f92672">#</span><span style="color:#960050;background-color:#1e0010">先设置环境变量</span>
+</span></span><span style="display:flex;"><span>[root<span style="color:#f92672">@</span>localhost <span style="color:#f92672">~</span>]<span style="color:#f92672">#</span> cat <span style="color:#f92672">&lt;&lt;</span>EOF <span style="color:#f92672">&gt;&gt;/</span>etc<span style="color:#f92672">/</span>profile
+</span></span><span style="display:flex;"><span>export ORACLE_HOME<span style="color:#f92672">=/</span>opt<span style="color:#f92672">/</span>oracle<span style="color:#f92672">/</span>product<span style="color:#f92672">/</span><span style="color:#ae81ff">23</span>ai<span style="color:#f92672">/</span>dbhomeFree
+</span></span><span style="display:flex;"><span>export ORACLE_SID<span style="color:#f92672">=</span><span style="color:#66d9ef">Free</span>
+</span></span><span style="display:flex;"><span>export PDB_NAME<span style="color:#f92672">=</span>FREEPDB1
+</span></span><span style="display:flex;"><span>export NLS_LANG<span style="color:#f92672">=</span>AMERICAN_AMERICA.AL32UTF8
+</span></span><span style="display:flex;"><span>export NLS_DATE_FORMAT<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;YYYY-MM-DD HH24:MI:SS&#34;</span>
+</span></span><span style="display:flex;"><span>export LD_LIBRARY_PATH<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">${</span>ORACLE_HOME<span style="color:#960050;background-color:#1e0010">}</span><span style="color:#f92672">/</span>lib:<span style="color:#f92672">/</span>lib:<span style="color:#f92672">/</span>usr<span style="color:#f92672">/</span>lib
+</span></span><span style="display:flex;"><span>export PATH<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">${</span>ORACLE_HOME<span style="color:#960050;background-color:#1e0010">}</span><span style="color:#f92672">/</span>bin:<span style="color:#960050;background-color:#1e0010">${</span>ORACLE_HOME<span style="color:#960050;background-color:#1e0010">}</span><span style="color:#f92672">/</span>OPatch:<span style="color:#960050;background-color:#1e0010">$</span>OGG_HOME:<span style="color:#960050;background-color:#1e0010">${</span>PATH<span style="color:#960050;background-color:#1e0010">}</span>
+</span></span><span style="display:flex;"><span>export <span style="color:#66d9ef">HOST</span><span style="color:#f92672">=`</span>hostname <span style="color:#f92672">|</span> cut <span style="color:#f92672">-</span>f1 <span style="color:#f92672">-</span>d<span style="color:#e6db74">&#34;.&#34;</span><span style="color:#f92672">`</span>
+</span></span><span style="display:flex;"><span>export LD_LIBRARY_PATH<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>ORACLE_HOME<span style="color:#f92672">/</span>lib:<span style="color:#960050;background-color:#1e0010">$</span>ORACLE_HOME<span style="color:#f92672">/</span>lib32:<span style="color:#960050;background-color:#1e0010">$</span>OGG_HOME:<span style="color:#f92672">/</span>lib<span style="color:#f92672">/</span>usr<span style="color:#f92672">/</span>lib:<span style="color:#f92672">/</span>usr<span style="color:#f92672">/</span><span style="color:#66d9ef">local</span><span style="color:#f92672">/</span>lib
+</span></span><span style="display:flex;"><span><span style="color:#f92672">#</span> <span style="color:#66d9ef">General</span> exports <span style="color:#66d9ef">and</span> vars
+</span></span><span style="display:flex;"><span>export PATH<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>ORACLE_HOME<span style="color:#f92672">/</span>bin:<span style="color:#960050;background-color:#1e0010">$</span>PATH
+</span></span><span style="display:flex;"><span>LSNR<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>ORACLE_HOME<span style="color:#f92672">/</span>bin<span style="color:#f92672">/</span>lsnrctl
+</span></span><span style="display:flex;"><span>SQLPLUS<span style="color:#f92672">=</span><span style="color:#960050;background-color:#1e0010">$</span>ORACLE_HOME<span style="color:#f92672">/</span>bin<span style="color:#f92672">/</span>sqlplus
+</span></span><span style="display:flex;"><span>EOF
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>[root<span style="color:#f92672">@</span>localhost <span style="color:#f92672">~</span>]<span style="color:#f92672">#</span> <span style="color:#66d9ef">source</span> <span style="color:#f92672">/</span>etc<span style="color:#f92672">/</span>profile
+</span></span><span style="display:flex;"><span>[root<span style="color:#f92672">@</span>localhost <span style="color:#f92672">~</span>]<span style="color:#f92672">#</span> su <span style="color:#f92672">-</span> oracle
+</span></span><span style="display:flex;"><span>[oracle<span style="color:#f92672">@</span>localhost]<span style="color:#960050;background-color:#1e0010">$</span> sqlplus <span style="color:#f92672">/</span> <span style="color:#66d9ef">as</span> sysdba <span style="color:#f92672">#</span><span style="color:#960050;background-color:#1e0010">以</span>DBA身份登录oracle
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">SQL</span><span style="color:#f92672">*</span>Plus: Release <span style="color:#ae81ff">23</span>.<span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">0</span> <span style="color:#f92672">-</span> Production <span style="color:#66d9ef">on</span> Wed Apr <span style="color:#ae81ff">23</span> <span style="color:#ae81ff">20</span>:<span style="color:#ae81ff">47</span>:<span style="color:#ae81ff">40</span> <span style="color:#ae81ff">2025</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">Version</span> <span style="color:#ae81ff">23</span>.<span style="color:#ae81ff">7</span>.<span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">25</span>.<span style="color:#ae81ff">01</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Copyright (<span style="color:#66d9ef">c</span>) <span style="color:#ae81ff">1982</span>, <span style="color:#ae81ff">2025</span>, Oracle. <span style="color:#66d9ef">All</span> rights reserved.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">???</span>:
+</span></span><span style="display:flex;"><span>Oracle <span style="color:#66d9ef">Database</span> <span style="color:#ae81ff">23</span>ai <span style="color:#66d9ef">Free</span> Release <span style="color:#ae81ff">23</span>.<span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">0</span> <span style="color:#f92672">-</span> Develop, Learn, <span style="color:#66d9ef">and</span> Run <span style="color:#66d9ef">for</span> <span style="color:#66d9ef">Free</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">Version</span> <span style="color:#ae81ff">23</span>.<span style="color:#ae81ff">7</span>.<span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">25</span>.<span style="color:#ae81ff">01</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">SQL</span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">show</span> <span style="color:#66d9ef">user</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">USER</span> <span style="color:#f92672">?</span> <span style="color:#e6db74">&#34;SYS&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">SQL</span><span style="color:#f92672">&gt;</span></span></span></code></pre></div><p>远程连接oracle</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>[root<span style="color:#f92672">@</span>localhost <span style="color:#f92672">~</span>]<span style="color:#f92672">#</span> systemctl stop firewalld
+</span></span><span style="display:flex;"><span>[root<span style="color:#f92672">@</span>localhost <span style="color:#f92672">~</span>]<span style="color:#f92672">#</span> systemctl disable firewalld
+</span></span><span style="display:flex;"><span><span style="color:#f92672">#</span><span style="color:#960050;background-color:#1e0010">远程连接，需要先关闭防火墙</span>
+</span></span><span style="display:flex;"><span>[root<span style="color:#f92672">@</span>localhost <span style="color:#f92672">~</span>]<span style="color:#f92672">#</span> sqlplus <span style="color:#66d9ef">system</span><span style="color:#f92672">/</span>Oracle23ai<span style="color:#f92672">@</span><span style="color:#ae81ff">192</span>.<span style="color:#ae81ff">168</span>.<span style="color:#ae81ff">10</span>.<span style="color:#ae81ff">100</span>:<span style="color:#ae81ff">1521</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">#</span><span style="color:#960050;background-color:#1e0010">连接到默认</span> PDB:FREEPDB1
+</span></span><span style="display:flex;"><span>[root<span style="color:#f92672">@</span>localhost <span style="color:#f92672">~</span>]<span style="color:#f92672">#</span> sqlplus <span style="color:#66d9ef">system</span><span style="color:#f92672">/</span>Oracle23ai<span style="color:#f92672">@</span><span style="color:#ae81ff">192</span>.<span style="color:#ae81ff">168</span>.<span style="color:#ae81ff">10</span>.<span style="color:#ae81ff">100</span>:<span style="color:#ae81ff">1521</span><span style="color:#f92672">/</span>FREEPDB1
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">使用</span>navicat连接oracle</span></span></code></pre></div><p><img src="../images/image25.png" alt="image25.png" /></p>
+<h3 id="docker方式安装">Docker方式安装<a class="anchor" href="#docker%e6%96%b9%e5%bc%8f%e5%ae%89%e8%a3%85">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>docker pull container<span style="color:#f92672">-</span>registry.oracle.com<span style="color:#f92672">/</span><span style="color:#66d9ef">database</span><span style="color:#f92672">/</span><span style="color:#66d9ef">free</span>:latest
+</span></span><span style="display:flex;"><span>docker run <span style="color:#f92672">-</span>d <span style="color:#75715e">--name myoracle -e ORACLE_PWD=Oracle23ai -p 1521:1521 container-registry.oracle.com/database/free:latest
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>sqlplus <span style="color:#66d9ef">system</span><span style="color:#f92672">/</span>Oracle23ai<span style="color:#f92672">@</span><span style="color:#ae81ff">192</span>.<span style="color:#ae81ff">168</span>.<span style="color:#ae81ff">10</span>.<span style="color:#ae81ff">100</span>:<span style="color:#ae81ff">1521</span>
+</span></span><span style="display:flex;"><span>docker <span style="color:#66d9ef">exec</span> <span style="color:#f92672">-</span>it Oracle23ai sqlplus <span style="color:#f92672">/</span> <span style="color:#66d9ef">as</span> sysdba
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">select</span> instance_name <span style="color:#66d9ef">from</span> v$instance; <span style="color:#f92672">#</span><span style="color:#960050;background-color:#1e0010">查询当前连接的数据库实例名称</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">容器初始化需要时间（约</span><span style="color:#ae81ff">5</span><span style="color:#f92672">-</span><span style="color:#ae81ff">10</span><span style="color:#960050;background-color:#1e0010">分钟），可通过以下命令检查状态：</span>
+</span></span><span style="display:flex;"><span>docker logs <span style="color:#f92672">-</span>f Oracle23ai
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">当看到以下日志表示就绪：</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">DATABASE</span> <span style="color:#66d9ef">IS</span> READY <span style="color:#66d9ef">TO</span> USE<span style="color:#f92672">!</span>
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">持久化存储建议：</span>
+</span></span><span style="display:flex;"><span>docker run <span style="color:#f92672">-</span>d <span style="color:#960050;background-color:#1e0010">\</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">--name Oracle23ai \
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">-</span>p <span style="color:#ae81ff">1521</span>:<span style="color:#ae81ff">1521</span> <span style="color:#960050;background-color:#1e0010">\</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-</span>v <span style="color:#f92672">/</span>path<span style="color:#f92672">/</span><span style="color:#66d9ef">on</span><span style="color:#f92672">/</span><span style="color:#66d9ef">host</span>:<span style="color:#f92672">/</span>opt<span style="color:#f92672">/</span>oracle<span style="color:#f92672">/</span>oradata <span style="color:#960050;background-color:#1e0010">\</span>
+</span></span><span style="display:flex;"><span>container<span style="color:#f92672">-</span>registry.oracle.com<span style="color:#f92672">/</span><span style="color:#66d9ef">database</span><span style="color:#f92672">/</span><span style="color:#66d9ef">free</span>:latest</span></span></code></pre></div><h3 id="virtualbox-oracle安装">VirtualBox oracle安装<a class="anchor" href="#virtualbox-oracle%e5%ae%89%e8%a3%85">#</a></h3>
+<h3 id="管理oracle">管理oracle<a class="anchor" href="#%e7%ae%a1%e7%90%86oracle">#</a></h3>
+<h4 id="设置开机自启动">设置开机自启动<a class="anchor" href="#%e8%ae%be%e7%bd%ae%e5%bc%80%e6%9c%ba%e8%87%aa%e5%90%af%e5%8a%a8">#</a></h4>
+<p>systemctl daemon-reload</p>
+<p>/usr/lib/systemd/systemd-sysv-install enable oracle-free-23ai</p>
+<p>/etc/init.d/oracle-free-23ai stop #先把之前方式启动的关闭</p>
+<p>systemctl start oracle-free-23ai #再启动</p>
+<p>systemctl stop oracle-free-23ai</p>
+<p>systemctl restart oracle-free-23ai</p>
+<p>lsnrctl status</p>
+<p>是 Oracle 数据库中的一个关键命令，用于 检查监听器（Listener）的运行状态和配置信息。监听器是 Oracle 数据库网络服务的核心组件，负责接收客户端连接请求并将其路由到相应的数据库实例。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span>LSNRCTL <span style="color:#66d9ef">for</span> Linux: <span style="color:#66d9ef">Version</span> <span style="color:#ae81ff">23</span>.<span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">0</span> <span style="color:#f92672">-</span> Production <span style="color:#66d9ef">on</span> <span style="color:#ae81ff">24</span><span style="color:#f92672">-</span>APR<span style="color:#f92672">-</span><span style="color:#ae81ff">2025</span> <span style="color:#ae81ff">00</span>:<span style="color:#ae81ff">54</span>:<span style="color:#ae81ff">07</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>STATUS <span style="color:#66d9ef">of</span> the LISTENER
+</span></span><span style="display:flex;"><span><span style="color:#75715e">------------------------
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">Alias</span> LISTENER
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">Version</span> TNSLSNR <span style="color:#66d9ef">for</span> Linux: <span style="color:#66d9ef">Version</span> <span style="color:#ae81ff">23</span>.<span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">0</span>.<span style="color:#ae81ff">0</span> <span style="color:#f92672">-</span> Production
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">Start</span> Date <span style="color:#ae81ff">23</span><span style="color:#f92672">-</span>APR<span style="color:#f92672">-</span><span style="color:#ae81ff">2025</span> <span style="color:#ae81ff">21</span>:<span style="color:#ae81ff">13</span>:<span style="color:#ae81ff">22</span>
+</span></span><span style="display:flex;"><span>Uptime <span style="color:#ae81ff">0</span> days <span style="color:#ae81ff">3</span> hr. <span style="color:#ae81ff">40</span> <span style="color:#66d9ef">min</span>. <span style="color:#ae81ff">45</span> sec
+</span></span><span style="display:flex;"><span>Trace <span style="color:#66d9ef">Level</span> <span style="color:#66d9ef">off</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">Security</span> <span style="color:#66d9ef">ON</span>: <span style="color:#66d9ef">Local</span> OS Authentication
+</span></span><span style="display:flex;"><span>SNMP <span style="color:#66d9ef">OFF</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">Default</span> Service <span style="color:#66d9ef">FREE</span>
+</span></span><span style="display:flex;"><span>Listener <span style="color:#66d9ef">Parameter</span> File <span style="color:#f92672">/</span>opt<span style="color:#f92672">/</span>oracle<span style="color:#f92672">/</span>product<span style="color:#f92672">/</span><span style="color:#ae81ff">23</span>ai<span style="color:#f92672">/</span>dbhomeFree<span style="color:#f92672">/</span>network<span style="color:#f92672">/</span><span style="color:#66d9ef">admin</span><span style="color:#f92672">/</span>listener.ora
+</span></span><span style="display:flex;"><span>Listener Log File <span style="color:#f92672">/</span>opt<span style="color:#f92672">/</span>oracle<span style="color:#f92672">/</span>diag<span style="color:#f92672">/</span>tnslsnr<span style="color:#f92672">/</span>localhost<span style="color:#f92672">/</span>listener<span style="color:#f92672">/</span>alert<span style="color:#f92672">/</span>log.xml
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Listening Endpoints Summary...
+</span></span><span style="display:flex;"><span>(DESCRIPTION<span style="color:#f92672">=</span>(ADDRESS<span style="color:#f92672">=</span>(PROTOCOL<span style="color:#f92672">=</span>tcp)(<span style="color:#66d9ef">HOST</span><span style="color:#f92672">=</span>localhost)(PORT<span style="color:#f92672">=</span><span style="color:#ae81ff">1521</span>))) <span style="color:#f92672">#</span> <span style="color:#960050;background-color:#1e0010">监听本地</span><span style="color:#ae81ff">1521</span><span style="color:#960050;background-color:#1e0010">端口</span>
+</span></span><span style="display:flex;"><span>(DESCRIPTION<span style="color:#f92672">=</span>(ADDRESS<span style="color:#f92672">=</span>(PROTOCOL<span style="color:#f92672">=</span>ipc)(<span style="color:#66d9ef">KEY</span><span style="color:#f92672">=</span>EXTPROC1521))) <span style="color:#f92672">#</span> IPC通信
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Services Summary...
+</span></span><span style="display:flex;"><span>Service <span style="color:#e6db74">&#34;FREE&#34;</span> has <span style="color:#ae81ff">1</span> instance(s). <span style="color:#f92672">#</span> CDB <span style="color:#960050;background-color:#1e0010">服务</span>
+</span></span><span style="display:flex;"><span>Instance <span style="color:#e6db74">&#34;FREE&#34;</span>, status READY, has <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">handler</span>(s) <span style="color:#66d9ef">for</span> this service...
+</span></span><span style="display:flex;"><span>Service <span style="color:#e6db74">&#34;FREEXDB&#34;</span> has <span style="color:#ae81ff">1</span> instance(s). <span style="color:#f92672">#</span> XML DB <span style="color:#960050;background-color:#1e0010">服务</span>
+</span></span><span style="display:flex;"><span>Instance <span style="color:#e6db74">&#34;FREE&#34;</span>, status READY, has <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">handler</span>(s) <span style="color:#66d9ef">for</span> this service...
+</span></span><span style="display:flex;"><span>Service <span style="color:#e6db74">&#34;freepdb1&#34;</span> has <span style="color:#ae81ff">1</span> instance(s). <span style="color:#f92672">#</span> PDB <span style="color:#960050;background-color:#1e0010">服务</span>
+</span></span><span style="display:flex;"><span>Instance <span style="color:#e6db74">&#34;FREE&#34;</span>, status READY, has <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">handler</span>(s) <span style="color:#66d9ef">for</span> this service...</span></span></code></pre></div><h4 id="oracle主要文件目录">Oracle主要文件目录<a class="anchor" href="#oracle%e4%b8%bb%e8%a6%81%e6%96%87%e4%bb%b6%e7%9b%ae%e5%bd%95">#</a></h4>
+<p><img src="../images/image18.png" alt="image18.png" /></p>
+<h3 id="安装oracle-sql-developer">安装Oracle SQL Developer<a class="anchor" href="#%e5%ae%89%e8%a3%85oracle-sql-developer">#</a></h3>
+<p><a href="https://www.oracle.com/cn/database/sqldeveloper/">https://www.oracle.com/cn/database/sqldeveloper/</a></p>
+<p><img src="../images/image4.png" alt="image4.png" /></p>
+<h2 id="oracle使用">Oracle使用<a class="anchor" href="#oracle%e4%bd%bf%e7%94%a8">#</a></h2>
+<h3 id="用户概念">用户概念<a class="anchor" href="#%e7%94%a8%e6%88%b7%e6%a6%82%e5%bf%b5">#</a></h3>
+<ul>
+<li>
+<p>Oracle用户的概念对于Oracle数据库至关重要，在现实环境当中一个服务器一般只会安装一个Oracle实例，一个 Oracle用户代表着一个用户群体，他们通过该用户登录数据库，进行数据库对象的创建、查询等开发。</p>
+</li>
+<li>
+<p>每一个用户对应着该用户下的N多对象，因此，在实际项目开发过程中，不同的项目组使用不同的Oracle用户进行开发，不相互干扰。也可以理解为一个Oracle用户即是一个业务模块，这些用户群构成一个完整的业务系统，不同模块间的关联可以通过Oracle用户的权限来控制，来获取其它业务模块的数据和操作其它业务模块的某些对象。</p>
+</li>
+</ul>
+<p>总之Oracle里的用户，不只是登录账号，而是一个业务系统的容器，管理着自己的表、程序和数据，多个用户之间通过授权进行数据共享与隔离。</p>
+<h3 id="用户模式">用户模式<a class="anchor" href="#%e7%94%a8%e6%88%b7%e6%a8%a1%e5%bc%8f">#</a></h3>
+<p>在Oracle数据库中，为了便于管理用户创建的数据库对象(如数据表、索引、视图等)，引入了模式的概念，某个用户创建的数据库对象都属于该用户模式。</p>
+<p>在一个模式内部不可以直接访问其他模式的数据库对象，即使在具有访问权限的情况下，也需要指定模式名称才可以访问其他模式的数据库对象。</p>
+<p>比如在scott账号下创建的表dept，查询这个表时使用下面的语句：</p>
+<p>当在其他用户账号下，比如system账号下，访问dept表时，需要在表名前面加上该表的所属账号</p>
+<p>scott；</p>
+<h3 id="用户登录数据库">用户登录数据库<a class="anchor" href="#%e7%94%a8%e6%88%b7%e7%99%bb%e5%bd%95%e6%95%b0%e6%8d%ae%e5%ba%93">#</a></h3>
+<p>SQLPlus是 Oracle 默认安装的自带的一个客户端工具。如果Oracle安装在 Windows下，在cmd 命令行中输入 “sqlplus”命令，就能够启动该工具了；如果Oracle安装在Linux系统中，在Linux的命令界面中输入“sqlplus”命令，就能启动该工具。</p>
+<p>连接身份代表着改用户连接数据库后享受的权限，oracle 有三种身份如下：</p>
+<p>sysdba:数据库管理员身份。权限：打开（关闭）数据库服务器、备份（恢复）数据库、日志功能、会话限制、数据库管理功能等。</p>
+<p><img src="../images/image19.png" alt="image19.png" /></p>
+<p>sysoper:数据库操作员身份 。权限：打开（关闭）数据库服务器、备份（恢复）数据库、日志功能、会话限制。</p>
+<p><img src="../images/image13.png" alt="image13.png" /></p>
+<p>normal:普通用户。权限：操作该用户下的数据对象和数据查询，默认的身份是normal用户。</p>
+<p><img src="../images/image7.png" alt="image7.png" /></p>
+<p>注意:sys用户必须用sysdba才能登陆(使用：sys as sysdba)，system用户(数据库管理员身份，直接使用：system)。</p>
+<p>sqlplus登录用户语法：sqlplus username/password@serviceName [ as 连接身份]以系统管理员登录数据库：</p>
+<p>切换用户：connect username/password@serviceName [ as 连接身份]</p>
+<p>查看当前用户：show user;</p>
+<p><img src="../images/image38.png" alt="image38.png" /></p>
+<p>SQLPlus令行工具提供了和Oracle数据库交互能力，不仅仅可以连接本地数据库，也可以连接远程数据库。</p>
+<p>语法：conn 用户名/密码@服务器连接字符串 as 连接身份(此身份需要解锁)</p>
+<p>案例：connect <a href="mailto:sys/Oracle23ai@192.168.65.198">sys/Oracle23ai@192.168.65.198</a>:1521/free as sysdba;</p>
+<p>基本概念</p>
+<p>CDB——Container Database，即容器数据库；</p>
+<p><img src="../images/image31.png" alt="image31.png" /></p>
+<p>PDB——Pluggable Database，即可插拔数据库；</p>
+<p><img src="../images/image20.png" alt="image20.png" /></p>
+<p>公共用户——CDB公共用户，必须以C##或c##开头，Oracle会在每个PDB中同时创建该用户；</p>
+<p><img src="../images/image47.png" alt="image47.png" /></p>
+<p>本地用户——PDB的用户，本地用户所在PDB中必须是唯一的，每个PDB可以有不同的本地用户；</p>
+<p><img src="../images/image8.png" alt="image8.png" /></p>
+<p>CDB和PDB是数据库中的两种重要概念。</p>
+<p>CDB是一个容器数据库，名称为 CDB$ROOT，其作用就是系统数据库，sys等账号都保存在里面，同时它可以管理PDB数据库。可以容纳多个PDB，类似于一个父容器。在CDB环境中，用户称为公共用户，而在PDB环境中，用户称为本地用户。</p>
+<p>PDB是一种可插拔数据库，它可以在CDB中独立地创建、停止和启动。每个PDB都有自己的数据文件、控制文件和日志文件，并且可以独立地进行备份和恢复操作。PDB提供了更高的隔离性和安全性，因为每个PDB都有自己的安全上下文，并且只能通过指定的用户访问。</p>
+<p>常用命令</p>
+<h3 id="创建用户">创建用户<a class="anchor" href="#%e5%88%9b%e5%bb%ba%e7%94%a8%e6%88%b7">#</a></h3>
+<p>每个用户都有自己的用户名和密码，以及权限和角色，用户访问和管理数据库中的对象。</p>
+<p><img src="../images/image39.png" alt="image39.png" /></p>
+<p>使用CREATE和DROP来创建和删除用户。用户对它所拥有的对象具有所有的增删改的权限。 可以使用 ALTER USER 命令来修改用户的属性，如密码、默认表空间以及存储配额。</p>
+<p><img src="../images/image26.png" alt="image26.png" /></p>
+<p><img src="../images/image9.png" alt="image9.png" /></p>
+<p>用户可以被授予不同的权限或者角色。</p>
+<p><img src="../images/image42.png" alt="image42.png" /></p>
+<p>1 sqlplus system/Oracle23ai@free &ndash; 连接数据库(管理员角色)</p>
+<p>2</p>
+<p>3</p>
+<p>4 # 在CDB（Container Database）容器中创建用户时，前面必须添加C## ,而PDB（Pluggable Database）数据库不需要加前缀</p>
+<p>5 #COMMON USERS(普通用户)：经常建立在CDB层，用户名以C##或c##开头；</p>
+<p>6 #LOCAL USERS(本地用户)：仅建立在PDB层，建立的时候得指定CONTAINER。</p>
+<p>7</p>
+<p>8 #看数据库是否为 CDB</p>
+<p>9 select CDB from v$database;</p>
+<p>10</p>
+<p>11 #创建用户</p>
+<p>12 create user C##fox identified by Oracle23ai;</p>
+<p>13</p>
+<p>14 #配置权限</p>
+<p>15 grant dba,connect,resource,create view to C##fox;</p>
+<p>16 grant create session to C##fox;</p>
+<p>17 grant select any table to C##fox;</p>
+<p>18 grant update any table to C##fox;</p>
+<p>19 grant insert any table to C##fox;</p>
+<p>20 grant delete any table to C##fox;</p>
+<p>21</p>
+<p>22</p>
+<p>23</p>
+<p>24 #连接登陆测试</p>
+<p>25 conn c##fox/Oracle23ai@free</p>
+<p>26</p>
+<p>27</p>
+<p>28 &ndash;修改用户密码、锁定状态</p>
+<p>29 alter user c##fox</p>
+<p>30	identified by</p>
+<p>&ndash;修改密码</p>
+<p>31	account lock;&ndash;修改用户处于锁定状态或者解锁状态 （LOCK|UNLOCK ）</p>
+<p>32</p>
+<p>33 #删除用户</p>
+<p>34 drop user c##fox;</p>
+<p>虽然创建了用户，但还不能使用，需要给用户授予数据库角色和设置用户权限。</p>
+<h3 id="数据库角色">数据库角色<a class="anchor" href="#%e6%95%b0%e6%8d%ae%e5%ba%93%e8%a7%92%e8%89%b2">#</a></h3>
+<p>Oracle数据库角色是若干系统权限的集合，给Oracle用户进行授数据库角色，就是等于赋予该用户若干数据库系统权限。</p>
+<p>常用的数据库角色如下：</p>
+<p>CONNECT角色：</p>
+<p><img src="../images/image32.png" alt="image32.png" /></p>
+<p>CONNECT角色是Oracle用户的基本角色，CONNECT权限代表着用户可以和Oracle服务器进行连接，建立Session（会 话）。</p>
+<p>RESOURCE角色：</p>
+<p><img src="../images/image21.png" alt="image21.png" /></p>
+<p>RESOURCE角色是开发过程中常用的角色。RESOURCE给用户提供了可以创建自己的对象，包括：表、视图、序列、过程、触发器、索引、包、类型等。</p>
+<p>DBA角色：</p>
+<p><img src="../images/image14.png" alt="image14.png" /></p>
+<p>DBA角色是管理数据库管理员该有的角色。它拥护系统了所有权限，和给其他用户授权的权限。 SYSTEM用户就具有DBA权限。</p>
+<p>三个数据库角色，对应有三个连接身份。</p>
+<h3 id="用户权限">用户权限<a class="anchor" href="#%e7%94%a8%e6%88%b7%e6%9d%83%e9%99%90">#</a></h3>
+<p>Oracle数据库用户权限分为：系统权限和对象权限两种。</p>
+<p>系统权限：</p>
+<p><img src="../images/image10.png" alt="image10.png" /></p>
+<p>比如：create session可以和数据库进行连接权限、create table、create view 等具有创建数据库对象权限。</p>
+<p>对象权限：</p>
+<p><img src="../images/image40.png" alt="image40.png" /></p>
+<p>比如：对表中数据进行增删改查操作，拥有数据库对象权限的用户可以对所拥有的对象进行相应的操作。</p>
+<p>因此，在实际开发过程当中可以根据需求，把某个角色或系统权限赋予某个用户。</p>
+<p>系统权限只能通过DBA用户授权！所以通常用于连接的用户（sqlplus system/Oracle23ai as sysdba; ） 对象权限由拥有该对象权限的对象授权！</p>
+<p><img src="../images/image27.png" alt="image27.png" /></p>
+<p><img src="../images/image22.png" alt="image22.png" /></p>
+<p>数据库角色选择授权一般也只能通过DBA用户授权！（sqlplus system/Oracle23ai as sysdba;） 用户不能自己给自己授权！（所以授权可以统一的：sqlplus system/Oracle23ai as sysdba;）</p>
+<p><img src="../images/image48.png" alt="image48.png" /></p>
+<p><img src="../images/image33.png" alt="image33.png" /></p>
+<p>授权操作</p>
+<p>查看用户的权限或角色</p>
+<p>取消用户权限</p>
+<p><img src="../images/image28.png" alt="image28.png" /></p>
+<p><img src="../images/image15.png" alt="image15.png" /></p>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/Prompt%E5%B7%A5%E7%A8%8B/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>Prompt工程</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/02.%E8%BF%90%E7%BB%B4/08.Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="flex align-center">
+        <span>nssm进程管理工具</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#oracle介绍">Oracle介绍</a>
+      <ul>
+        <li><a href="#oracle数据库发展史">Oracle数据库发展史</a></li>
+        <li><a href="#应用场景">应用场景</a></li>
+        <li><a href="#oracle体系结构">Oracle体系结构</a></li>
+      </ul>
+    </li>
+    <li><a href="#oracle安装">Oracle安装</a>
+      <ul>
+        <li><a href="#rpm安装">rpm安装</a></li>
+        <li><a href="#docker方式安装">Docker方式安装</a></li>
+        <li><a href="#virtualbox-oracle安装">VirtualBox oracle安装</a></li>
+        <li><a href="#管理oracle">管理oracle</a></li>
+        <li><a href="#安装oracle-sql-developer">安装Oracle SQL Developer</a></li>
+      </ul>
+    </li>
+    <li><a href="#oracle使用">Oracle使用</a>
+      <ul>
+        <li><a href="#用户概念">用户概念</a></li>
+        <li><a href="#用户模式">用户模式</a></li>
+        <li><a href="#用户登录数据库">用户登录数据库</a></li>
+        <li><a href="#创建用户">创建用户</a></li>
+        <li><a href="#数据库角色">数据库角色</a></li>
+        <li><a href="#用户权限">用户权限</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

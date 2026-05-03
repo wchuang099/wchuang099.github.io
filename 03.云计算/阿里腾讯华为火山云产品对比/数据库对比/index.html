@@ -1,0 +1,2570 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="数据库产品对比表# 产品类别 厂商 产品名称 型号 / 版本 核心性能参数 适用场景 云原生数据库 阿里云 云原生数据库 PolarDB PolarDB MySQL 版, PolarDB PostgreSQL 版, PolarDB Oracle 兼容版, PolarDB Serverless 版 100%兼容MySQL、PostgreSQL，兼容Oracle；最大存储容量100TB；峰值QPS达100万&#43;，延迟低至10ms；支持存储计算分离，弹性扩展 互联网电商、金融支付、游戏社交等高并发场景；企业核心业务系统迁移（Oracle/MySQL迁移）；实时数据处理 腾讯云 云原生数据库 TDSQL-C TDSQL-C MySQL 版, TDSQL-C PostgreSQL 版, TDSQL-C Serverless 版, TDSQL-C 企业版 100%兼容MySQL、PostgreSQL协议；存储扩展至128TB，支持百万级QPS；秒级扩容，按实际使用量计费；99.999%数据可靠性 高并发交易系统（如电商秒杀、直播打赏）；SaaS服务多租户场景 华为云 云原生数据库 GaussDB (for MySQL/PostgreSQL) GaussDB for MySQL, GaussDB for PostgreSQL, GaussDB Serverless, GaussDB 企业版 兼容MySQL 8.0、PostgreSQL 12协议；128TB存储，百万级QPS；支持读写分离、自动备份与恢复；符合等保三级标准 金融核心系统、政务数据平台、大型ERP、AI训练数据存储与分析 火山云 云数据库 veDB MySQL 版 通用型，独享型 无详细参数 企业级应用、系统数据库需求 关系型数据库 RDS 阿里云 云数据库 RDS RDS MySQL 版, RDS PostgreSQL 版, RDS SQL Server 版, RDS MariaDB 版, RDS PPAS 版（兼容Oracle） 自动备份、故障迁移；支持5000GB存储，500万QPS；支持SQL审计、数据加密、性能监控与优化建议 传统企业IT系统迁移，电商订单管理，用户信息存储 腾讯云 云数据库 TencentDB for RDS TencentDB for MySQL, TencentDB for PostgreSQL, TencentDB for SQL Server, TencentDB for MariaDB 99.99%可用性；支持6000GB存储，400万QPS；跨地域备份，集成DBbrain智能管家；透明数据加密（TDE） 游戏用户数据存储，社交平台用户关系存储，财务系统 华为云 云数据库 RDS RDS for MySQL, RDS for PostgreSQL, RDS for SQL Server, RDS for MariaDB, RDS for DB2 支持4000GB存储，300万QPS；跨可用区部署；符合等保四级、PCI DSS等合规要求 政务信息化系统，金融行业交易系统，大型企业核心业务 火山云 云数据库 MySQL 版 独享规格，通用规格 无详细参数 企业级应用、系统数据库需求 数据库管理工具 阿里云 数据管理 DMS DMS 基础版, DMS 企业版, DMS 旗舰版, DMS Serverless 版 支持多数据库统一管理，SQL审核、数据脱敏、权限管理；AI助手支持智能SQL生成与优化 企业级数据库统一管理与运维，开发团队SQL审核流程管控 腾讯云 数据库管理服务 DBManager DBManager 基础版, DBManager 企业版, DBManager 专业版 支持MySQL、PostgreSQL等数据库管理，性能监控与诊断，权限精细化控制 中小企业数据库日常管理，开发团队快速数据库操作，腾讯云生态内管理 华为云 数据管理服务 DAS DAS 免费版, DAS 企业版, DAS 专业版 支持GaussDB、RDS等数据库管理，智能诊断与性能优化建议，支持敏感数据脱敏，自动化运维 数据安全管控，智能诊断功能，国产化数据库支持要求高的场景 火山云 数据库工作台 DBW 数据库工作台（Database Workshop, DBW） 支持多类型数据库生命周期管理，数据库GUI、故障排查、审计，智能风险检核，自治运维 数据库生命周期管理，智能风险检核，数据库自治运维 数据传输服务 阿里云 数据传输服务 DTS DTS 数据迁移版, DTS 数据同步版, DTS 数据订阅版, DTS 灾备版 支持数据库迁移上云，实时数据集成，支持异构数据库间同步，断点续传，保证数据一致性 企业数据库上云迁移项目，跨地域灾备系统建设，数据实时同步 腾讯云 数据传输服务 DTS DTS 数据迁移, DTS 数据同步, DTS 数据订阅, DTS 灾备同步 支持MySQL、PostgreSQL、MongoDB等数据库传输，延迟低至毫秒级，数据一致性校验 本地数据库迁移至腾讯云，跨可用区数据同步与灾备，游戏数据跨服同步 华为云 数据复制服务 DRS DRS 数据迁移, DRS 数据同步, DRS 灾备复制, DRS 数据集成 支持国内外主流数据库迁移与同步，增量同步，数据脱敏与转换，符合等保合规要求，数据传输加密 国产化数据库替换项目，跨云厂商数据迁移，金融行业灾备系统 火山云 数据传输服务 DTS DTS 数据传输服务 无详细参数 数据传输服务 NoSQL数据库 阿里云 云数据库 Tair (兼容Redis) Tair 标准版, Tair 集群版, Tair 读写分离版, Tair Serverless 版 兼容Redis协议，支持多数据结构，百万级QPS，高可用架构，单实例最大支持100GB内存 高并发缓存场景（如电商商品详情，用户会话），AI向量缓存与计算 腾讯云 云数据库 TencentDB for Redis Redis 标准版, Redis 集群版, Redis 读写分离版, Redis 企业版 兼容Redis 2.8-7.0，支持内存数据库与持久化存储，最大集群规模1000&#43;节点，提供数据备份与灾备能力 游戏排行榜、计数器场景，社交平台消息缓存，电商秒杀库存控制 华为云 分布式缓存服务 Redis Redis 标准版, Redis 集群版, Redis 读写分离版, Redis 企业版 兼容Redis 4.0-6.2，支持数据持久化，高可用架构，单集群最大支持512GB内存 企业级应用缓存加速，金融行业高频交易数据缓存，政务会话管理 火山云 缓存数据库 Redis 版 Redis 版 无详细参数 高并发缓存应用，消息中间件场景 云原生多模数据库 阿里云 云原生多模数据库 Lindorm Lindorm 宽表版, Lindorm 时序版, Lindorm 向量版, Lindorm 时空版 支持HBase宽表、时序、向量和时空等多数据模型，支持PB级存储，百万级写入QPS，支持冷热数据分离 IoT设备数据存储与分析，车联网时空数据管理，AI向量数据库 腾讯云 云原生多模数据库 TDSQL-M TDSQL-M 多模版, TDSQL-M 时序版, TDSQL-M 宽表版, TDSQL-M 企业版 支持关系、文档、时序、键值多数据模型，兼容MySQL协议，弹性扩展，存储容量无上限，支持实时数据分析 多数据模型混合应用场景，IoT平台数据存储，监控系统时序数据 华为云 云原生多模数据库 GaussDB NoSQL GaussDB NoSQL 宽表版, GaussDB NoSQL 时序版, GaussDB NoSQL 文档版, GaussDB NoSQL 向量版 兼容HBase、MongoDB、InfluxDB协议，支持PB级存储，高并发读写，支持数据分片与弹性扩展 工业物联网数据管理，AI向量检索，政务大数据平台 火山云 表格数据库 HBase版 HBase版 无详细参数 大规模分布式数据存储 ">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%B9%E6%AF%94/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="数据库产品对比表">
+  <meta property="og:description" content="数据库产品对比表# 产品类别 厂商 产品名称 型号 / 版本 核心性能参数 适用场景 云原生数据库 阿里云 云原生数据库 PolarDB PolarDB MySQL 版, PolarDB PostgreSQL 版, PolarDB Oracle 兼容版, PolarDB Serverless 版 100%兼容MySQL、PostgreSQL，兼容Oracle；最大存储容量100TB；峰值QPS达100万&#43;，延迟低至10ms；支持存储计算分离，弹性扩展 互联网电商、金融支付、游戏社交等高并发场景；企业核心业务系统迁移（Oracle/MySQL迁移）；实时数据处理 腾讯云 云原生数据库 TDSQL-C TDSQL-C MySQL 版, TDSQL-C PostgreSQL 版, TDSQL-C Serverless 版, TDSQL-C 企业版 100%兼容MySQL、PostgreSQL协议；存储扩展至128TB，支持百万级QPS；秒级扩容，按实际使用量计费；99.999%数据可靠性 高并发交易系统（如电商秒杀、直播打赏）；SaaS服务多租户场景 华为云 云原生数据库 GaussDB (for MySQL/PostgreSQL) GaussDB for MySQL, GaussDB for PostgreSQL, GaussDB Serverless, GaussDB 企业版 兼容MySQL 8.0、PostgreSQL 12协议；128TB存储，百万级QPS；支持读写分离、自动备份与恢复；符合等保三级标准 金融核心系统、政务数据平台、大型ERP、AI训练数据存储与分析 火山云 云数据库 veDB MySQL 版 通用型，独享型 无详细参数 企业级应用、系统数据库需求 关系型数据库 RDS 阿里云 云数据库 RDS RDS MySQL 版, RDS PostgreSQL 版, RDS SQL Server 版, RDS MariaDB 版, RDS PPAS 版（兼容Oracle） 自动备份、故障迁移；支持5000GB存储，500万QPS；支持SQL审计、数据加密、性能监控与优化建议 传统企业IT系统迁移，电商订单管理，用户信息存储 腾讯云 云数据库 TencentDB for RDS TencentDB for MySQL, TencentDB for PostgreSQL, TencentDB for SQL Server, TencentDB for MariaDB 99.99%可用性；支持6000GB存储，400万QPS；跨地域备份，集成DBbrain智能管家；透明数据加密（TDE） 游戏用户数据存储，社交平台用户关系存储，财务系统 华为云 云数据库 RDS RDS for MySQL, RDS for PostgreSQL, RDS for SQL Server, RDS for MariaDB, RDS for DB2 支持4000GB存储，300万QPS；跨可用区部署；符合等保四级、PCI DSS等合规要求 政务信息化系统，金融行业交易系统，大型企业核心业务 火山云 云数据库 MySQL 版 独享规格，通用规格 无详细参数 企业级应用、系统数据库需求 数据库管理工具 阿里云 数据管理 DMS DMS 基础版, DMS 企业版, DMS 旗舰版, DMS Serverless 版 支持多数据库统一管理，SQL审核、数据脱敏、权限管理；AI助手支持智能SQL生成与优化 企业级数据库统一管理与运维，开发团队SQL审核流程管控 腾讯云 数据库管理服务 DBManager DBManager 基础版, DBManager 企业版, DBManager 专业版 支持MySQL、PostgreSQL等数据库管理，性能监控与诊断，权限精细化控制 中小企业数据库日常管理，开发团队快速数据库操作，腾讯云生态内管理 华为云 数据管理服务 DAS DAS 免费版, DAS 企业版, DAS 专业版 支持GaussDB、RDS等数据库管理，智能诊断与性能优化建议，支持敏感数据脱敏，自动化运维 数据安全管控，智能诊断功能，国产化数据库支持要求高的场景 火山云 数据库工作台 DBW 数据库工作台（Database Workshop, DBW） 支持多类型数据库生命周期管理，数据库GUI、故障排查、审计，智能风险检核，自治运维 数据库生命周期管理，智能风险检核，数据库自治运维 数据传输服务 阿里云 数据传输服务 DTS DTS 数据迁移版, DTS 数据同步版, DTS 数据订阅版, DTS 灾备版 支持数据库迁移上云，实时数据集成，支持异构数据库间同步，断点续传，保证数据一致性 企业数据库上云迁移项目，跨地域灾备系统建设，数据实时同步 腾讯云 数据传输服务 DTS DTS 数据迁移, DTS 数据同步, DTS 数据订阅, DTS 灾备同步 支持MySQL、PostgreSQL、MongoDB等数据库传输，延迟低至毫秒级，数据一致性校验 本地数据库迁移至腾讯云，跨可用区数据同步与灾备，游戏数据跨服同步 华为云 数据复制服务 DRS DRS 数据迁移, DRS 数据同步, DRS 灾备复制, DRS 数据集成 支持国内外主流数据库迁移与同步，增量同步，数据脱敏与转换，符合等保合规要求，数据传输加密 国产化数据库替换项目，跨云厂商数据迁移，金融行业灾备系统 火山云 数据传输服务 DTS DTS 数据传输服务 无详细参数 数据传输服务 NoSQL数据库 阿里云 云数据库 Tair (兼容Redis) Tair 标准版, Tair 集群版, Tair 读写分离版, Tair Serverless 版 兼容Redis协议，支持多数据结构，百万级QPS，高可用架构，单实例最大支持100GB内存 高并发缓存场景（如电商商品详情，用户会话），AI向量缓存与计算 腾讯云 云数据库 TencentDB for Redis Redis 标准版, Redis 集群版, Redis 读写分离版, Redis 企业版 兼容Redis 2.8-7.0，支持内存数据库与持久化存储，最大集群规模1000&#43;节点，提供数据备份与灾备能力 游戏排行榜、计数器场景，社交平台消息缓存，电商秒杀库存控制 华为云 分布式缓存服务 Redis Redis 标准版, Redis 集群版, Redis 读写分离版, Redis 企业版 兼容Redis 4.0-6.2，支持数据持久化，高可用架构，单集群最大支持512GB内存 企业级应用缓存加速，金融行业高频交易数据缓存，政务会话管理 火山云 缓存数据库 Redis 版 Redis 版 无详细参数 高并发缓存应用，消息中间件场景 云原生多模数据库 阿里云 云原生多模数据库 Lindorm Lindorm 宽表版, Lindorm 时序版, Lindorm 向量版, Lindorm 时空版 支持HBase宽表、时序、向量和时空等多数据模型，支持PB级存储，百万级写入QPS，支持冷热数据分离 IoT设备数据存储与分析，车联网时空数据管理，AI向量数据库 腾讯云 云原生多模数据库 TDSQL-M TDSQL-M 多模版, TDSQL-M 时序版, TDSQL-M 宽表版, TDSQL-M 企业版 支持关系、文档、时序、键值多数据模型，兼容MySQL协议，弹性扩展，存储容量无上限，支持实时数据分析 多数据模型混合应用场景，IoT平台数据存储，监控系统时序数据 华为云 云原生多模数据库 GaussDB NoSQL GaussDB NoSQL 宽表版, GaussDB NoSQL 时序版, GaussDB NoSQL 文档版, GaussDB NoSQL 向量版 兼容HBase、MongoDB、InfluxDB协议，支持PB级存储，高并发读写，支持数据分片与弹性扩展 工业物联网数据管理，AI向量检索，政务大数据平台 火山云 表格数据库 HBase版 HBase版 无详细参数 大规模分布式数据存储">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="03.云计算">
+
+
+  <meta itemprop="name" content="数据库产品对比表">
+  <meta itemprop="description" content="数据库产品对比表# 产品类别 厂商 产品名称 型号 / 版本 核心性能参数 适用场景 云原生数据库 阿里云 云原生数据库 PolarDB PolarDB MySQL 版, PolarDB PostgreSQL 版, PolarDB Oracle 兼容版, PolarDB Serverless 版 100%兼容MySQL、PostgreSQL，兼容Oracle；最大存储容量100TB；峰值QPS达100万&#43;，延迟低至10ms；支持存储计算分离，弹性扩展 互联网电商、金融支付、游戏社交等高并发场景；企业核心业务系统迁移（Oracle/MySQL迁移）；实时数据处理 腾讯云 云原生数据库 TDSQL-C TDSQL-C MySQL 版, TDSQL-C PostgreSQL 版, TDSQL-C Serverless 版, TDSQL-C 企业版 100%兼容MySQL、PostgreSQL协议；存储扩展至128TB，支持百万级QPS；秒级扩容，按实际使用量计费；99.999%数据可靠性 高并发交易系统（如电商秒杀、直播打赏）；SaaS服务多租户场景 华为云 云原生数据库 GaussDB (for MySQL/PostgreSQL) GaussDB for MySQL, GaussDB for PostgreSQL, GaussDB Serverless, GaussDB 企业版 兼容MySQL 8.0、PostgreSQL 12协议；128TB存储，百万级QPS；支持读写分离、自动备份与恢复；符合等保三级标准 金融核心系统、政务数据平台、大型ERP、AI训练数据存储与分析 火山云 云数据库 veDB MySQL 版 通用型，独享型 无详细参数 企业级应用、系统数据库需求 关系型数据库 RDS 阿里云 云数据库 RDS RDS MySQL 版, RDS PostgreSQL 版, RDS SQL Server 版, RDS MariaDB 版, RDS PPAS 版（兼容Oracle） 自动备份、故障迁移；支持5000GB存储，500万QPS；支持SQL审计、数据加密、性能监控与优化建议 传统企业IT系统迁移，电商订单管理，用户信息存储 腾讯云 云数据库 TencentDB for RDS TencentDB for MySQL, TencentDB for PostgreSQL, TencentDB for SQL Server, TencentDB for MariaDB 99.99%可用性；支持6000GB存储，400万QPS；跨地域备份，集成DBbrain智能管家；透明数据加密（TDE） 游戏用户数据存储，社交平台用户关系存储，财务系统 华为云 云数据库 RDS RDS for MySQL, RDS for PostgreSQL, RDS for SQL Server, RDS for MariaDB, RDS for DB2 支持4000GB存储，300万QPS；跨可用区部署；符合等保四级、PCI DSS等合规要求 政务信息化系统，金融行业交易系统，大型企业核心业务 火山云 云数据库 MySQL 版 独享规格，通用规格 无详细参数 企业级应用、系统数据库需求 数据库管理工具 阿里云 数据管理 DMS DMS 基础版, DMS 企业版, DMS 旗舰版, DMS Serverless 版 支持多数据库统一管理，SQL审核、数据脱敏、权限管理；AI助手支持智能SQL生成与优化 企业级数据库统一管理与运维，开发团队SQL审核流程管控 腾讯云 数据库管理服务 DBManager DBManager 基础版, DBManager 企业版, DBManager 专业版 支持MySQL、PostgreSQL等数据库管理，性能监控与诊断，权限精细化控制 中小企业数据库日常管理，开发团队快速数据库操作，腾讯云生态内管理 华为云 数据管理服务 DAS DAS 免费版, DAS 企业版, DAS 专业版 支持GaussDB、RDS等数据库管理，智能诊断与性能优化建议，支持敏感数据脱敏，自动化运维 数据安全管控，智能诊断功能，国产化数据库支持要求高的场景 火山云 数据库工作台 DBW 数据库工作台（Database Workshop, DBW） 支持多类型数据库生命周期管理，数据库GUI、故障排查、审计，智能风险检核，自治运维 数据库生命周期管理，智能风险检核，数据库自治运维 数据传输服务 阿里云 数据传输服务 DTS DTS 数据迁移版, DTS 数据同步版, DTS 数据订阅版, DTS 灾备版 支持数据库迁移上云，实时数据集成，支持异构数据库间同步，断点续传，保证数据一致性 企业数据库上云迁移项目，跨地域灾备系统建设，数据实时同步 腾讯云 数据传输服务 DTS DTS 数据迁移, DTS 数据同步, DTS 数据订阅, DTS 灾备同步 支持MySQL、PostgreSQL、MongoDB等数据库传输，延迟低至毫秒级，数据一致性校验 本地数据库迁移至腾讯云，跨可用区数据同步与灾备，游戏数据跨服同步 华为云 数据复制服务 DRS DRS 数据迁移, DRS 数据同步, DRS 灾备复制, DRS 数据集成 支持国内外主流数据库迁移与同步，增量同步，数据脱敏与转换，符合等保合规要求，数据传输加密 国产化数据库替换项目，跨云厂商数据迁移，金融行业灾备系统 火山云 数据传输服务 DTS DTS 数据传输服务 无详细参数 数据传输服务 NoSQL数据库 阿里云 云数据库 Tair (兼容Redis) Tair 标准版, Tair 集群版, Tair 读写分离版, Tair Serverless 版 兼容Redis协议，支持多数据结构，百万级QPS，高可用架构，单实例最大支持100GB内存 高并发缓存场景（如电商商品详情，用户会话），AI向量缓存与计算 腾讯云 云数据库 TencentDB for Redis Redis 标准版, Redis 集群版, Redis 读写分离版, Redis 企业版 兼容Redis 2.8-7.0，支持内存数据库与持久化存储，最大集群规模1000&#43;节点，提供数据备份与灾备能力 游戏排行榜、计数器场景，社交平台消息缓存，电商秒杀库存控制 华为云 分布式缓存服务 Redis Redis 标准版, Redis 集群版, Redis 读写分离版, Redis 企业版 兼容Redis 4.0-6.2，支持数据持久化，高可用架构，单集群最大支持512GB内存 企业级应用缓存加速，金融行业高频交易数据缓存，政务会话管理 火山云 缓存数据库 Redis 版 Redis 版 无详细参数 高并发缓存应用，消息中间件场景 云原生多模数据库 阿里云 云原生多模数据库 Lindorm Lindorm 宽表版, Lindorm 时序版, Lindorm 向量版, Lindorm 时空版 支持HBase宽表、时序、向量和时空等多数据模型，支持PB级存储，百万级写入QPS，支持冷热数据分离 IoT设备数据存储与分析，车联网时空数据管理，AI向量数据库 腾讯云 云原生多模数据库 TDSQL-M TDSQL-M 多模版, TDSQL-M 时序版, TDSQL-M 宽表版, TDSQL-M 企业版 支持关系、文档、时序、键值多数据模型，兼容MySQL协议，弹性扩展，存储容量无上限，支持实时数据分析 多数据模型混合应用场景，IoT平台数据存储，监控系统时序数据 华为云 云原生多模数据库 GaussDB NoSQL GaussDB NoSQL 宽表版, GaussDB NoSQL 时序版, GaussDB NoSQL 文档版, GaussDB NoSQL 向量版 兼容HBase、MongoDB、InfluxDB协议，支持PB级存储，高并发读写，支持数据分片与弹性扩展 工业物联网数据管理，AI向量检索，政务大数据平台 火山云 表格数据库 HBase版 HBase版 无详细参数 大规模分布式数据存储">
+  <meta itemprop="wordCount" content="339">
+
+<title>数据库产品对比表 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%B9%E6%AF%94/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.7d58ae02adbb48cddb44e14ebd18d032450f84203c407b8742616c4d8963d04e.js" integrity="sha256-fViuAq27SM3bROFOvRjQMkUPhCA8QHuHQmFsTYlj0E4=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-03.云计算">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-9fe7a2339ad0dc4a73778e68cef649fe" class="toggle"  />
+    <label for="section-9fe7a2339ad0dc4a73778e68cef649fe" class="flex">
+      <a role="button" class="">
+        AI</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-15c23871017acbed09b7424bdcf80a4a" class="toggle"  />
+    <label for="section-15c23871017acbed09b7424bdcf80a4a" class="flex">
+      <a href="/01.AI/01.AI%E5%9F%BA%E7%A1%80/" class="">
+        AI基础</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/01.AI%E5%9F%BA%E7%A1%80/AI%E5%8F%91%E5%B1%95%E7%BC%96%E5%B9%B4%E5%8F%B2/" class="">
+      Ai发展编年史</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/01.AI%E5%9F%BA%E7%A1%80/AI%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E4%B8%8E%E6%9C%AF%E8%AF%AD%E6%A2%B3%E7%90%86/" class="">
+      Ai核心概念与术语梳理</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-3c59d4207daf22454abfe1884802d176" class="toggle"  />
+    <label for="section-3c59d4207daf22454abfe1884802d176" class="flex">
+      <a href="/01.AI/02.%E6%A8%A1%E5%9E%8B%E4%B8%8E%E6%8A%80%E6%9C%AF/" class="">
+        模型与技术</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-49d4b9c6159f641db7abe3ae967f518a" class="toggle"  />
+    <label for="section-49d4b9c6159f641db7abe3ae967f518a" class="flex">
+      <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/" class="">
+        AI应用</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-a4f890ca069a25208a03d08b2bb2af9b" class="toggle"  />
+    <label for="section-a4f890ca069a25208a03d08b2bb2af9b" class="flex">
+      <a role="button" class="">
+        大模型聚合平台</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%81%9A%E5%90%88%E5%B9%B3%E5%8F%B0/LiteLLM/" class="">
+      LiteLLM</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-d6e743b94614084bb7b1efb03702d051" class="toggle"  />
+    <label for="section-d6e743b94614084bb7b1efb03702d051" class="flex">
+      <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7/" class="">
+        编程工具</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7/Trae/" class="">
+      Trae</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-3f03d304f7515b074c3e895c04f5985a" class="toggle"  />
+    <label for="section-3f03d304f7515b074c3e895c04f5985a" class="flex">
+      <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/Agent/" class="">
+        Agent</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-540714977fc446f2999968aa0312d1d1" class="toggle"  />
+    <label for="section-540714977fc446f2999968aa0312d1d1" class="flex">
+      <a role="button" class="">
+        OpenClaw</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/API%E8%B0%83%E7%94%A8%E8%A7%84%E8%8C%83/" class="">
+      API调用规范</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/Prompt%E5%B7%A5%E7%A8%8B/" class="">
+      Prompt工程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-81e5d1f0dc654ba1710e62c7855b9f41" class="toggle"  />
+    <label for="section-81e5d1f0dc654ba1710e62c7855b9f41" class="flex">
+      <a role="button" class="">
+        运维</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-07353f6b74ee2fa2408751490aab51d1" class="toggle"  />
+    <label for="section-07353f6b74ee2fa2408751490aab51d1" class="flex">
+      <a role="button" class="">
+        Oracle</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/02.%E8%BF%90%E7%BB%B4/oracle/oracle%E7%AC%94%E8%AE%B0/" class="">
+      Oracle笔记</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-588052d0ddc9d35446ed3fcf1c068d7e" class="toggle"  />
+    <label for="section-588052d0ddc9d35446ed3fcf1c068d7e" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/02.%E8%BF%90%E7%BB%B4/08.Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/02.%E8%BF%90%E7%BB%B4/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-a1da811a60ec5f919d028b5a8ad22512" class="toggle" checked />
+    <label for="section-a1da811a60ec5f919d028b5a8ad22512" class="flex">
+      <a role="button" class="">
+        云计算</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-835dbb699264e6d42cdd17507140ac88" class="toggle"  />
+    <label for="section-835dbb699264e6d42cdd17507140ac88" class="flex">
+      <a role="button" class="">
+        AWS</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c558e862208eb14727f1a08067f09bdd" class="toggle"  />
+    <label for="section-c558e862208eb14727f1a08067f09bdd" class="flex">
+      <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/Bedrock/Bedrock%E4%BB%8B%E7%BB%8D/" class="">
+        Bedrock</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c3e7e52ac9a64d92fde731aee4156588" class="toggle"  />
+    <label for="section-c3e7e52ac9a64d92fde731aee4156588" class="flex">
+      <a role="button" class="">
+        IAM</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/IAM/aws-security-iam-1-notes/" class="">
+      AWS IAM 身份、策略与 Role 实战学习笔记</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/aws%E5%9F%BA%E7%A1%80/" class="">
+      Aws基础</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-134481839eb9c2f960db1fbd97c06e82" class="toggle"  />
+    <label for="section-134481839eb9c2f960db1fbd97c06e82" class="flex">
+      <a role="button" class="">
+        阿里云</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-601ec63ad4b894fb5775994f34301885" class="toggle"  />
+    <label for="section-601ec63ad4b894fb5775994f34301885" class="flex">
+      <a role="button" class="">
+        腾讯云</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-575fefbd29f71371957ab2f14f9cbee0" class="toggle" checked />
+    <label for="section-575fefbd29f71371957ab2f14f9cbee0" class="flex">
+      <a role="button" class="">
+        阿里腾讯华为火山云产品对比</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AF%B9%E6%AF%94/" class="">
+      服务器对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E7%A1%AC%E7%9B%98%E5%AF%B9%E6%AF%94/" class="">
+      云硬盘对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%B9%E6%AF%94/" class="active">
+      数据库产品对比表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AF%B9%E6%AF%94/" class="">
+      中间件产品对比表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AF%B9%E6%AF%94/" class="">
+      大数据对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E5%AE%89%E5%85%A8%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/" class="">
+      安全产品对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AF%B9%E6%A0%87/" class="">
+      云容器对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E6%9E%B6%E6%9E%84%E5%B8%88%E5%B7%A5%E4%BD%9C%E8%81%8C%E8%B4%A3/" class="">
+      云架构师工作职责</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E8%BF%81%E7%A7%BB%E6%B5%81%E7%A8%8B%E9%98%BF%E9%87%8C%E4%BA%91/" class="">
+      迁移流程总结</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f63ca89517e3b888fc3c4dc8b04609ea" class="toggle"  />
+    <label for="section-f63ca89517e3b888fc3c4dc8b04609ea" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f508e989cd5e3427044a0620121ddbda" class="toggle"  />
+    <label for="section-f508e989cd5e3427044a0620121ddbda" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-344a042a46b58aed858fd7aa7abd362d" class="toggle"  />
+    <label for="section-344a042a46b58aed858fd7aa7abd362d" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-ed2965e47d3be272fd865c1df0bb75bc" class="toggle"  />
+    <label for="section-ed2965e47d3be272fd865c1df0bb75bc" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-60bdc869135151ee6f66cb65499bf2d9" class="toggle"  />
+    <label for="section-60bdc869135151ee6f66cb65499bf2d9" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-8a098eb60ed3a3c8aa631838098de5f6" class="toggle"  />
+    <label for="section-8a098eb60ed3a3c8aa631838098de5f6" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-d3553f07e3dd22f14040931f6def7247" class="toggle"  />
+    <label for="section-d3553f07e3dd22f14040931f6def7247" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-755341e3f50c66a57e172eec45daad0b" class="toggle"  />
+    <label for="section-755341e3f50c66a57e172eec45daad0b" class="flex">
+      <a role="button" class="">
+        脚本开发实战</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/1.%E5%9B%BE%E8%89%B2%E8%84%9A%E6%9C%AC%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" class="">
+      1.图色脚本架构设计</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E6%A2%A6%E5%B9%BB%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/" class="">
+      游戏图色脚本开发实战</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E9%97%AE%E9%81%93%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/" class="">
+      游戏图色脚本开发实战</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/2.%E5%B7%A5%E7%A8%8B%E6%9E%B6%E6%9E%84UI-%E5%B8%83%E5%B1%80%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%85%8D%E7%BD%AE%E9%9A%94%E7%A6%BB/" class="">
+      2.工程架构、UI 布局与多线程配置隔离</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/3.%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%89%BE%E5%9B%BE%E6%8C%87%E4%BB%A4%E8%AF%A6%E8%A7%A3/" class="">
+      3.大漠插件：环境部署与找图指令详解</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/4.%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E5%85%8D%E6%B3%A8%E5%86%8C%E8%B0%83%E7%94%A8%E5%9D%90%E6%A0%87%E7%B3%BB%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E5%90%8E%E5%8F%B0%E7%BB%91%E5%AE%9A/" class="">
+      4.大漠插件：免注册调用、坐标系原理以及后台绑定</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/5.%E6%98%93%E8%AF%AD%E8%A8%80%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6/" class="">
+      5.易语言多线程控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/5.%E6%98%93%E8%AF%AD%E8%A8%80%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6%E4%B8%8E%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB%E4%BC%98%E5%8C%96%E6%96%B9%E6%A1%88/" class="">
+      5.易语言多线程控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/6.%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" class="">
+      6.鼠标漂移解决方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/10.%E5%BC%BA%E7%9B%97%E4%BB%BB%E5%8A%A1%E8%B4%BC%E7%8E%8B%E4%BB%BB%E5%8A%A1%E8%AF%BB%E5%8F%961/" class="">
+      10.打图任务(1)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/10.%E5%BC%BA%E7%9B%97%E4%BB%BB%E5%8A%A1%E8%B4%BC%E7%8E%8B%E4%BB%BB%E5%8A%A1%E8%AF%BB%E5%8F%962/" class="">
+      10.打图任务(2)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/11.%E8%B7%A8%E5%9C%B0%E5%9B%BE%E8%87%AA%E5%8A%A8%E5%AF%BB%E8%B7%AF/" class="">
+      11.跨地图寻路</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/12.%E9%A3%9E%E8%A1%8C%E6%97%97/" class="">
+      12.飞行旗</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/13.%E5%8A%A8%E6%80%81NPC%E8%BD%A6%E5%A4%AB%E9%A9%BF%E7%AB%99%E8%80%81%E6%9D%BF%E7%82%B9%E5%87%BB%E5%AF%B9%E8%AF%9D%E6%A1%86%E8%87%AA%E5%8A%A8%E5%8C%96%E4%BB%A5%E5%8F%8A%E6%96%B0%E5%8C%BA%E9%81%AE%E6%8C%A1%E5%88%A4%E5%AE%9A%E7%9A%84%E9%AB%98%E7%BA%A7%E5%AE%9E%E6%93%8D%E6%8A%80%E5%B7%A7/" class="">
+      13.动态NPC（车夫、驿站老板）点击、对话框自动化以及新区遮挡判定的高级实操技巧</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/14.%E5%9C%B0%E5%9B%BE%E5%9D%90%E6%A0%87%E6%8D%A2%E7%AE%97/" class="">
+      14.地图坐标换算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/15.%E5%BC%BA%E7%9B%97NPC%E8%A2%AB%E9%81%AE%E6%8C%A1%E6%88%96%E9%87%8D%E5%8F%A0%E6%97%B6%E7%9A%84%E8%BF%9B%E9%98%B6%E5%A4%84%E7%90%86%E9%80%BB%E8%BE%91/" class="">
+      15.强盗（NPC）被遮挡或重叠时的进阶处理逻辑</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/16.%E8%B4%BC%E7%8E%8B%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6/" class="">
+      16.贼王处理机制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/17-18-19-20-21.%E8%B4%BC%E7%8E%8B%E8%BF%9B%E9%98%B6%E5%A4%84%E7%90%86%E4%B8%8E-OCR-%E9%AA%8C%E8%AF%81%E5%AE%9E%E6%88%98/" class="">
+      17-18-19-20-21.贼王进阶处理与 OCR 验证实战</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%8F%92%E4%BB%B6%E8%AF%86%E5%88%AB/" class="">
+      程序集_插件识别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%8F%92%E4%BB%B6%E6%B3%A8%E5%86%8C/" class="">
+      程序集_插件注册</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/23-24-25.%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" class="">
+      23-24-25.自动登录与模拟器将军令获取</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E4%BB%BB%E5%8A%A1%E6%89%A7%E8%A1%8C%E5%88%86%E9%85%8D/" class="">
+      程序集_任务执行分配</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%AA%97%E5%8F%A3%E7%A8%8B%E5%BA%8F%E9%9B%86_%E7%AA%97%E5%8F%A3_%E5%8A%9F%E8%83%BD%E8%AE%BE%E7%BD%AE/" class="">
+      程序集_功能设置</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%AA%97%E5%8F%A3%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%90%AF%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="">
+      程序集_启动窗口</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%9C%B0%E5%9B%BE/" class="">
+      程序集_地图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/" class="">
+      程序集_常用功能</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%89%93%E5%9B%BE/" class="">
+      程序集_打图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E8%84%9A%E6%9C%AC%E4%B8%BB%E7%A8%8B%E5%BA%8F/" class="">
+      程序集_脚本主程序</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E9%A3%9E%E8%A1%8C/" class="">
+      程序集_飞行</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%8A%A8/" class="">
+      程序集_鼠标移动</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/26.%E4%BB%BB%E5%8A%A1%E8%B6%85%E6%97%B6%E7%9B%91%E6%8E%A7%E4%B8%8E%E6%B8%B8%E6%88%8F%E6%8E%89%E7%BA%BF%E8%87%AA%E5%8A%A8%E9%87%8D%E8%BF%9E/" class="">
+      26.任务超时监控与游戏掉线自动重连</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/27.%E8%87%AA%E5%8A%A8%E6%8D%A2%E5%8F%B7%E6%81%A2%E5%A4%8D%E7%94%A8%E6%88%B7%E8%AE%BE%E7%BD%AE%E6%96%B0%E7%9A%84%E4%BB%BB%E5%8A%A1%E9%93%BE/" class="">
+      27.自动换号,恢复用户设置新的任务链</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/28.%E6%95%B4%E4%BD%93%E6%89%93%E5%9B%BE%E6%B5%81%E7%A8%8B%E5%9B%9E%E9%A1%BE%E8%AE%B2%E8%A7%A3%E8%A7%A3%E5%86%B3%E6%96%B0%E5%8C%BA%E5%8D%A1%E9%A1%BF%E5%A4%84%E7%90%86%E5%90%8C%E6%97%B6%E4%B8%8D%E5%BD%B1%E5%93%8D%E8%80%81%E5%8C%BA%E7%9A%84%E6%B5%81%E7%95%85%E5%BA%A6/" class="">
+      28.整体打图流程回顾讲解,解决新区卡顿处理同时不影响老区的流畅度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/29-30-31.%E8%AF%BE-%E6%8A%BC%E9%95%96%E9%9A%BE%E7%82%B9%E8%A7%A3%E6%9E%90/" class="">
+      29-30-31押镖难点解析</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/32-33-%E8%87%AA%E5%8A%A8%E4%BB%93%E5%BA%93%E8%BD%AC%E5%9B%BE%E5%AE%9D%E7%9F%B3%E5%95%86%E4%BA%BA%E5%8F%96%E5%9B%BE%E7%9B%B4%E6%8E%A5%E8%BD%AC%E5%9B%BE/" class="">
+      32-33 自动仓库转图，宝石商人取图直接转图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/34.%E5%8D%A1%E5%AF%86%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BA%E9%AA%8C%E8%AF%81/" class="">
+      34.卡密系统搭建验证</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5126b54f0ae1ceecc1303140e82740c8" class="toggle"  />
+    <label for="section-5126b54f0ae1ceecc1303140e82740c8" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E6%98%93%E9%94%AE%E9%BC%A0/" class="">
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+      幽灵键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-d4a0c57ccfa86bfc9cc9b680995d5df5" class="toggle"  />
+    <label for="section-d4a0c57ccfa86bfc9cc9b680995d5df5" class="flex">
+      <a role="button" class="">
+        Tools</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/06.Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/06.Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/06.Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强cpu装机事项</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-9053fccdbd7199bd47302238aacb0e2d" class="toggle"  />
+    <label for="section-9053fccdbd7199bd47302238aacb0e2d" class="flex">
+      <a role="button" class="">
+        Java</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-6e540f017616ab12e7390ffcfc707be8" class="toggle"  />
+    <label for="section-6e540f017616ab12e7390ffcfc707be8" class="flex">
+      <a role="button" class="">
+        生活碎碎</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-78b2b94ef620d452afa50ea603ec65c9" class="toggle"  />
+    <label for="section-78b2b94ef620d452afa50ea603ec65c9" class="flex">
+      <a role="button" class="">
+        英语</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-80f5fffe9bee676d4a2bf6c7a43cd7ed" class="toggle"  />
+    <label for="section-80f5fffe9bee676d4a2bf6c7a43cd7ed" class="flex">
+      <a role="button" class="">
+        外汇</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0335bddd19a23a8f94f5dcac9a412967" class="toggle"  />
+    <label for="section-0335bddd19a23a8f94f5dcac9a412967" class="flex">
+      <a role="button" class="">
+        Adobe</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-6a1db553da3d9bad9cd7eb830f28f894" class="toggle"  />
+    <label for="section-6a1db553da3d9bad9cd7eb830f28f894" class="flex">
+      <a role="button" class="">
+        Office</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>数据库产品对比表</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#数据库产品对比表">数据库产品对比表</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h3 id="数据库产品对比表">数据库产品对比表<a class="anchor" href="#%e6%95%b0%e6%8d%ae%e5%ba%93%e4%ba%a7%e5%93%81%e5%af%b9%e6%af%94%e8%a1%a8">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th><strong>产品类别</strong></th>
+          <th><strong>厂商</strong></th>
+          <th><strong>产品名称</strong></th>
+          <th><strong>型号 / 版本</strong></th>
+          <th><strong>核心性能参数</strong></th>
+          <th><strong>适用场景</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>云原生数据库</strong></td>
+          <td>阿里云</td>
+          <td>云原生数据库 PolarDB</td>
+          <td>PolarDB MySQL 版, PolarDB PostgreSQL 版, PolarDB Oracle 兼容版, PolarDB Serverless 版</td>
+          <td>100%兼容MySQL、PostgreSQL，兼容Oracle；最大存储容量100TB；峰值QPS达100万+，延迟低至10ms；支持存储计算分离，弹性扩展</td>
+          <td>互联网电商、金融支付、游戏社交等高并发场景；企业核心业务系统迁移（Oracle/MySQL迁移）；实时数据处理</td>
+      </tr>
+      <tr>
+          <td></td>
+          <td>腾讯云</td>
+          <td>云原生数据库 TDSQL-C</td>
+          <td>TDSQL-C MySQL 版, TDSQL-C PostgreSQL 版, TDSQL-C Serverless 版, TDSQL-C 企业版</td>
+          <td>100%兼容MySQL、PostgreSQL协议；存储扩展至128TB，支持百万级QPS；秒级扩容，按实际使用量计费；99.999%数据可靠性</td>
+          <td>高并发交易系统（如电商秒杀、直播打赏）；SaaS服务多租户场景</td>
+      </tr>
+      <tr>
+          <td></td>
+          <td>华为云</td>
+          <td>云原生数据库 GaussDB (for MySQL/PostgreSQL)</td>
+          <td>GaussDB for MySQL, GaussDB for PostgreSQL, GaussDB Serverless, GaussDB 企业版</td>
+          <td>兼容MySQL 8.0、PostgreSQL 12协议；128TB存储，百万级QPS；支持读写分离、自动备份与恢复；符合等保三级标准</td>
+          <td>金融核心系统、政务数据平台、大型ERP、AI训练数据存储与分析</td>
+      </tr>
+      <tr>
+          <td></td>
+          <td>火山云</td>
+          <td>云数据库 veDB MySQL 版</td>
+          <td>通用型，独享型</td>
+          <td>无详细参数</td>
+          <td>企业级应用、系统数据库需求</td>
+      </tr>
+      <tr>
+          <td><strong>关系型数据库 RDS</strong></td>
+          <td>阿里云</td>
+          <td>云数据库 RDS</td>
+          <td>RDS MySQL 版, RDS PostgreSQL 版, RDS SQL Server 版, RDS MariaDB 版, RDS PPAS 版（兼容Oracle）</td>
+          <td>自动备份、故障迁移；支持5000GB存储，500万QPS；支持SQL审计、数据加密、性能监控与优化建议</td>
+          <td>传统企业IT系统迁移，电商订单管理，用户信息存储</td>
+      </tr>
+      <tr>
+          <td></td>
+          <td>腾讯云</td>
+          <td>云数据库 TencentDB for RDS</td>
+          <td>TencentDB for MySQL, TencentDB for PostgreSQL, TencentDB for SQL Server, TencentDB for MariaDB</td>
+          <td>99.99%可用性；支持6000GB存储，400万QPS；跨地域备份，集成DBbrain智能管家；透明数据加密（TDE）</td>
+          <td>游戏用户数据存储，社交平台用户关系存储，财务系统</td>
+      </tr>
+      <tr>
+          <td></td>
+          <td>华为云</td>
+          <td>云数据库 RDS</td>
+          <td>RDS for MySQL, RDS for PostgreSQL, RDS for SQL Server, RDS for MariaDB, RDS for DB2</td>
+          <td>支持4000GB存储，300万QPS；跨可用区部署；符合等保四级、PCI DSS等合规要求</td>
+          <td>政务信息化系统，金融行业交易系统，大型企业核心业务</td>
+      </tr>
+      <tr>
+          <td></td>
+          <td>火山云</td>
+          <td>云数据库 MySQL 版</td>
+          <td>独享规格，通用规格</td>
+          <td>无详细参数</td>
+          <td>企业级应用、系统数据库需求</td>
+      </tr>
+      <tr>
+          <td><strong>数据库管理工具</strong></td>
+          <td>阿里云</td>
+          <td>数据管理 DMS</td>
+          <td>DMS 基础版, DMS 企业版, DMS 旗舰版, DMS Serverless 版</td>
+          <td>支持多数据库统一管理，SQL审核、数据脱敏、权限管理；AI助手支持智能SQL生成与优化</td>
+          <td>企业级数据库统一管理与运维，开发团队SQL审核流程管控</td>
+      </tr>
+      <tr>
+          <td></td>
+          <td>腾讯云</td>
+          <td>数据库管理服务 DBManager</td>
+          <td>DBManager 基础版, DBManager 企业版, DBManager 专业版</td>
+          <td>支持MySQL、PostgreSQL等数据库管理，性能监控与诊断，权限精细化控制</td>
+          <td>中小企业数据库日常管理，开发团队快速数据库操作，腾讯云生态内管理</td>
+      </tr>
+      <tr>
+          <td></td>
+          <td>华为云</td>
+          <td>数据管理服务 DAS</td>
+          <td>DAS 免费版, DAS 企业版, DAS 专业版</td>
+          <td>支持GaussDB、RDS等数据库管理，智能诊断与性能优化建议，支持敏感数据脱敏，自动化运维</td>
+          <td>数据安全管控，智能诊断功能，国产化数据库支持要求高的场景</td>
+      </tr>
+      <tr>
+          <td></td>
+          <td>火山云</td>
+          <td>数据库工作台 DBW</td>
+          <td>数据库工作台（Database Workshop, DBW）</td>
+          <td>支持多类型数据库生命周期管理，数据库GUI、故障排查、审计，智能风险检核，自治运维</td>
+          <td>数据库生命周期管理，智能风险检核，数据库自治运维</td>
+      </tr>
+      <tr>
+          <td><strong>数据传输服务</strong></td>
+          <td>阿里云</td>
+          <td>数据传输服务 DTS</td>
+          <td>DTS 数据迁移版, DTS 数据同步版, DTS 数据订阅版, DTS 灾备版</td>
+          <td>支持数据库迁移上云，实时数据集成，支持异构数据库间同步，断点续传，保证数据一致性</td>
+          <td>企业数据库上云迁移项目，跨地域灾备系统建设，数据实时同步</td>
+      </tr>
+      <tr>
+          <td></td>
+          <td>腾讯云</td>
+          <td>数据传输服务 DTS</td>
+          <td>DTS 数据迁移, DTS 数据同步, DTS 数据订阅, DTS 灾备同步</td>
+          <td>支持MySQL、PostgreSQL、MongoDB等数据库传输，延迟低至毫秒级，数据一致性校验</td>
+          <td>本地数据库迁移至腾讯云，跨可用区数据同步与灾备，游戏数据跨服同步</td>
+      </tr>
+      <tr>
+          <td></td>
+          <td>华为云</td>
+          <td>数据复制服务 DRS</td>
+          <td>DRS 数据迁移, DRS 数据同步, DRS 灾备复制, DRS 数据集成</td>
+          <td>支持国内外主流数据库迁移与同步，增量同步，数据脱敏与转换，符合等保合规要求，数据传输加密</td>
+          <td>国产化数据库替换项目，跨云厂商数据迁移，金融行业灾备系统</td>
+      </tr>
+      <tr>
+          <td></td>
+          <td>火山云</td>
+          <td>数据传输服务 DTS</td>
+          <td>DTS 数据传输服务</td>
+          <td>无详细参数</td>
+          <td>数据传输服务</td>
+      </tr>
+      <tr>
+          <td><strong>NoSQL数据库</strong></td>
+          <td>阿里云</td>
+          <td>云数据库 Tair (兼容Redis)</td>
+          <td>Tair 标准版, Tair 集群版, Tair 读写分离版, Tair Serverless 版</td>
+          <td>兼容Redis协议，支持多数据结构，百万级QPS，高可用架构，单实例最大支持100GB内存</td>
+          <td>高并发缓存场景（如电商商品详情，用户会话），AI向量缓存与计算</td>
+      </tr>
+      <tr>
+          <td></td>
+          <td>腾讯云</td>
+          <td>云数据库 TencentDB for Redis</td>
+          <td>Redis 标准版, Redis 集群版, Redis 读写分离版, Redis 企业版</td>
+          <td>兼容Redis 2.8-7.0，支持内存数据库与持久化存储，最大集群规模1000+节点，提供数据备份与灾备能力</td>
+          <td>游戏排行榜、计数器场景，社交平台消息缓存，电商秒杀库存控制</td>
+      </tr>
+      <tr>
+          <td></td>
+          <td>华为云</td>
+          <td>分布式缓存服务 Redis</td>
+          <td>Redis 标准版, Redis 集群版, Redis 读写分离版, Redis 企业版</td>
+          <td>兼容Redis 4.0-6.2，支持数据持久化，高可用架构，单集群最大支持512GB内存</td>
+          <td>企业级应用缓存加速，金融行业高频交易数据缓存，政务会话管理</td>
+      </tr>
+      <tr>
+          <td></td>
+          <td>火山云</td>
+          <td>缓存数据库 Redis 版</td>
+          <td>Redis 版</td>
+          <td>无详细参数</td>
+          <td>高并发缓存应用，消息中间件场景</td>
+      </tr>
+      <tr>
+          <td><strong>云原生多模数据库</strong></td>
+          <td>阿里云</td>
+          <td>云原生多模数据库 Lindorm</td>
+          <td>Lindorm 宽表版, Lindorm 时序版, Lindorm 向量版, Lindorm 时空版</td>
+          <td>支持HBase宽表、时序、向量和时空等多数据模型，支持PB级存储，百万级写入QPS，支持冷热数据分离</td>
+          <td>IoT设备数据存储与分析，车联网时空数据管理，AI向量数据库</td>
+      </tr>
+      <tr>
+          <td></td>
+          <td>腾讯云</td>
+          <td>云原生多模数据库 TDSQL-M</td>
+          <td>TDSQL-M 多模版, TDSQL-M 时序版, TDSQL-M 宽表版, TDSQL-M 企业版</td>
+          <td>支持关系、文档、时序、键值多数据模型，兼容MySQL协议，弹性扩展，存储容量无上限，支持实时数据分析</td>
+          <td>多数据模型混合应用场景，IoT平台数据存储，监控系统时序数据</td>
+      </tr>
+      <tr>
+          <td></td>
+          <td>华为云</td>
+          <td>云原生多模数据库 GaussDB NoSQL</td>
+          <td>GaussDB NoSQL 宽表版, GaussDB NoSQL 时序版, GaussDB NoSQL 文档版, GaussDB NoSQL 向量版</td>
+          <td>兼容HBase、MongoDB、InfluxDB协议，支持PB级存储，高并发读写，支持数据分片与弹性扩展</td>
+          <td>工业物联网数据管理，AI向量检索，政务大数据平台</td>
+      </tr>
+      <tr>
+          <td></td>
+          <td>火山云</td>
+          <td>表格数据库 HBase版</td>
+          <td>HBase版</td>
+          <td>无详细参数</td>
+          <td>大规模分布式数据存储</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+  <div class="flex flex-wrap justify-between">
+    <span>
+    
+      <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E7%A1%AC%E7%9B%98%E5%AF%B9%E6%AF%94/" class="flex align-center">
+        <img src="/icons/backward.svg" class="book-icon" alt="Backward" />
+        <span>云硬盘对比</span>
+      </a>
+    
+    </span>
+    <span>
+    
+      <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AF%B9%E6%AF%94/" class="flex align-center">
+        <span>中间件产品对比表</span>
+        <img src="/icons/forward.svg" class="book-icon" alt="Forward" />
+      </a>
+    
+    </span>
+  </div>
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#数据库产品对比表">数据库产品对比表</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
