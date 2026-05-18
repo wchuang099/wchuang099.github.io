@@ -1,0 +1,2852 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="1. IAM 角色概述# IAM 角色是一种具有权限策略的 AWS 身份，与 IAM 用户不同的地方在于：
+不唯一关联到个人，任何符合条件的实体都可以担任 没有长期凭证（密码、访问密钥），担任后返回临时安全凭证 担任角色后原有权限暂停，退出时恢复 使用角色的典型原因：
+向 AWS 账户内或跨账户的用户/应用/服务授权 不把 AWS 密钥嵌入移动应用 让外部身份（企业目录、OIDC/SAML）获取 AWS 访问权限 授权第三方审核账户 2. 角色术语# 术语 含义 角色 可被 AWS 用户、服务、联合身份代入的 IAM 身份 AWS 服务角色 被服务担任并代表您行事的角色 AWS 服务相关角色 与特定 AWS 服务关联、由服务拥有的预定义服务角色，IAM 管理员可查看但不能改权限 角色链 使用一个角色代入另一个角色（会话最长 1 小时） 委派 在两个账户之间建立信任以授权访问资源 信任策略 角色上的基于资源的策略，规定谁可以担任 联合身份 来自外部 IdP 的身份，通过角色访问 AWS 权限边界 限制基于身份策略可授予的最大权限（不适用于服务相关角色） 2.1 角色链注意事项# 控制台、CLI、API 使用角色链时会话上限为 1 小时 AssumeRole 的 DurationSeconds 在角色链中若超过 1 小时会失败 角色链中可传递会话标签（需设为可传递） 2.2 角色可以由谁代入# 同账户或跨账户的 IAM 用户 同账户中的其他 IAM 角色 AWS 服务主体（EC2、Lambda、S3 对象复制等） IAM Roles Anywhere、ECS Anywhere 等为 AWS 外部应用提供凭证的服务 SAML 2.0 / OIDC 外部 IdP 认证的用户 3. 服务相关角色（SLR）特殊行为# 启动服务时可能被服务自动创建 权限不能手动编辑，由服务维护 删除 SLR 前必须先删除相关资源 计入账户 IAM 角色配额，但已达上限仍允许创建 SLR 使用角色时权限可能间接传递给可调用该服务的用户（例如 RDS SLR 会间接访问 EC2、SNS 等） 4. 混淆代理人问题# 4.1 跨账户场景# 第三方拥有的账户可能被其他客户提供的角色 ARN 诱导去操作您的资源。解决方案是在角色信任策略中要求 sts:ExternalId：
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/IAM/08-iam-roles/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="08 IAM 角色">
+  <meta property="og:description" content="1. IAM 角色概述# IAM 角色是一种具有权限策略的 AWS 身份，与 IAM 用户不同的地方在于：
+不唯一关联到个人，任何符合条件的实体都可以担任 没有长期凭证（密码、访问密钥），担任后返回临时安全凭证 担任角色后原有权限暂停，退出时恢复 使用角色的典型原因：
+向 AWS 账户内或跨账户的用户/应用/服务授权 不把 AWS 密钥嵌入移动应用 让外部身份（企业目录、OIDC/SAML）获取 AWS 访问权限 授权第三方审核账户 2. 角色术语# 术语 含义 角色 可被 AWS 用户、服务、联合身份代入的 IAM 身份 AWS 服务角色 被服务担任并代表您行事的角色 AWS 服务相关角色 与特定 AWS 服务关联、由服务拥有的预定义服务角色，IAM 管理员可查看但不能改权限 角色链 使用一个角色代入另一个角色（会话最长 1 小时） 委派 在两个账户之间建立信任以授权访问资源 信任策略 角色上的基于资源的策略，规定谁可以担任 联合身份 来自外部 IdP 的身份，通过角色访问 AWS 权限边界 限制基于身份策略可授予的最大权限（不适用于服务相关角色） 2.1 角色链注意事项# 控制台、CLI、API 使用角色链时会话上限为 1 小时 AssumeRole 的 DurationSeconds 在角色链中若超过 1 小时会失败 角色链中可传递会话标签（需设为可传递） 2.2 角色可以由谁代入# 同账户或跨账户的 IAM 用户 同账户中的其他 IAM 角色 AWS 服务主体（EC2、Lambda、S3 对象复制等） IAM Roles Anywhere、ECS Anywhere 等为 AWS 外部应用提供凭证的服务 SAML 2.0 / OIDC 外部 IdP 认证的用户 3. 服务相关角色（SLR）特殊行为# 启动服务时可能被服务自动创建 权限不能手动编辑，由服务维护 删除 SLR 前必须先删除相关资源 计入账户 IAM 角色配额，但已达上限仍允许创建 SLR 使用角色时权限可能间接传递给可调用该服务的用户（例如 RDS SLR 会间接访问 EC2、SNS 等） 4. 混淆代理人问题# 4.1 跨账户场景# 第三方拥有的账户可能被其他客户提供的角色 ARN 诱导去操作您的资源。解决方案是在角色信任策略中要求 sts:ExternalId：">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="03.云计算">
+
+
+  <meta itemprop="name" content="08 IAM 角色">
+  <meta itemprop="description" content="1. IAM 角色概述# IAM 角色是一种具有权限策略的 AWS 身份，与 IAM 用户不同的地方在于：
+不唯一关联到个人，任何符合条件的实体都可以担任 没有长期凭证（密码、访问密钥），担任后返回临时安全凭证 担任角色后原有权限暂停，退出时恢复 使用角色的典型原因：
+向 AWS 账户内或跨账户的用户/应用/服务授权 不把 AWS 密钥嵌入移动应用 让外部身份（企业目录、OIDC/SAML）获取 AWS 访问权限 授权第三方审核账户 2. 角色术语# 术语 含义 角色 可被 AWS 用户、服务、联合身份代入的 IAM 身份 AWS 服务角色 被服务担任并代表您行事的角色 AWS 服务相关角色 与特定 AWS 服务关联、由服务拥有的预定义服务角色，IAM 管理员可查看但不能改权限 角色链 使用一个角色代入另一个角色（会话最长 1 小时） 委派 在两个账户之间建立信任以授权访问资源 信任策略 角色上的基于资源的策略，规定谁可以担任 联合身份 来自外部 IdP 的身份，通过角色访问 AWS 权限边界 限制基于身份策略可授予的最大权限（不适用于服务相关角色） 2.1 角色链注意事项# 控制台、CLI、API 使用角色链时会话上限为 1 小时 AssumeRole 的 DurationSeconds 在角色链中若超过 1 小时会失败 角色链中可传递会话标签（需设为可传递） 2.2 角色可以由谁代入# 同账户或跨账户的 IAM 用户 同账户中的其他 IAM 角色 AWS 服务主体（EC2、Lambda、S3 对象复制等） IAM Roles Anywhere、ECS Anywhere 等为 AWS 外部应用提供凭证的服务 SAML 2.0 / OIDC 外部 IdP 认证的用户 3. 服务相关角色（SLR）特殊行为# 启动服务时可能被服务自动创建 权限不能手动编辑，由服务维护 删除 SLR 前必须先删除相关资源 计入账户 IAM 角色配额，但已达上限仍允许创建 SLR 使用角色时权限可能间接传递给可调用该服务的用户（例如 RDS SLR 会间接访问 EC2、SNS 等） 4. 混淆代理人问题# 4.1 跨账户场景# 第三方拥有的账户可能被其他客户提供的角色 ARN 诱导去操作您的资源。解决方案是在角色信任策略中要求 sts:ExternalId：">
+  <meta itemprop="wordCount" content="811">
+
+<title>08 IAM 角色 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/IAM/08-iam-roles/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.0086c058a1f89b2530fc9e1a0952383e7f19b9016224faf4d18973fe5c351a04.js" integrity="sha256-AIbAWKH4myUw/J4aCVI4Pn8ZuQFiJPr00Ylz/lw1GgQ=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-03.云计算">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-9fe7a2339ad0dc4a73778e68cef649fe" class="toggle"  />
+    <label for="section-9fe7a2339ad0dc4a73778e68cef649fe" class="flex">
+      <a role="button" class="">
+        AI</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-15c23871017acbed09b7424bdcf80a4a" class="toggle"  />
+    <label for="section-15c23871017acbed09b7424bdcf80a4a" class="flex">
+      <a href="/01.AI/01.AI%E5%9F%BA%E7%A1%80/" class="">
+        AI基础</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/01.AI%E5%9F%BA%E7%A1%80/AI%E5%8F%91%E5%B1%95%E7%BC%96%E5%B9%B4%E5%8F%B2/" class="">
+      Ai发展编年史</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/01.AI%E5%9F%BA%E7%A1%80/AI%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E4%B8%8E%E6%9C%AF%E8%AF%AD%E6%A2%B3%E7%90%86/" class="">
+      Ai核心概念与术语梳理</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-3c59d4207daf22454abfe1884802d176" class="toggle"  />
+    <label for="section-3c59d4207daf22454abfe1884802d176" class="flex">
+      <a href="/01.AI/02.%E6%A8%A1%E5%9E%8B%E4%B8%8E%E6%8A%80%E6%9C%AF/" class="">
+        模型与技术</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-49d4b9c6159f641db7abe3ae967f518a" class="toggle"  />
+    <label for="section-49d4b9c6159f641db7abe3ae967f518a" class="flex">
+      <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/" class="">
+        AI应用</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-a4f890ca069a25208a03d08b2bb2af9b" class="toggle"  />
+    <label for="section-a4f890ca069a25208a03d08b2bb2af9b" class="flex">
+      <a role="button" class="">
+        大模型聚合平台</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%81%9A%E5%90%88%E5%B9%B3%E5%8F%B0/LiteLLM/" class="">
+      LiteLLM</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%81%9A%E5%90%88%E5%B9%B3%E5%8F%B0/New-api/" class="">
+      New API</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-d6e743b94614084bb7b1efb03702d051" class="toggle"  />
+    <label for="section-d6e743b94614084bb7b1efb03702d051" class="flex">
+      <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7/" class="">
+        编程工具</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7/Trae/" class="">
+      Trae</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-3f03d304f7515b074c3e895c04f5985a" class="toggle"  />
+    <label for="section-3f03d304f7515b074c3e895c04f5985a" class="flex">
+      <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/Agent/" class="">
+        Agent</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/Agent/OpenClaw/" class="">
+      OpenClaw</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/API%E8%B0%83%E7%94%A8%E8%A7%84%E8%8C%83/" class="">
+      API调用规范</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/Prompt%E5%B7%A5%E7%A8%8B/" class="">
+      Prompt工程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-81e5d1f0dc654ba1710e62c7855b9f41" class="toggle"  />
+    <label for="section-81e5d1f0dc654ba1710e62c7855b9f41" class="flex">
+      <a role="button" class="">
+        运维</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-07353f6b74ee2fa2408751490aab51d1" class="toggle"  />
+    <label for="section-07353f6b74ee2fa2408751490aab51d1" class="flex">
+      <a role="button" class="">
+        Oracle</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/02.%E8%BF%90%E7%BB%B4/oracle/oracle%E7%AC%94%E8%AE%B0/" class="">
+      Oracle笔记</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-588052d0ddc9d35446ed3fcf1c068d7e" class="toggle"  />
+    <label for="section-588052d0ddc9d35446ed3fcf1c068d7e" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/02.%E8%BF%90%E7%BB%B4/08.Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/02.%E8%BF%90%E7%BB%B4/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-a1da811a60ec5f919d028b5a8ad22512" class="toggle" checked />
+    <label for="section-a1da811a60ec5f919d028b5a8ad22512" class="flex">
+      <a role="button" class="">
+        云计算</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-835dbb699264e6d42cdd17507140ac88" class="toggle" checked />
+    <label for="section-835dbb699264e6d42cdd17507140ac88" class="flex">
+      <a role="button" class="">
+        AWS</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/cli%E5%91%BD%E4%BB%A4%E8%A1%8C/" class="">
+      AWS CLI命令行</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c558e862208eb14727f1a08067f09bdd" class="toggle"  />
+    <label for="section-c558e862208eb14727f1a08067f09bdd" class="flex">
+      <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/Bedrock/Bedrock%E4%BB%8B%E7%BB%8D/" class="">
+        Bedrock</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/aws%E5%9F%BA%E7%A1%80/" class="">
+      Aws基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/IAM/" class="">
+      AWS IAM 用户指南笔记</a>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/IAM/IAM/" class="">
+      Iam</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-134481839eb9c2f960db1fbd97c06e82" class="toggle"  />
+    <label for="section-134481839eb9c2f960db1fbd97c06e82" class="flex">
+      <a role="button" class="">
+        阿里云</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-601ec63ad4b894fb5775994f34301885" class="toggle"  />
+    <label for="section-601ec63ad4b894fb5775994f34301885" class="flex">
+      <a role="button" class="">
+        腾讯云</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-575fefbd29f71371957ab2f14f9cbee0" class="toggle"  />
+    <label for="section-575fefbd29f71371957ab2f14f9cbee0" class="flex">
+      <a role="button" class="">
+        阿里腾讯华为火山云产品对比</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AF%B9%E6%AF%94/" class="">
+      服务器对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E7%A1%AC%E7%9B%98%E5%AF%B9%E6%AF%94/" class="">
+      云硬盘对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%B9%E6%AF%94/" class="">
+      数据库产品对比表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AF%B9%E6%AF%94/" class="">
+      中间件产品对比表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AF%B9%E6%AF%94/" class="">
+      大数据对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E5%AE%89%E5%85%A8%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/" class="">
+      安全产品对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AF%B9%E6%A0%87/" class="">
+      云容器对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E6%9E%B6%E6%9E%84%E5%B8%88%E5%B7%A5%E4%BD%9C%E8%81%8C%E8%B4%A3/" class="">
+      云架构师工作职责</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E8%BF%81%E7%A7%BB%E6%B5%81%E7%A8%8B%E9%98%BF%E9%87%8C%E4%BA%91/" class="">
+      迁移流程总结</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f63ca89517e3b888fc3c4dc8b04609ea" class="toggle"  />
+    <label for="section-f63ca89517e3b888fc3c4dc8b04609ea" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f508e989cd5e3427044a0620121ddbda" class="toggle"  />
+    <label for="section-f508e989cd5e3427044a0620121ddbda" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-344a042a46b58aed858fd7aa7abd362d" class="toggle"  />
+    <label for="section-344a042a46b58aed858fd7aa7abd362d" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-ed2965e47d3be272fd865c1df0bb75bc" class="toggle"  />
+    <label for="section-ed2965e47d3be272fd865c1df0bb75bc" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-60bdc869135151ee6f66cb65499bf2d9" class="toggle"  />
+    <label for="section-60bdc869135151ee6f66cb65499bf2d9" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-8a098eb60ed3a3c8aa631838098de5f6" class="toggle"  />
+    <label for="section-8a098eb60ed3a3c8aa631838098de5f6" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-d3553f07e3dd22f14040931f6def7247" class="toggle"  />
+    <label for="section-d3553f07e3dd22f14040931f6def7247" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-755341e3f50c66a57e172eec45daad0b" class="toggle"  />
+    <label for="section-755341e3f50c66a57e172eec45daad0b" class="flex">
+      <a role="button" class="">
+        脚本开发实战</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/1.%E5%9B%BE%E8%89%B2%E8%84%9A%E6%9C%AC%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" class="">
+      1.图色脚本架构设计</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E6%A2%A6%E5%B9%BB%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/" class="">
+      游戏图色脚本开发实战</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E9%97%AE%E9%81%93%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/" class="">
+      游戏图色脚本开发实战</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/2.%E5%B7%A5%E7%A8%8B%E6%9E%B6%E6%9E%84UI-%E5%B8%83%E5%B1%80%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%85%8D%E7%BD%AE%E9%9A%94%E7%A6%BB/" class="">
+      2.工程架构、UI 布局与多线程配置隔离</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/3.%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%89%BE%E5%9B%BE%E6%8C%87%E4%BB%A4%E8%AF%A6%E8%A7%A3/" class="">
+      3.大漠插件：环境部署与找图指令详解</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/4.%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E5%85%8D%E6%B3%A8%E5%86%8C%E8%B0%83%E7%94%A8%E5%9D%90%E6%A0%87%E7%B3%BB%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E5%90%8E%E5%8F%B0%E7%BB%91%E5%AE%9A/" class="">
+      4.大漠插件：免注册调用、坐标系原理以及后台绑定</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/5.%E6%98%93%E8%AF%AD%E8%A8%80%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6/" class="">
+      5.易语言多线程控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/5.%E6%98%93%E8%AF%AD%E8%A8%80%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6%E4%B8%8E%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB%E4%BC%98%E5%8C%96%E6%96%B9%E6%A1%88/" class="">
+      5.易语言多线程控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/6.%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" class="">
+      6.鼠标漂移解决方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/10.%E5%BC%BA%E7%9B%97%E4%BB%BB%E5%8A%A1%E8%B4%BC%E7%8E%8B%E4%BB%BB%E5%8A%A1%E8%AF%BB%E5%8F%961/" class="">
+      10.打图任务(1)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/10.%E5%BC%BA%E7%9B%97%E4%BB%BB%E5%8A%A1%E8%B4%BC%E7%8E%8B%E4%BB%BB%E5%8A%A1%E8%AF%BB%E5%8F%962/" class="">
+      10.打图任务(2)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/11.%E8%B7%A8%E5%9C%B0%E5%9B%BE%E8%87%AA%E5%8A%A8%E5%AF%BB%E8%B7%AF/" class="">
+      11.跨地图寻路</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/12.%E9%A3%9E%E8%A1%8C%E6%97%97/" class="">
+      12.飞行旗</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/13.%E5%8A%A8%E6%80%81NPC%E8%BD%A6%E5%A4%AB%E9%A9%BF%E7%AB%99%E8%80%81%E6%9D%BF%E7%82%B9%E5%87%BB%E5%AF%B9%E8%AF%9D%E6%A1%86%E8%87%AA%E5%8A%A8%E5%8C%96%E4%BB%A5%E5%8F%8A%E6%96%B0%E5%8C%BA%E9%81%AE%E6%8C%A1%E5%88%A4%E5%AE%9A%E7%9A%84%E9%AB%98%E7%BA%A7%E5%AE%9E%E6%93%8D%E6%8A%80%E5%B7%A7/" class="">
+      13.动态NPC（车夫、驿站老板）点击、对话框自动化以及新区遮挡判定的高级实操技巧</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/14.%E5%9C%B0%E5%9B%BE%E5%9D%90%E6%A0%87%E6%8D%A2%E7%AE%97/" class="">
+      14.地图坐标换算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/15.%E5%BC%BA%E7%9B%97NPC%E8%A2%AB%E9%81%AE%E6%8C%A1%E6%88%96%E9%87%8D%E5%8F%A0%E6%97%B6%E7%9A%84%E8%BF%9B%E9%98%B6%E5%A4%84%E7%90%86%E9%80%BB%E8%BE%91/" class="">
+      15.强盗（NPC）被遮挡或重叠时的进阶处理逻辑</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/16.%E8%B4%BC%E7%8E%8B%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6/" class="">
+      16.贼王处理机制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/17-18-19-20-21.%E8%B4%BC%E7%8E%8B%E8%BF%9B%E9%98%B6%E5%A4%84%E7%90%86%E4%B8%8E-OCR-%E9%AA%8C%E8%AF%81%E5%AE%9E%E6%88%98/" class="">
+      17-18-19-20-21.贼王进阶处理与 OCR 验证实战</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%8F%92%E4%BB%B6%E8%AF%86%E5%88%AB/" class="">
+      程序集_插件识别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%8F%92%E4%BB%B6%E6%B3%A8%E5%86%8C/" class="">
+      程序集_插件注册</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/23-24-25.%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" class="">
+      23-24-25.自动登录与模拟器将军令获取</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E4%BB%BB%E5%8A%A1%E6%89%A7%E8%A1%8C%E5%88%86%E9%85%8D/" class="">
+      程序集_任务执行分配</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%AA%97%E5%8F%A3%E7%A8%8B%E5%BA%8F%E9%9B%86_%E7%AA%97%E5%8F%A3_%E5%8A%9F%E8%83%BD%E8%AE%BE%E7%BD%AE/" class="">
+      程序集_功能设置</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%AA%97%E5%8F%A3%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%90%AF%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="">
+      程序集_启动窗口</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%9C%B0%E5%9B%BE/" class="">
+      程序集_地图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/" class="">
+      程序集_常用功能</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%89%93%E5%9B%BE/" class="">
+      程序集_打图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E8%84%9A%E6%9C%AC%E4%B8%BB%E7%A8%8B%E5%BA%8F/" class="">
+      程序集_脚本主程序</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E9%A3%9E%E8%A1%8C/" class="">
+      程序集_飞行</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%8A%A8/" class="">
+      程序集_鼠标移动</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/26.%E4%BB%BB%E5%8A%A1%E8%B6%85%E6%97%B6%E7%9B%91%E6%8E%A7%E4%B8%8E%E6%B8%B8%E6%88%8F%E6%8E%89%E7%BA%BF%E8%87%AA%E5%8A%A8%E9%87%8D%E8%BF%9E/" class="">
+      26.任务超时监控与游戏掉线自动重连</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/27.%E8%87%AA%E5%8A%A8%E6%8D%A2%E5%8F%B7%E6%81%A2%E5%A4%8D%E7%94%A8%E6%88%B7%E8%AE%BE%E7%BD%AE%E6%96%B0%E7%9A%84%E4%BB%BB%E5%8A%A1%E9%93%BE/" class="">
+      27.自动换号,恢复用户设置新的任务链</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/28.%E6%95%B4%E4%BD%93%E6%89%93%E5%9B%BE%E6%B5%81%E7%A8%8B%E5%9B%9E%E9%A1%BE%E8%AE%B2%E8%A7%A3%E8%A7%A3%E5%86%B3%E6%96%B0%E5%8C%BA%E5%8D%A1%E9%A1%BF%E5%A4%84%E7%90%86%E5%90%8C%E6%97%B6%E4%B8%8D%E5%BD%B1%E5%93%8D%E8%80%81%E5%8C%BA%E7%9A%84%E6%B5%81%E7%95%85%E5%BA%A6/" class="">
+      28.整体打图流程回顾讲解,解决新区卡顿处理同时不影响老区的流畅度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/29-30-31.%E8%AF%BE-%E6%8A%BC%E9%95%96%E9%9A%BE%E7%82%B9%E8%A7%A3%E6%9E%90/" class="">
+      29-30-31押镖难点解析</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/32-33-%E8%87%AA%E5%8A%A8%E4%BB%93%E5%BA%93%E8%BD%AC%E5%9B%BE%E5%AE%9D%E7%9F%B3%E5%95%86%E4%BA%BA%E5%8F%96%E5%9B%BE%E7%9B%B4%E6%8E%A5%E8%BD%AC%E5%9B%BE/" class="">
+      32-33 自动仓库转图，宝石商人取图直接转图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/34.%E5%8D%A1%E5%AF%86%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BA%E9%AA%8C%E8%AF%81/" class="">
+      34.卡密系统搭建验证</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5126b54f0ae1ceecc1303140e82740c8" class="toggle"  />
+    <label for="section-5126b54f0ae1ceecc1303140e82740c8" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E6%98%93%E9%94%AE%E9%BC%A0/" class="">
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+      幽灵键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-d4a0c57ccfa86bfc9cc9b680995d5df5" class="toggle"  />
+    <label for="section-d4a0c57ccfa86bfc9cc9b680995d5df5" class="flex">
+      <a role="button" class="">
+        Tools</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/06.Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/06.Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/06.Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强cpu装机事项</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-9053fccdbd7199bd47302238aacb0e2d" class="toggle"  />
+    <label for="section-9053fccdbd7199bd47302238aacb0e2d" class="flex">
+      <a role="button" class="">
+        Java</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-6e540f017616ab12e7390ffcfc707be8" class="toggle"  />
+    <label for="section-6e540f017616ab12e7390ffcfc707be8" class="flex">
+      <a role="button" class="">
+        生活碎碎</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-78b2b94ef620d452afa50ea603ec65c9" class="toggle"  />
+    <label for="section-78b2b94ef620d452afa50ea603ec65c9" class="flex">
+      <a role="button" class="">
+        英语</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-80f5fffe9bee676d4a2bf6c7a43cd7ed" class="toggle"  />
+    <label for="section-80f5fffe9bee676d4a2bf6c7a43cd7ed" class="flex">
+      <a role="button" class="">
+        外汇</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0335bddd19a23a8f94f5dcac9a412967" class="toggle"  />
+    <label for="section-0335bddd19a23a8f94f5dcac9a412967" class="flex">
+      <a role="button" class="">
+        Adobe</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-6a1db553da3d9bad9cd7eb830f28f894" class="toggle"  />
+    <label for="section-6a1db553da3d9bad9cd7eb830f28f894" class="flex">
+      <a role="button" class="">
+        Office</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>08 IAM 角色</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-iam-角色概述">1. IAM 角色概述</a></li>
+    <li><a href="#2-角色术语">2. 角色术语</a>
+      <ul>
+        <li><a href="#21-角色链注意事项">2.1 角色链注意事项</a></li>
+        <li><a href="#22-角色可以由谁代入">2.2 角色可以由谁代入</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-服务相关角色slr特殊行为">3. 服务相关角色（SLR）特殊行为</a></li>
+    <li><a href="#4-混淆代理人问题">4. 混淆代理人问题</a>
+      <ul>
+        <li><a href="#41-跨账户场景">4.1 跨账户场景</a></li>
+        <li><a href="#42-跨服务场景">4.2 跨服务场景</a></li>
+        <li><a href="#43-rcp-组织级防护">4.3 RCP 组织级防护</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-常见角色场景">5. 常见角色场景</a>
+      <ul>
+        <li><a href="#51-跨-aws-账户访问">5.1 跨 AWS 账户访问</a></li>
+        <li><a href="#52-非-aws-工作负载">5.2 非 AWS 工作负载</a></li>
+        <li><a href="#53-第三方账户访问">5.3 第三方账户访问</a></li>
+        <li><a href="#54-aws-服务访问">5.4 AWS 服务访问</a></li>
+        <li><a href="#55-联合身份">5.5 联合身份</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-创建-iam-角色">6. 创建 IAM 角色</a>
+      <ul>
+        <li><a href="#61-控制台以跨账户角色为例">6.1 控制台（以跨账户角色为例）</a></li>
+        <li><a href="#62-cli">6.2 CLI</a></li>
+        <li><a href="#63-api">6.3 API</a></li>
+        <li><a href="#64-cloudformation">6.4 CloudFormation</a></li>
+        <li><a href="#65-信任策略示例">6.5 信任策略示例</a></li>
+      </ul>
+    </li>
+    <li><a href="#7-实例配置文件ec2">7. 实例配置文件（EC2）</a></li>
+    <li><a href="#8-创建服务相关角色">8. 创建服务相关角色</a></li>
+    <li><a href="#9-管理角色">9. 管理角色</a>
+      <ul>
+        <li><a href="#91-查看角色">9.1 查看角色</a></li>
+        <li><a href="#92-修改权限">9.2 修改权限</a></li>
+        <li><a href="#93-修改信任策略">9.3 修改信任策略</a></li>
+        <li><a href="#94-修改最大会话时长">9.4 修改最大会话时长</a></li>
+        <li><a href="#95-权限边界">9.5 权限边界</a></li>
+      </ul>
+    </li>
+    <li><a href="#10-删除角色">10. 删除角色</a>
+      <ul>
+        <li><a href="#101-删除前准备">10.1 删除前准备</a></li>
+        <li><a href="#102-删除-iam-角色">10.2 删除 IAM 角色</a></li>
+        <li><a href="#103-删除服务相关角色">10.3 删除服务相关角色</a></li>
+      </ul>
+    </li>
+    <li><a href="#11-担任角色切换角色">11. 担任角色（切换角色）</a>
+      <ul>
+        <li><a href="#111-控制台">11.1 控制台</a></li>
+        <li><a href="#112-aws-cli">11.2 AWS CLI</a></li>
+        <li><a href="#113-aws-api">11.3 AWS API</a></li>
+      </ul>
+    </li>
+    <li><a href="#12-向用户授予切换角色的权限">12. 向用户授予切换角色的权限</a></li>
+    <li><a href="#13-角色会话权限扩展">13. 角色会话权限扩展</a>
+      <ul>
+        <li><a href="#131-会话策略">13.1 会话策略</a></li>
+        <li><a href="#132-会话标签">13.2 会话标签</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h2 id="1-iam-角色概述">1. IAM 角色概述<a class="anchor" href="#1-iam-%e8%a7%92%e8%89%b2%e6%a6%82%e8%bf%b0">#</a></h2>
+<p>IAM 角色是一种具有权限策略的 AWS 身份，与 IAM 用户不同的地方在于：</p>
+<ul>
+<li><strong>不唯一关联到个人</strong>，任何符合条件的实体都可以担任</li>
+<li><strong>没有长期凭证</strong>（密码、访问密钥），担任后返回<strong>临时安全凭证</strong></li>
+<li>担任角色后原有权限<strong>暂停</strong>，退出时恢复</li>
+</ul>
+<p>使用角色的典型原因：</p>
+<ul>
+<li>向 AWS 账户内或跨账户的用户/应用/服务授权</li>
+<li>不把 AWS 密钥嵌入移动应用</li>
+<li>让外部身份（企业目录、OIDC/SAML）获取 AWS 访问权限</li>
+<li>授权第三方审核账户</li>
+</ul>
+<h2 id="2-角色术语">2. 角色术语<a class="anchor" href="#2-%e8%a7%92%e8%89%b2%e6%9c%af%e8%af%ad">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th>术语</th>
+          <th>含义</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>角色</td>
+          <td>可被 AWS 用户、服务、联合身份代入的 IAM 身份</td>
+      </tr>
+      <tr>
+          <td>AWS 服务角色</td>
+          <td>被服务担任并代表您行事的角色</td>
+      </tr>
+      <tr>
+          <td>AWS 服务相关角色</td>
+          <td>与特定 AWS 服务关联、由服务拥有的预定义服务角色，IAM 管理员可查看但不能改权限</td>
+      </tr>
+      <tr>
+          <td>角色链</td>
+          <td>使用一个角色代入另一个角色（会话最长 1 小时）</td>
+      </tr>
+      <tr>
+          <td>委派</td>
+          <td>在两个账户之间建立信任以授权访问资源</td>
+      </tr>
+      <tr>
+          <td>信任策略</td>
+          <td>角色上的基于资源的策略，规定谁可以担任</td>
+      </tr>
+      <tr>
+          <td>联合身份</td>
+          <td>来自外部 IdP 的身份，通过角色访问 AWS</td>
+      </tr>
+      <tr>
+          <td>权限边界</td>
+          <td>限制基于身份策略可授予的最大权限（不适用于服务相关角色）</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="21-角色链注意事项">2.1 角色链注意事项<a class="anchor" href="#21-%e8%a7%92%e8%89%b2%e9%93%be%e6%b3%a8%e6%84%8f%e4%ba%8b%e9%a1%b9">#</a></h3>
+<ul>
+<li>控制台、CLI、API 使用角色链时会话上限为 <strong>1 小时</strong></li>
+<li><code>AssumeRole</code> 的 <code>DurationSeconds</code> 在角色链中若超过 1 小时会失败</li>
+<li>角色链中可传递会话标签（需设为可传递）</li>
+</ul>
+<h3 id="22-角色可以由谁代入">2.2 角色可以由谁代入<a class="anchor" href="#22-%e8%a7%92%e8%89%b2%e5%8f%af%e4%bb%a5%e7%94%b1%e8%b0%81%e4%bb%a3%e5%85%a5">#</a></h3>
+<ul>
+<li>同账户或跨账户的 IAM 用户</li>
+<li>同账户中的其他 IAM 角色</li>
+<li>AWS 服务主体（EC2、Lambda、S3 对象复制等）</li>
+<li>IAM Roles Anywhere、ECS Anywhere 等为 AWS 外部应用提供凭证的服务</li>
+<li>SAML 2.0 / OIDC 外部 IdP 认证的用户</li>
+</ul>
+<h2 id="3-服务相关角色slr特殊行为">3. 服务相关角色（SLR）特殊行为<a class="anchor" href="#3-%e6%9c%8d%e5%8a%a1%e7%9b%b8%e5%85%b3%e8%a7%92%e8%89%b2slr%e7%89%b9%e6%ae%8a%e8%a1%8c%e4%b8%ba">#</a></h2>
+<ul>
+<li>启动服务时可能被服务自动创建</li>
+<li>权限不能手动编辑，由服务维护</li>
+<li>删除 SLR 前必须先删除相关资源</li>
+<li>计入账户 IAM 角色配额，但已达上限仍允许创建 SLR</li>
+<li>使用角色时权限可能<strong>间接传递</strong>给可调用该服务的用户（例如 RDS SLR 会间接访问 EC2、SNS 等）</li>
+</ul>
+<h2 id="4-混淆代理人问题">4. 混淆代理人问题<a class="anchor" href="#4-%e6%b7%b7%e6%b7%86%e4%bb%a3%e7%90%86%e4%ba%ba%e9%97%ae%e9%a2%98">#</a></h2>
+<h3 id="41-跨账户场景">4.1 跨账户场景<a class="anchor" href="#41-%e8%b7%a8%e8%b4%a6%e6%88%b7%e5%9c%ba%e6%99%af">#</a></h3>
+<p>第三方拥有的账户可能被其他客户提供的角色 ARN 诱导去操作您的资源。解决方案是在角色信任策略中要求 <code>sts:ExternalId</code>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Version&#34;</span>: <span style="color:#e6db74">&#34;2012-10-17&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Statement&#34;</span>: {
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Effect&#34;</span>: <span style="color:#e6db74">&#34;Allow&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Principal&#34;</span>: { <span style="color:#f92672">&#34;AWS&#34;</span>: <span style="color:#e6db74">&#34;&lt;ThirdParty-Account-ID&gt;&#34;</span> },
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Action&#34;</span>: <span style="color:#e6db74">&#34;sts:AssumeRole&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;Condition&#34;</span>: {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;StringEquals&#34;</span>: { <span style="color:#f92672">&#34;sts:ExternalId&#34;</span>: <span style="color:#e6db74">&#34;12345&#34;</span> }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><p><code>ExternalId</code> 由第三方为每个客户生成且对其客户不透明，客户无法伪造。</p>
+<h3 id="42-跨服务场景">4.2 跨服务场景<a class="anchor" href="#42-%e8%b7%a8%e6%9c%8d%e5%8a%a1%e5%9c%ba%e6%99%af">#</a></h3>
+<p>AWS 服务主体代为访问您的资源，可能被未授权角色欺骗。使用以下全局条件键缩小范围：</p>
+<table>
+  <thead>
+      <tr>
+          <th>条件键</th>
+          <th>作用</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>aws:SourceArn</code></td>
+          <td>限制特定源资源的 ARN</td>
+      </tr>
+      <tr>
+          <td><code>aws:SourceAccount</code></td>
+          <td>限制特定源账户</td>
+      </tr>
+      <tr>
+          <td><code>aws:SourceOrgID</code></td>
+          <td>限制特定 AWS Organizations</td>
+      </tr>
+      <tr>
+          <td><code>aws:SourceOrgPaths</code></td>
+          <td>限制特定组织路径</td>
+      </tr>
+  </tbody>
+</table>
+<p>示例：仅允许来自指定账户的 CloudTrail 写入 S3 桶：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Version&#34;</span>: <span style="color:#e6db74">&#34;2012-10-17&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Statement&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Sid&#34;</span>: <span style="color:#e6db74">&#34;CloudTrailAclCheck&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Effect&#34;</span>: <span style="color:#e6db74">&#34;Allow&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Principal&#34;</span>: { <span style="color:#f92672">&#34;Service&#34;</span>: <span style="color:#e6db74">&#34;cloudtrail.amazonaws.com&#34;</span> },
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Action&#34;</span>: <span style="color:#e6db74">&#34;s3:GetBucketAcl&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Resource&#34;</span>: <span style="color:#e6db74">&#34;arn:aws:s3:::amzn-s3-demo-bucket1&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Condition&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;StringEquals&#34;</span>: { <span style="color:#f92672">&#34;aws:SourceAccount&#34;</span>: <span style="color:#e6db74">&#34;111122223333&#34;</span> }
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Sid&#34;</span>: <span style="color:#e6db74">&#34;AWSCloudTrailWrite&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Effect&#34;</span>: <span style="color:#e6db74">&#34;Allow&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Principal&#34;</span>: { <span style="color:#f92672">&#34;Service&#34;</span>: <span style="color:#e6db74">&#34;cloudtrail.amazonaws.com&#34;</span> },
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Action&#34;</span>: <span style="color:#e6db74">&#34;s3:PutObject&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Resource&#34;</span>: <span style="color:#e6db74">&#34;arn:aws:s3:::amzn-s3-demo-bucket1/AWSLogs/111122223333/*&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Condition&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;StringEquals&#34;</span>: { <span style="color:#f92672">&#34;aws:SourceAccount&#34;</span>: <span style="color:#e6db74">&#34;111122223333&#34;</span> }
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><h3 id="43-rcp-组织级防护">4.3 RCP 组织级防护<a class="anchor" href="#43-rcp-%e7%bb%84%e7%bb%87%e7%ba%a7%e9%98%b2%e6%8a%a4">#</a></h3>
+<p>使用资源控制策略统一在组织层面加上跨服务防护（避免每个资源都写条件）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Version&#34;</span>: <span style="color:#e6db74">&#34;2012-10-17&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Statement&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Sid&#34;</span>: <span style="color:#e6db74">&#34;RCPEnforceConfusedDeputyProtectionForS3&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Effect&#34;</span>: <span style="color:#e6db74">&#34;Deny&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Principal&#34;</span>: <span style="color:#e6db74">&#34;*&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Action&#34;</span>: [<span style="color:#e6db74">&#34;s3:*&#34;</span>],
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Resource&#34;</span>: <span style="color:#e6db74">&#34;*&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Condition&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;StringNotEqualsIfExists&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;aws:SourceOrgID&#34;</span>: <span style="color:#e6db74">&#34;o-ExampleOrg&#34;</span>
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;Null&#34;</span>: { <span style="color:#f92672">&#34;aws:SourceAccount&#34;</span>: <span style="color:#e6db74">&#34;false&#34;</span> },
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;Bool&#34;</span>: { <span style="color:#f92672">&#34;aws:PrincipalIsAWSService&#34;</span>: <span style="color:#e6db74">&#34;true&#34;</span> }
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><h2 id="5-常见角色场景">5. 常见角色场景<a class="anchor" href="#5-%e5%b8%b8%e8%a7%81%e8%a7%92%e8%89%b2%e5%9c%ba%e6%99%af">#</a></h2>
+<h3 id="51-跨-aws-账户访问">5.1 跨 AWS 账户访问<a class="anchor" href="#51-%e8%b7%a8-aws-%e8%b4%a6%e6%88%b7%e8%ae%bf%e9%97%ae">#</a></h3>
+<p>在生产账户创建 <code>UpdateApp</code> 角色，信任开发账户，授予对 <code>productionapp</code> S3 桶的读写权限。开发账户中的用户通过 <code>sts:AssumeRole</code> 切换到该角色使用权限。</p>
+<p>核心权限分工：</p>
+<ul>
+<li>角色所在账户：信任策略 + 权限策略</li>
+<li>使用方账户：允许 <code>sts:AssumeRole</code> 到目标角色 ARN 的策略</li>
+</ul>
+<p>角色 ARN 形式：<code>arn:aws:iam::123456789012:role/UpdateApp</code>。</p>
+<h3 id="52-非-aws-工作负载">5.2 非 AWS 工作负载<a class="anchor" href="#52-%e9%9d%9e-aws-%e5%b7%a5%e4%bd%9c%e8%b4%9f%e8%bd%bd">#</a></h3>
+<p>使用 <strong>IAM Roles Anywhere</strong>，基于 X.509 证书身份验证：</p>
+<ol>
+<li>使用 AWS Private CA 或自有 PKI 的 CA</li>
+<li>将 CA 证书作为信任锚注册到 IAM Roles Anywhere</li>
+<li>创建/复用角色并授予权限</li>
+<li>在工作负载上用证书获取临时凭证</li>
+</ol>
+<h3 id="53-第三方账户访问">5.3 第三方账户访问<a class="anchor" href="#53-%e7%ac%ac%e4%b8%89%e6%96%b9%e8%b4%a6%e6%88%b7%e8%ae%bf%e9%97%ae">#</a></h3>
+<p>第三方需要角色 ARN 才能担任。务必在信任策略中加入 <code>sts:ExternalId</code>，并设置最小权限。</p>
+<h3 id="54-aws-服务访问">5.4 AWS 服务访问<a class="anchor" href="#54-aws-%e6%9c%8d%e5%8a%a1%e8%ae%bf%e9%97%ae">#</a></h3>
+<p>创建 AWS 服务角色，服务（如 EC2、Lambda、CodeBuild）通过服务主体担任。实例需要通过<strong>实例配置文件</strong>（Instance Profile）关联。</p>
+<h3 id="55-联合身份">5.5 联合身份<a class="anchor" href="#55-%e8%81%94%e5%90%88%e8%ba%ab%e4%bb%bd">#</a></h3>
+<p>为 SAML 或 OIDC 提供商创建对应的 IdP 和角色。联合主体登录后通过 <code>AssumeRoleWithSAML</code> 或 <code>AssumeRoleWithWebIdentity</code> 获取临时凭证。</p>
+<h2 id="6-创建-iam-角色">6. 创建 IAM 角色<a class="anchor" href="#6-%e5%88%9b%e5%bb%ba-iam-%e8%a7%92%e8%89%b2">#</a></h2>
+<h3 id="61-控制台以跨账户角色为例">6.1 控制台（以跨账户角色为例）<a class="anchor" href="#61-%e6%8e%a7%e5%88%b6%e5%8f%b0%e4%bb%a5%e8%b7%a8%e8%b4%a6%e6%88%b7%e8%a7%92%e8%89%b2%e4%b8%ba%e4%be%8b">#</a></h3>
+<ol>
+<li>IAM 控制台 → 角色 → 创建角色</li>
+<li>受信任实体类型：选择 AWS 账户</li>
+<li>填写受信账户 ID；可选 <code>ExternalId</code>、要求 MFA</li>
+<li>选择要附加的权限策略</li>
+<li>（可选）设置权限边界、标签</li>
+<li>命名、审查并创建</li>
+</ol>
+<h3 id="62-cli">6.2 CLI<a class="anchor" href="#62-cli">#</a></h3>
+<p>跨账户角色：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 1. 创建角色（指定信任策略 JSON 文件）</span>
+</span></span><span style="display:flex;"><span>aws iam create-role <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --role-name UpdateApp <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --assume-role-policy-document file://trust.json
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 2. 附加托管权限策略</span>
+</span></span><span style="display:flex;"><span>aws iam attach-role-policy <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --role-name UpdateApp <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess</span></span></code></pre></div><p>服务角色同样使用 <code>create-role</code> + <code>attach-role-policy</code>，但信任策略的 <code>Principal</code> 为 <code>{&quot;Service&quot;:&quot;&lt;service&gt;.amazonaws.com&quot;}</code>。</p>
+<h3 id="63-api">6.3 API<a class="anchor" href="#63-api">#</a></h3>
+<p><code>CreateRole</code> → <code>AttachRolePolicy</code>。可选 <code>PutRolePermissionsBoundary</code>、<code>PutRolePolicy</code> 设置内联策略。</p>
+<h3 id="64-cloudformation">6.4 CloudFormation<a class="anchor" href="#64-cloudformation">#</a></h3>
+<p>使用 <code>AWS::IAM::Role</code> 资源类型，<code>AssumeRolePolicyDocument</code> 定义信任关系，<code>Policies</code>/<code>ManagedPolicyArns</code> 定义权限。</p>
+<h3 id="65-信任策略示例">6.5 信任策略示例<a class="anchor" href="#65-%e4%bf%a1%e4%bb%bb%e7%ad%96%e7%95%a5%e7%a4%ba%e4%be%8b">#</a></h3>
+<p>AWS 账户受信：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Version&#34;</span>: <span style="color:#e6db74">&#34;2012-10-17&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Statement&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Effect&#34;</span>: <span style="color:#e6db74">&#34;Allow&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Principal&#34;</span>: { <span style="color:#f92672">&#34;AWS&#34;</span>: <span style="color:#e6db74">&#34;arn:aws:iam::123456789012:root&#34;</span> },
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Action&#34;</span>: <span style="color:#e6db74">&#34;sts:AssumeRole&#34;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><p>AWS 服务受信：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Version&#34;</span>: <span style="color:#e6db74">&#34;2012-10-17&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Statement&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Effect&#34;</span>: <span style="color:#e6db74">&#34;Allow&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Principal&#34;</span>: { <span style="color:#f92672">&#34;Service&#34;</span>: <span style="color:#e6db74">&#34;ec2.amazonaws.com&#34;</span> },
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Action&#34;</span>: <span style="color:#e6db74">&#34;sts:AssumeRole&#34;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><p>SAML 联合受信：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Version&#34;</span>: <span style="color:#e6db74">&#34;2012-10-17&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Statement&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Effect&#34;</span>: <span style="color:#e6db74">&#34;Allow&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Principal&#34;</span>: { <span style="color:#f92672">&#34;Federated&#34;</span>: <span style="color:#e6db74">&#34;arn:aws:iam::123456789012:saml-provider/ExampleCorp&#34;</span> },
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Action&#34;</span>: <span style="color:#e6db74">&#34;sts:AssumeRoleWithSAML&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Condition&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;StringEquals&#34;</span>: { <span style="color:#f92672">&#34;SAML:aud&#34;</span>: <span style="color:#e6db74">&#34;https://signin.aws.amazon.com/saml&#34;</span> }
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><p>OIDC Web 联合（如 GitHub Actions）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Version&#34;</span>: <span style="color:#e6db74">&#34;2012-10-17&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Statement&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Effect&#34;</span>: <span style="color:#e6db74">&#34;Allow&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Principal&#34;</span>: { <span style="color:#f92672">&#34;Federated&#34;</span>: <span style="color:#e6db74">&#34;arn:aws:iam::123456789012:oidc-provider/token.actions.githubusercontent.com&#34;</span> },
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Action&#34;</span>: <span style="color:#e6db74">&#34;sts:AssumeRoleWithWebIdentity&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Condition&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;StringEquals&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;token.actions.githubusercontent.com:aud&#34;</span>: <span style="color:#e6db74">&#34;sts.amazonaws.com&#34;</span>
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;StringLike&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;token.actions.githubusercontent.com:sub&#34;</span>: <span style="color:#e6db74">&#34;repo:org/repo:*&#34;</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><h2 id="7-实例配置文件ec2">7. 实例配置文件（EC2）<a class="anchor" href="#7-%e5%ae%9e%e4%be%8b%e9%85%8d%e7%bd%ae%e6%96%87%e4%bb%b6ec2">#</a></h2>
+<p>EC2 实例不能直接担任角色，需通过实例配置文件：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws iam create-instance-profile --instance-profile-name MyAppProfile
+</span></span><span style="display:flex;"><span>aws iam add-role-to-instance-profile <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --instance-profile-name MyAppProfile --role-name MyAppRole</span></span></code></pre></div><p>启动实例时指定 <code>--iam-instance-profile Name=MyAppProfile</code>。控制台通过角色创建时会自动创建同名实例配置文件。</p>
+<h2 id="8-创建服务相关角色">8. 创建服务相关角色<a class="anchor" href="#8-%e5%88%9b%e5%bb%ba%e6%9c%8d%e5%8a%a1%e7%9b%b8%e5%85%b3%e8%a7%92%e8%89%b2">#</a></h2>
+<p>多数 SLR 在首次使用服务或执行特定操作时由 AWS 自动创建。也可手动创建：</p>
+<p>CLI：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws iam create-service-linked-role --aws-service-name &lt;service&gt;.amazonaws.com</span></span></code></pre></div><p>API：<code>CreateServiceLinkedRole</code>。</p>
+<h2 id="9-管理角色">9. 管理角色<a class="anchor" href="#9-%e7%ae%a1%e7%90%86%e8%a7%92%e8%89%b2">#</a></h2>
+<h3 id="91-查看角色">9.1 查看角色<a class="anchor" href="#91-%e6%9f%a5%e7%9c%8b%e8%a7%92%e8%89%b2">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws iam list-roles
+</span></span><span style="display:flex;"><span>aws iam get-role --role-name &lt;name&gt;
+</span></span><span style="display:flex;"><span>aws iam list-role-policies --role-name &lt;name&gt;
+</span></span><span style="display:flex;"><span>aws iam list-attached-role-policies --role-name &lt;name&gt;</span></span></code></pre></div><h3 id="92-修改权限">9.2 修改权限<a class="anchor" href="#92-%e4%bf%ae%e6%94%b9%e6%9d%83%e9%99%90">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 附加托管策略</span>
+</span></span><span style="display:flex;"><span>aws iam attach-role-policy --role-name &lt;n&gt; --policy-arn &lt;arn&gt;
+</span></span><span style="display:flex;"><span>aws iam detach-role-policy --role-name &lt;n&gt; --policy-arn &lt;arn&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 内联策略</span>
+</span></span><span style="display:flex;"><span>aws iam put-role-policy --role-name &lt;n&gt; --policy-name &lt;pn&gt; <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --policy-document file://p.json
+</span></span><span style="display:flex;"><span>aws iam delete-role-policy --role-name &lt;n&gt; --policy-name &lt;pn&gt;</span></span></code></pre></div><h3 id="93-修改信任策略">9.3 修改信任策略<a class="anchor" href="#93-%e4%bf%ae%e6%94%b9%e4%bf%a1%e4%bb%bb%e7%ad%96%e7%95%a5">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws iam update-assume-role-policy --role-name &lt;n&gt; --policy-document file://trust.json</span></span></code></pre></div><h3 id="94-修改最大会话时长">9.4 修改最大会话时长<a class="anchor" href="#94-%e4%bf%ae%e6%94%b9%e6%9c%80%e5%a4%a7%e4%bc%9a%e8%af%9d%e6%97%b6%e9%95%bf">#</a></h3>
+<p>CLI：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws iam update-role --role-name &lt;n&gt; --max-session-duration <span style="color:#ae81ff">7200</span></span></span></code></pre></div><p>默认 1 小时，可设置 1–12 小时。角色链场景下上限仍为 1 小时。</p>
+<h3 id="95-权限边界">9.5 权限边界<a class="anchor" href="#95-%e6%9d%83%e9%99%90%e8%be%b9%e7%95%8c">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws iam put-role-permissions-boundary --role-name &lt;n&gt; --permissions-boundary &lt;arn&gt;
+</span></span><span style="display:flex;"><span>aws iam delete-role-permissions-boundary --role-name &lt;n&gt;</span></span></code></pre></div><h2 id="10-删除角色">10. 删除角色<a class="anchor" href="#10-%e5%88%a0%e9%99%a4%e8%a7%92%e8%89%b2">#</a></h2>
+<h3 id="101-删除前准备">10.1 删除前准备<a class="anchor" href="#101-%e5%88%a0%e9%99%a4%e5%89%8d%e5%87%86%e5%a4%87">#</a></h3>
+<ul>
+<li>移除关联的实例配置文件</li>
+<li>分离所有托管策略</li>
+<li>删除所有内联策略</li>
+<li>删除权限边界</li>
+<li>等待依赖服务释放角色</li>
+</ul>
+<h3 id="102-删除-iam-角色">10.2 删除 IAM 角色<a class="anchor" href="#102-%e5%88%a0%e9%99%a4-iam-%e8%a7%92%e8%89%b2">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 移除实例配置文件关联</span>
+</span></span><span style="display:flex;"><span>aws iam remove-role-from-instance-profile <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --instance-profile-name &lt;ipn&gt; --role-name &lt;n&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 分离与删除策略</span>
+</span></span><span style="display:flex;"><span>aws iam list-attached-role-policies --role-name &lt;n&gt;
+</span></span><span style="display:flex;"><span>aws iam detach-role-policy --role-name &lt;n&gt; --policy-arn &lt;arn&gt;
+</span></span><span style="display:flex;"><span>aws iam list-role-policies --role-name &lt;n&gt;
+</span></span><span style="display:flex;"><span>aws iam delete-role-policy --role-name &lt;n&gt; --policy-name &lt;pn&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 删除角色</span>
+</span></span><span style="display:flex;"><span>aws iam delete-role --role-name &lt;n&gt;</span></span></code></pre></div><h3 id="103-删除服务相关角色">10.3 删除服务相关角色<a class="anchor" href="#103-%e5%88%a0%e9%99%a4%e6%9c%8d%e5%8a%a1%e7%9b%b8%e5%85%b3%e8%a7%92%e8%89%b2">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws iam delete-service-linked-role --role-name &lt;slr-name&gt;
+</span></span><span style="display:flex;"><span>aws iam get-service-linked-role-deletion-status --deletion-task-id &lt;id&gt;</span></span></code></pre></div><p>服务会异步验证 SLR 是否仍被使用；若资源未删除，删除会失败。</p>
+<h2 id="11-担任角色切换角色">11. 担任角色（切换角色）<a class="anchor" href="#11-%e6%8b%85%e4%bb%bb%e8%a7%92%e8%89%b2%e5%88%87%e6%8d%a2%e8%a7%92%e8%89%b2">#</a></h2>
+<h3 id="111-控制台">11.1 控制台<a class="anchor" href="#111-%e6%8e%a7%e5%88%b6%e5%8f%b0">#</a></h3>
+<ol>
+<li>导航栏 → 用户名菜单 → 切换角色</li>
+<li>填写账户 ID/别名、角色名</li>
+<li>可选显示名称、颜色</li>
+<li>切换成功后右上角显示新角色，可退回原身份</li>
+<li>最近使用过的角色会缓存以便快速切换</li>
+</ol>
+<p>注意：根用户<strong>不能</strong>切换角色；要求 <code>ExternalId</code> 的角色无法通过控制台切换。</p>
+<h3 id="112-aws-cli">11.2 AWS CLI<a class="anchor" href="#112-aws-cli">#</a></h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws sts assume-role <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --role-arn arn:aws:iam::999999999999:role/UpdateApp <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --role-session-name MySession <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --duration-seconds <span style="color:#ae81ff">3600</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --external-id MyExtId</span></span></code></pre></div><p>返回后将凭证设置为环境变量：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>export AWS_ACCESS_KEY_ID<span style="color:#f92672">=</span>...
+</span></span><span style="display:flex;"><span>export AWS_SECRET_ACCESS_KEY<span style="color:#f92672">=</span>...
+</span></span><span style="display:flex;"><span>export AWS_SESSION_TOKEN<span style="color:#f92672">=</span>...</span></span></code></pre></div><p>也可在 <code>~/.aws/config</code> 配置 <code>source_profile</code> 与 <code>role_arn</code>，命令自动完成切换。</p>
+<h3 id="113-aws-api">11.3 AWS API<a class="anchor" href="#113-aws-api">#</a></h3>
+<ul>
+<li><code>AssumeRole</code>：使用 IAM 凭证（长期或短期）</li>
+<li><code>AssumeRoleWithSAML</code>：SAML 2.0 IdP</li>
+<li><code>AssumeRoleWithWebIdentity</code>：OIDC/JWT</li>
+<li><code>AssumeRoot</code>：委托管理员对成员账户执行特权任务</li>
+</ul>
+<p>返回的 <code>Credentials</code> 包含 <code>AccessKeyId</code>、<code>SecretAccessKey</code>、<code>SessionToken</code>、<code>Expiration</code>。</p>
+<h2 id="12-向用户授予切换角色的权限">12. 向用户授予切换角色的权限<a class="anchor" href="#12-%e5%90%91%e7%94%a8%e6%88%b7%e6%8e%88%e4%ba%88%e5%88%87%e6%8d%a2%e8%a7%92%e8%89%b2%e7%9a%84%e6%9d%83%e9%99%90">#</a></h2>
+<p>附加到 IAM 用户或组的策略：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Version&#34;</span>: <span style="color:#e6db74">&#34;2012-10-17&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Statement&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Effect&#34;</span>: <span style="color:#e6db74">&#34;Allow&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Action&#34;</span>: <span style="color:#e6db74">&#34;sts:AssumeRole&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Resource&#34;</span>: <span style="color:#e6db74">&#34;arn:aws:iam::999999999999:role/UpdateApp&#34;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><p>结合 <code>aws:MultiFactorAuthPresent</code> 可强制 MFA 才能切换。</p>
+<h2 id="13-角色会话权限扩展">13. 角色会话权限扩展<a class="anchor" href="#13-%e8%a7%92%e8%89%b2%e4%bc%9a%e8%af%9d%e6%9d%83%e9%99%90%e6%89%a9%e5%b1%95">#</a></h2>
+<h3 id="131-会话策略">13.1 会话策略<a class="anchor" href="#131-%e4%bc%9a%e8%af%9d%e7%ad%96%e7%95%a5">#</a></h3>
+<p>调用 <code>AssumeRole*</code> 时传递 <code>Policy</code> 或 <code>PolicyArns</code> 参数，用于<strong>进一步缩减</strong>角色权限（<strong>不能超过</strong>角色本身权限）。</p>
+<h3 id="132-会话标签">13.2 会话标签<a class="anchor" href="#132-%e4%bc%9a%e8%af%9d%e6%a0%87%e7%ad%be">#</a></h3>
+<p>传递 <code>Tags</code> 参数为当前会话附加标签；设置 <code>TransitiveTagKeys</code> 让标签随后续链继续生效。用于 ABAC 联合场景。</p>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-iam-角色概述">1. IAM 角色概述</a></li>
+    <li><a href="#2-角色术语">2. 角色术语</a>
+      <ul>
+        <li><a href="#21-角色链注意事项">2.1 角色链注意事项</a></li>
+        <li><a href="#22-角色可以由谁代入">2.2 角色可以由谁代入</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-服务相关角色slr特殊行为">3. 服务相关角色（SLR）特殊行为</a></li>
+    <li><a href="#4-混淆代理人问题">4. 混淆代理人问题</a>
+      <ul>
+        <li><a href="#41-跨账户场景">4.1 跨账户场景</a></li>
+        <li><a href="#42-跨服务场景">4.2 跨服务场景</a></li>
+        <li><a href="#43-rcp-组织级防护">4.3 RCP 组织级防护</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-常见角色场景">5. 常见角色场景</a>
+      <ul>
+        <li><a href="#51-跨-aws-账户访问">5.1 跨 AWS 账户访问</a></li>
+        <li><a href="#52-非-aws-工作负载">5.2 非 AWS 工作负载</a></li>
+        <li><a href="#53-第三方账户访问">5.3 第三方账户访问</a></li>
+        <li><a href="#54-aws-服务访问">5.4 AWS 服务访问</a></li>
+        <li><a href="#55-联合身份">5.5 联合身份</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-创建-iam-角色">6. 创建 IAM 角色</a>
+      <ul>
+        <li><a href="#61-控制台以跨账户角色为例">6.1 控制台（以跨账户角色为例）</a></li>
+        <li><a href="#62-cli">6.2 CLI</a></li>
+        <li><a href="#63-api">6.3 API</a></li>
+        <li><a href="#64-cloudformation">6.4 CloudFormation</a></li>
+        <li><a href="#65-信任策略示例">6.5 信任策略示例</a></li>
+      </ul>
+    </li>
+    <li><a href="#7-实例配置文件ec2">7. 实例配置文件（EC2）</a></li>
+    <li><a href="#8-创建服务相关角色">8. 创建服务相关角色</a></li>
+    <li><a href="#9-管理角色">9. 管理角色</a>
+      <ul>
+        <li><a href="#91-查看角色">9.1 查看角色</a></li>
+        <li><a href="#92-修改权限">9.2 修改权限</a></li>
+        <li><a href="#93-修改信任策略">9.3 修改信任策略</a></li>
+        <li><a href="#94-修改最大会话时长">9.4 修改最大会话时长</a></li>
+        <li><a href="#95-权限边界">9.5 权限边界</a></li>
+      </ul>
+    </li>
+    <li><a href="#10-删除角色">10. 删除角色</a>
+      <ul>
+        <li><a href="#101-删除前准备">10.1 删除前准备</a></li>
+        <li><a href="#102-删除-iam-角色">10.2 删除 IAM 角色</a></li>
+        <li><a href="#103-删除服务相关角色">10.3 删除服务相关角色</a></li>
+      </ul>
+    </li>
+    <li><a href="#11-担任角色切换角色">11. 担任角色（切换角色）</a>
+      <ul>
+        <li><a href="#111-控制台">11.1 控制台</a></li>
+        <li><a href="#112-aws-cli">11.2 AWS CLI</a></li>
+        <li><a href="#113-aws-api">11.3 AWS API</a></li>
+      </ul>
+    </li>
+    <li><a href="#12-向用户授予切换角色的权限">12. 向用户授予切换角色的权限</a></li>
+    <li><a href="#13-角色会话权限扩展">13. 角色会话权限扩展</a>
+      <ul>
+        <li><a href="#131-会话策略">13.1 会话策略</a></li>
+        <li><a href="#132-会话标签">13.2 会话标签</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

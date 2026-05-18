@@ -1,0 +1,2670 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="1. 身份提供商与联合概述# 联合身份验证让外部 IdP 管理用户身份，外部用户通过角色获得 AWS 临时凭证，避免在应用中嵌入长期密钥。
+1.1 联合类型对比# 联合类型 适用账户 适合的身份 支持的身份源 使用 IAM Identity Center 的联合 AWS Organizations 多账户 员工人类用户 SAML 2.0、Managed AD、Identity Center 目录 使用 IAM 的联合 单一独立账户 小规模人类用户、机器用户 SAML 2.0、OIDC Amazon Cognito 身份池 任意 应用程序用户 SAML 2.0、OIDC、OAuth 2.0 社交 IdP 推荐：多账户组织使用 IAM Identity Center，应用用户使用 Cognito，单账户短期场景使用 IAM SAML/OIDC。
+1.2 工作负载联合# IAM Roles Anywhere：AWS 外部工作负载通过 X.509 证书获取临时凭证 外部 IdP (SAML/OIDC)：通过 AssumeRoleWithSAML / AssumeRoleWithWebIdentity AWS IoT Core：物联网设备通过 MTLS 2. OIDC 联合# 2.1 典型流程# 移动应用使用外部 IdP（Login with Amazon、Facebook、Google、其他 OIDC）：
+">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#343a40">
+<meta name="color-scheme" content="light dark"><meta property="og:url" content="http://localhost:1313/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/IAM/09-iam-federation/">
+  <meta property="og:site_name" content="碎碎念念">
+  <meta property="og:title" content="09 联合身份验证">
+  <meta property="og:description" content="1. 身份提供商与联合概述# 联合身份验证让外部 IdP 管理用户身份，外部用户通过角色获得 AWS 临时凭证，避免在应用中嵌入长期密钥。
+1.1 联合类型对比# 联合类型 适用账户 适合的身份 支持的身份源 使用 IAM Identity Center 的联合 AWS Organizations 多账户 员工人类用户 SAML 2.0、Managed AD、Identity Center 目录 使用 IAM 的联合 单一独立账户 小规模人类用户、机器用户 SAML 2.0、OIDC Amazon Cognito 身份池 任意 应用程序用户 SAML 2.0、OIDC、OAuth 2.0 社交 IdP 推荐：多账户组织使用 IAM Identity Center，应用用户使用 Cognito，单账户短期场景使用 IAM SAML/OIDC。
+1.2 工作负载联合# IAM Roles Anywhere：AWS 外部工作负载通过 X.509 证书获取临时凭证 外部 IdP (SAML/OIDC)：通过 AssumeRoleWithSAML / AssumeRoleWithWebIdentity AWS IoT Core：物联网设备通过 MTLS 2. OIDC 联合# 2.1 典型流程# 移动应用使用外部 IdP（Login with Amazon、Facebook、Google、其他 OIDC）：">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="03.云计算">
+
+
+  <meta itemprop="name" content="09 联合身份验证">
+  <meta itemprop="description" content="1. 身份提供商与联合概述# 联合身份验证让外部 IdP 管理用户身份，外部用户通过角色获得 AWS 临时凭证，避免在应用中嵌入长期密钥。
+1.1 联合类型对比# 联合类型 适用账户 适合的身份 支持的身份源 使用 IAM Identity Center 的联合 AWS Organizations 多账户 员工人类用户 SAML 2.0、Managed AD、Identity Center 目录 使用 IAM 的联合 单一独立账户 小规模人类用户、机器用户 SAML 2.0、OIDC Amazon Cognito 身份池 任意 应用程序用户 SAML 2.0、OIDC、OAuth 2.0 社交 IdP 推荐：多账户组织使用 IAM Identity Center，应用用户使用 Cognito，单账户短期场景使用 IAM SAML/OIDC。
+1.2 工作负载联合# IAM Roles Anywhere：AWS 外部工作负载通过 X.509 证书获取临时凭证 外部 IdP (SAML/OIDC)：通过 AssumeRoleWithSAML / AssumeRoleWithWebIdentity AWS IoT Core：物联网设备通过 MTLS 2. OIDC 联合# 2.1 典型流程# 移动应用使用外部 IdP（Login with Amazon、Facebook、Google、其他 OIDC）：">
+  <meta itemprop="wordCount" content="586">
+
+<title>09 联合身份验证 | 碎碎念念</title>
+<link rel="icon" href="/favicon.png" >
+<link rel="manifest" href="/manifest.json">
+<link rel="canonical" href="http://localhost:1313/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/IAM/09-iam-federation/">
+<link rel="stylesheet" href="/book.min.d001b688465bfefc82049e01ae748ce2a5b3d7da2ae566f7623a5daac2ddea10.css" integrity="sha256-0AG2iEZb/vyCBJ4BrnSM4qWz19oq5Wb3YjpdqsLd6hA=" crossorigin="anonymous">
+
+
+  <script defer src="/fuse.min.js"></script>
+  <script defer src="/en.search.min.0086c058a1f89b2530fc9e1a0952383e7f19b9016224faf4d18973fe5c351a04.js" integrity="sha256-AIbAWKH4myUw/J4aCVI4Pn8ZuQFiJPr00Ylz/lw1GgQ=" crossorigin="anonymous"></script>
+
+
+
+  
+</head>
+<body dir="ltr" class="book-kind-page book-type-03.云计算">
+  <input type="checkbox" class="hidden toggle" id="menu-control" />
+  <input type="checkbox" class="hidden toggle" id="toc-control" />
+  <main class="container flex">
+    
+<aside class="book-menu">
+  <div class="book-menu-content">
+    
+  <nav>
+<h2 class="book-brand">
+  <a class="flex align-center" href="/"><span>碎碎念念</span>
+  </a>
+</h2>
+
+
+<div class="book-search hidden">
+  <input id="book-search-input" type="text" 
+    placeholder="Search"
+    aria-label="Search"
+    maxlength="64" data-hotkeys="s/" />
+  <div class="book-search-spinner hidden"></div>
+  <ul id="book-search-results"></ul>
+</div>
+<script>document.querySelector(".book-search").classList.remove("hidden")</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-9fe7a2339ad0dc4a73778e68cef649fe" class="toggle"  />
+    <label for="section-9fe7a2339ad0dc4a73778e68cef649fe" class="flex">
+      <a role="button" class="">
+        AI</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-15c23871017acbed09b7424bdcf80a4a" class="toggle"  />
+    <label for="section-15c23871017acbed09b7424bdcf80a4a" class="flex">
+      <a href="/01.AI/01.AI%E5%9F%BA%E7%A1%80/" class="">
+        AI基础</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/01.AI%E5%9F%BA%E7%A1%80/AI%E5%8F%91%E5%B1%95%E7%BC%96%E5%B9%B4%E5%8F%B2/" class="">
+      Ai发展编年史</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/01.AI%E5%9F%BA%E7%A1%80/AI%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E4%B8%8E%E6%9C%AF%E8%AF%AD%E6%A2%B3%E7%90%86/" class="">
+      Ai核心概念与术语梳理</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-3c59d4207daf22454abfe1884802d176" class="toggle"  />
+    <label for="section-3c59d4207daf22454abfe1884802d176" class="flex">
+      <a href="/01.AI/02.%E6%A8%A1%E5%9E%8B%E4%B8%8E%E6%8A%80%E6%9C%AF/" class="">
+        模型与技术</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-49d4b9c6159f641db7abe3ae967f518a" class="toggle"  />
+    <label for="section-49d4b9c6159f641db7abe3ae967f518a" class="flex">
+      <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/" class="">
+        AI应用</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-a4f890ca069a25208a03d08b2bb2af9b" class="toggle"  />
+    <label for="section-a4f890ca069a25208a03d08b2bb2af9b" class="flex">
+      <a role="button" class="">
+        大模型聚合平台</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%81%9A%E5%90%88%E5%B9%B3%E5%8F%B0/LiteLLM/" class="">
+      LiteLLM</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E8%81%9A%E5%90%88%E5%B9%B3%E5%8F%B0/New-api/" class="">
+      New API</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-d6e743b94614084bb7b1efb03702d051" class="toggle"  />
+    <label for="section-d6e743b94614084bb7b1efb03702d051" class="flex">
+      <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7/" class="">
+        编程工具</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/%E7%BC%96%E7%A8%8B%E5%B7%A5%E5%85%B7/Trae/" class="">
+      Trae</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-3f03d304f7515b074c3e895c04f5985a" class="toggle"  />
+    <label for="section-3f03d304f7515b074c3e895c04f5985a" class="flex">
+      <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/Agent/" class="">
+        Agent</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/Agent/OpenClaw/" class="">
+      OpenClaw</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/API%E8%B0%83%E7%94%A8%E8%A7%84%E8%8C%83/" class="">
+      API调用规范</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/01.AI/03.AI%E5%BA%94%E7%94%A8/Prompt%E5%B7%A5%E7%A8%8B/" class="">
+      Prompt工程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-81e5d1f0dc654ba1710e62c7855b9f41" class="toggle"  />
+    <label for="section-81e5d1f0dc654ba1710e62c7855b9f41" class="flex">
+      <a role="button" class="">
+        运维</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-07353f6b74ee2fa2408751490aab51d1" class="toggle"  />
+    <label for="section-07353f6b74ee2fa2408751490aab51d1" class="flex">
+      <a role="button" class="">
+        Oracle</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/02.%E8%BF%90%E7%BB%B4/oracle/oracle%E7%AC%94%E8%AE%B0/" class="">
+      Oracle笔记</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-588052d0ddc9d35446ed3fcf1c068d7e" class="toggle"  />
+    <label for="section-588052d0ddc9d35446ed3fcf1c068d7e" class="flex">
+      <a role="button" class="">
+        Windows</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/02.%E8%BF%90%E7%BB%B4/08.Windows/nssm%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" class="">
+      nssm进程管理工具</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/02.%E8%BF%90%E7%BB%B4/git/Git%E5%9F%BA%E7%A1%80/" class="">
+      Git使用教程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-a1da811a60ec5f919d028b5a8ad22512" class="toggle" checked />
+    <label for="section-a1da811a60ec5f919d028b5a8ad22512" class="flex">
+      <a role="button" class="">
+        云计算</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-835dbb699264e6d42cdd17507140ac88" class="toggle" checked />
+    <label for="section-835dbb699264e6d42cdd17507140ac88" class="flex">
+      <a role="button" class="">
+        AWS</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/cli%E5%91%BD%E4%BB%A4%E8%A1%8C/" class="">
+      AWS CLI命令行</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-c558e862208eb14727f1a08067f09bdd" class="toggle"  />
+    <label for="section-c558e862208eb14727f1a08067f09bdd" class="flex">
+      <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/Bedrock/Bedrock%E4%BB%8B%E7%BB%8D/" class="">
+        Bedrock</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/aws%E5%9F%BA%E7%A1%80/" class="">
+      Aws基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/IAM/" class="">
+      AWS IAM 用户指南笔记</a>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/01.AWS/IAM/IAM/" class="">
+      Iam</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-134481839eb9c2f960db1fbd97c06e82" class="toggle"  />
+    <label for="section-134481839eb9c2f960db1fbd97c06e82" class="flex">
+      <a role="button" class="">
+        阿里云</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-601ec63ad4b894fb5775994f34301885" class="toggle"  />
+    <label for="section-601ec63ad4b894fb5775994f34301885" class="flex">
+      <a role="button" class="">
+        腾讯云</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-575fefbd29f71371957ab2f14f9cbee0" class="toggle"  />
+    <label for="section-575fefbd29f71371957ab2f14f9cbee0" class="flex">
+      <a role="button" class="">
+        阿里腾讯华为火山云产品对比</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%AF%B9%E6%AF%94/" class="">
+      服务器对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E7%A1%AC%E7%9B%98%E5%AF%B9%E6%AF%94/" class="">
+      云硬盘对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AF%B9%E6%AF%94/" class="">
+      数据库产品对比表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%B8%AD%E9%97%B4%E4%BB%B6%E5%AF%B9%E6%AF%94/" class="">
+      中间件产品对比表</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E5%A4%A7%E6%95%B0%E6%8D%AE%E5%AF%B9%E6%AF%94/" class="">
+      大数据对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E5%AE%89%E5%85%A8%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/" class="">
+      安全产品对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AF%B9%E6%A0%87/" class="">
+      云容器对比</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E6%9E%B6%E6%9E%84%E5%B8%88%E5%B7%A5%E4%BD%9C%E8%81%8C%E8%B4%A3/" class="">
+      云架构师工作职责</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/03.%E4%BA%91%E8%AE%A1%E7%AE%97/%E9%98%BF%E9%87%8C%E8%85%BE%E8%AE%AF%E5%8D%8E%E4%B8%BA%E7%81%AB%E5%B1%B1%E4%BA%91%E4%BA%A7%E5%93%81%E5%AF%B9%E6%AF%94/%E4%BA%91%E8%BF%81%E7%A7%BB%E6%B5%81%E7%A8%8B%E9%98%BF%E9%87%8C%E4%BA%91/" class="">
+      迁移流程总结</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f63ca89517e3b888fc3c4dc8b04609ea" class="toggle"  />
+    <label for="section-f63ca89517e3b888fc3c4dc8b04609ea" class="flex">
+      <a role="button" class="">
+        Python</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-f508e989cd5e3427044a0620121ddbda" class="toggle"  />
+    <label for="section-f508e989cd5e3427044a0620121ddbda" class="flex">
+      <a role="button" class="">
+        Python基础知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="">
+      基础知识</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E8%A3%85%E9%A5%B0%E5%99%A8/" class="">
+      Python函数</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/functools/" class="">
+      functools</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/Numpy/" class="">
+      Numpy</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-344a042a46b58aed858fd7aa7abd362d" class="toggle"  />
+    <label for="section-344a042a46b58aed858fd7aa7abd362d" class="flex">
+      <a role="button" class="">
+        Python应用代码</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Jupyter%E4%BD%BF%E7%94%A8/" class="">
+      Jupyter使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru-%E5%89%AF%E6%9C%AC/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Loguru/" class="">
+      Loguru</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/PySimpleGUI/" class="">
+      PySimpleGUI</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/watchdog/" class="">
+      WatchDog</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/schedule/" class="">
+      定时任务-schedule</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="">
+      配置文件</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/Fastapi-WEB%E5%BC%80%E5%8F%91/" class="">
+      fastapi</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%BC%80%E5%8F%91/" class="">
+      数据库开发</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E5%BA%94%E7%94%A8%E4%BB%A3%E7%A0%81/%E4%B8%80%E4%BA%9B%E8%A7%84%E8%8C%83/" class="">
+      一些规范</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/1.Pandas%E5%9F%BA%E7%A1%80/" class="">
+      Pandas基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/2.Pandas%E7%B4%A2%E5%BC%95/" class="">
+      Pandas索引</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/3.Pandas%E5%88%86%E7%BB%84/" class="">
+      Pandas分组</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-ed2965e47d3be272fd865c1df0bb75bc" class="toggle"  />
+    <label for="section-ed2965e47d3be272fd865c1df0bb75bc" class="flex">
+      <a role="button" class="">
+        Pyside-GUI开发</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Pyside/pyside%E5%9F%BA%E7%A1%80/" class="">
+      PySide基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Pyside/%E7%BE%8E%E5%8C%96%E7%95%8C%E9%9D%A2css/" class="">
+      PySide美化界面</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Pyside/%E4%BF%A1%E5%8F%B7%E6%A7%BD%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="">
+      PySide信号槽与多线程</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/Python%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/4.Pandas%E5%8F%98%E5%BD%A2/" class="">
+      Pandas变形</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-60bdc869135151ee6f66cb65499bf2d9" class="toggle"  />
+    <label for="section-60bdc869135151ee6f66cb65499bf2d9" class="flex">
+      <a role="button" class="">
+        其它知识</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Pystand/" class="">
+      Pystand打包工具</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/Conda/" class="">
+      Conda使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/04.Python/%E5%85%B6%E4%BB%96%E7%9F%A5%E8%AF%86/MinGit%E4%BD%BF%E7%94%A8/" class="">
+      MinGit使用</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-8a098eb60ed3a3c8aa631838098de5f6" class="toggle"  />
+    <label for="section-8a098eb60ed3a3c8aa631838098de5f6" class="flex">
+      <a role="button" class="">
+        Game</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-d3553f07e3dd22f14040931f6def7247" class="toggle"  />
+    <label for="section-d3553f07e3dd22f14040931f6def7247" class="flex">
+      <a role="button" class="">
+        Yolo</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/Yolo/yolo%E7%8E%AF%E5%A2%83%E5%AE%89%E8%A3%85/" class="">
+      YOLO环境安装</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/Yolo/YOLO%E6%A0%87%E6%B3%A8%E5%92%8C%E8%AE%AD%E7%BB%83%E6%95%B0%E6%8D%AE/" class="">
+      YOLO标注和训练数据</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-755341e3f50c66a57e172eec45daad0b" class="toggle"  />
+    <label for="section-755341e3f50c66a57e172eec45daad0b" class="flex">
+      <a role="button" class="">
+        脚本开发实战</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/1.%E5%9B%BE%E8%89%B2%E8%84%9A%E6%9C%AC%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/" class="">
+      1.图色脚本架构设计</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E6%A2%A6%E5%B9%BB%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/" class="">
+      游戏图色脚本开发实战</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E9%97%AE%E9%81%93%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/" class="">
+      游戏图色脚本开发实战</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/2.%E5%B7%A5%E7%A8%8B%E6%9E%B6%E6%9E%84UI-%E5%B8%83%E5%B1%80%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%85%8D%E7%BD%AE%E9%9A%94%E7%A6%BB/" class="">
+      2.工程架构、UI 布局与多线程配置隔离</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/3.%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E7%8E%AF%E5%A2%83%E9%83%A8%E7%BD%B2%E4%B8%8E%E6%89%BE%E5%9B%BE%E6%8C%87%E4%BB%A4%E8%AF%A6%E8%A7%A3/" class="">
+      3.大漠插件：环境部署与找图指令详解</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/4.%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E5%85%8D%E6%B3%A8%E5%86%8C%E8%B0%83%E7%94%A8%E5%9D%90%E6%A0%87%E7%B3%BB%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E5%90%8E%E5%8F%B0%E7%BB%91%E5%AE%9A/" class="">
+      4.大漠插件：免注册调用、坐标系原理以及后台绑定</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/5.%E6%98%93%E8%AF%AD%E8%A8%80%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6/" class="">
+      5.易语言多线程控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/5.%E6%98%93%E8%AF%AD%E8%A8%80%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6%E4%B8%8E%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB%E4%BC%98%E5%8C%96%E6%96%B9%E6%A1%88/" class="">
+      5.易语言多线程控制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/6.%E9%BC%A0%E6%A0%87%E6%BC%82%E7%A7%BB%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" class="">
+      6.鼠标漂移解决方案</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/10.%E5%BC%BA%E7%9B%97%E4%BB%BB%E5%8A%A1%E8%B4%BC%E7%8E%8B%E4%BB%BB%E5%8A%A1%E8%AF%BB%E5%8F%961/" class="">
+      10.打图任务(1)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/10.%E5%BC%BA%E7%9B%97%E4%BB%BB%E5%8A%A1%E8%B4%BC%E7%8E%8B%E4%BB%BB%E5%8A%A1%E8%AF%BB%E5%8F%962/" class="">
+      10.打图任务(2)</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/11.%E8%B7%A8%E5%9C%B0%E5%9B%BE%E8%87%AA%E5%8A%A8%E5%AF%BB%E8%B7%AF/" class="">
+      11.跨地图寻路</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/12.%E9%A3%9E%E8%A1%8C%E6%97%97/" class="">
+      12.飞行旗</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/13.%E5%8A%A8%E6%80%81NPC%E8%BD%A6%E5%A4%AB%E9%A9%BF%E7%AB%99%E8%80%81%E6%9D%BF%E7%82%B9%E5%87%BB%E5%AF%B9%E8%AF%9D%E6%A1%86%E8%87%AA%E5%8A%A8%E5%8C%96%E4%BB%A5%E5%8F%8A%E6%96%B0%E5%8C%BA%E9%81%AE%E6%8C%A1%E5%88%A4%E5%AE%9A%E7%9A%84%E9%AB%98%E7%BA%A7%E5%AE%9E%E6%93%8D%E6%8A%80%E5%B7%A7/" class="">
+      13.动态NPC（车夫、驿站老板）点击、对话框自动化以及新区遮挡判定的高级实操技巧</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/14.%E5%9C%B0%E5%9B%BE%E5%9D%90%E6%A0%87%E6%8D%A2%E7%AE%97/" class="">
+      14.地图坐标换算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/15.%E5%BC%BA%E7%9B%97NPC%E8%A2%AB%E9%81%AE%E6%8C%A1%E6%88%96%E9%87%8D%E5%8F%A0%E6%97%B6%E7%9A%84%E8%BF%9B%E9%98%B6%E5%A4%84%E7%90%86%E9%80%BB%E8%BE%91/" class="">
+      15.强盗（NPC）被遮挡或重叠时的进阶处理逻辑</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/16.%E8%B4%BC%E7%8E%8B%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6/" class="">
+      16.贼王处理机制</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/17-18-19-20-21.%E8%B4%BC%E7%8E%8B%E8%BF%9B%E9%98%B6%E5%A4%84%E7%90%86%E4%B8%8E-OCR-%E9%AA%8C%E8%AF%81%E5%AE%9E%E6%88%98/" class="">
+      17-18-19-20-21.贼王进阶处理与 OCR 验证实战</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%8F%92%E4%BB%B6%E8%AF%86%E5%88%AB/" class="">
+      程序集_插件识别</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%8F%92%E4%BB%B6%E6%B3%A8%E5%86%8C/" class="">
+      程序集_插件注册</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/23-24-25.%E8%87%AA%E5%8A%A8%E7%99%BB%E5%BD%95/" class="">
+      23-24-25.自动登录与模拟器将军令获取</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E4%BB%BB%E5%8A%A1%E6%89%A7%E8%A1%8C%E5%88%86%E9%85%8D/" class="">
+      程序集_任务执行分配</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%AA%97%E5%8F%A3%E7%A8%8B%E5%BA%8F%E9%9B%86_%E7%AA%97%E5%8F%A3_%E5%8A%9F%E8%83%BD%E8%AE%BE%E7%BD%AE/" class="">
+      程序集_功能设置</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%AA%97%E5%8F%A3%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%90%AF%E5%8A%A8%E7%AA%97%E5%8F%A3/" class="">
+      程序集_启动窗口</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%9C%B0%E5%9B%BE/" class="">
+      程序集_地图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E5%B8%B8%E7%94%A8%E5%8A%9F%E8%83%BD/" class="">
+      程序集_常用功能</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E6%89%93%E5%9B%BE/" class="">
+      程序集_打图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E8%84%9A%E6%9C%AC%E4%B8%BB%E7%A8%8B%E5%BA%8F/" class="">
+      程序集_脚本主程序</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E9%A3%9E%E8%A1%8C/" class="">
+      程序集_飞行</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/%E7%A8%8B%E5%BA%8F%E9%9B%86_%E9%BC%A0%E6%A0%87%E7%A7%BB%E5%8A%A8/" class="">
+      程序集_鼠标移动</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/26.%E4%BB%BB%E5%8A%A1%E8%B6%85%E6%97%B6%E7%9B%91%E6%8E%A7%E4%B8%8E%E6%B8%B8%E6%88%8F%E6%8E%89%E7%BA%BF%E8%87%AA%E5%8A%A8%E9%87%8D%E8%BF%9E/" class="">
+      26.任务超时监控与游戏掉线自动重连</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/27.%E8%87%AA%E5%8A%A8%E6%8D%A2%E5%8F%B7%E6%81%A2%E5%A4%8D%E7%94%A8%E6%88%B7%E8%AE%BE%E7%BD%AE%E6%96%B0%E7%9A%84%E4%BB%BB%E5%8A%A1%E9%93%BE/" class="">
+      27.自动换号,恢复用户设置新的任务链</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/28.%E6%95%B4%E4%BD%93%E6%89%93%E5%9B%BE%E6%B5%81%E7%A8%8B%E5%9B%9E%E9%A1%BE%E8%AE%B2%E8%A7%A3%E8%A7%A3%E5%86%B3%E6%96%B0%E5%8C%BA%E5%8D%A1%E9%A1%BF%E5%A4%84%E7%90%86%E5%90%8C%E6%97%B6%E4%B8%8D%E5%BD%B1%E5%93%8D%E8%80%81%E5%8C%BA%E7%9A%84%E6%B5%81%E7%95%85%E5%BA%A6/" class="">
+      28.整体打图流程回顾讲解,解决新区卡顿处理同时不影响老区的流畅度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/29-30-31.%E8%AF%BE-%E6%8A%BC%E9%95%96%E9%9A%BE%E7%82%B9%E8%A7%A3%E6%9E%90/" class="">
+      29-30-31押镖难点解析</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/32-33-%E8%87%AA%E5%8A%A8%E4%BB%93%E5%BA%93%E8%BD%AC%E5%9B%BE%E5%AE%9D%E7%9F%B3%E5%95%86%E4%BA%BA%E5%8F%96%E5%9B%BE%E7%9B%B4%E6%8E%A5%E8%BD%AC%E5%9B%BE/" class="">
+      32-33 自动仓库转图，宝石商人取图直接转图</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E8%84%9A%E6%9C%AC%E5%BC%80%E5%8F%91%E5%AE%9E%E6%88%98/34.%E5%8D%A1%E5%AF%86%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BA%E9%AA%8C%E8%AF%81/" class="">
+      34.卡密系统搭建验证</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-5126b54f0ae1ceecc1303140e82740c8" class="toggle"  />
+    <label for="section-5126b54f0ae1ceecc1303140e82740c8" class="flex">
+      <a role="button" class="">
+        逆向初级</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/01.%E8%BF%9B%E5%88%B6%E5%9F%BA%E7%A1%80/" class="">
+      01.进制基础</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/02.%E6%95%B0%E6%8D%AE%E5%AE%BD%E5%BA%A6/" class="">
+      02.数据宽度</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/03.%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97/" class="">
+      03.逻辑运算</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/04.%E5%AF%84%E5%AD%98%E5%99%A8/" class="">
+      04.寄存器</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E9%80%86%E5%90%91%E5%88%9D%E7%BA%A7/05.%E5%86%85%E5%AD%98/" class="">
+      05.内存</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E6%98%93%E9%94%AE%E9%BC%A0/" class="">
+      易键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E5%B9%BD%E7%81%B5%E9%94%AE%E9%BC%A0/" class="">
+      幽灵键鼠</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/05.Game/%E5%A4%A7%E6%BC%A0%E6%8F%92%E4%BB%B6/" class="">
+      大漠插件</a>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-d4a0c57ccfa86bfc9cc9b680995d5df5" class="toggle"  />
+    <label for="section-d4a0c57ccfa86bfc9cc9b680995d5df5" class="flex">
+      <a role="button" class="">
+        Tools</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/06.Other/hugo/" class="">
+      hugo使用</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/06.Other/Markdown%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/" class="">
+      Markdown使用教程</a>
+  
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <a href="/06.Other/%E5%A6%82%E4%BD%95%E7%BB%84%E8%A3%85%E4%B8%80%E5%8F%B0%E4%B8%BB%E6%9C%BA/" class="">
+      志强cpu装机事项</a>
+  
+
+        </li>
+      
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-9053fccdbd7199bd47302238aacb0e2d" class="toggle"  />
+    <label for="section-9053fccdbd7199bd47302238aacb0e2d" class="flex">
+      <a role="button" class="">
+        Java</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-6e540f017616ab12e7390ffcfc707be8" class="toggle"  />
+    <label for="section-6e540f017616ab12e7390ffcfc707be8" class="flex">
+      <a role="button" class="">
+        生活碎碎</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-78b2b94ef620d452afa50ea603ec65c9" class="toggle"  />
+    <label for="section-78b2b94ef620d452afa50ea603ec65c9" class="flex">
+      <a role="button" class="">
+        英语</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-80f5fffe9bee676d4a2bf6c7a43cd7ed" class="toggle"  />
+    <label for="section-80f5fffe9bee676d4a2bf6c7a43cd7ed" class="flex">
+      <a role="button" class="">
+        外汇</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-0335bddd19a23a8f94f5dcac9a412967" class="toggle"  />
+    <label for="section-0335bddd19a23a8f94f5dcac9a412967" class="flex">
+      <a role="button" class="">
+        Adobe</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+      
+        <li>
+          
+  
+  
+
+  
+    <input type="checkbox" id="section-6a1db553da3d9bad9cd7eb830f28f894" class="toggle"  />
+    <label for="section-6a1db553da3d9bad9cd7eb830f28f894" class="flex">
+      <a role="button" class="">
+        Office</a>
+      <img src="/icons/chevron-right.svg" class="book-icon" alt="Expand" />
+    </label>
+  
+
+          
+  <ul>
+    
+  </ul>
+
+        </li>
+      
+    
+  </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var e=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(){localStorage.setItem("menu.scrollTop",e.scrollTop)}),e.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+
+
+
+  </div>
+</aside>
+ 
+
+    <div class="book-page">
+      <header class="book-header hidden">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/icons/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <h3>09 联合身份验证</h3>
+
+  <label for="toc-control">
+    
+    <img src="/icons/toc.svg" class="book-icon" alt="Table of Contents" />
+    
+  </label>
+</div>
+
+
+  
+  <aside class="hidden">
+    
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-身份提供商与联合概述">1. 身份提供商与联合概述</a>
+      <ul>
+        <li><a href="#11-联合类型对比">1.1 联合类型对比</a></li>
+        <li><a href="#12-工作负载联合">1.2 工作负载联合</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-oidc-联合">2. OIDC 联合</a>
+      <ul>
+        <li><a href="#21-典型流程">2.1 典型流程</a></li>
+        <li><a href="#22-amazon-cognito-路径">2.2 Amazon Cognito 路径</a></li>
+        <li><a href="#23-iam-oidc-身份提供者">2.3 IAM OIDC 身份提供者</a></li>
+        <li><a href="#24-github-actions-到-aws-示例">2.4 GitHub Actions 到 AWS 示例</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-saml-20-联合">3. SAML 2.0 联合</a>
+      <ul>
+        <li><a href="#31-基本流程">3.1 基本流程</a></li>
+        <li><a href="#32-创建-iam-saml-身份提供者">3.2 创建 IAM SAML 身份提供者</a></li>
+        <li><a href="#33-配置-saml-断言">3.3 配置 SAML 断言</a></li>
+        <li><a href="#34-saml-条件键">3.4 SAML 条件键</a></li>
+        <li><a href="#35-aws-控制台-sso-流程">3.5 AWS 控制台 SSO 流程</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-获取联合令牌getfederationtoken">4. 获取联合令牌（GetFederationToken）</a></li>
+    <li><a href="#5-saml-联合故障排除">5. SAML 联合故障排除</a></li>
+    <li><a href="#6-出站联合aws-to-external">6. 出站联合（AWS to External）</a></li>
+    <li><a href="#7-客户自定义身份代理">7. 客户自定义身份代理</a></li>
+  </ul>
+</nav>
+
+
+
+  </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown book-article"><h2 id="1-身份提供商与联合概述">1. 身份提供商与联合概述<a class="anchor" href="#1-%e8%ba%ab%e4%bb%bd%e6%8f%90%e4%be%9b%e5%95%86%e4%b8%8e%e8%81%94%e5%90%88%e6%a6%82%e8%bf%b0">#</a></h2>
+<p>联合身份验证让外部 IdP 管理用户身份，外部用户通过角色获得 AWS 临时凭证，避免在应用中嵌入长期密钥。</p>
+<h3 id="11-联合类型对比">1.1 联合类型对比<a class="anchor" href="#11-%e8%81%94%e5%90%88%e7%b1%bb%e5%9e%8b%e5%af%b9%e6%af%94">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>联合类型</th>
+          <th>适用账户</th>
+          <th>适合的身份</th>
+          <th>支持的身份源</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>使用 IAM Identity Center 的联合</td>
+          <td>AWS Organizations 多账户</td>
+          <td>员工人类用户</td>
+          <td>SAML 2.0、Managed AD、Identity Center 目录</td>
+      </tr>
+      <tr>
+          <td>使用 IAM 的联合</td>
+          <td>单一独立账户</td>
+          <td>小规模人类用户、机器用户</td>
+          <td>SAML 2.0、OIDC</td>
+      </tr>
+      <tr>
+          <td>Amazon Cognito 身份池</td>
+          <td>任意</td>
+          <td>应用程序用户</td>
+          <td>SAML 2.0、OIDC、OAuth 2.0 社交 IdP</td>
+      </tr>
+  </tbody>
+</table>
+<p>推荐：多账户组织使用 IAM Identity Center，应用用户使用 Cognito，单账户短期场景使用 IAM SAML/OIDC。</p>
+<h3 id="12-工作负载联合">1.2 工作负载联合<a class="anchor" href="#12-%e5%b7%a5%e4%bd%9c%e8%b4%9f%e8%bd%bd%e8%81%94%e5%90%88">#</a></h3>
+<ul>
+<li><strong>IAM Roles Anywhere</strong>：AWS 外部工作负载通过 X.509 证书获取临时凭证</li>
+<li><strong>外部 IdP (SAML/OIDC)</strong>：通过 <code>AssumeRoleWithSAML</code> / <code>AssumeRoleWithWebIdentity</code></li>
+<li><strong>AWS IoT Core</strong>：物联网设备通过 MTLS</li>
+</ul>
+<h2 id="2-oidc-联合">2. OIDC 联合<a class="anchor" href="#2-oidc-%e8%81%94%e5%90%88">#</a></h2>
+<h3 id="21-典型流程">2.1 典型流程<a class="anchor" href="#21-%e5%85%b8%e5%9e%8b%e6%b5%81%e7%a8%8b">#</a></h3>
+<p>移动应用使用外部 IdP（Login with Amazon、Facebook、Google、其他 OIDC）：</p>
+<ol>
+<li>应用调用 IdP 登录接口</li>
+<li>IdP 验证用户并返回 JWT</li>
+<li>应用调用 <code>AssumeRoleWithWebIdentity</code>（或经 Cognito 身份池的 <code>GetCredentialsForIdentity</code>）</li>
+<li>AWS STS 返回临时凭证</li>
+<li>应用使用凭证访问 AWS 资源</li>
+</ol>
+<p>临时凭证默认 1 小时，过期前需重新获取。</p>
+<h3 id="22-amazon-cognito-路径">2.2 Amazon Cognito 路径<a class="anchor" href="#22-amazon-cognito-%e8%b7%af%e5%be%84">#</a></h3>
+<p>首选方案：使用 Cognito 身份池作为凭证代理，配合：</p>
+<ul>
+<li>用户池（登录、注册、个人资料）</li>
+<li>身份池（为 IAM 角色颁发临时凭证）</li>
+</ul>
+<p>集成步骤：</p>
+<ol>
+<li>开发者注册 IdP 并配置应用</li>
+<li>在 Cognito 控制台创建身份池（自动创建两套角色：已验证、未验证 Guest）</li>
+<li>集成 AWS Amplify 到应用</li>
+<li>创建 Cognito 凭证提供程序实例，传入身份池 ID、账户号、角色 ARN</li>
+<li>应用使用该凭证提供程序访问 AWS 客户端</li>
+</ol>
+<p>Google、Facebook、Amazon Cognito 内置为 AWS 的 OIDC 提供商，<strong>无需</strong>额外创建 IAM OIDC 身份提供商。</p>
+<h3 id="23-iam-oidc-身份提供者">2.3 IAM OIDC 身份提供者<a class="anchor" href="#23-iam-oidc-%e8%ba%ab%e4%bb%bd%e6%8f%90%e4%be%9b%e8%80%85">#</a></h3>
+<h4 id="231-先决条件">2.3.1 先决条件<a class="anchor" href="#231-%e5%85%88%e5%86%b3%e6%9d%a1%e4%bb%b6">#</a></h4>
+<p>IdP 必须具备 OIDC 发现文档（<code>/.well-known/openid-configuration</code>），包含：</p>
+<ul>
+<li><code>issuer</code>：域 URL（<code>https://</code> 开头，不含端口）</li>
+<li><code>jwks_uri</code>：JWKS 端点，最多 100 个 RSA 密钥和 100 个 EC 密钥</li>
+<li><code>claims_supported</code>：至少 <code>aud</code>、<code>iat</code>、<code>iss</code>、<code>sub</code></li>
+<li><code>response_types_supported</code>：<code>id_token</code></li>
+<li><code>subject_types_supported</code>：<code>public</code></li>
+<li><code>id_token_signing_alg_values_supported</code>：<code>RS256</code>、<code>RS384</code>、<code>RS512</code>、<code>ES256</code>、<code>ES384</code>、<code>ES512</code></li>
+</ul>
+<h4 id="232-创建-oidc-idp">2.3.2 创建 OIDC IdP<a class="anchor" href="#232-%e5%88%9b%e5%bb%ba-oidc-idp">#</a></h4>
+<p>控制台：IAM → 身份提供商 → 添加提供商 → OpenID Connect → 提供商 URL（区分大小写，仅能在当前账户唯一）+ 受众（客户端 ID）。</p>
+<p>CLI：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws iam create-open-id-connect-provider <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --url https://token.actions.githubusercontent.com <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --thumbprint-list &lt;thumb&gt; <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --client-id-list sts.amazonaws.com</span></span></code></pre></div><p>API：<code>CreateOpenIDConnectProvider</code>。</p>
+<h4 id="233-jwt-时钟偏差与-aud-规则">2.3.3 JWT 时钟偏差与 aud 规则<a class="anchor" href="#233-jwt-%e6%97%b6%e9%92%9f%e5%81%8f%e5%b7%ae%e4%b8%8e-aud-%e8%a7%84%e5%88%99">#</a></h4>
+<ul>
+<li>AWS 在 OIDC 令牌 <code>exp</code> 时间外给 5 分钟时钟偏差容忍</li>
+<li>若 JWT 同时有 <code>aud</code> 和 <code>azp</code>，AWS STS 使用 <code>azp</code> 作为 <code>aud</code></li>
+<li>创建 IdP 时填写的客户端 ID 必须与 JWT 中 <code>aud</code> 一致</li>
+</ul>
+<h4 id="234-基于身份策略中的-arn-匹配">2.3.4 基于身份策略中的 ARN 匹配<a class="anchor" href="#234-%e5%9f%ba%e4%ba%8e%e8%ba%ab%e4%bb%bd%e7%ad%96%e7%95%a5%e4%b8%ad%e7%9a%84-arn-%e5%8c%b9%e9%85%8d">#</a></h4>
+<p>OIDC 身份提供者 URL 带路径时，策略 <code>Resource</code> 必须包含完整路径（可用 <code>/*</code> 或 <code>*/?</code> 通配）。不匹配会拒绝。</p>
+<h3 id="24-github-actions-到-aws-示例">2.4 GitHub Actions 到 AWS 示例<a class="anchor" href="#24-github-actions-%e5%88%b0-aws-%e7%a4%ba%e4%be%8b">#</a></h3>
+<ol>
+<li>创建 IAM OIDC IdP，URL 为 <code>https://token.actions.githubusercontent.com</code>，受众 <code>sts.amazonaws.com</code></li>
+<li>创建角色，信任策略：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Version&#34;</span>: <span style="color:#e6db74">&#34;2012-10-17&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Statement&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Effect&#34;</span>: <span style="color:#e6db74">&#34;Allow&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Principal&#34;</span>: { <span style="color:#f92672">&#34;Federated&#34;</span>: <span style="color:#e6db74">&#34;arn:aws:iam::111122223333:oidc-provider/token.actions.githubusercontent.com&#34;</span> },
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Action&#34;</span>: <span style="color:#e6db74">&#34;sts:AssumeRoleWithWebIdentity&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Condition&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;StringEquals&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;token.actions.githubusercontent.com:aud&#34;</span>: <span style="color:#e6db74">&#34;sts.amazonaws.com&#34;</span>
+</span></span><span style="display:flex;"><span>        },
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;StringLike&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;token.actions.githubusercontent.com:sub&#34;</span>: <span style="color:#e6db74">&#34;repo:my-org/my-repo:*&#34;</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><ol start="3">
+<li>工作流中通过 <code>aws-actions/configure-aws-credentials@v4</code> 获取临时凭证</li>
+</ol>
+<h2 id="3-saml-20-联合">3. SAML 2.0 联合<a class="anchor" href="#3-saml-20-%e8%81%94%e5%90%88">#</a></h2>
+<h3 id="31-基本流程">3.1 基本流程<a class="anchor" href="#31-%e5%9f%ba%e6%9c%ac%e6%b5%81%e7%a8%8b">#</a></h3>
+<p>典型 SSO 流程：</p>
+<ol>
+<li>用户在企业门户（如 ADFS <code>IdpInitiatedSignOn.aspx</code>）登录</li>
+<li>企业 IdP 验证用户身份</li>
+<li>IdP 生成 SAML 响应（包含断言）</li>
+<li>客户端应用程序调用 <code>AssumeRoleWithSAML</code>（或 AWS 控制台登录端点）传递 SAML 断言</li>
+<li>AWS STS 返回临时凭证</li>
+<li>用户访问 AWS 控制台或 API</li>
+</ol>
+<h3 id="32-创建-iam-saml-身份提供者">3.2 创建 IAM SAML 身份提供者<a class="anchor" href="#32-%e5%88%9b%e5%bb%ba-iam-saml-%e8%ba%ab%e4%bb%bd%e6%8f%90%e4%be%9b%e8%80%85">#</a></h3>
+<h4 id="321-先决条件">3.2.1 先决条件<a class="anchor" href="#321-%e5%85%88%e5%86%b3%e6%9d%a1%e4%bb%b6">#</a></h4>
+<p>从 IdP 获取元数据文件（XML），包含 issuer、公钥、终端节点。要求：</p>
+<ul>
+<li>UTF-8 编码<strong>无 BOM</strong></li>
+<li>X.509 证书密钥长度至少 1024 位</li>
+<li>证书扩展项不得重复</li>
+</ul>
+<h4 id="322-创建-idp">3.2.2 创建 IdP<a class="anchor" href="#322-%e5%88%9b%e5%bb%ba-idp">#</a></h4>
+<p>控制台：IAM → 身份提供商 → 添加提供商 → SAML → 上传元数据文件。可选 SAML 加密（上传私钥，勾选“需要加密”）。</p>
+<p>CLI：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>aws iam create-saml-provider <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --saml-metadata-document file://saml-metadata.xml <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    --name ExampleCorp</span></span></code></pre></div><p>API：<code>CreateSAMLProvider</code>。相关：<code>UpdateSAMLProvider</code>、<code>DeleteSAMLProvider</code>、<code>ListSAMLProviders</code>、<code>TagSAMLProvider</code>、<code>UntagSAMLProvider</code>。</p>
+<h3 id="33-配置-saml-断言">3.3 配置 SAML 断言<a class="anchor" href="#33-%e9%85%8d%e7%bd%ae-saml-%e6%96%ad%e8%a8%80">#</a></h3>
+<p>IdP 生成的 SAML 响应必须包含以下属性：</p>
+<table>
+  <thead>
+      <tr>
+          <th>Attribute Name</th>
+          <th>作用</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>https://aws.amazon.com/SAML/Attributes/Role</code></td>
+          <td><code>arn:aws:iam::&lt;account&gt;:role/&lt;role-name&gt;,arn:aws:iam::&lt;account&gt;:saml-provider/&lt;provider-name&gt;</code> 对。可包含多个角色/提供商对，登录时用户选择</td>
+      </tr>
+      <tr>
+          <td><code>https://aws.amazon.com/SAML/Attributes/RoleSessionName</code></td>
+          <td>会话名（2–64 个字符，允许字母数字和 <code>. , + = @ -</code>，不能含空格）</td>
+      </tr>
+      <tr>
+          <td><code>https://aws.amazon.com/SAML/Attributes/SessionDuration</code>（可选）</td>
+          <td>控制台会话持续时间</td>
+      </tr>
+      <tr>
+          <td><code>https://aws.amazon.com/SAML/Attributes/PrincipalTag:{TagKey}</code>（可选）</td>
+          <td>将 SAML 属性作为会话标签传递给 AWS</td>
+      </tr>
+      <tr>
+          <td><code>https://aws.amazon.com/SAML/Attributes/TransitiveTagKeys</code>（可选）</td>
+          <td>声明可传递的会话标签键</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="34-saml-条件键">3.4 SAML 条件键<a class="anchor" href="#34-saml-%e6%9d%a1%e4%bb%b6%e9%94%ae">#</a></h3>
+<p>IAM 策略中可使用的 SAML 上下文键：</p>
+<ul>
+<li><code>saml:aud</code>：受众 ARN（对应 SAML recipient 属性）</li>
+<li><code>saml:iss</code>：IdP issuer</li>
+<li><code>saml:sub</code>：主体 NameID</li>
+<li><code>saml:sub_type</code>：<code>persistent</code> / <code>transient</code>（transient 每次会话不同，不可用作稳定标识）</li>
+<li><code>saml:cn</code>、<code>saml:mail</code>、<code>saml:eduPerson*</code>、<code>saml:eduOrg*</code> 等（映射 IdP 属性）</li>
+</ul>
+<p>断言样例：仅允许 <code>staff</code> 群组访问：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Version&#34;</span>: <span style="color:#e6db74">&#34;2012-10-17&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&#34;Statement&#34;</span>: [
+</span></span><span style="display:flex;"><span>    {
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Effect&#34;</span>: <span style="color:#e6db74">&#34;Allow&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Principal&#34;</span>: { <span style="color:#f92672">&#34;Federated&#34;</span>: <span style="color:#e6db74">&#34;arn:aws:iam::111122223333:saml-provider/ExampleCorp&#34;</span> },
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Action&#34;</span>: <span style="color:#e6db74">&#34;sts:AssumeRoleWithSAML&#34;</span>,
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&#34;Condition&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;StringEquals&#34;</span>: {
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;saml:aud&#34;</span>: <span style="color:#e6db74">&#34;https://signin.aws.amazon.com/saml&#34;</span>,
+</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&#34;saml:edupersonaffiliation&#34;</span>: <span style="color:#e6db74">&#34;staff&#34;</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>      }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><h3 id="35-aws-控制台-sso-流程">3.5 AWS 控制台 SSO 流程<a class="anchor" href="#35-aws-%e6%8e%a7%e5%88%b6%e5%8f%b0-sso-%e6%b5%81%e7%a8%8b">#</a></h3>
+<p>使用 <code>https://signin.aws.amazon.com/saml</code> 端点，IdP POST 一个 SAML 响应后 AWS 代替用户调用 API 并重定向浏览器到控制台。默认端点是全局，失效转移可参考区域端点策略。</p>
+<p>ADFS/Azure AD 门户 URL 格式：</p>
+<pre tabindex="0"><code>https://ADFSServiceName/adfs/ls/IdpInitiatedSignOn.aspx</code></pre><h2 id="4-获取联合令牌getfederationtoken">4. 获取联合令牌（GetFederationToken）<a class="anchor" href="#4-%e8%8e%b7%e5%8f%96%e8%81%94%e5%90%88%e4%bb%a4%e7%89%8cgetfederationtoken">#</a></h2>
+<p>用于自定义身份凭证代理：</p>
+<ol>
+<li>代理使用 IAM 用户凭证调用 <code>sts:GetFederationToken</code>，传递联合用户名与临时策略</li>
+<li>AWS STS 返回令牌</li>
+<li>代理构造登录 URL 将用户重定向到控制台，或返回给应用使用</li>
+</ol>
+<p>注意：<code>GetFederationToken</code> 登录的会话<strong>不需要 MFA</strong>。</p>
+<h2 id="5-saml-联合故障排除">5. SAML 联合故障排除<a class="anchor" href="#5-saml-%e8%81%94%e5%90%88%e6%95%85%e9%9a%9c%e6%8e%92%e9%99%a4">#</a></h2>
+<p>常见问题：</p>
+<table>
+  <thead>
+      <tr>
+          <th>错误</th>
+          <th>可能原因</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Invalid SAML response</td>
+          <td>元数据文件含 BOM、证书链顺序错乱、时钟偏差过大</td>
+      </tr>
+      <tr>
+          <td>Signature invalid</td>
+          <td>元数据中公钥与实际响应签名不匹配</td>
+      </tr>
+      <tr>
+          <td>RoleSessionName must match</td>
+          <td>属性值含非法字符或空格</td>
+      </tr>
+      <tr>
+          <td>NotAuthorized</td>
+          <td>信任策略中 <code>saml:aud</code> 或其他条件未通过</td>
+      </tr>
+  </tbody>
+</table>
+<p>浏览器中抓取 SAML 响应：使用开发者工具 Network 标签中的 SAML POST 请求的 <code>SAMLResponse</code> 参数（Base64 编码）。PowerShell 解码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>[<span style="color:#66d9ef">System.Text.Encoding</span>]::UTF8.GetString([<span style="color:#66d9ef">System.Convert</span>]::FromBase64String(<span style="color:#e6db74">&#34;&lt;base64&gt;&#34;</span>))</span></span></code></pre></div><h2 id="6-出站联合aws-to-external">6. 出站联合（AWS to External）<a class="anchor" href="#6-%e5%87%ba%e7%ab%99%e8%81%94%e5%90%88aws-to-external">#</a></h2>
+<p>AWS 也可以作为 OIDC 颁发方，为特定工作负载颁发 JWT 令牌，用于访问外部服务。相关 API：</p>
+<ul>
+<li><code>GetWebIdentityToken</code>：为工作负载生成 JWT 令牌</li>
+<li>令牌声明包含 AWS 身份、会话上下文</li>
+</ul>
+<p>外部服务验证 JWT 签名后即可根据 AWS 身份授权。可在 IAM 策略中使用 <code>sts:</code> 条件键控制谁能获取 JWT。</p>
+<h2 id="7-客户自定义身份代理">7. 客户自定义身份代理<a class="anchor" href="#7-%e5%ae%a2%e6%88%b7%e8%87%aa%e5%ae%9a%e4%b9%89%e8%ba%ab%e4%bb%bd%e4%bb%a3%e7%90%86">#</a></h2>
+<p>当企业目录不兼容 SAML 且不想使用 IAM Identity Center 时，构建自定义身份代理：</p>
+<ol>
+<li>用户登录企业身份系统</li>
+<li>代理根据用户属性决定授权</li>
+<li>代理调用 <code>sts:GetFederationToken</code> 或 <code>sts:AssumeRole</code> 获取临时凭证</li>
+<li>构造控制台登录 URL（调用 <code>https://signin.aws.amazon.com/federation</code> 接口）</li>
+<li>用户跳转进入 AWS 控制台</li>
+</ol>
+<p>登录 URL 生成需要 <code>Action=getSigninToken</code> + <code>SessionDuration</code> + <code>Session</code>（JSON 凭证），返回签名令牌后构造 <code>Action=login</code> URL。</p>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex flex-wrap justify-between">
+
+<div>
+
+</div>
+
+<div>
+
+</div>
+
+</div>
+
+
+
+  
+
+
+
+  
+  
+  
+
+
+ 
+        
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+        
+        
+  
+ 
+        
+  
+  
+    <script>(function(){document.querySelectorAll("pre:has(code)").forEach(e=>{e.addEventListener("click",e.focus),e.addEventListener("copy",function(t){if(t.preventDefault(),navigator.clipboard){const t=window.getSelection().toString()||e.textContent;navigator.clipboard.writeText(t)}})})})()</script>
+  
+
+      </footer>
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+  
+  <aside class="book-toc">
+    <div class="book-toc-content">
+      
+  
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-身份提供商与联合概述">1. 身份提供商与联合概述</a>
+      <ul>
+        <li><a href="#11-联合类型对比">1.1 联合类型对比</a></li>
+        <li><a href="#12-工作负载联合">1.2 工作负载联合</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-oidc-联合">2. OIDC 联合</a>
+      <ul>
+        <li><a href="#21-典型流程">2.1 典型流程</a></li>
+        <li><a href="#22-amazon-cognito-路径">2.2 Amazon Cognito 路径</a></li>
+        <li><a href="#23-iam-oidc-身份提供者">2.3 IAM OIDC 身份提供者</a></li>
+        <li><a href="#24-github-actions-到-aws-示例">2.4 GitHub Actions 到 AWS 示例</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-saml-20-联合">3. SAML 2.0 联合</a>
+      <ul>
+        <li><a href="#31-基本流程">3.1 基本流程</a></li>
+        <li><a href="#32-创建-iam-saml-身份提供者">3.2 创建 IAM SAML 身份提供者</a></li>
+        <li><a href="#33-配置-saml-断言">3.3 配置 SAML 断言</a></li>
+        <li><a href="#34-saml-条件键">3.4 SAML 条件键</a></li>
+        <li><a href="#35-aws-控制台-sso-流程">3.5 AWS 控制台 SSO 流程</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-获取联合令牌getfederationtoken">4. 获取联合令牌（GetFederationToken）</a></li>
+    <li><a href="#5-saml-联合故障排除">5. SAML 联合故障排除</a></li>
+    <li><a href="#6-出站联合aws-to-external">6. 出站联合（AWS to External）</a></li>
+    <li><a href="#7-客户自定义身份代理">7. 客户自定义身份代理</a></li>
+  </ul>
+</nav>
+
+
+
+    </div>
+  </aside>
+  
+ 
+  </main>
+
+  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
